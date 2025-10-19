@@ -1,5 +1,4 @@
 import 'package:billkeep/database/database.dart';
-import 'package:billkeep/utils/id_generator.dart';
 import 'package:drift/drift.dart';
 
 class DefaultCategories {

@@ -73,12 +73,12 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker> {
                 if (selectedCategory != null) ...[
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: selectedCategory.color != null
+                    backgroundColor: selectedCategory?.color != null
                         ? Color(int.parse(
-                            selectedCategory.color!.replaceFirst('#', '0xFF')))
+                            selectedCategory!.color!.replaceFirst('#', '0xFF')))
                         : Colors.grey,
                     child: Text(
-                      selectedCategory.icon ?? '📁',
+                      selectedCategory?.icon ?? '📁',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
@@ -89,14 +89,14 @@ class _CategoryPickerState extends ConsumerState<CategoryPicker> {
                       children: [
                         if (selectedParent != null)
                           Text(
-                            selectedParent.name,
+                            selectedParent!.name,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
                             ),
                           ),
                         Text(
-                          selectedCategory.name,
+                          selectedCategory!.name,
                           style: const TextStyle(fontSize: 16),
                         ),
                       ],

@@ -64,7 +64,7 @@ class CategoryRepository {
     String? color,
     String? parentCategoryId,
   }) async {
-    final tempCategoryId = IdGenerator.generate('category');
+    final tempCategoryId = IdGenerator.tempCategory();
 
     await _database.into(_database.categories).insert(
           CategoriesCompanion(

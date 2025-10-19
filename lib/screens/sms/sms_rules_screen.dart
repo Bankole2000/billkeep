@@ -4,7 +4,6 @@ import 'package:billkeep/screens/sms/test_rule_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../database/database.dart';
-import 'package:drift/drift.dart' as drift;
 
 class SmsRulesScreen extends ConsumerStatefulWidget {
   const SmsRulesScreen({super.key});
@@ -142,7 +141,7 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
           sender: rule['sender'] as String,
           pattern: rule['pattern'] as String,
           amountPattern: rule['amountPattern'] as String,
-          descriptionPattern: rule['descriptionPattern'] as String?,
+          descriptionPattern: rule['descriptionPattern'],
         );
       }
 

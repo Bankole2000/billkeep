@@ -24,4 +24,5 @@ class IdGenerator {
   static String tempPayment() => generateTempId('pay');
   static String tempSmsMessage() => generateTempId('sms');
   static String tempMessageRule() => generateTempId('rule');
+  static String tempCategory() => generateTempId('cat');
 }

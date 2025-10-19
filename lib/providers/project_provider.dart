@@ -27,16 +27,21 @@ class ProjectRepository {
 
     print('Creating project with ID: $tempId');
 
-    await _database.createProject(
-      ProjectsCompanion(
-        id: drift.Value(tempId),
-        tempId: drift.Value(tempId),
-        name: drift.Value(name),
-        description: drift.Value(description),
-        isSynced: const drift.Value(false),
-      ),
-    );
-
+    try {
+      await _database.createProject(
+        ProjectsCompanion(
+          id: drift.Value(tempId),
+          tempId: drift.Value(tempId),
+          name: drift.Value(name),
+          description: drift.Value(description),
+          isSynced: const drift.Value(false),
+        ),
+      );
+      
+    } catch (e) {
+      print( 'Error creating project: $e');
+    }
+    
     print('Project created successfully');
 
     return tempId;
