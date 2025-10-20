@@ -282,26 +282,26 @@ class AppDatabase extends _$AppDatabase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         // Future migrations will go here
-        if (from == 1) {
+        if (from <= 1) {
           await m.addColumn(projects, projects.budgetAmount);
           await m.addColumn(projects, projects.budgetType);
           await m.addColumn(projects, projects.budgetFrequency);
         }
 
         // Migration from 2 to 3 - Add expense/payment tracking to todos
-        if (from == 2) {
+        if (from <= 2) {
           await m.addColumn(todoItems, todoItems.createdExpenseId);
           await m.addColumn(todoItems, todoItems.createdPaymentId);
         }
 
         // Migration from 3 to 4 - Add SMS/Email import tables
-        if (from == 3) {
+        if (from <= 3) {
           await m.createTable(messageRules);
           await m.createTable(parsedMessages);
         }
 
         // Migration from 4 to 5 - Add Categories table and categoryId to Expenses/Income
-        if (from == 4) {
+        if (from <= 4) {
           await m.createTable(categories);
           await m.addColumn(expenses, expenses.categoryId);
           await m.addColumn(income, income.categoryId);

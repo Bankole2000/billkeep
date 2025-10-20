@@ -1,132 +1,97 @@
+import 'dart:ui';
+
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/projects/add_project_screen.dart';
 import 'package:billkeep/screens/settings/database_management_screen.dart';
 import 'package:billkeep/screens/sms/sms_import_screen.dart';
+import 'package:billkeep/widgets/common/app_bar_dynamic_title.dart';
+import 'package:billkeep/widgets/navigation/side_drawer_navigation.dart';
+import 'package:billkeep/widgets/project_dropdown.dart';
+import 'package:billkeep/widgets/projects/project_select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/widgets/projects/project_list.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      drawer: const AppDrawer(),
-      appBar: AppBar(
-        title: const Text('BillKeep'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: const ProjectList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddProjectScreen()),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-// Drawer
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  // Example wallet list
+  final List<String> wallets = [
+    'Main Wallet',
+    'Project A',
+    'Travel Fund',
+    'Savings',
+    'Bankole\'s Esan\'s Big Project',
+  ];
+
+  String selectedWallet = 'Main Wallet';
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
+    final colors = ref.watch(appColorsProvider);
+    return Scaffold(
+      drawer: const SideNavigationDrawer(),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        // centerTitle: false,
+        title: LayoutBuilder(
+          builder: (context, constraints) {
+            // Get 85% of the AppBar width
+            final width = constraints.maxWidth * 0.85;
+            return InkWell(
+              onTap: () {
+                // Handle tap here
+                showModalBottomSheet<void>(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20.0), // Change this value
+                    ),
+                  ),
+                  builder: (BuildContext context) => ProjectSelectBottomSheet(),
+                );
+              },
+              borderRadius: BorderRadius.circular(4),
+              child: AppBarDynamicTitle(
+                width: width,
+                projectTitle: 'This is a long project title',
+                pageType: 'Project',
+              ),
+            );
+          },
+        ),
+
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(
+            60,
+          ), // height of the bottom section
+          child: Container(
+            color: Colors.indigo.shade700,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            alignment: Alignment.centerLeft,
+            child: Row(
               children: [
-                Text(
-                  'BillKeep',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                const Text(
+                  "Subsection below AppBar",
+                  style: TextStyle(color: Colors.white),
                 ),
-                SizedBox(height: 8),
-                Text('Expense & Income Tracker'),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.settings, color: Colors.white),
+                  onPressed: () {},
+                ),
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Profile'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Navigate to profile
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.cloud_sync),
-            title: const Text('Sync Status'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Show sync status
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.sms),
-            title: const Text('SMS Auto-Import'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SmsImportScreen(),
-                ),
-              );
-            },
-          ),
-          // In your drawer or settings screen:
-          ListTile(
-            leading: const Icon(Icons.storage),
-            title: const Text('Database Management'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DatabaseManagementScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.file_download),
-            title: const Text('Export Data'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Export functionality
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.info),
-            title: const Text('About'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: About screen
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: const Text('Help'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Help screen
-            },
-          ),
-        ],
+        ),
       ),
+
+      body: const Center(child: Text('Home Screen - Coming Soon')),
     );
   }
 }

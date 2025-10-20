@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dart run build_runner:*)"
+      "Bash(dart run build_runner:*)",
+      "Bash(mkdir -p assets/images)"
     ],
     "deny": [],
     "ask": []

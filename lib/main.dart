@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/screens/home/main_navigation_screen.dart';
+import 'package:billkeep/screens/splash/splash_screen.dart';
 import 'package:billkeep/providers/database_provider.dart';
 import 'package:billkeep/utils/default_categories.dart';
 
@@ -17,6 +18,8 @@ class BillKeepApp extends ConsumerStatefulWidget {
 }
 
 class _BillKeepAppState extends ConsumerState<BillKeepApp> {
+  bool _isInitialized = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +30,15 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
     // Seed default categories if needed
     final database = ref.read(databaseProvider);
     await DefaultCategories.seedDefaultCategories(database);
+
+    // Wait for minimum splash duration
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (mounted) {
+      setState(() {
+        _isInitialized = true;
+      });
+    }
   }
 
   @override
@@ -37,7 +49,7 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MainNavigationScreen(),
+      home: _isInitialized ? const MainNavigationScreen() : const SplashScreen(),
     );
   }
 }
