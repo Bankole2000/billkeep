@@ -23,8 +23,17 @@ class ProjectList extends ConsumerWidget {
           itemBuilder: (context, index) {
             final project = projects[index];
             return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              margin: const EdgeInsets.all(8),
               child: ListTile(
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.network(
+                    "https://avatars.githubusercontent.com/u/23138415?v=4",
+                    height: 40,
+                    width: 40,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 title: Text(project.name),
                 subtitle: project.description != null
                     ? Text(project.description!)

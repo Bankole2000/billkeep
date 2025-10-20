@@ -1,15 +1,21 @@
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/widgets/common/app_bar_dynamic_title.dart';
 import 'package:billkeep/widgets/projects/project_select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(appColorsProvider);
+    final activeColor = ref.watch(activeThemeColorProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: colors.background,
       appBar: AppBar(
+        backgroundColor: activeColor,
         title: LayoutBuilder(
           builder: (context, constraints) {
             // Get 85% of the AppBar width

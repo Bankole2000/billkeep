@@ -1,12 +1,16 @@
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/projects/add_project_screen.dart';
 import 'package:billkeep/utils/page_transitions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddProjectButton extends StatelessWidget {
+class AddProjectButton extends ConsumerWidget {
   const AddProjectButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(appColorsProvider);
+    final activeColor = ref.watch(activeThemeColorProvider);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
@@ -22,13 +26,18 @@ class AddProjectButton extends StatelessWidget {
           },
           label: Text(
             'Add Project',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: colors.textInverse,
+            ),
           ),
-          icon: Icon(Icons.add, size: 24),
+          icon: Icon(Icons.add, size: 24, color: colors.textInverse),
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6), // Adjust this value
+              borderRadius: BorderRadius.circular(6), // Adjust this valu
             ),
+            backgroundColor: activeColor,
           ),
         ),
       ),

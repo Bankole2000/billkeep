@@ -36,9 +36,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final colors = ref.watch(appColorsProvider);
     return Scaffold(
       drawer: const SideNavigationDrawer(),
+      backgroundColor: colors.background,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        // centerTitle: false,
+        backgroundColor: colors.navy,
+        iconTheme: IconThemeData(color: colors.textInverse),
+        actionsIconTheme: IconThemeData(color: colors.textInverse),
         title: LayoutBuilder(
           builder: (context, constraints) {
             // Get 85% of the AppBar width
@@ -71,7 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             60,
           ), // height of the bottom section
           child: Container(
-            color: Colors.indigo.shade700,
+            color: colors.navy,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             alignment: Alignment.centerLeft,
             child: Row(

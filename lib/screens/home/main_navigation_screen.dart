@@ -47,7 +47,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
         },
         child: screens[selectedIndex],
       ),
-      // backgroundColor: const Color.fromARGB(255, 0, 82, 150),
+      backgroundColor: colors.background,
       floatingActionButton: FloatingActionButton(
         backgroundColor: activeColor,
         onPressed: () {
@@ -57,12 +57,12 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           ).showSnackBar(const SnackBar(content: Text('Add new expense')));
         },
         shape: const CircleBorder(),
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: colors.textInverse),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        color: const Color(0xFF161618),
+        color: colors.surface,
         notchMargin: 6,
         child: SizedBox(
           height: 20,
@@ -78,14 +78,14 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 label: 'Overview',
                 index: 0,
                 isSelected: selectedIndex == 0,
-                activeColor: colors.electric,
+                activeColor: colors.navy,
               ),
               BottomAppBarNavigationItem(
                 icon: selectedIndex == 1 ? Icons.work : Icons.work_outline,
                 label: 'Budget',
                 index: 1,
                 isSelected: selectedIndex == 1,
-                activeColor: colors.earth,
+                activeColor: colors.electric,
               ),
 
               // Space for FAB
@@ -99,7 +99,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 label: 'Reports',
                 index: 2,
                 isSelected: selectedIndex == 2,
-                activeColor: colors.water,
+                activeColor: colors.earth,
               ),
               BottomAppBarNavigationItem(
                 icon: selectedIndex == 3
@@ -108,7 +108,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 label: 'Settings',
                 index: 3,
                 isSelected: selectedIndex == 3,
-                activeColor: colors.textInverse,
+                activeColor: colors.wave,
               ),
             ],
           ),

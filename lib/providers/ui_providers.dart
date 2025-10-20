@@ -21,7 +21,7 @@ final bottomAppBarNavigationIndexProvider =
 class ActiveThemeColor extends Notifier<Color> {
   @override
   Color build() {
-    return Colors.purpleAccent;
+    return Colors.blueAccent;
   }
 
   void setActiveColor(Color color) {
