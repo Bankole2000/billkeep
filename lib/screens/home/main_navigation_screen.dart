@@ -6,6 +6,8 @@ import 'package:billkeep/screens/home/add_finances_screen.dart';
 import 'package:billkeep/screens/settings/add_settings_screen.dart';
 import 'package:billkeep/screens/settings/settings_screen.dart';
 import 'package:billkeep/utils/page_transitions.dart';
+import 'package:billkeep/widgets/examples/another_animation.dart';
+import 'package:billkeep/widgets/examples/list_animation.dart';
 import 'package:billkeep/widgets/navigation/bottom_app_bar_navigation_item.dart';
 import 'package:flutter/material.dart';
 import 'package:billkeep/providers/ui_providers.dart';
@@ -38,7 +40,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       const AddFinancesScreen(),
       const AddBudgetScreen(),
       const AddReportsScreen(),
-      const AddSettingsScreen(),
+      // const AddSettingsScreen(),
+      // SlidingListTiles(),
+      SmoothSlideTile(),
     ];
 
     return Scaffold(
@@ -91,7 +95,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 label: 'Overview',
                 index: 0,
                 isSelected: selectedIndex == 0,
-                activeColor: colors.navy,
+                activeColor: colors.text,
               ),
               BottomAppBarNavigationItem(
                 icon: selectedIndex == 1 ? Icons.work : Icons.work_outline,

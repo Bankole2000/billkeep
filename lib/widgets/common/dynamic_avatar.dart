@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Avatar extends StatelessWidget {
+class DynamicAvatar extends StatelessWidget {
   final VoidCallback? onTap;
   final Color? color;
   final IconData? icon;
@@ -10,7 +10,7 @@ class Avatar extends StatelessWidget {
   final double borderRadius;
   // ... other parameters
 
-  const Avatar({
+  const DynamicAvatar({
     super.key,
     this.color,
     this.icon,

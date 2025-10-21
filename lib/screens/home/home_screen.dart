@@ -11,6 +11,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(appColorsProvider);
+    final activeColor = ref.watch(activeThemeColorProvider);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -19,7 +20,7 @@ class HomeScreen extends ConsumerWidget {
         extendBodyBehindAppBar: true,
 
         appBar: AppBar(
-          backgroundColor: colors.navy,
+          backgroundColor: activeColor,
           iconTheme: IconThemeData(color: colors.textInverse),
           actionsIconTheme: IconThemeData(color: colors.textInverse),
           title: AppBarActiveProjectSelector(),
@@ -41,9 +42,9 @@ class HomeScreen extends ConsumerWidget {
 
         body: const TabBarView(
           children: [
-            Icon(Icons.directions_car),
-            Icon(Icons.directions_transit),
-            Icon(Icons.directions_bike),
+            Center(child: Text('Overview - Coming Soon')),
+            Center(child: Text('Finances - Coming Soon')),
+            Center(child: Text('Tasks - Coming Soon')),
           ],
         ),
       ),

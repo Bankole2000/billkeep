@@ -1,3 +1,4 @@
+import 'package:billkeep/widgets/examples/list_animation.dart';
 import 'package:billkeep/widgets/examples/transaction_screenshot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,6 +89,7 @@ class _AddTaskSubscreenState extends ConsumerState<AddTaskSubscreen> {
             // Display content based on selection
             Text('Selected Tab: $_selectedSegment'),
             // NewTransactionSheet(),
+            // SlidingListTiles(),
           ],
         ),
       ),
