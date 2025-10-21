@@ -257,9 +257,9 @@ class _UpcomingPaymentsScreenState
     final isDueToday = daysUntil == 0;
 
     Color cardColor = Colors.white;
-    if (isOverdue)
+    if (isOverdue) {
       cardColor = Colors.red.shade50;
-    else if (isDueToday)
+    } else if (isDueToday)
       cardColor = Colors.orange.shade50;
     else if (daysUntil <= 3)
       cardColor = Colors.yellow.shade50;
@@ -313,9 +313,9 @@ class _UpcomingPaymentsScreenState
     final isDueToday = daysUntil == 0;
 
     Color cardColor = Colors.white;
-    if (isOverdue)
+    if (isOverdue) {
       cardColor = Colors.orange.shade50;
-    else if (isDueToday)
+    } else if (isDueToday)
       cardColor = Colors.green.shade50;
 
     return Card(

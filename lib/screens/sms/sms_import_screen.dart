@@ -327,7 +327,7 @@ class _ParsedMessageCardState extends ConsumerState<_ParsedMessageCard> {
                     }
 
                     return DropdownButtonFormField<String>(
-                      value: _selectedProjectId,
+                      initialValue: _selectedProjectId,
                       decoration: const InputDecoration(
                         labelText: 'Assign to Project',
                         border: OutlineInputBorder(),

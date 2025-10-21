@@ -1,4 +1,5 @@
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/utils/page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/screens/projects/project_details_screen.dart';
@@ -11,6 +12,7 @@ class ProjectList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final projectsAsync = ref.watch(projectsProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
+    final activeProject = ref.watch(activeProjectProvider);
 
     return projectsAsync.when(
       data: (projects) {
@@ -29,10 +31,12 @@ class ProjectList extends ConsumerWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
-                  color: index == 0 ? activeColor : Colors.grey.shade400,
+                  color: activeProject.project?.id == project.id
+                      ? activeColor
+                      : Colors.grey.shade400,
                 ),
               ),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
                 contentPadding: EdgeInsets.only(
@@ -69,7 +73,7 @@ class ProjectList extends ConsumerWidget {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (index == 0)
+                    if (activeProject.project?.id == project.id)
                       IconButton(
                         onPressed: () {
                           print('Project settings');
@@ -85,7 +89,12 @@ class ProjectList extends ConsumerWidget {
                     // const SizedBox(width: 8),
                     IconButton(
                       onPressed: () {
-                        print('Project settings');
+                        Navigator.push(
+                          context,
+                          AppPageRoute.slideRight(
+                            ProjectDetailScreen(project: project),
+                          ),
+                        );
                       },
                       icon: Icon(Icons.chevron_right, size: 24),
                       style: IconButton.styleFrom(
@@ -97,13 +106,9 @@ class ProjectList extends ConsumerWidget {
                   ],
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProjectDetailScreen(project: project),
-                    ),
-                  );
+                  ref
+                      .read(activeProjectProvider.notifier)
+                      .setActiveProject(project);
                 },
               ),
             );

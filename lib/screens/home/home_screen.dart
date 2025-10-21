@@ -1,100 +1,52 @@
-import 'dart:ui';
-
 import 'package:billkeep/providers/ui_providers.dart';
-import 'package:billkeep/screens/projects/add_project_screen.dart';
-import 'package:billkeep/screens/settings/database_management_screen.dart';
-import 'package:billkeep/screens/sms/sms_import_screen.dart';
-import 'package:billkeep/widgets/common/app_bar_dynamic_title.dart';
+import 'package:billkeep/widgets/common/app_bar_active_project_selector.dart';
+import 'package:billkeep/widgets/common/tabbar_icon_label.dart';
 import 'package:billkeep/widgets/navigation/side_drawer_navigation.dart';
-import 'package:billkeep/widgets/project_dropdown.dart';
-import 'package:billkeep/widgets/projects/project_select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:billkeep/widgets/projects/project_list.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  // Example wallet list
-  final List<String> wallets = [
-    'Main Wallet',
-    'Project A',
-    'Travel Fund',
-    'Savings',
-    'Bankole\'s Esan\'s Big Project',
-  ];
-
-  String selectedWallet = 'Main Wallet';
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(appColorsProvider);
-    return Scaffold(
-      drawer: const SideNavigationDrawer(),
-      backgroundColor: colors.background,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: colors.navy,
-        iconTheme: IconThemeData(color: colors.textInverse),
-        actionsIconTheme: IconThemeData(color: colors.textInverse),
-        title: LayoutBuilder(
-          builder: (context, constraints) {
-            // Get 85% of the AppBar width
-            final width = constraints.maxWidth * 0.85;
-            return InkWell(
-              onTap: () {
-                // Handle tap here
-                showModalBottomSheet<void>(
-                  context: context,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20.0), // Change this value
-                    ),
-                  ),
-                  builder: (BuildContext context) => ProjectSelectBottomSheet(),
-                );
-              },
-              borderRadius: BorderRadius.circular(4),
-              child: AppBarDynamicTitle(
-                width: width,
-                projectTitle: 'This is a long project title',
-                pageType: 'Project',
-              ),
-            );
-          },
-        ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        drawer: const SideNavigationDrawer(),
+        backgroundColor: colors.background,
+        extendBodyBehindAppBar: true,
 
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(
-            60,
-          ), // height of the bottom section
-          child: Container(
-            color: colors.navy,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                const Text(
-                  "Subsection below AppBar",
-                  style: TextStyle(color: Colors.white),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.settings, color: Colors.white),
-                  onPressed: () {},
-                ),
-              ],
-            ),
+        appBar: AppBar(
+          backgroundColor: colors.navy,
+          iconTheme: IconThemeData(color: colors.textInverse),
+          actionsIconTheme: IconThemeData(color: colors.textInverse),
+          title: AppBarActiveProjectSelector(),
+          bottom: TabBar(
+            unselectedLabelColor: colors.textMuteInverse,
+            labelColor: colors.textInverse,
+            indicatorColor: colors.textInverse,
+
+            tabs: const [
+              TabbarIconLabel(icon: Icons.remove_red_eye, label: 'Overview'),
+              TabbarIconLabel(
+                icon: Icons.account_balance_wallet,
+                label: 'Finances',
+              ),
+              TabbarIconLabel(icon: Icons.checklist, label: 'Tasks'),
+            ],
           ),
         ),
-      ),
 
-      body: const Center(child: Text('Home Screen - Coming Soon')),
+        body: const TabBarView(
+          children: [
+            Icon(Icons.directions_car),
+            Icon(Icons.directions_transit),
+            Icon(Icons.directions_bike),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,11 @@
+import 'package:billkeep/screens/budget/add_budget_screen.dart';
 import 'package:billkeep/screens/budget/budget_screen.dart';
-import 'package:billkeep/screens/dashboard/dashboard_screen.dart';
+import 'package:billkeep/screens/reports/add_reports_screen.dart';
+import 'package:billkeep/screens/reports/reports_screen.dart';
+import 'package:billkeep/screens/home/add_finances_screen.dart';
+import 'package:billkeep/screens/settings/add_settings_screen.dart';
 import 'package:billkeep/screens/settings/settings_screen.dart';
+import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/widgets/navigation/bottom_app_bar_navigation_item.dart';
 import 'package:flutter/material.dart';
 import 'package:billkeep/providers/ui_providers.dart';
@@ -24,9 +29,16 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
 
     final screens = [
       const HomeScreen(),
-      const DashboardScreen(), // Placeholder
       const BudgetScreen(), // Placeholder
+      const ReportsScreen(), // Placeholder
       const SettingsScreen(), // Placeholder
+    ];
+
+    final addScreens = [
+      const AddFinancesScreen(),
+      const AddBudgetScreen(),
+      const AddReportsScreen(),
+      const AddSettingsScreen(),
     ];
 
     return Scaffold(
@@ -52,9 +64,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
         backgroundColor: activeColor,
         onPressed: () {
           // Example: open "Add Expense" modal
-          ScaffoldMessenger.of(
+          Navigator.push(
             context,
-          ).showSnackBar(const SnackBar(content: Text('Add new expense')));
+            AppPageRoute.containerTransform(addScreens[selectedIndex]),
+          );
         },
         shape: const CircleBorder(),
         child: Icon(Icons.add, color: colors.textInverse),
@@ -108,7 +121,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 label: 'Settings',
                 index: 3,
                 isSelected: selectedIndex == 3,
-                activeColor: colors.wave,
+                activeColor: colors.text,
               ),
             ],
           ),

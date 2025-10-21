@@ -8,7 +8,7 @@ class AppColors {
     textMuteInverse: Colors.white54,
     textMute: Colors.black54,
     primary: Color(0xFF161618),
-    background: Color(0xFFD0D0D0),
+    background: Color(0xFFE0E0E0),
     surface: Color(0xFFFFFFFF),
     accent: Color(0xFF007AFF),
   );

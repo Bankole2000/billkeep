@@ -172,7 +172,7 @@ class _TodoFormState extends ConsumerState<TodoForm> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: _expenseType,
+                initialValue: _expenseType,
                 decoration: const InputDecoration(
                   labelText: 'Type',
                   border: OutlineInputBorder(),
@@ -189,9 +189,8 @@ class _TodoFormState extends ConsumerState<TodoForm> {
                     _expenseType = value!;
                     if (_expenseType == 'ONE_TIME') {
                       _frequency = null;
-                    } else if (_frequency == null) {
-                      _frequency = 'MONTHLY';
-                    }
+                    } else
+                      _frequency ??= 'MONTHLY';
                   });
                 },
               ),
@@ -199,7 +198,7 @@ class _TodoFormState extends ConsumerState<TodoForm> {
 
               if (_expenseType == 'RECURRING')
                 DropdownButtonFormField<String>(
-                  value: _frequency,
+                  initialValue: _frequency,
                   decoration: const InputDecoration(
                     labelText: 'Frequency',
                     border: OutlineInputBorder(),
@@ -244,7 +243,7 @@ class _TodoFormState extends ConsumerState<TodoForm> {
                   }
 
                   return DropdownButtonFormField<String>(
-                    value: _selectedShoppingListId,
+                    initialValue: _selectedShoppingListId,
                     decoration: const InputDecoration(
                       labelText: 'Select Shopping List',
                       border: OutlineInputBorder(),

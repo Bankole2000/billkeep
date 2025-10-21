@@ -319,7 +319,7 @@ class _RuleBuilderScreenState extends ConsumerState<RuleBuilderScreen> {
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    value: _transactionType,
+                    initialValue: _transactionType,
                     decoration: const InputDecoration(
                       labelText: 'Transaction Type',
                       border: OutlineInputBorder(),

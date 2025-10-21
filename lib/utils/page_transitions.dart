@@ -38,4 +38,36 @@ class AppPageRoute {
       },
     );
   }
+
+  static PageRouteBuilder fadeThrough(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeThroughTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          child: child,
+        );
+      },
+    );
+  }
+
+  static PageRouteBuilder<T> containerTransform<T>(
+    Widget page, {
+    Color? backgroundColor,
+  }) {
+    return PageRouteBuilder<T>(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.scaled,
+          child: child,
+        );
+      },
+      opaque: false,
+      barrierColor: backgroundColor,
+    );
+  }
 }

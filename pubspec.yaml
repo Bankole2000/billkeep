@@ -46,6 +46,7 @@ dependencies:
   another_telephony: ^0.4.1
   intl: ^0.20.2
   shared_preferences: ^2.5.3
+  custom_sliding_segmented_control: ^1.8.5
 
 dev_dependencies:
   flutter_test:

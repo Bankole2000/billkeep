@@ -1,6 +1,5 @@
 // my_bottom_sheet.dart
 // import 'package:billkeep/screens/projects/settings_screen.dart';
-import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/widgets/projects/add_project_button.dart';
 import 'package:billkeep/widgets/projects/project_list_bottom_sheet.dart';
@@ -21,9 +20,9 @@ class ProjectSelectBottomSheet extends ConsumerWidget {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                'Title',
+                'Select Project',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),

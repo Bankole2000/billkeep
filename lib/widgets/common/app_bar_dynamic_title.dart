@@ -32,14 +32,14 @@ class AppBarDynamicTitle extends ConsumerWidget {
               Text(
                 '$pageType: ',
                 maxLines: 1,
-                style: TextStyle(color: colors.textMuteInverse, fontSize: 17),
+                style: TextStyle(color: colors.textMuteInverse, fontSize: 20),
               ),
             Expanded(
               child: Text(
                 projectTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: colors.textInverse, fontSize: 17),
+                style: TextStyle(color: colors.textInverse, fontSize: 20),
               ),
             ),
             Icon(Icons.arrow_drop_down, color: colors.textInverse),

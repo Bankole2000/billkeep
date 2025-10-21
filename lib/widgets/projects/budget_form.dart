@@ -104,7 +104,7 @@ class _BudgetFormState extends ConsumerState<BudgetForm> {
             const SizedBox(height: 16),
 
             DropdownButtonFormField<String>(
-              value: _budgetType,
+              initialValue: _budgetType,
               decoration: const InputDecoration(
                 labelText: 'Budget Type',
                 border: OutlineInputBorder(),
@@ -121,9 +121,8 @@ class _BudgetFormState extends ConsumerState<BudgetForm> {
                   _budgetType = value!;
                   if (_budgetType == 'ONE_TIME') {
                     _budgetFrequency = null;
-                  } else if (_budgetFrequency == null) {
-                    _budgetFrequency = 'MONTHLY';
-                  }
+                  } else
+                    _budgetFrequency ??= 'MONTHLY';
                 });
               },
             ),
@@ -131,7 +130,7 @@ class _BudgetFormState extends ConsumerState<BudgetForm> {
 
             if (_budgetType == 'RECURRING')
               DropdownButtonFormField<String>(
-                value: _budgetFrequency,
+                initialValue: _budgetFrequency,
                 decoration: const InputDecoration(
                   labelText: 'Frequency',
                   border: OutlineInputBorder(),

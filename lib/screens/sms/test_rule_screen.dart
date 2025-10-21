@@ -201,7 +201,7 @@ class _TestRuleScreenState extends ConsumerState<TestRuleScreen> {
 
                 // Rule selector
                 DropdownButtonFormField<MessageRule?>(
-                  value: _selectedRule,
+                  initialValue: _selectedRule,
                   decoration: const InputDecoration(
                     labelText: 'Test Against Rule',
                     border: OutlineInputBorder(),
