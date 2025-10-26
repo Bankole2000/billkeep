@@ -15,16 +15,17 @@ class AddFinancesScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: colors.surface,
         appBar: AppBar(
-          backgroundColor: activeColor,
-          iconTheme: IconThemeData(color: colors.textInverse),
-          actionsIconTheme: IconThemeData(color: colors.textInverse),
-          title: Text('Add New', style: TextStyle(color: colors.textInverse)),
+          backgroundColor: colors.surface,
+          iconTheme: IconThemeData(color: colors.text),
+          actionsIconTheme: IconThemeData(color: colors.text),
+          title: Text('Add New', style: TextStyle(color: colors.text)),
           centerTitle: true,
           bottom: TabBar(
-            unselectedLabelColor: colors.textMuteInverse,
-            labelColor: colors.textInverse,
-            indicatorColor: colors.textInverse,
+            unselectedLabelColor: colors.textMute,
+            labelColor: colors.text,
+            indicatorColor: colors.text,
             tabs: [
               TabbarIconLabel(icon: Icons.money, label: 'Transaction'),
               TabbarIconLabel(icon: Icons.check_box, label: 'Task'),

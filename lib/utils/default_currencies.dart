@@ -12,6 +12,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'US',
     },
     {
       'code': 'EUR',
@@ -20,6 +21,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'EU',
     },
     {
       'code': 'GBP',
@@ -28,6 +30,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'GB',
     },
     {
       'code': 'JPY',
@@ -36,6 +39,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'JP',
     },
     {
       'code': 'CNY',
@@ -44,6 +48,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'CN',
     },
     {
       'code': 'CAD',
@@ -52,6 +57,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'CA',
     },
     {
       'code': 'AUD',
@@ -60,6 +66,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'AU',
     },
     {
       'code': 'CHF',
@@ -68,6 +75,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'CH',
     },
     {
       'code': 'NZD',
@@ -76,6 +84,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'NZ',
     },
     {
       'code': 'SEK',
@@ -84,6 +93,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'SE',
     },
     {
       'code': 'NOK',
@@ -92,6 +102,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'NO',
     },
     {
       'code': 'DKK',
@@ -100,6 +111,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'DK',
     },
     {
       'code': 'SGD',
@@ -108,6 +120,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'SG',
     },
     {
       'code': 'HKD',
@@ -116,6 +129,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'HK',
     },
 
     // Other Major Currencies
@@ -126,6 +140,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'IN',
     },
     {
       'code': 'BRL',
@@ -134,6 +149,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'BR',
     },
     {
       'code': 'RUB',
@@ -142,6 +158,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'RU',
     },
     {
       'code': 'ZAR',
@@ -150,6 +167,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'ZA',
     },
     {
       'code': 'MXN',
@@ -158,6 +176,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'MX',
     },
     {
       'code': 'KRW',
@@ -166,6 +185,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'KR',
     },
     {
       'code': 'TRY',
@@ -174,6 +194,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'TR',
     },
     {
       'code': 'AED',
@@ -182,6 +203,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'AE',
     },
     {
       'code': 'SAR',
@@ -190,6 +212,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'SA',
     },
     {
       'code': 'THB',
@@ -198,6 +221,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'TH',
     },
     {
       'code': 'MYR',
@@ -206,6 +230,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'MY',
     },
     {
       'code': 'IDR',
@@ -214,6 +239,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'ID',
     },
     {
       'code': 'PHP',
@@ -222,6 +248,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'PH',
     },
     {
       'code': 'VND',
@@ -230,6 +257,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'VN',
     },
     {
       'code': 'PLN',
@@ -238,6 +266,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'PL',
     },
     {
       'code': 'CZK',
@@ -246,6 +275,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'CZ',
     },
     {
       'code': 'HUF',
@@ -254,6 +284,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'HU',
     },
     {
       'code': 'ILS',
@@ -262,6 +293,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'IL',
     },
     {
       'code': 'EGP',
@@ -270,6 +302,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'EG',
     },
     {
       'code': 'NGN',
@@ -278,6 +311,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'NG',
     },
     {
       'code': 'KES',
@@ -286,6 +320,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'KE',
     },
     {
       'code': 'ARS',
@@ -294,6 +329,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'AR',
     },
     {
       'code': 'CLP',
@@ -302,6 +338,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'CL',
     },
     {
       'code': 'COP',
@@ -310,6 +347,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'CO',
     },
     {
       'code': 'PEN',
@@ -318,6 +356,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'PE',
     },
     {
       'code': 'GHS',
@@ -326,6 +365,7 @@ class DefaultCurrencies {
       'decimals': 2,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'GH',
     },
     {
       'code': 'RWF',
@@ -334,6 +374,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'RW',
     },
     {
       'code': 'XOF',
@@ -342,6 +383,7 @@ class DefaultCurrencies {
       'decimals': 0,
       'isCrypto': false,
       'isActive': true,
+      'countryISO2': 'SN',
     },
 
     // Cryptocurrencies
@@ -352,6 +394,7 @@ class DefaultCurrencies {
       'decimals': 8,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'ETH',
@@ -360,6 +403,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'SOL',
@@ -368,6 +412,7 @@ class DefaultCurrencies {
       'decimals': 9,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'BNB',
@@ -376,6 +421,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'XRP',
@@ -384,6 +430,7 @@ class DefaultCurrencies {
       'decimals': 6,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'ADA',
@@ -392,6 +439,7 @@ class DefaultCurrencies {
       'decimals': 6,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'DOGE',
@@ -400,6 +448,7 @@ class DefaultCurrencies {
       'decimals': 8,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'DOT',
@@ -408,6 +457,7 @@ class DefaultCurrencies {
       'decimals': 10,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'MATIC',
@@ -416,6 +466,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'AVAX',
@@ -424,6 +475,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'LINK',
@@ -432,6 +484,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'UNI',
@@ -440,6 +493,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'LTC',
@@ -448,6 +502,7 @@ class DefaultCurrencies {
       'decimals': 8,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'TRX',
@@ -456,6 +511,7 @@ class DefaultCurrencies {
       'decimals': 6,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'ATOM',
@@ -464,6 +520,7 @@ class DefaultCurrencies {
       'decimals': 6,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'XLM',
@@ -472,6 +529,7 @@ class DefaultCurrencies {
       'decimals': 7,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'XMR',
@@ -480,6 +538,7 @@ class DefaultCurrencies {
       'decimals': 12,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'ALGO',
@@ -488,6 +547,7 @@ class DefaultCurrencies {
       'decimals': 6,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'VET',
@@ -496,6 +556,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'FIL',
@@ -504,6 +565,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
 
     // Stablecoins
@@ -514,6 +576,7 @@ class DefaultCurrencies {
       'decimals': 6,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'USDC',
@@ -522,6 +585,7 @@ class DefaultCurrencies {
       'decimals': 6,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'DAI',
@@ -530,6 +594,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
     {
       'code': 'BUSD',
@@ -538,6 +603,7 @@ class DefaultCurrencies {
       'decimals': 18,
       'isCrypto': true,
       'isActive': true,
+      'countryISO2': '🪙',
     },
   ];
 
@@ -558,6 +624,7 @@ class DefaultCurrencies {
               name: Value(currency['name'] as String),
               symbol: Value(currency['symbol'] as String),
               decimals: Value(currency['decimals'] as int),
+              countryISO2: Value(currency['countryISO2'] as String?),
               isCrypto: Value(currency['isCrypto'] as bool),
               isActive: Value(currency['isActive'] as bool),
             ),

@@ -1061,6 +1061,17 @@ class $CurrenciesTable extends Currencies
     requiredDuringInsert: false,
     defaultValue: const Constant(2),
   );
+  static const VerificationMeta _countryISO2Meta = const VerificationMeta(
+    'countryISO2',
+  );
+  @override
+  late final GeneratedColumn<String> countryISO2 = GeneratedColumn<String>(
+    'country_i_s_o2',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isCryptoMeta = const VerificationMeta(
     'isCrypto',
   );
@@ -1097,6 +1108,7 @@ class $CurrenciesTable extends Currencies
     name,
     symbol,
     decimals,
+    countryISO2,
     isCrypto,
     isActive,
   ];
@@ -1142,6 +1154,15 @@ class $CurrenciesTable extends Currencies
         decimals.isAcceptableOrUnknown(data['decimals']!, _decimalsMeta),
       );
     }
+    if (data.containsKey('country_i_s_o2')) {
+      context.handle(
+        _countryISO2Meta,
+        countryISO2.isAcceptableOrUnknown(
+          data['country_i_s_o2']!,
+          _countryISO2Meta,
+        ),
+      );
+    }
     if (data.containsKey('is_crypto')) {
       context.handle(
         _isCryptoMeta,
@@ -1179,6 +1200,10 @@ class $CurrenciesTable extends Currencies
         DriftSqlType.int,
         data['${effectivePrefix}decimals'],
       )!,
+      countryISO2: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country_i_s_o2'],
+      ),
       isCrypto: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_crypto'],
@@ -1201,6 +1226,7 @@ class Currency extends DataClass implements Insertable<Currency> {
   final String name;
   final String symbol;
   final int decimals;
+  final String? countryISO2;
   final bool isCrypto;
   final bool isActive;
   const Currency({
@@ -1208,6 +1234,7 @@ class Currency extends DataClass implements Insertable<Currency> {
     required this.name,
     required this.symbol,
     required this.decimals,
+    this.countryISO2,
     required this.isCrypto,
     required this.isActive,
   });
@@ -1218,6 +1245,9 @@ class Currency extends DataClass implements Insertable<Currency> {
     map['name'] = Variable<String>(name);
     map['symbol'] = Variable<String>(symbol);
     map['decimals'] = Variable<int>(decimals);
+    if (!nullToAbsent || countryISO2 != null) {
+      map['country_i_s_o2'] = Variable<String>(countryISO2);
+    }
     map['is_crypto'] = Variable<bool>(isCrypto);
     map['is_active'] = Variable<bool>(isActive);
     return map;
@@ -1229,6 +1259,9 @@ class Currency extends DataClass implements Insertable<Currency> {
       name: Value(name),
       symbol: Value(symbol),
       decimals: Value(decimals),
+      countryISO2: countryISO2 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(countryISO2),
       isCrypto: Value(isCrypto),
       isActive: Value(isActive),
     );
@@ -1244,6 +1277,7 @@ class Currency extends DataClass implements Insertable<Currency> {
       name: serializer.fromJson<String>(json['name']),
       symbol: serializer.fromJson<String>(json['symbol']),
       decimals: serializer.fromJson<int>(json['decimals']),
+      countryISO2: serializer.fromJson<String?>(json['countryISO2']),
       isCrypto: serializer.fromJson<bool>(json['isCrypto']),
       isActive: serializer.fromJson<bool>(json['isActive']),
     );
@@ -1256,6 +1290,7 @@ class Currency extends DataClass implements Insertable<Currency> {
       'name': serializer.toJson<String>(name),
       'symbol': serializer.toJson<String>(symbol),
       'decimals': serializer.toJson<int>(decimals),
+      'countryISO2': serializer.toJson<String?>(countryISO2),
       'isCrypto': serializer.toJson<bool>(isCrypto),
       'isActive': serializer.toJson<bool>(isActive),
     };
@@ -1266,6 +1301,7 @@ class Currency extends DataClass implements Insertable<Currency> {
     String? name,
     String? symbol,
     int? decimals,
+    Value<String?> countryISO2 = const Value.absent(),
     bool? isCrypto,
     bool? isActive,
   }) => Currency(
@@ -1273,6 +1309,7 @@ class Currency extends DataClass implements Insertable<Currency> {
     name: name ?? this.name,
     symbol: symbol ?? this.symbol,
     decimals: decimals ?? this.decimals,
+    countryISO2: countryISO2.present ? countryISO2.value : this.countryISO2,
     isCrypto: isCrypto ?? this.isCrypto,
     isActive: isActive ?? this.isActive,
   );
@@ -1282,6 +1319,9 @@ class Currency extends DataClass implements Insertable<Currency> {
       name: data.name.present ? data.name.value : this.name,
       symbol: data.symbol.present ? data.symbol.value : this.symbol,
       decimals: data.decimals.present ? data.decimals.value : this.decimals,
+      countryISO2: data.countryISO2.present
+          ? data.countryISO2.value
+          : this.countryISO2,
       isCrypto: data.isCrypto.present ? data.isCrypto.value : this.isCrypto,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
     );
@@ -1294,6 +1334,7 @@ class Currency extends DataClass implements Insertable<Currency> {
           ..write('name: $name, ')
           ..write('symbol: $symbol, ')
           ..write('decimals: $decimals, ')
+          ..write('countryISO2: $countryISO2, ')
           ..write('isCrypto: $isCrypto, ')
           ..write('isActive: $isActive')
           ..write(')'))
@@ -1301,8 +1342,15 @@ class Currency extends DataClass implements Insertable<Currency> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(code, name, symbol, decimals, isCrypto, isActive);
+  int get hashCode => Object.hash(
+    code,
+    name,
+    symbol,
+    decimals,
+    countryISO2,
+    isCrypto,
+    isActive,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1311,6 +1359,7 @@ class Currency extends DataClass implements Insertable<Currency> {
           other.name == this.name &&
           other.symbol == this.symbol &&
           other.decimals == this.decimals &&
+          other.countryISO2 == this.countryISO2 &&
           other.isCrypto == this.isCrypto &&
           other.isActive == this.isActive);
 }
@@ -1320,6 +1369,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
   final Value<String> name;
   final Value<String> symbol;
   final Value<int> decimals;
+  final Value<String?> countryISO2;
   final Value<bool> isCrypto;
   final Value<bool> isActive;
   final Value<int> rowid;
@@ -1328,6 +1378,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     this.name = const Value.absent(),
     this.symbol = const Value.absent(),
     this.decimals = const Value.absent(),
+    this.countryISO2 = const Value.absent(),
     this.isCrypto = const Value.absent(),
     this.isActive = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1337,6 +1388,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     required String name,
     required String symbol,
     this.decimals = const Value.absent(),
+    this.countryISO2 = const Value.absent(),
     this.isCrypto = const Value.absent(),
     this.isActive = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1348,6 +1400,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     Expression<String>? name,
     Expression<String>? symbol,
     Expression<int>? decimals,
+    Expression<String>? countryISO2,
     Expression<bool>? isCrypto,
     Expression<bool>? isActive,
     Expression<int>? rowid,
@@ -1357,6 +1410,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
       if (name != null) 'name': name,
       if (symbol != null) 'symbol': symbol,
       if (decimals != null) 'decimals': decimals,
+      if (countryISO2 != null) 'country_i_s_o2': countryISO2,
       if (isCrypto != null) 'is_crypto': isCrypto,
       if (isActive != null) 'is_active': isActive,
       if (rowid != null) 'rowid': rowid,
@@ -1368,6 +1422,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     Value<String>? name,
     Value<String>? symbol,
     Value<int>? decimals,
+    Value<String?>? countryISO2,
     Value<bool>? isCrypto,
     Value<bool>? isActive,
     Value<int>? rowid,
@@ -1377,6 +1432,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
       name: name ?? this.name,
       symbol: symbol ?? this.symbol,
       decimals: decimals ?? this.decimals,
+      countryISO2: countryISO2 ?? this.countryISO2,
       isCrypto: isCrypto ?? this.isCrypto,
       isActive: isActive ?? this.isActive,
       rowid: rowid ?? this.rowid,
@@ -1398,6 +1454,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     if (decimals.present) {
       map['decimals'] = Variable<int>(decimals.value);
     }
+    if (countryISO2.present) {
+      map['country_i_s_o2'] = Variable<String>(countryISO2.value);
+    }
     if (isCrypto.present) {
       map['is_crypto'] = Variable<bool>(isCrypto.value);
     }
@@ -1417,6 +1476,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
           ..write('name: $name, ')
           ..write('symbol: $symbol, ')
           ..write('decimals: $decimals, ')
+          ..write('countryISO2: $countryISO2, ')
           ..write('isCrypto: $isCrypto, ')
           ..write('isActive: $isActive, ')
           ..write('rowid: $rowid')
@@ -21868,6 +21928,7 @@ typedef $$CurrenciesTableCreateCompanionBuilder =
       required String name,
       required String symbol,
       Value<int> decimals,
+      Value<String?> countryISO2,
       Value<bool> isCrypto,
       Value<bool> isActive,
       Value<int> rowid,
@@ -21878,6 +21939,7 @@ typedef $$CurrenciesTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String> symbol,
       Value<int> decimals,
+      Value<String?> countryISO2,
       Value<bool> isCrypto,
       Value<bool> isActive,
       Value<int> rowid,
@@ -22030,6 +22092,11 @@ class $$CurrenciesTableFilterComposer
 
   ColumnFilters<int> get decimals => $composableBuilder(
     column: $table.decimals,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get countryISO2 => $composableBuilder(
+    column: $table.countryISO2,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22223,6 +22290,11 @@ class $$CurrenciesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get countryISO2 => $composableBuilder(
+    column: $table.countryISO2,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isCrypto => $composableBuilder(
     column: $table.isCrypto,
     builder: (column) => ColumnOrderings(column),
@@ -22254,6 +22326,11 @@ class $$CurrenciesTableAnnotationComposer
 
   GeneratedColumn<int> get decimals =>
       $composableBuilder(column: $table.decimals, builder: (column) => column);
+
+  GeneratedColumn<String> get countryISO2 => $composableBuilder(
+    column: $table.countryISO2,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get isCrypto =>
       $composableBuilder(column: $table.isCrypto, builder: (column) => column);
@@ -22451,6 +22528,7 @@ class $$CurrenciesTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String> symbol = const Value.absent(),
                 Value<int> decimals = const Value.absent(),
+                Value<String?> countryISO2 = const Value.absent(),
                 Value<bool> isCrypto = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -22459,6 +22537,7 @@ class $$CurrenciesTableTableManager
                 name: name,
                 symbol: symbol,
                 decimals: decimals,
+                countryISO2: countryISO2,
                 isCrypto: isCrypto,
                 isActive: isActive,
                 rowid: rowid,
@@ -22469,6 +22548,7 @@ class $$CurrenciesTableTableManager
                 required String name,
                 required String symbol,
                 Value<int> decimals = const Value.absent(),
+                Value<String?> countryISO2 = const Value.absent(),
                 Value<bool> isCrypto = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -22477,6 +22557,7 @@ class $$CurrenciesTableTableManager
                 name: name,
                 symbol: symbol,
                 decimals: decimals,
+                countryISO2: countryISO2,
                 isCrypto: isCrypto,
                 isActive: isActive,
                 rowid: rowid,

@@ -5,6 +5,7 @@ import 'package:billkeep/screens/home/main_navigation_screen.dart';
 import 'package:billkeep/screens/splash/splash_screen.dart';
 import 'package:billkeep/providers/database_provider.dart';
 import 'package:billkeep/utils/default_categories.dart';
+import 'package:billkeep/utils/default_currencies.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,7 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
     final database = ref.read(databaseProvider);
     await DefaultCategories.seedDefaultCategories(database);
     await DefaultMerchants.seedDefaultMerchants(database);
+    await DefaultCurrencies.seedDefaultCurrencies(database);
 
     // Wait for minimum splash duration
     await Future.delayed(const Duration(seconds: 2));

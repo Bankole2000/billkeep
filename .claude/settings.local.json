@@ -8,7 +8,9 @@
       "WebSearch",
       "WebFetch(domain:pub.dev)",
       "WebFetch(domain:github.com)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Read(//c/Users/techy/AppData/Local/Pub/Cache/hosted/pub.dev/contacts_service-0.6.3/android/**)",
+      "Bash(flutter pub get:*)"
     ],
     "deny": [],
     "ask": []

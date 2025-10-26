@@ -1,3 +1,4 @@
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/merchants/add_merchant_screen.dart';
 import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/widgets/common/app_image.dart';
@@ -83,27 +84,38 @@ class MerchantsList extends ConsumerWidget {
   }
 }
 
-class MerchantListItem extends StatelessWidget {
+class MerchantListItem extends ConsumerWidget {
   final Merchant merchant;
   final VoidCallback? onTap;
 
   const MerchantListItem({super.key, required this.merchant, this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(appColorsProvider);
+    final activeColor = ref.watch(activeThemeColorProvider);
     return ListTile(
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: colors.textMute,
+          width: .5,
+        ), // Customize color and width
+        borderRadius: BorderRadius.circular(
+          8.0,
+        ), // Optional: Add rounded corners
+      ),
       contentPadding: EdgeInsets.only(right: 10, left: 16),
       leading: _buildMerchantAvatar(),
       title: Text(
         merchant.name,
-        style: const TextStyle(fontWeight: FontWeight.w500),
+        style: TextStyle(fontWeight: FontWeight.w500, color: colors.text),
       ),
       subtitle: merchant.description != null
           ? Text(
               merchant.description!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+              style: TextStyle(fontSize: 12, color: colors.textMute),
             )
           : null,
       // trailing: merchant.isDefault
@@ -121,7 +133,7 @@ class MerchantListItem extends StatelessWidget {
             AppPageRoute.slideRight(AddMerchantScreen(merchant: merchant)),
           ),
         },
-        icon: Icon(Icons.chevron_right_rounded),
+        icon: Icon(Icons.chevron_right_rounded, color: colors.text),
       ),
       onTap: onTap,
     );

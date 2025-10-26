@@ -24,12 +24,12 @@ class SlidingSegmentControlLabel extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 20, color: isActive ? activeColor : colors.textMute),
-        SizedBox(width: 6),
+        Icon(icon, size: 16, color: isActive ? activeColor : colors.textMute),
+        SizedBox(width: 4),
         Text(
           label,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 13,
             color: isActive ? colors.text : colors.textMute,
           ),
         ),

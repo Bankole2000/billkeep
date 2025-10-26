@@ -16,14 +16,18 @@ class ProjectSelectBottomSheet extends ConsumerWidget {
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       child: Container(
         height: 600,
-        color: colors.background,
+        color: colors.surface,
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 'Select Project',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: colors.text,
+                ),
               ),
             ),
             Expanded(child: ProjectList()),

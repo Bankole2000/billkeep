@@ -93,7 +93,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                   // Amount Input
                   Padding(
                     padding: EdgeInsetsGeometry.symmetric(
-                      horizontal: 30,
+                      horizontal: 20,
                       vertical: 0,
                     ),
                     child: Row(
@@ -104,9 +104,9 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                         Text(
                           '₦',
                           style: TextStyle(
-                            fontSize: 40,
+                            fontSize: 32,
                             fontWeight: FontWeight.w600,
-                            color: colors.textMute,
+                            color: colors.text,
                           ),
                         ),
                         // const Spacer(),
@@ -125,9 +125,10 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                             keyboardType: TextInputType.numberWithOptions(
                               decimal: true,
                             ),
-                            style: const TextStyle(
-                              fontSize: 50, // large font size
+                            style: TextStyle(
+                              fontSize: 44, // large font size
                               fontWeight: FontWeight.w600,
+                              color: colors.text,
                             ),
                             decoration: InputDecoration(
                               // prefixText: '₦', // or '$', '€', etc.
@@ -141,9 +142,9 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               hintText: '0.00',
-                              hintStyle: const TextStyle(
+                              hintStyle: TextStyle(
                                 fontSize: 50,
-                                color: Colors.grey,
+                                color: colors.text,
                               ),
                               contentPadding:
                                   EdgeInsets.zero, // keeps alignment tight
@@ -154,7 +155,26 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     ),
                   ),
 
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
+
+                  // Title Input Field
+                  ListTile(
+                    tileColor: colors.surface,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 30),
+                    visualDensity: VisualDensity(vertical: 0.1),
+                    leading: Icon(Icons.edit_sharp, color: colors.text),
+                    title: CupertinoTextFormFieldRow(
+                      style: TextStyle(color: colors.text),
+                      padding: EdgeInsets.all(0),
+                      prefix: Text(
+                        'Title',
+                        style: TextStyle(color: colors.textMute),
+                      ),
+                      // placeholder: 'Title',
+                    ),
+                    onTap: () {},
+                  ),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Merchant Select
                   ClipRect(
@@ -167,9 +187,13 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                             ? null
                             : 0,
                         child: ListTile(
+                          tileColor: colors.surface,
                           contentPadding: EdgeInsets.symmetric(horizontal: 20),
                           visualDensity: VisualDensity(vertical: 0.1),
-                          leading: DynamicAvatar(icon: Icons.store),
+                          leading: DynamicAvatar(
+                            icon: Icons.store,
+                            color: colors.wave,
+                          ),
                           title: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -197,14 +221,14 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                                 ),
                               );
                             },
-                            icon: Icon(Icons.add),
+                            icon: Icon(Icons.add, color: colors.text),
                           ),
                         ),
                       ),
                     ),
                   ),
 
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Project Select
                   ListTile(
@@ -395,7 +419,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     },
                   ),
 
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Category Select
                   ListTile(
@@ -422,7 +446,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                       );
                     },
                   ),
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Wallet Select (From)
                   ClipRect(
@@ -455,7 +479,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                       ),
                     ),
                   ),
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Wallet Select (To)
                   ClipRect(
@@ -488,40 +512,31 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                       ),
                     ),
                   ),
-                  Divider(height: 1),
-
-                  // Title Input Field
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 30),
-                    visualDensity: VisualDensity(vertical: 0.1),
-                    leading: Icon(Icons.edit_sharp),
-                    title: CupertinoTextFormFieldRow(
-                      padding: EdgeInsets.all(0),
-                      prefix: Text(
-                        'Title',
-                        style: TextStyle(color: colors.textMute),
-                      ),
-                      // placeholder: 'Title',
-                    ),
-                    onTap: () {},
-                  ),
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Date Select Input
                   ListTile(
+                    tileColor: colors.surface,
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     visualDensity: VisualDensity(vertical: 0.1),
-                    leading: Icon(Icons.calendar_today_outlined),
-                    title: Text('Date:'),
+                    leading: Icon(
+                      Icons.calendar_today_outlined,
+                      color: colors.text,
+                    ),
+                    title: Text(
+                      'Date:',
+                      style: TextStyle(color: colors.textMute),
+                    ),
                     onTap: () {},
                   ),
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Repeat select
                   ListTile(
+                    tileColor: colors.surface,
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     visualDensity: VisualDensity(vertical: 0.1),
-                    leading: Icon(Icons.repeat),
+                    leading: Icon(Icons.repeat, color: colors.text),
                     title: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -533,13 +548,14 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     ),
                     onTap: () {},
                   ),
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
                   // Tags Input Select
                   ListTile(
+                    tileColor: colors.surface,
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     visualDensity: VisualDensity(vertical: 0.1),
-                    leading: Icon(Icons.tag),
+                    leading: Icon(Icons.tag, color: colors.text),
                     title: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -551,9 +567,28 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     ),
                     onTap: () {},
                   ),
-                  Divider(height: 1),
+                  Divider(height: 1, color: colors.textMute),
 
-                  SizedBox(height: 60),
+                  // Contacts Input Select
+                  ListTile(
+                    tileColor: colors.surface,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 30),
+                    visualDensity: VisualDensity(vertical: 0.1),
+                    leading: Icon(Icons.person, color: colors.text),
+                    title: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Contacts: ',
+                          style: TextStyle(color: colors.textMute),
+                        ),
+                      ],
+                    ),
+                    onTap: () {},
+                  ),
+                  Divider(height: 1, color: colors.textMute),
+
+                  SizedBox(height: 300),
                 ],
               ),
             ),

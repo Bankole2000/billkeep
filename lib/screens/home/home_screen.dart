@@ -20,14 +20,14 @@ class HomeScreen extends ConsumerWidget {
         extendBodyBehindAppBar: true,
 
         appBar: AppBar(
-          backgroundColor: activeColor,
-          iconTheme: IconThemeData(color: colors.textInverse),
-          actionsIconTheme: IconThemeData(color: colors.textInverse),
+          backgroundColor: colors.surface,
+          iconTheme: IconThemeData(color: colors.text),
+          actionsIconTheme: IconThemeData(color: colors.text),
           title: AppBarActiveProjectSelector(),
           bottom: TabBar(
-            unselectedLabelColor: colors.textMuteInverse,
-            labelColor: colors.textInverse,
-            indicatorColor: colors.textInverse,
+            unselectedLabelColor: colors.textMute,
+            labelColor: colors.text,
+            indicatorColor: colors.text,
 
             tabs: const [
               TabbarIconLabel(icon: Icons.remove_red_eye, label: 'Overview'),

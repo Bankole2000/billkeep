@@ -1,3 +1,6 @@
+import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/widgets/common/sliding_segment_control_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
@@ -10,53 +13,40 @@ class AddTaskSubscreen extends ConsumerStatefulWidget {
 }
 
 class _AddTaskSubscreenState extends ConsumerState<AddTaskSubscreen> {
-  int _selectedSegment = 0;
+  TaskType _selectedSegment = TaskType.todo;
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.watch(appColorsProvider);
+    final activeColor = ref.watch(activeThemeColorProvider);
     return Scaffold(
+      backgroundColor: colors.surface,
       // appBar: AppBar(title: Text('Custom Sliding Segmented Control')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // Basic segmented control
-            CustomSlidingSegmentedControl<int>(
+            CustomSlidingSegmentedControl<TaskType>(
               isStretch: true,
               children: {
-                0: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.output_outlined,
-                      size: 20,
-                      color: Colors.redAccent,
-                    ),
-                    SizedBox(width: 6),
-                    Text('Todo', style: TextStyle(fontSize: 16)),
-                  ],
+                TaskType.todo: SlidingSegmentControlLabel(
+                  isActive: _selectedSegment == TaskType.todo,
+                  label: 'Todo',
+                  icon: taskIcons[TaskType.todo]!,
+                  activeColor: colors.fire,
                 ),
-                1: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.input, size: 20, color: Colors.greenAccent),
-                    SizedBox(width: 6),
-                    Text('Shopping', style: TextStyle(fontSize: 16)),
-                  ],
+                TaskType.shopping: SlidingSegmentControlLabel(
+                  isActive: _selectedSegment == TaskType.shopping,
+                  label: 'Shopping',
+                  icon: taskIcons[TaskType.shopping]!,
+                  activeColor: colors.earth,
                 ),
-                2: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.swap_horiz, size: 20, color: Colors.blueAccent),
-                    SizedBox(width: 6),
-                    Text('Meeting', style: TextStyle(fontSize: 16)),
-                  ],
+                TaskType.meeting: SlidingSegmentControlLabel(
+                  isActive: _selectedSegment == TaskType.meeting,
+                  label: 'Meeting',
+                  icon: taskIcons[TaskType.meeting]!,
+                  activeColor: colors.navy,
                 ),
               },
               onValueChanged: (value) {
@@ -66,11 +56,11 @@ class _AddTaskSubscreenState extends ConsumerState<AddTaskSubscreen> {
               },
               innerPadding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: colors.background,
                 borderRadius: BorderRadius.circular(8),
               ),
               thumbDecoration: BoxDecoration(
-                color: Colors.white,
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(6),
                 boxShadow: [
                   BoxShadow(

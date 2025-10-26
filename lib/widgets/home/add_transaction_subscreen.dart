@@ -56,11 +56,11 @@ class _AddTransactionSubscreenState
             },
             innerPadding: EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: colors.background,
               borderRadius: BorderRadius.circular(8),
             ),
             thumbDecoration: BoxDecoration(
-              color: Colors.white,
+              color: colors.surface,
               borderRadius: BorderRadius.circular(6),
               boxShadow: [
                 BoxShadow(

@@ -4,16 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TransactionMerchantSelectScreen extends ConsumerStatefulWidget {
-  const TransactionMerchantSelectScreen({super.key});
+class CurrencySelectScreen extends ConsumerStatefulWidget {
+  const CurrencySelectScreen({super.key});
 
   @override
-  ConsumerState<TransactionMerchantSelectScreen> createState() =>
-      _TransactionMerchantSelectScreenState();
+  ConsumerState<CurrencySelectScreen> createState() =>
+      _CurrencySelectScreenState();
 }
 
-class _TransactionMerchantSelectScreenState
-    extends ConsumerState<TransactionMerchantSelectScreen> {
+class _CurrencySelectScreenState extends ConsumerState<CurrencySelectScreen> {
   late TextEditingController searchTextController;
 
   @override
@@ -33,12 +32,15 @@ class _TransactionMerchantSelectScreenState
     final colors = ref.watch(appColorsProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
     return Scaffold(
-      backgroundColor: colors.surface,
+      backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: colors.surface,
-        iconTheme: IconThemeData(color: colors.text),
-        actionsIconTheme: IconThemeData(color: colors.text),
-        title: Text('Select Merchant', style: TextStyle(color: colors.text)),
+        backgroundColor: activeColor,
+        iconTheme: IconThemeData(color: colors.textInverse),
+        actionsIconTheme: IconThemeData(color: colors.textInverse),
+        title: Text(
+          'Select Currency',
+          style: TextStyle(color: colors.textInverse),
+        ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: Padding(
@@ -85,7 +87,7 @@ class _TransactionMerchantSelectScreenState
       //       onPressed: () {},
       //       style: ElevatedButton.styleFrom(
       //         backgroundColor: activeColor,
-      //         foregroundColor: colors.text,
+      //         foregroundColor: colors.textInverse,
       //         shape: RoundedRectangleBorder(
       //           borderRadius: BorderRadius.circular(6),
       //         ),

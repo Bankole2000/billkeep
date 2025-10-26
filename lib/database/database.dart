@@ -441,6 +441,10 @@ class Wallets extends Table {
 
   // For remote images
   TextColumn get imageUrl => text().nullable()();
+  TextColumn get provider =>
+      text().nullable()(); // Bank Name or Credit Card / Crypto Provider
+  TextColumn get providerUrl =>
+      text().nullable()(); // Bank, Credit Card or Crypto provider Url
 
   // For local images (store file path, not binary data)
   TextColumn get localImagePath => text().nullable()();
@@ -523,6 +527,7 @@ class Currencies extends Table {
   TextColumn get symbol => text()(); // $, €, ₿, Ξ, etc.
   IntColumn get decimals =>
       integer().withDefault(const Constant(2))(); // 2 for USD, 8 for BTC
+  TextColumn get countryISO2 => text().nullable()();
   BoolColumn get isCrypto => boolean().withDefault(const Constant(false))();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
 
