@@ -3,11 +3,11 @@ import 'package:billkeep/screens/budget/budget_screen.dart';
 import 'package:billkeep/screens/reports/add_reports_screen.dart';
 import 'package:billkeep/screens/reports/reports_screen.dart';
 import 'package:billkeep/screens/home/add_finances_screen.dart';
-import 'package:billkeep/screens/settings/add_settings_screen.dart';
 import 'package:billkeep/screens/settings/settings_screen.dart';
 import 'package:billkeep/utils/page_transitions.dart';
-import 'package:billkeep/widgets/examples/another_animation.dart';
-import 'package:billkeep/widgets/examples/list_animation.dart';
+import 'package:billkeep/widgets/examples/cupertino_radio_button_example.dart';
+import 'package:billkeep/widgets/examples/radio_button_example.dart';
+
 import 'package:billkeep/widgets/navigation/bottom_app_bar_navigation_item.dart';
 import 'package:flutter/material.dart';
 import 'package:billkeep/providers/ui_providers.dart';
@@ -42,7 +42,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       const AddReportsScreen(),
       // const AddSettingsScreen(),
       // SlidingListTiles(),
-      SmoothSlideTile(),
+      // SmoothSlideTile(),
+      // TestPage(),
+      // RadioExampleApp(),
+      CupertinoRadioApp(),
     ];
 
     return Scaffold(

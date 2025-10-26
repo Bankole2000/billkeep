@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(dart run build_runner:*)",
-      "Bash(mkdir -p assets/images)"
+      "Bash(mkdir -p assets/images)",
+      "Bash(flutter run:*)",
+      "Bash(dart analyze:*)",
+      "WebSearch",
+      "WebFetch(domain:pub.dev)",
+      "WebFetch(domain:github.com)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

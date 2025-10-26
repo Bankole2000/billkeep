@@ -1,0 +1,73 @@
+// Software & SaaS section descriptions
+merchant_github: Code hosting platform for version control and collaboration
+merchant_microsoft365: Productivity suite with Office apps and cloud storage
+merchant_adobe: Creative software suite for design and media editing
+merchant_dropbox: Cloud storage and file synchronization service
+merchant_zoom: Video conferencing and online meeting platform
+merchant_slack: Team communication and collaboration platform
+merchant_notion: All-in-one workspace for notes, docs, and project management
+merchant_trello: Visual project management tool with kanban boards
+merchant_asana: Work management platform for teams and projects
+
+// Food Delivery
+merchant_uber_eats: Food delivery service from local restaurants
+merchant_doordash: On-demand food delivery and takeout service
+merchant_grubhub: Online food ordering and delivery platform
+merchant_postmates: Delivery service for food, groceries, and essentials
+
+// Transportation
+merchant_uber: Ride-sharing and transportation network service
+merchant_lyft: Ride-sharing platform for on-demand transportation
+
+// Utilities & Telecom
+merchant_att: Telecommunications and wireless service provider
+merchant_verizon: Wireless network and telecommunications company
+merchant_tmobile: Mobile network operator and wireless service
+merchant_comcast: Cable TV, internet, and phone service provider
+merchant_spectrum: Cable and internet services provider
+
+// Fitness & Health
+merchant_planet_fitness: Gym and fitness center membership
+merchant_la_fitness: Health club with fitness and wellness programs
+merchant_peloton: Interactive fitness platform with connected equipment
+
+// Gaming
+merchant_steam: Digital distribution platform for PC games
+merchant_playstation: Gaming network for PlayStation console users
+merchant_xbox: Online gaming service for Xbox consoles
+merchant_nintendo: Digital storefront for Nintendo games and content
+
+// Insurance
+merchant_geico: Auto insurance and related coverage services
+merchant_progressive: Insurance company for auto, home, and more
+merchant_state_farm: Insurance and financial services provider
+
+// Payment Services
+merchant_paypal: Online payment processing and money transfer service
+merchant_venmo: Mobile payment service for peer-to-peer transfers
+merchant_cashapp: Mobile payment app for sending and receiving money
+merchant_stripe: Online payment processing for internet businesses
+
+// Fast Food
+merchant_mcdonalds: Fast food restaurant chain for burgers and fries
+merchant_starbucks: Coffee shop chain and beverage retailer
+merchant_subway: Sandwich restaurant and fast food chain
+merchant_chipotle: Fast-casual Mexican food restaurant
+merchant_wendys: Fast food restaurant specializing in burgers
+
+// Hotels & Travel
+merchant_airbnb: Vacation rental and lodging marketplace
+merchant_booking: Hotel and accommodation booking platform
+merchant_expedia: Travel booking site for flights, hotels, and packages
+merchant_hotels_com: Hotel reservation and booking service
+
+// Education
+merchant_coursera: Online learning platform for courses and degrees
+merchant_udemy: Marketplace for online courses and skill development
+merchant_linkedin_learning: Professional development and online training platform
+merchant_skillshare: Online learning community for creative skills
+
+// News & Media
+merchant_nyt: Digital and print newspaper subscription
+merchant_wsj: Business and financial news publication
+merchant_wapo: News and journalism publication

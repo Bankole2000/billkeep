@@ -24,12 +24,12 @@ class _BudgetFormState extends ConsumerState<BudgetForm> {
   void initState() {
     super.initState();
     // Pre-fill if budget exists
-    if (widget.project.budgetAmount != null) {
-      _amountController.text = (widget.project.budgetAmount! / 100)
-          .toStringAsFixed(2);
-      _budgetType = widget.project.budgetType ?? 'ONE_TIME';
-      _budgetFrequency = widget.project.budgetFrequency;
-    }
+    // if (widget.project.budgetAmount != null) {
+    //   _amountController.text = (widget.project.budgetAmount! / 100)
+    //       .toStringAsFixed(2);
+    //   _budgetType = widget.project.budgetType ?? 'ONE_TIME';
+    //   _budgetFrequency = widget.project.budgetFrequency;
+    // }
   }
 
   @override
@@ -43,16 +43,16 @@ class _BudgetFormState extends ConsumerState<BudgetForm> {
       setState(() => _isLoading = true);
 
       try {
-        await ref
-            .read(projectRepositoryProvider)
-            .updateProjectBudget(
-              projectId: widget.project.id,
-              budgetAmount: CurrencyHelper.dollarsToCents(
-                _amountController.text.trim(),
-              ),
-              budgetType: _budgetType,
-              budgetFrequency: _budgetFrequency,
-            );
+        // await ref
+        //     .read(projectRepositoryProvider)
+        //     .updateProjectBudget(
+        //       projectId: widget.project.id,
+        //       budgetAmount: CurrencyHelper.dollarsToCents(
+        //         _amountController.text.trim(),
+        //       ),
+        //       budgetType: _budgetType,
+        //       budgetFrequency: _budgetFrequency,
+        //     );
 
         if (mounted) {
           Navigator.pop(context);

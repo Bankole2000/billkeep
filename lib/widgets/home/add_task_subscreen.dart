@@ -1,5 +1,3 @@
-import 'package:billkeep/widgets/examples/list_animation.dart';
-import 'package:billkeep/widgets/examples/transaction_screenshot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';

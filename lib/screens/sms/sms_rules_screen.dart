@@ -659,7 +659,7 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
     final descriptionPatternController = TextEditingController(
       text: rule.descriptionPattern ?? '',
     );
-    String selectedType = rule.type;
+    // String selectedType = rule.type;
 
     showDialog(
       context: context,

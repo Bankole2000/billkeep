@@ -880,7 +880,7 @@ class _ShoppingListsView extends ConsumerWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.2),
+                          color: Colors.green.withValues(alpha: 0.2 * 255),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Row(

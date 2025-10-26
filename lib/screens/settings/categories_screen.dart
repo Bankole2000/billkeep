@@ -3,77 +3,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/category_provider.dart';
 
-class CategoriesScreen extends ConsumerStatefulWidget {
+class CategoriesScreen extends ConsumerWidget {
   const CategoriesScreen({super.key});
 
   @override
-  ConsumerState<CategoriesScreen> createState() => _CategoriesScreenState();
-}
-
-class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Categories'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Expense Categories'),
-            Tab(text: 'Income Categories'),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          CategoryListView(type: 'EXPENSE'),
-          CategoryListView(type: 'INCOME'),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Categories')),
+      body: const CategoryListView(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddCategoryDialog(
-          context,
-          _tabController.index == 0 ? 'EXPENSE' : 'INCOME',
-        ),
+        onPressed: () => _showAddCategoryDialog(context),
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _showAddCategoryDialog(BuildContext context, String type) {
+  void _showAddCategoryDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AddCategoryDialog(type: type),
+      builder: (context) => const AddCategoryDialog(),
     );
   }
 }
 
 class CategoryListView extends ConsumerWidget {
-  final String type;
-
-  const CategoryListView({super.key, required this.type});
+  const CategoryListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categoriesAsync = type == 'EXPENSE'
-        ? ref.watch(expenseCategoriesProvider)
-        : ref.watch(incomeCategoriesProvider);
+    final categoriesAsync = ref.watch(allCategoriesProvider);
 
     return categoriesAsync.when(
       data: (categories) {
@@ -82,17 +40,13 @@ class CategoryListView extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  type == 'EXPENSE' ? Icons.money_off : Icons.attach_money,
-                  size: 64,
-                  color: Colors.grey,
-                ),
+                const Icon(Icons.category, size: 64, color: Colors.grey),
                 const SizedBox(height: 16),
                 Text(
-                  'No ${type.toLowerCase()} categories yet',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.grey,
-                      ),
+                  'No categories yet',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: Colors.grey),
                 ),
                 const SizedBox(height: 8),
                 const Text('Tap + to add a category'),
@@ -110,9 +64,7 @@ class CategoryListView extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text('Error: $error'),
-      ),
+      error: (error, stack) => Center(child: Text('Error: $error')),
     );
   }
 }
@@ -124,15 +76,13 @@ class CategoryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final subcategoriesAsync = ref.watch(subcategoriesProvider(category.id));
-
-    return ExpansionTile(
+    return ListTile(
       leading: CircleAvatar(
         backgroundColor: category.color != null
             ? Color(int.parse(category.color!.replaceFirst('#', '0xFF')))
             : Colors.grey,
         child: Text(
-          category.icon ?? '📁',
+          category.iconEmoji ?? '📁',
           style: const TextStyle(fontSize: 20),
         ),
       ),
@@ -177,51 +127,6 @@ class CategoryTile extends ConsumerWidget {
               },
             )
           : null,
-      children: [
-        subcategoriesAsync.when(
-          data: (subcategories) {
-            if (subcategories.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text('No subcategories'),
-              );
-            }
-
-            return Column(
-              children: subcategories.map((sub) {
-                return ListTile(
-                  contentPadding: const EdgeInsets.only(left: 72, right: 16),
-                  leading: Text(
-                    sub.icon ?? '📄',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  title: Text(sub.name),
-                  trailing: !sub.isDefault
-                      ? IconButton(
-                          icon: const Icon(Icons.delete, size: 20),
-                          onPressed: () => _deleteCategory(context, ref, sub),
-                        )
-                      : null,
-                );
-              }).toList(),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Text('Error: $error'),
-        ),
-        if (!category.isDefault)
-          Padding(
-            padding: const EdgeInsets.only(left: 72, bottom: 8),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(
-                onPressed: () => _showAddSubcategoryDialog(context, category),
-                icon: const Icon(Icons.add),
-                label: const Text('Add Subcategory'),
-              ),
-            ),
-          ),
-      ],
     );
   }
 
@@ -229,16 +134,6 @@ class CategoryTile extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => EditCategoryDialog(category: category),
-    );
-  }
-
-  void _showAddSubcategoryDialog(BuildContext context, Category parentCategory) {
-    showDialog(
-      context: context,
-      builder: (context) => AddCategoryDialog(
-        type: parentCategory.type,
-        parentCategoryId: parentCategory.id,
-      ),
     );
   }
 
@@ -268,20 +163,18 @@ class CategoryTile extends ConsumerWidget {
 
     if (confirmed == true && context.mounted) {
       try {
-        await ref
-            .read(categoryRepositoryProvider)
-            .deleteCategory(category.id);
+        await ref.read(categoryRepositoryProvider).deleteCategory(category.id);
 
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Category deleted')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Category deleted')));
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error: $e')));
         }
       }
     }
@@ -289,14 +182,7 @@ class CategoryTile extends ConsumerWidget {
 }
 
 class AddCategoryDialog extends ConsumerStatefulWidget {
-  final String type;
-  final String? parentCategoryId;
-
-  const AddCategoryDialog({
-    super.key,
-    required this.type,
-    this.parentCategoryId,
-  });
+  const AddCategoryDialog({super.key});
 
   @override
   ConsumerState<AddCategoryDialog> createState() => _AddCategoryDialogState();
@@ -307,17 +193,52 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
   final _nameController = TextEditingController();
   String? _selectedIcon;
   String? _selectedColor;
+  String? _selectedCategoryGroupId;
 
   final List<String> _availableIcons = [
-    '📁', '💰', '🏠', '🚗', '🍔', '🏥', '🎮', '🛍️', '📚', '💻',
-    '✈️', '🎬', '🎨', '💼', '🔧', '📱', '⚡', '🎯', '💳', '🎁'
+    '📁',
+    '💰',
+    '🏠',
+    '🚗',
+    '🍔',
+    '🏥',
+    '🎮',
+    '🛍️',
+    '📚',
+    '💻',
+    '✈️',
+    '🎬',
+    '🎨',
+    '💼',
+    '🔧',
+    '📱',
+    '⚡',
+    '🎯',
+    '💳',
+    '🎁',
   ];
 
   final List<String> _availableColors = [
-    '#FF6B6B', '#4ECDC4', '#95E1D3', '#F38181', '#AA96DA',
-    '#FCBAD3', '#FFFFD2', '#A8E6CF', '#FFD3B6', '#98D8C8',
-    '#F6A5C0', '#4CAF50', '#2196F3', '#9C27B0', '#FF9800',
-    '#E91E63', '#00BCD4', '#8BC34A', '#607D8B', '#B5B5B5',
+    '#FF6B6B',
+    '#4ECDC4',
+    '#95E1D3',
+    '#F38181',
+    '#AA96DA',
+    '#FCBAD3',
+    '#FFFFD2',
+    '#A8E6CF',
+    '#FFD3B6',
+    '#98D8C8',
+    '#F6A5C0',
+    '#4CAF50',
+    '#2196F3',
+    '#9C27B0',
+    '#FF9800',
+    '#E91E63',
+    '#00BCD4',
+    '#8BC34A',
+    '#607D8B',
+    '#B5B5B5',
   ];
 
   @override
@@ -328,10 +249,10 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final categoryGroupsAsync = ref.watch(allCategoryGroupsProvider);
+
     return AlertDialog(
-      title: Text(
-        widget.parentCategoryId == null ? 'Add Category' : 'Add Subcategory',
-      ),
+      title: const Text('Add Category'),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -351,6 +272,41 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 16),
+              categoryGroupsAsync.when(
+                data: (categoryGroups) {
+                  if (_selectedCategoryGroupId == null &&
+                      categoryGroups.isNotEmpty) {
+                    _selectedCategoryGroupId = categoryGroups.first.id;
+                  }
+                  return DropdownButtonFormField<String>(
+                    initialValue: _selectedCategoryGroupId,
+                    decoration: const InputDecoration(
+                      labelText: 'Category Group',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: categoryGroups.map((group) {
+                      return DropdownMenuItem(
+                        value: group.id,
+                        child: Text(group.name),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategoryGroupId = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a category group';
+                      }
+                      return null;
+                    },
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (error, stack) => Text('Error loading groups: $error'),
               ),
               const SizedBox(height: 16),
               const Text('Icon', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -380,7 +336,10 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                 }).toList(),
               ),
               const SizedBox(height: 16),
-              const Text('Color', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Color',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -393,7 +352,9 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Color(int.parse(color.replaceFirst('#', '0xFF'))),
+                        color: Color(
+                          int.parse(color.replaceFirst('#', '0xFF')),
+                        ),
                         border: Border.all(
                           color: isSelected ? Colors.black : Colors.grey,
                           width: isSelected ? 3 : 1,
@@ -413,10 +374,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        ElevatedButton(
-          onPressed: _saveCategory,
-          child: const Text('Save'),
-        ),
+        ElevatedButton(onPressed: _saveCategory, child: const Text('Save')),
       ],
     );
   }
@@ -424,25 +382,26 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
   void _saveCategory() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await ref.read(categoryRepositoryProvider).createCategory(
+        await ref
+            .read(categoryRepositoryProvider)
+            .createCategory(
               name: _nameController.text,
-              type: widget.type,
               icon: _selectedIcon,
               color: _selectedColor,
-              parentCategoryId: widget.parentCategoryId,
+              categoryGroupId: _selectedCategoryGroupId!,
             );
 
         if (mounted) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Category created')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Category created')));
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error: $e')));
         }
       }
     }
@@ -465,22 +424,56 @@ class _EditCategoryDialogState extends ConsumerState<EditCategoryDialog> {
   String? _selectedColor;
 
   final List<String> _availableIcons = [
-    '📁', '💰', '🏠', '🚗', '🍔', '🏥', '🎮', '🛍️', '📚', '💻',
-    '✈️', '🎬', '🎨', '💼', '🔧', '📱', '⚡', '🎯', '💳', '🎁'
+    '📁',
+    '💰',
+    '🏠',
+    '🚗',
+    '🍔',
+    '🏥',
+    '🎮',
+    '🛍️',
+    '📚',
+    '💻',
+    '✈️',
+    '🎬',
+    '🎨',
+    '💼',
+    '🔧',
+    '📱',
+    '⚡',
+    '🎯',
+    '💳',
+    '🎁',
   ];
 
   final List<String> _availableColors = [
-    '#FF6B6B', '#4ECDC4', '#95E1D3', '#F38181', '#AA96DA',
-    '#FCBAD3', '#FFFFD2', '#A8E6CF', '#FFD3B6', '#98D8C8',
-    '#F6A5C0', '#4CAF50', '#2196F3', '#9C27B0', '#FF9800',
-    '#E91E63', '#00BCD4', '#8BC34A', '#607D8B', '#B5B5B5',
+    '#FF6B6B',
+    '#4ECDC4',
+    '#95E1D3',
+    '#F38181',
+    '#AA96DA',
+    '#FCBAD3',
+    '#FFFFD2',
+    '#A8E6CF',
+    '#FFD3B6',
+    '#98D8C8',
+    '#F6A5C0',
+    '#4CAF50',
+    '#2196F3',
+    '#9C27B0',
+    '#FF9800',
+    '#E91E63',
+    '#00BCD4',
+    '#8BC34A',
+    '#607D8B',
+    '#B5B5B5',
   ];
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.category.name);
-    _selectedIcon = widget.category.icon;
+    _selectedIcon = widget.category.iconEmoji;
     _selectedColor = widget.category.color;
   }
 
@@ -542,7 +535,10 @@ class _EditCategoryDialogState extends ConsumerState<EditCategoryDialog> {
                 }).toList(),
               ),
               const SizedBox(height: 16),
-              const Text('Color', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Color',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -555,7 +551,9 @@ class _EditCategoryDialogState extends ConsumerState<EditCategoryDialog> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Color(int.parse(color.replaceFirst('#', '0xFF'))),
+                        color: Color(
+                          int.parse(color.replaceFirst('#', '0xFF')),
+                        ),
                         border: Border.all(
                           color: isSelected ? Colors.black : Colors.grey,
                           width: isSelected ? 3 : 1,
@@ -575,10 +573,7 @@ class _EditCategoryDialogState extends ConsumerState<EditCategoryDialog> {
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        ElevatedButton(
-          onPressed: _updateCategory,
-          child: const Text('Save'),
-        ),
+        ElevatedButton(onPressed: _updateCategory, child: const Text('Save')),
       ],
     );
   }
@@ -586,7 +581,9 @@ class _EditCategoryDialogState extends ConsumerState<EditCategoryDialog> {
   void _updateCategory() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await ref.read(categoryRepositoryProvider).updateCategory(
+        await ref
+            .read(categoryRepositoryProvider)
+            .updateCategory(
               categoryId: widget.category.id,
               name: _nameController.text,
               icon: _selectedIcon,
@@ -595,15 +592,15 @@ class _EditCategoryDialogState extends ConsumerState<EditCategoryDialog> {
 
         if (mounted) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Category updated')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Category updated')));
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error: $e')));
         }
       }
     }

@@ -1,6 +1,15 @@
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/categories/category_select_screen.dart';
+import 'package:billkeep/screens/merchants/add_merchant_screen.dart';
+import 'package:billkeep/screens/merchants/merchant_select_screen.dart';
+import 'package:billkeep/screens/projects/add_project_screen.dart';
 import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
+import 'package:billkeep/widgets/projects/project_form.dart';
+import 'package:billkeep/widgets/projects/project_list_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -17,12 +26,42 @@ class TransactionForm extends ConsumerStatefulWidget {
       _TransactionFormState();
 }
 
+enum SingingCharacter { lafayette, jefferson }
+
 class _TransactionFormState extends ConsumerState<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
   final amountController = TextEditingController();
+  final _titleController = TextEditingController();
+  Project? _selectedProject;
 
-  static const Duration duration = Duration(milliseconds: 400);
-  static const Curve curve = Curves.easeIn;
+  // bool _createInitialPayment = true;
+
+  // static const Duration duration = Duration(milliseconds: 400);
+  // static const Curve curve = Curves.easeIn;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // _selectedProject = ref.watch(activeProjectProvider).project?.id;
+    super.initState();
+
+    // Delay access to ref until after widget is mounted
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final activeProject = ref.read(activeProjectProvider);
+
+      setState(() {
+        _selectedProject = activeProject.project;
+      });
+    });
+  }
+
+  void selectProject(Project project) {
+    print('selected project');
+    print(project.name);
+    setState(() {
+      _selectedProject = project;
+    });
+  }
 
   @override
   void dispose() {
@@ -30,8 +69,12 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
     super.dispose();
   }
 
+  SingingCharacter? _character = SingingCharacter.lafayette;
+
   @override
   Widget build(BuildContext context) {
+    final projects = ref.watch(projectsProvider);
+    final activeProject = ref.watch(activeProjectProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
     final colors = ref.watch(appColorsProvider);
     return Form(
@@ -47,6 +90,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
               // padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  // Amount Input
                   Padding(
                     padding: EdgeInsetsGeometry.symmetric(
                       horizontal: 30,
@@ -109,8 +153,10 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                       ],
                     ),
                   ),
+
                   Divider(height: 1),
 
+                  // Merchant Select
                   ClipRect(
                     child: AnimatedSize(
                       duration: Duration(milliseconds: 300),
@@ -134,20 +180,33 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                             ],
                           ),
                           onTap: () {
-                            print('Select Merchant');
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                fullscreenDialog: true,
+                                builder: (context) =>
+                                    TransactionMerchantSelectScreen(),
+                              ),
+                            );
                           },
                           trailing: IconButton(
                             onPressed: () {
-                              print('Configure Merchants');
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (context) => AddMerchantScreen(),
+                                ),
+                              );
                             },
-                            icon: Icon(Icons.settings),
+                            icon: Icon(Icons.add),
                           ),
                         ),
                       ),
                     ),
                   ),
+
                   Divider(height: 1),
 
+                  // Project Select
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 20),
                     visualDensity: VisualDensity(vertical: 0.1),
@@ -160,35 +219,185 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           'Project: ',
                           style: TextStyle(color: colors.textMute),
                         ),
+                        Text(
+                          _selectedProject == null
+                              ? 'No Project Selected'
+                              : _selectedProject!.name,
+                        ),
                       ],
                     ),
                     onTap: () {
-                      showCupertinoModalPopup(
+                      showModalBottomSheet(
                         context: context,
-                        builder: (BuildContext context) => SizedBox(
-                          height: 250, // Adjust height as needed
-                          child: CupertinoPicker(
-                            backgroundColor:
-                                CupertinoColors.white, // Or any other color
-                            itemExtent: 40.0, // Height of each item
-                            onSelectedItemChanged: (int index) {
-                              // Handle the selected item change
-                              setState(() {
-                                // Update state with the new selection
-                              });
-                            },
-                            children: const <Widget>[
-                              Text('Option 1'),
-                              Text('Option 2'),
-                              Text('Option 3'),
-                              // Add more children as needed
+                        builder: (BuildContext context) => Container(
+                          height: 400, // Adjust height as needed
+                          decoration: BoxDecoration(
+                            color: CupertinoColors.systemBackground.resolveFrom(
+                              context,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                            ),
+                          ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: CupertinoColors.systemGrey5,
+                                    ),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // SizedBox(width: 24),
+                                    Padding(
+                                      padding: EdgeInsetsGeometry.only(
+                                        left: 10,
+                                      ),
+                                      child: CupertinoButton(
+                                        borderRadius: BorderRadius.circular(25),
+                                        onPressed: () => Navigator.pop(context),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                        ),
+                                        minimumSize: Size(20, 20),
+                                        child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: CupertinoColors.systemGrey5,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            CupertinoIcons.clear,
+                                            color: CupertinoColors.label,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Select Project',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsGeometry.only(
+                                        right: 10,
+                                      ),
+                                      child: CupertinoButton(
+                                        borderRadius: BorderRadius.circular(25),
+                                        onPressed: () => {
+                                          Navigator.push(
+                                            context,
+                                            AppPageRoute.slideRight(
+                                              AddProjectScreen(),
+                                            ),
+                                          ),
+                                        },
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                        ),
+                                        minimumSize: Size(20, 20),
+                                        child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: CupertinoColors.systemGrey5,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            CupertinoIcons.add,
+                                            color: CupertinoColors.label,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Positioned(
+                                left: 20,
+                                right: 20,
+                                bottom:
+                                    20 + MediaQuery.of(context).padding.bottom,
+                                // top: 50,
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    height: 320,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // SizedBox(height: 40),
+                                          ...projects.when(
+                                            data: (ps) {
+                                              if (ps.isEmpty) {
+                                                return const [
+                                                  Center(
+                                                    child: Text(
+                                                      'No projects yet. Tap + to create one.',
+                                                    ),
+                                                  ),
+                                                ];
+                                              }
+                                              return ps
+                                                  .expand(
+                                                    (p) => [
+                                                      ProjectListSelectItem(
+                                                        isSelected:
+                                                            _selectedProject
+                                                                ?.id ==
+                                                            p.id,
+                                                        project: p,
+                                                        onSelectProject: () {
+                                                          selectProject(p);
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop();
+                                                        },
+                                                      ),
+                                                      Divider(),
+                                                    ],
+                                                  )
+                                                  .toList();
+                                            },
+                                            error: (error, stack) => [
+                                              Text('Error loading Projects'),
+                                            ],
+                                            loading: () => [
+                                              Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       );
                     },
                   ),
+
                   Divider(height: 1),
+
+                  // Category Select
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 20),
                     visualDensity: VisualDensity(vertical: 0.1),
@@ -203,33 +412,61 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                         ),
                       ],
                     ),
-                    onTap: () {},
-                  ),
-                  Divider(height: 1),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                    visualDensity: VisualDensity(vertical: 0.1),
-                    leading: DynamicAvatar(icon: Icons.folder),
-
-                    title: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'From: ',
-                          style: TextStyle(color: colors.textMute),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) =>
+                              TransactionCategorySelectScreen(),
                         ),
-                      ],
-                    ),
-                    onTap: () {},
+                      );
+                    },
                   ),
                   Divider(height: 1),
+
+                  // Wallet Select (From)
                   ClipRect(
                     child: AnimatedSize(
                       duration: Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                       child: SizedBox(
                         height:
-                            widget.transactionType == TransactionType.transfer
+                            widget.transactionType == TransactionType.expense ||
+                                widget.transactionType ==
+                                    TransactionType.transfer
+                            ? null
+                            : 0,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                          visualDensity: VisualDensity(vertical: 0.1),
+                          leading: DynamicAvatar(icon: Icons.folder),
+
+                          title: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'From: ',
+                                style: TextStyle(color: colors.textMute),
+                              ),
+                            ],
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(height: 1),
+
+                  // Wallet Select (To)
+                  ClipRect(
+                    child: AnimatedSize(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: SizedBox(
+                        height:
+                            widget.transactionType == TransactionType.income ||
+                                widget.transactionType ==
+                                    TransactionType.transfer
                             ? null
                             : 0,
                         child: ListTile(
@@ -252,14 +489,25 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     ),
                   ),
                   Divider(height: 1),
+
+                  // Title Input Field
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     visualDensity: VisualDensity(vertical: 0.1),
                     leading: Icon(Icons.edit_sharp),
-                    title: Text('Title'),
+                    title: CupertinoTextFormFieldRow(
+                      padding: EdgeInsets.all(0),
+                      prefix: Text(
+                        'Title',
+                        style: TextStyle(color: colors.textMute),
+                      ),
+                      // placeholder: 'Title',
+                    ),
                     onTap: () {},
                   ),
                   Divider(height: 1),
+
+                  // Date Select Input
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     visualDensity: VisualDensity(vertical: 0.1),
@@ -268,6 +516,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     onTap: () {},
                   ),
                   Divider(height: 1),
+
+                  // Repeat select
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     visualDensity: VisualDensity(vertical: 0.1),
@@ -284,6 +534,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     onTap: () {},
                   ),
                   Divider(height: 1),
+
+                  // Tags Input Select
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     visualDensity: VisualDensity(vertical: 0.1),

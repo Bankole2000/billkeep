@@ -13,12 +13,11 @@ class Projects extends Table {
   TextColumn get name => text()();
   TextColumn get description => text().nullable()();
 
-  // Budget fields
-  IntColumn get budgetAmount => integer().nullable()(); // In cents
-  TextColumn get budgetType => text().nullable()(); // 'ONE_TIME' or 'RECURRING'
-  TextColumn get budgetFrequency =>
-      text().nullable()(); // 'WEEKLY' or 'MONTHLY' for recurring
-
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  TextColumn get color => text().nullable()();
   BoolColumn get isSynced =>
       boolean().withDefault(const Constant(false))(); // NEW
   TextColumn get tempId => text().nullable()(); // Store original temp ID
@@ -30,6 +29,26 @@ class Projects extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+class ProjectMetadata extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get projectId => text()();
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {projectId, key},
+  ];
+}
+
+class Reminders extends Table {
+  TextColumn get id => text()();
+  DateTimeColumn get reminderDate => dateTime()();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  TextColumn get reminderType =>
+      text()(); // e.g., '15_min_before', '1_day_before'
+}
+
 // Add this table definition before the @DriftDatabase annotation
 class Expenses extends Table {
   TextColumn get id => text()();
@@ -38,12 +57,36 @@ class Expenses extends Table {
   )();
   TextColumn get name => text()();
   IntColumn get expectedAmount => integer()(); // Expected amount per cycle
-  TextColumn get currency => text().withDefault(const Constant('USD'))();
-  TextColumn get type => text()(); // 'ONE_TIME' or 'RECURRING'
+  TextColumn get currency => text().references(
+    Currencies,
+    #code,
+  )(); // Currency should come from Wallet
+  TextColumn get type =>
+      text()(); // 'ONE_TIME' or 'RECURRING' or 'INSTALLMENTS'
   TextColumn get frequency => text().nullable()(); // 'MONTHLY' or 'YEARLY'
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get nextRenewalDate => dateTime().nullable()();
-  TextColumn get categoryId => text().nullable()(); // Link to category
+  TextColumn get categoryId =>
+      text().nullable().references(Categories, #id)(); // Link to category
+  TextColumn get merchantId =>
+      text().nullable().references(Merchants, #id)(); // Link to merchant
+  TextColumn get contactId =>
+      text().nullable().references(Contacts, #id)(); // Link to merchant
+  TextColumn get walletId =>
+      text().nullable().references(Wallets, #id)(); // Wallet to deduct from
+  TextColumn get investmentId =>
+      text().nullable().references(Investments, #id)(); // Add to X investment
+  TextColumn get goalId => text().nullable().references(
+    Goals,
+    #id,
+  )(); // Deduct from debt or add to savings
+  TextColumn get reminderId => text().nullable().references(
+    Reminders,
+    #id,
+  )(); // reminder references (to send notification)
+  TextColumn get source => text().withDefault(
+    const Constant('MANUAL'),
+  )(); // 'MANUAL', 'SMS', 'EMAIL', 'SDK'
   TextColumn get notes => text().nullable()();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
@@ -58,14 +101,21 @@ class Expenses extends Table {
 class Payments extends Table {
   TextColumn get id => text()();
   TextColumn get paymentType => text()(); // 'DEBIT' or 'CREDIT'
+  TextColumn get categoryId => text().nullable()(); // Nullable now
+  TextColumn get merchantId => text().nullable()(); // Nullable now
+  TextColumn get contactId => text().nullable()(); // Nullable now
+  TextColumn get walletId => text().nullable()(); // Nullable now
   TextColumn get expenseId => text().nullable()(); // Nullable now
   TextColumn get incomeId => text().nullable()(); // NEW - link to income
+  TextColumn get investmentId =>
+      text().nullable()(); // NEW - link to investment
+  TextColumn get debtId => text().nullable()(); // NEW - link to debt
   IntColumn get actualAmount => integer()(); // What was actually paid
-  TextColumn get currency => text().withDefault(const Constant('USD'))();
+  TextColumn get currency => text().references(Currencies, #code)();
   DateTimeColumn get paymentDate => dateTime()();
   TextColumn get source => text().withDefault(
     const Constant('MANUAL'),
-  )(); // 'MANUAL', 'SMS', 'EMAIL'
+  )(); // 'MANUAL', 'SMS', 'EMAIL', 'SDK'
   BoolColumn get verified =>
       boolean().withDefault(const Constant(true))(); // User confirmed
   TextColumn get notes => text().nullable()();
@@ -87,13 +137,33 @@ class Income extends Table {
   TextColumn get description => text()();
   IntColumn get expectedAmount =>
       integer()(); // Expected amount per cycle (in cents)
-  TextColumn get currency => text().withDefault(const Constant('USD'))();
+  TextColumn get currency => text().references(Currencies, #code)();
   TextColumn get type => text()(); // 'ONE_TIME' or 'RECURRING'
   TextColumn get frequency => text().nullable()(); // 'MONTHLY' or 'YEARLY'
   DateTimeColumn get startDate => dateTime()(); // When income starts
   DateTimeColumn get nextExpectedDate =>
       dateTime().nullable()(); // Next expected payment
-  TextColumn get categoryId => text().nullable()(); // Link to category
+  TextColumn get categoryId =>
+      text().nullable().references(Categories, #id)(); // Link to category
+  TextColumn get merchantId =>
+      text().nullable().references(Merchants, #id)(); // Link to merchant
+  TextColumn get contactId =>
+      text().nullable().references(Contacts, #id)(); // Link to merchant
+  TextColumn get walletId =>
+      text().nullable().references(Wallets, #id)(); // Wallet to deduct from
+  TextColumn get investmentId =>
+      text().nullable().references(Investments, #id)(); // Add to X investment
+  TextColumn get goalId => text().nullable().references(
+    Goals,
+    #id,
+  )(); // Deduct from debt or add to Savings
+  TextColumn get reminderId => text().nullable().references(
+    Reminders,
+    #id,
+  )(); // reminder references (to send notification)
+  TextColumn get source => text().withDefault(
+    const Constant('MANUAL'),
+  )(); // 'MANUAL', 'SMS', 'EMAIL', 'SDK'
   TextColumn get invoiceNumber => text().nullable()();
   TextColumn get notes => text().nullable()();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
@@ -239,11 +309,16 @@ class ParsedMessages extends Table {
 class Categories extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
-  TextColumn get type => text()(); // 'EXPENSE' or 'INCOME'
-  TextColumn get icon => text().nullable()(); // Icon name or emoji
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
   TextColumn get color => text().nullable()(); // Hex color code
-  BoolColumn get isDefault => boolean().withDefault(const Constant(false))(); // System-provided
-  TextColumn get parentCategoryId => text().nullable()(); // For subcategories
+  BoolColumn get isDefault =>
+      boolean().withDefault(const Constant(false))(); // System-provided
+  TextColumn get categoryGroupId => text().customConstraint(
+    'NOT NULL REFERENCES category_groups(id) ON DELETE CASCADE',
+  )();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   TextColumn get tempId => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -253,9 +328,709 @@ class Categories extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+class CategoryGroups extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get tempId => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class Merchants extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get tempId => text().nullable()();
+  TextColumn get description => text().nullable()();
+  TextColumn get website => text().nullable()();
+
+  // For remote images
+  TextColumn get imageUrl => text().nullable()();
+
+  // For local images (store file path, not binary data)
+  TextColumn get localImagePath => text().nullable()();
+
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  TextColumn get color => text().nullable()(); // Hex color code
+  BoolColumn get isDefault =>
+      boolean().withDefault(const Constant(false))(); // System-provided
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class MerchantMetadata extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get merchantId => text()();
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {merchantId, key},
+  ];
+}
+
+class Tags extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get tempId => text().nullable()();
+
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class Contacts extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get tempId => text().nullable()();
+
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  TextColumn get color => text().nullable()();
+
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class ContactInfo extends Table {
+  TextColumn get id => text()();
+  TextColumn get contactId => text().customConstraint(
+    'NOT NULL REFERENCES contacts(id) ON DELETE CASCADE',
+  )();
+  TextColumn get tempId => text().nullable()();
+  TextColumn get value => text()();
+  TextColumn get type => text()(); // 'email', 'phone', 'url',
+
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class Wallets extends Table {
+  // TextColumn get value => text()();
+  TextColumn get walletType =>
+      text()(); // 'cash', 'bank', 'crypto', 'credit', 'other'
+  TextColumn get currency => text().references(
+    Currencies,
+    #code,
+  )(); // Primary currency (USD, EUR, BTC, etc.)
+  IntColumn get balance => integer()(); // storage in cents
+
+  // For remote images
+  TextColumn get imageUrl => text().nullable()();
+
+  // For local images (store file path, not binary data)
+  TextColumn get localImagePath => text().nullable()();
+  BoolColumn get isGlobal => boolean().withDefault(
+    const Constant(true),
+  )(); // Available for all projects or only a single project
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  TextColumn get color => text().nullable()();
+
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get tempId => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class WalletMetadata extends Table {
+  TextColumn get id => text()();
+  TextColumn get walletId => text()();
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {walletId, key}, // Ensure unique key per wallet
+  ];
+}
+
+class Budgets extends Table {
+  IntColumn get underLimitGoal =>
+      integer().nullable()(); // Aspirational savings goal
+  DateTimeColumn get startDate =>
+      dateTime()(); // Day when the budget becomes active
+  DateTimeColumn get endDate => dateTime()(); // Day when the budget expires
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  TextColumn get projectId => text().references(Projects, #id)();
+  TextColumn get categoryId => text().nullable().references(Categories, #id)();
+  TextColumn get currency => text().references(Currencies, #code)();
+
+  IntColumn get limitAmount => integer()(); // The budget limit
+  IntColumn get spentAmount =>
+      integer().withDefault(const Constant(0))(); // Total spent
+  IntColumn get overBudgetAllowance =>
+      integer().withDefault(const Constant(0))(); // How much over
+
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  TextColumn get color => text().nullable()();
+
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get tempId => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class Currencies extends Table {
+  TextColumn get code => text()(); // USD, EUR, BTC, ETH, etc.
+  TextColumn get name => text()(); // US Dollar, Euro, Bitcoin, etc.
+  TextColumn get symbol => text()(); // $, €, ₿, Ξ, etc.
+  IntColumn get decimals =>
+      integer().withDefault(const Constant(2))(); // 2 for USD, 8 for BTC
+  BoolColumn get isCrypto => boolean().withDefault(const Constant(false))();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+
+  @override
+  Set<Column> get primaryKey => {code};
+}
+
+class Goals extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()(); // Goal name (e.g., "New Car", "Vacation")
+  TextColumn get type => textEnum<GoalType>()(); // SAVINGS or DEBT_CLEARING
+  IntColumn get targetAmount => integer()(); // Target amount to reach
+  TextColumn get contactId => text().nullable().references(Contacts, #id)();
+  TextColumn get categoryId => text().nullable().references(Categories, #id)();
+
+  IntColumn get currentAmount =>
+      integer().withDefault(const Constant(0))(); // Current progress
+  DateTimeColumn get targetDate =>
+      dateTime().nullable()(); // Optional target date
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  TextColumn get description => text().nullable()(); // Optional description
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  TextColumn get color =>
+      text().nullable().withDefault(const Constant('#2196F3'))();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  TextColumn get tempId => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class GoalMetadata extends Table {
+  TextColumn get id => text()();
+  TextColumn get goalId => text()();
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {goalId, key}, // Ensure unique key per wallet
+  ];
+}
+
+class GoalContribution extends Table {
+  TextColumn get id => text()();
+
+  TextColumn get paymentId =>
+      text().references(Payments, #id)(); // Reference to payment
+  TextColumn get goalId => text().references(Goals, #id)(); // Reference to goal
+  IntColumn get allocatedAmount => integer()(); // Amount allocated to this goal
+  DateTimeColumn get allocatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  TextColumn get notes =>
+      text().nullable()(); // Optional notes about allocation
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {paymentId, goalId}, // Ensure unique key per payment goal contribution
+  ];
+}
+
+enum GoalType { savings, debt }
+
+// enum InvestmentStatus { active, completed, defaulted, cancelled, sold }
+
+class InvestmentPayments extends Table {
+  TextColumn get id => text()();
+
+  TextColumn get paymentId =>
+      text().references(Payments, #id)(); // Reference to payment
+  TextColumn get investmentId =>
+      text().references(Investments, #id)(); // Reference to goal
+  IntColumn get allocatedAmount => integer()(); // Amount allocated to this goal
+  DateTimeColumn get allocatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  TextColumn get notes =>
+      text().nullable()(); // Optional notes about allocation
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class Investments extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()(); // e.g. Tesla Stock, Loan to John
+  TextColumn get investmentTypeId => text().references(
+    InvestmentTypes,
+    #id,
+  )(); // e.g. Investment Type, Stock, Shares, Bonds, Mutual Funds, Personal Loans, Crypto, other
+  TextColumn get tempId => text().nullable()();
+  DateTimeColumn get investmentDate => dateTime()();
+  DateTimeColumn get maturityDate =>
+      dateTime().nullable()(); // When investment matures/returns
+  DateTimeColumn get closedDate =>
+      dateTime().nullable()(); // When actually closed
+
+  // Currency and amounts
+  TextColumn get currencyCode => text().references(Currencies, #code)();
+  IntColumn get investedAmount => integer()(); // Principal investment amount
+  IntColumn get currentValue => integer().withDefault(
+    const Constant(0),
+  )(); // Principal + interest accrued amount
+
+  // Return configuration
+  TextColumn get returnCalculationType =>
+      text().map(const _ReturnCalculationTypeConverter())();
+  IntColumn get interestRate =>
+      integer().nullable()(); // Annual percentage (e.g., 5 for 0.05%)
+  IntColumn get fixedReturnAmount =>
+      integer().nullable()(); // Fixed return per period
+  TextColumn get returnFrequency =>
+      text().nullable()(); // "monthly", "quarterly", "annually", "one-time"
+
+  // // Status
+  // TextColumn get status => text().map(const _InvestmentStatusConverter())();
+
+  // Contact reference (who you invested in/lent to)
+  TextColumn get contactId => text().nullable().references(Contacts, #id)();
+  TextColumn get merchantId => text().nullable().references(
+    Merchants,
+    #id,
+  )(); // Company you bought the stock from
+
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class InvestmentMetadata extends Table {
+  TextColumn get id => text()();
+  TextColumn get investmentId => text()();
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {investmentId, key},
+  ];
+}
+
+class InvestmentReturns extends Table {
+  TextColumn get id => text()();
+
+  TextColumn get investmentId =>
+      text().references(Investments, #id, onDelete: KeyAction.cascade)();
+
+  IntColumn get amount => integer()();
+  // Amount gained (or lost, if negative)
+
+  TextColumn get type => text()();
+  // e.g. "DIVIDEND", "INTEREST", "CAPITAL_GAIN", "LOSS"
+
+  DateTimeColumn get date => dateTime().withDefault(currentDateAndTime)();
+
+  TextColumn get notes => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class InvestmentTypes extends Table {
+  TextColumn get id => text()();
+  TextColumn get name =>
+      text()(); // "Stock", "Bond", "Personal Loan", "Real Estate", etc.
+  TextColumn get description => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+// class InvestmentTransactions extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   TextColumn get investmentId => text()();
+
+//   TextColumn get transactionType =>
+//       text().map(const _InvestmentTransactionTypeConverter())();
+//   IntColumn get amount => integer()();
+//   TextColumn get currencyCode => text().references(Currencies, #code)();
+
+//   DateTimeColumn get transactionDate => dateTime()();
+//   DateTimeColumn get dueDate =>
+//       dateTime().nullable()(); // For scheduled returns
+
+//   TextColumn get status => text().map(const _TransactionStatusConverter())();
+//   TextColumn get reference => text().nullable()();
+//   TextColumn get notes => text().nullable()();
+
+//   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+// }
+
+// enum InvestmentTransactionType {
+//   initialInvestment,
+//   returnPayment,
+//   interest,
+//   dividend,
+//   capitalGain,
+//   fee,
+//   withdrawal,
+//   adjustment,
+// }
+
+// class InvestmentSchedules extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   TextColumn get investmentId => text()();
+
+//   DateTimeColumn get dueDate => dateTime()();
+//   IntColumn get amount => integer()();
+//   TextColumn get currencyCode => text().references(Currencies, #code)();
+//   TextColumn get scheduleType =>
+//       text().map(const _InvestmentScheduleTypeConverter())();
+
+//   BoolColumn get isPaid => boolean().withDefault(const Constant(false))();
+//   IntColumn get transactionId => integer().nullable().references(
+//     InvestmentTransactions,
+//     #id,
+//     onDelete: KeyAction.setNull,
+//   )();
+//   TextColumn get notes => text().nullable()();
+// }
+
+// class Debts extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+
+//   // Basic info
+//   TextColumn get title => text()();
+//   TextColumn get description => text().nullable()();
+//   IntColumn get typeId => integer().references(DebtTypes, #id)();
+
+//   // Contact reference (who you borrowed from)
+//   TextColumn get contactId => text().nullable()();
+
+//   // Currency and amounts
+//   TextColumn get currencyCode => text().references(Currencies, #code)();
+//   IntColumn get borrowedAmount => integer()(); // Original loan amount
+//   IntColumn get outstandingBalance =>
+//       integer().withDefault(const Constant(0))();
+
+//   // Status
+//   TextColumn get status => text().map(const _DebtStatusConverter())();
+
+//   // Dates
+//   DateTimeColumn get borrowDate => dateTime()();
+//   DateTimeColumn get dueDate =>
+//       dateTime().nullable()(); // When debt should be fully repaid
+//   DateTimeColumn get closedDate =>
+//       dateTime().nullable()(); // When actually paid off
+
+//   // Interest configuration
+//   TextColumn get interestCalculationType =>
+//       text().map(const _InterestCalculationTypeConverter())();
+//   IntColumn get interestRate =>
+//       integer().nullable()(); // Annual percentage rate
+//   IntColumn get fixedInterestAmount =>
+//       integer().nullable()(); // Fixed interest per period
+//   TextColumn get interestFrequency =>
+//       text().nullable()(); // "monthly", "quarterly", etc.
+
+//   // For compound interest
+//   BoolColumn get isCompoundInterest =>
+//       boolean().withDefault(const Constant(false))();
+//   TextColumn get compoundingFrequency => text().nullable()();
+
+//   // Payment tracking
+//   IntColumn get totalPayments => integer().withDefault(const Constant(0))();
+//   IntColumn get totalInterestPaid => integer().withDefault(const Constant(0))();
+
+//   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+//   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+// }
+
+// class DebtTypes extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   TextColumn get name =>
+//       text()(); // "Credit Card", "Mortgage", "Personal Loan", "Car Loan", etc.
+//   TextColumn get description => text().nullable()();
+// }
+
+// enum DebtStatus { active, paidOff, defaulted, writtenOff, renegotiated }
+
+// class _DebtStatusConverter extends TypeConverter<DebtStatus, String> {
+//   const _DebtStatusConverter();
+
+//   @override
+//   DebtStatus fromSql(String fromDb) {
+//     return DebtStatus.values.firstWhere(
+//       (e) => e.name == fromDb,
+//       orElse: () => DebtStatus.active,
+//     );
+//   }
+
+//   @override
+//   String toSql(DebtStatus value) => value.name;
+// }
+
+// class DebtTransactions extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   IntColumn get debtId => integer().references(Debts, #id)();
+
+//   TextColumn get transactionType =>
+//       text().map(const _DebtTransactionTypeConverter())();
+//   IntColumn get amount => integer()();
+//   TextColumn get currencyCode => text().references(Currencies, #code)();
+
+//   DateTimeColumn get transactionDate => dateTime()();
+//   DateTimeColumn get dueDate =>
+//       dateTime().nullable()(); // For scheduled payments
+
+//   TextColumn get status => text().map(const _TransactionStatusConverter())();
+//   TextColumn get reference => text().nullable()();
+//   TextColumn get notes => text().nullable()();
+
+//   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+// }
+
+// enum DebtTransactionType {
+//   loanDisbursement,
+//   principalPayment,
+//   interestPayment,
+//   fee,
+//   penalty,
+//   adjustment,
+// }
+
+// class DebtSchedules extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   IntColumn get debtId => integer().references(Debts, #id)();
+
+//   DateTimeColumn get dueDate => dateTime()();
+//   IntColumn get principalAmount => integer()();
+//   IntColumn get interestAmount => integer().withDefault(const Constant(0))();
+//   IntColumn get totalAmount => integer()(); // principal + interest
+//   TextColumn get currencyCode => text().references(Currencies, #code)();
+
+//   BoolColumn get isPaid => boolean().withDefault(const Constant(false))();
+//   IntColumn get transactionId => integer().nullable().references(
+//     DebtTransactions,
+//     #id,
+//     onDelete: KeyAction.setNull,
+//   )();
+//   TextColumn get notes => text().nullable()();
+// }
+
+// class DebtMetadata extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   IntColumn get debtId => integer().references(Debts, #id)();
+//   TextColumn get key => text()();
+//   TextColumn get value => text()();
+
+//   @override
+//   List<Set<Column>> get uniqueKeys => [
+//     {debtId, key},
+//   ];
+// }
+
+// #region Enums
+
+enum ReturnCalculationType { percentage, fixedAmount, fixedTotal, variable }
+
+// enum InterestCalculationType { percentage, fixedAmount, fixedTotal, variable }
+
+// enum InvestmentScheduleType { returnPayment, interest, dividend, capitalGain }
+
+// enum TransactionStatus { pending, completed, failed, cancelled }
+
+// enum DebtScheduleType { payment, principalOnly, interestOnly }
+
+// #endregion
+
+// #region Type Converters
+
+class _ReturnCalculationTypeConverter
+    extends TypeConverter<ReturnCalculationType, String> {
+  const _ReturnCalculationTypeConverter();
+
+  @override
+  ReturnCalculationType fromSql(String fromDb) {
+    return ReturnCalculationType.values.firstWhere(
+      (e) => e.name == fromDb,
+      orElse: () => ReturnCalculationType.variable,
+    );
+  }
+
+  @override
+  String toSql(ReturnCalculationType value) => value.name;
+}
+
+// class _InterestCalculationTypeConverter
+//     extends TypeConverter<InterestCalculationType, String> {
+//   const _InterestCalculationTypeConverter();
+
+//   @override
+//   InterestCalculationType fromSql(String fromDb) {
+//     return InterestCalculationType.values.firstWhere(
+//       (e) => e.name == fromDb,
+//       orElse: () => InterestCalculationType.variable,
+//     );
+//   }
+
+//   @override
+//   String toSql(InterestCalculationType value) => value.name;
+// }
+
+// class _InvestmentStatusConverter
+//     extends TypeConverter<InvestmentStatus, String> {
+//   const _InvestmentStatusConverter();
+
+//   @override
+//   InvestmentStatus fromSql(String fromDb) {
+//     return InvestmentStatus.values.firstWhere(
+//       (e) => e.name == fromDb,
+//       orElse: () => InvestmentStatus.active,
+//     );
+//   }
+
+//   @override
+//   String toSql(InvestmentStatus value) => value.name;
+// }
+
+// class _InvestmentTransactionTypeConverter
+//     extends TypeConverter<InvestmentTransactionType, String> {
+//   const _InvestmentTransactionTypeConverter();
+
+//   @override
+//   InvestmentTransactionType fromSql(String fromDb) {
+//     return InvestmentTransactionType.values.firstWhere(
+//       (e) => e.name == fromDb,
+//       orElse: () => InvestmentTransactionType.adjustment,
+//     );
+//   }
+
+//   @override
+//   String toSql(InvestmentTransactionType value) => value.name;
+// }
+
+// class _DebtTransactionTypeConverter
+//     extends TypeConverter<DebtTransactionType, String> {
+//   const _DebtTransactionTypeConverter();
+
+//   @override
+//   DebtTransactionType fromSql(String fromDb) {
+//     return DebtTransactionType.values.firstWhere(
+//       (e) => e.name == fromDb,
+//       orElse: () => DebtTransactionType.adjustment,
+//     );
+//   }
+
+//   @override
+//   String toSql(DebtTransactionType value) => value.name;
+// }
+
+// class _TransactionStatusConverter
+//     extends TypeConverter<TransactionStatus, String> {
+//   const _TransactionStatusConverter();
+
+//   @override
+//   TransactionStatus fromSql(String fromDb) {
+//     return TransactionStatus.values.firstWhere(
+//       (e) => e.name == fromDb,
+//       orElse: () => TransactionStatus.pending,
+//     );
+//   }
+
+//   @override
+//   String toSql(TransactionStatus value) => value.name;
+// }
+
+// class _InvestmentScheduleTypeConverter
+//     extends TypeConverter<InvestmentScheduleType, String> {
+//   const _InvestmentScheduleTypeConverter();
+
+//   @override
+//   InvestmentScheduleType fromSql(String fromDb) {
+//     return InvestmentScheduleType.values.firstWhere(
+//       (e) => e.name == fromDb,
+//       orElse: () => InvestmentScheduleType.returnPayment,
+//     );
+//   }
+
+//   @override
+//   String toSql(InvestmentScheduleType value) => value.name;
+// }
+
+// #endregion
+
 @DriftDatabase(
   tables: [
     Projects,
+    ProjectMetadata,
     Expenses,
     Payments,
     Income,
@@ -266,13 +1041,32 @@ class Categories extends Table {
     ParsedMessages,
     IdMappings,
     Categories,
+    CategoryGroups,
+    Merchants,
+    MerchantMetadata,
+    Tags,
+    Contacts,
+    ContactInfo,
+    Wallets,
+    WalletMetadata,
+    Budgets,
+    Currencies,
+    Goals,
+    GoalMetadata,
+    GoalContribution,
+    Investments,
+    InvestmentTypes,
+    InvestmentMetadata,
+    InvestmentPayments,
+    InvestmentReturns,
+    Reminders,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 5; // Increment this when schema changes
+  int get schemaVersion => 6; // Increment this when schema changes
 
   @override
   MigrationStrategy get migration {
@@ -282,11 +1076,7 @@ class AppDatabase extends _$AppDatabase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         // Future migrations will go here
-        if (from <= 1) {
-          await m.addColumn(projects, projects.budgetAmount);
-          await m.addColumn(projects, projects.budgetType);
-          await m.addColumn(projects, projects.budgetFrequency);
-        }
+        // Migration from 1 to 2 removed - budget fields were moved to Budgets table
 
         // Migration from 2 to 3 - Add expense/payment tracking to todos
         if (from <= 2) {
@@ -302,9 +1092,38 @@ class AppDatabase extends _$AppDatabase {
 
         // Migration from 4 to 5 - Add Categories table and categoryId to Expenses/Income
         if (from <= 4) {
+          // First create CategoryGroups table (required by Categories foreign key)
+          await m.createTable(categoryGroups);
+
+          // Then create Categories table
           await m.createTable(categories);
+
+          // Add category references to existing tables
           await m.addColumn(expenses, expenses.categoryId);
           await m.addColumn(income, income.categoryId);
+        }
+
+        // Migration from 5 to 6 - Add all new tables for wallets, currencies, investments
+        if (from <= 5) {
+          await m.createTable(projectMetadata);
+          await m.createTable(merchants);
+          await m.createTable(merchantMetadata);
+          await m.createTable(tags);
+          await m.createTable(contacts);
+          await m.createTable(contactInfo);
+          await m.createTable(currencies);
+          await m.createTable(wallets);
+          await m.createTable(walletMetadata);
+          await m.createTable(budgets);
+          await m.createTable(goals);
+          await m.createTable(goalMetadata);
+          await m.createTable(goalContribution);
+          await m.createTable(investmentTypes);
+          await m.createTable(investments);
+          await m.createTable(investmentMetadata);
+          await m.createTable(investmentPayments);
+          await m.createTable(investmentReturns);
+          await m.createTable(reminders);
         }
       },
       beforeOpen: (details) async {
@@ -312,77 +1131,6 @@ class AppDatabase extends _$AppDatabase {
       },
     );
   }
-
-  // @override
-  // MigrationStrategy get migration {
-  //   return MigrationStrategy(
-  //     onCreate: (Migrator m) async {
-  //       await m.createAll();
-  //     },
-  //     onUpgrade: (Migrator m, int from, int to) async {
-  //       // Migration from version 1 to 2 (adding todos and shopping lists)
-  //       if (from == 1) {
-  //         await m.createTable(income);
-  //         await m.createTable(todoItems);
-  //         await m.createTable(shoppingLists);
-  //         await m.createTable(shoppingListItems);
-  //       }
-
-  //       // Future migrations go here
-  //       // if (from == 2) { ... }
-  //       // Migration from version 2 to 3
-  //       if (from <= 2) {
-  //         await customStatement(
-  //           'ALTER TABLE shopping_lists ADD COLUMN linked_expense_id TEXT',
-  //         );
-  //       }
-
-  //       // Migration from version 3/4 to 5 - Income and Payment refactor
-  //       if (from <= 3) {
-  //         // Add new columns to income table
-  //         await customStatement(
-  //           'ALTER TABLE income ADD COLUMN type TEXT DEFAULT "ONE_TIME"',
-  //         );
-  //         await customStatement('ALTER TABLE income ADD COLUMN frequency TEXT');
-  //         await customStatement(
-  //           'ALTER TABLE income ADD COLUMN start_date INTEGER',
-  //         );
-  //         await customStatement(
-  //           'ALTER TABLE income ADD COLUMN next_expected_date INTEGER',
-  //         );
-  //         await customStatement(
-  //           'ALTER TABLE income ADD COLUMN is_active INTEGER DEFAULT 1',
-  //         );
-
-  //         // Rename amount to expected_amount in income
-  //         await customStatement(
-  //           'ALTER TABLE income RENAME COLUMN amount TO expected_amount',
-  //         );
-
-  //         // Remove old date_received, replace with start_date
-  //         // SQLite doesn't support DROP COLUMN, so we need to recreate
-  //         // For now, just update start_date with date_received value
-  //         await customStatement(
-  //           'UPDATE income SET start_date = date_received WHERE start_date IS NULL',
-  //         );
-
-  //         // Add new columns to payments table
-  //         await customStatement(
-  //           'ALTER TABLE payments ADD COLUMN payment_type TEXT DEFAULT "DEBIT"',
-  //         );
-  //         await customStatement(
-  //           'ALTER TABLE payments ADD COLUMN income_id TEXT',
-  //         );
-
-  //         // Make expense_id nullable by updating constraint (already nullable in new schema)
-  //       }
-  //     },
-  //     beforeOpen: (details) async {
-  //       // Optional: Enable foreign keys
-  //       await customStatement('PRAGMA foreign_keys = ON');
-  //     },
-  //   );
-  // }
 
   Future<void> deleteDatabase() async {
     final dbPath = await _getDatabasePath();

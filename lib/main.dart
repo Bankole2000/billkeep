@@ -1,3 +1,4 @@
+import 'package:billkeep/utils/default_merchants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/screens/home/main_navigation_screen.dart';
@@ -30,6 +31,7 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
     // Seed default categories if needed
     final database = ref.read(databaseProvider);
     await DefaultCategories.seedDefaultCategories(database);
+    await DefaultMerchants.seedDefaultMerchants(database);
 
     // Wait for minimum splash duration
     await Future.delayed(const Duration(seconds: 2));
@@ -49,7 +51,9 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: _isInitialized ? const MainNavigationScreen() : const SplashScreen(),
+      home: _isInitialized
+          ? const MainNavigationScreen()
+          : const SplashScreen(),
     );
   }
 }

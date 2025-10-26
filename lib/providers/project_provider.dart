@@ -17,7 +17,10 @@ class ActiveProjectNotifier extends Notifier<ActiveProjectState> {
   ActiveProjectState build() {
     final projects = ref.watch(projectsProvider);
     return projects.when(
-      data: (p) => ActiveProjectState(project: p[0], isLoading: false),
+      data: (p) => ActiveProjectState(
+        project: p.isEmpty ? null : p[0],
+        isLoading: false,
+      ),
       loading: () => ActiveProjectState(project: null, isLoading: true),
       error: (error, stack) => ActiveProjectState(
         project: null,
@@ -115,22 +118,22 @@ class ProjectRepository {
     )..where((t) => t.isSynced.equals(false))).get();
   }
 
-  Future<void> updateProjectBudget({
-    required String projectId,
-    required int budgetAmount,
-    required String budgetType,
-    String? budgetFrequency,
-  }) async {
-    await (_database.update(
-      _database.projects,
-    )..where((p) => p.id.equals(projectId))).write(
-      ProjectsCompanion(
-        budgetAmount: drift.Value(budgetAmount),
-        budgetType: drift.Value(budgetType),
-        budgetFrequency: drift.Value(budgetFrequency),
-      ),
-    );
-  }
+  // Future<void> updateProjectBudget({
+  //   required String projectId,
+  //   required int budgetAmount,
+  //   required String budgetType,
+  //   String? budgetFrequency,
+  // }) async {
+  //   await (_database.update(
+  //     _database.projects,
+  //   )..where((p) => p.id.equals(projectId))).write(
+  //     ProjectsCompanion(
+  //       budgetAmount: drift.Value(budgetAmount),
+  //       budgetType: drift.Value(budgetType),
+  //       budgetFrequency: drift.Value(budgetFrequency),
+  //     ),
+  //   );
+  // }
 
   Future<void> updateProject({
     required String projectId,

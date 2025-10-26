@@ -48,6 +48,11 @@ dependencies:
   shared_preferences: ^2.5.3
   custom_sliding_segmented_control: ^1.8.5
   flutter_multi_formatter: ^2.13.10
+  flutter_local_notifications: ^19.5.0
+  contacts_service: ^0.6.3
+  flutter_iconpicker: ^4.0.3
+  emoji_picker_flutter: ^4.3.0
+  flutter_colorpicker: ^1.1.0
 
 dev_dependencies:
   flutter_test:

@@ -2,8 +2,25 @@ import 'package:billkeep/database/database.dart';
 import 'package:drift/drift.dart';
 
 class DefaultCategories {
+  // Default Category Groups
+  static final List<Map<String, dynamic>> categoryGroups = [
+    {'id': 'catgrp_miscellaneous', 'name': 'Miscellaneous'},
+    {'id': 'catgrp_entertainment', 'name': 'Entertainment'},
+    {'id': 'catgrp_food_and_drinks', 'name': 'Food and Drinks'},
+    {'id': 'catgrp_housing', 'name': 'Housing'},
+    {'id': 'catgrp_lifestyle', 'name': 'Debt Payments'},
+    {'id': 'catgrp_savings', 'name': 'Savings'},
+    {'id': 'catgrp_transportation', 'name': 'Transportation'},
+    {'id': 'catgrp_utilities', 'name': 'Utilities'},
+    {'id': 'catgrp_healthcare', 'name': 'Healthcare'},
+    {'id': 'catgrp_shopping', 'name': 'Shopping'},
+    {'id': 'catgrp_work', 'name': 'Work'},
+    {'id': 'catgrp_education', 'name': 'Education'},
+    {'id': 'catgrp_personal', 'name': 'Personal'},
+    {'id': 'catgrp_income', 'name': 'Income'},
+  ];
   // Expense Categories with subcategories
-  static final List<Map<String, dynamic>> expenseCategories = [
+  static final List<Map<String, dynamic>> categories = [
     // Housing
     {
       'id': 'cat_expense_housing',
@@ -58,7 +75,7 @@ class DefaultCategories {
     // Food & Dining
     {
       'id': 'cat_expense_food',
-      'name': 'Food & Dining',
+      'name': 'Food and Drinks',
       'type': 'EXPENSE',
       'icon': '🍽️',
       'color': '#F38181',
@@ -154,7 +171,7 @@ class DefaultCategories {
     // Savings & Investments
     {
       'id': 'cat_expense_savings',
-      'name': 'Savings & Investments',
+      'name': 'Savings',
       'type': 'EXPENSE',
       'icon': '💰',
       'color': '#98D8C8',
@@ -164,6 +181,21 @@ class DefaultCategories {
         {'name': 'Retirement', 'icon': '👴', 'color': '#98D8C8'},
         {'name': 'Investments', 'icon': '📈', 'color': '#98D8C8'},
         {'name': 'Savings Goals', 'icon': '🎯', 'color': '#98D8C8'},
+      ],
+    },
+    // Debt Payments
+    {
+      'id': 'cat_expense_work',
+      'name': 'Work',
+      'type': 'EXPENSE',
+      'icon': '💼',
+      'color': '#F6A5C0',
+      'isDefault': true,
+      'subcategories': [
+        {'name': 'Cabinet supplies', 'icon': '📂', 'color': '#F6A5C0'},
+        {'name': 'Office Utilities', 'icon': '🏢', 'color': '#F6A5C0'},
+        {'name': 'Office Supplies', 'icon': '📌', 'color': '#F6A5C0'},
+        {'name': 'Stationery', 'icon': '✏️', 'color': '#F6A5C0'},
       ],
     },
     // Debt Payments
@@ -190,7 +222,8 @@ class DefaultCategories {
       'color': '#B5B5B5',
       'isDefault': true,
       'subcategories': [
-        {'name': 'Other', 'icon': '❓', 'color': '#B5B5B5'},
+        {'name': 'Unknown', 'icon': '❓', 'color': '#B5B5B5'},
+        {'name': 'Random', 'icon': '🎲', 'color': '#B5B5B5'},
       ],
     },
   ];
@@ -300,18 +333,6 @@ class DefaultCategories {
         {'name': 'Expense Reimbursement', 'icon': '💼', 'color': '#8BC34A'},
       ],
     },
-    // Other
-    {
-      'id': 'cat_income_other',
-      'name': 'Other Income',
-      'type': 'INCOME',
-      'icon': '💵',
-      'color': '#607D8B',
-      'isDefault': true,
-      'subcategories': [
-        {'name': 'Miscellaneous', 'icon': '❓', 'color': '#607D8B'},
-      ],
-    },
   ];
 
   // Helper method to seed default categories
@@ -322,40 +343,62 @@ class DefaultCategories {
       return; // Already seeded
     }
 
-    // Insert expense categories
-    for (final category in expenseCategories) {
+    // First, insert all category groups
+    for (final categoryGroup in categoryGroups) {
+      await database
+          .into(database.categoryGroups)
+          .insert(
+            CategoryGroupsCompanion(
+              id: Value(categoryGroup['id']),
+              tempId: Value(categoryGroup['id']),
+              name: Value(categoryGroup['name'] as String),
+              isSynced: const Value(false),
+            ),
+          );
+    }
+
+    // Insert expense categories (parent categories)
+    for (final category in categories) {
       final categoryId = category['id'] as String;
+      final categoryGroupMatch = categoryGroups.firstWhere(
+        (cg) => cg['name'] == category['name'],
+        orElse: () => categoryGroups.first, // Fallback to first group
+      );
 
       // Insert parent category
-      await database.into(database.categories).insert(
+      await database
+          .into(database.categories)
+          .insert(
             CategoriesCompanion(
               id: Value(categoryId),
               tempId: Value(categoryId),
               name: Value(category['name'] as String),
-              type: Value(category['type'] as String),
-              icon: Value(category['icon'] as String),
+              iconEmoji: Value(category['icon'] as String),
               color: Value(category['color'] as String),
               isDefault: Value(category['isDefault'] as bool),
+              categoryGroupId: Value(categoryGroupMatch['id']),
               isSynced: const Value(false),
             ),
           );
 
-      // Insert subcategories
-      final subcategories = category['subcategories'] as List<Map<String, dynamic>>;
+      // Insert subcategories as independent categories
+      final subcategories =
+          category['subcategories'] as List<Map<String, dynamic>>;
       for (var i = 0; i < subcategories.length; i++) {
         final sub = subcategories[i];
         final subId = '${categoryId}_sub_$i';
 
-        await database.into(database.categories).insert(
+        await database
+            .into(database.categories)
+            .insert(
               CategoriesCompanion(
                 id: Value(subId),
                 tempId: Value(subId),
                 name: Value(sub['name'] as String),
-                type: Value(category['type'] as String),
-                icon: Value(sub['icon'] as String),
+                iconEmoji: Value(sub['icon'] as String),
                 color: Value(sub['color'] as String),
                 isDefault: Value(category['isDefault'] as bool),
-                parentCategoryId: Value(categoryId),
+                categoryGroupId: Value(categoryGroupMatch['id']),
                 isSynced: const Value(false),
               ),
             );
@@ -363,39 +406,48 @@ class DefaultCategories {
     }
 
     // Insert income categories
+    final incomeGroupMatch = categoryGroups.firstWhere(
+      (cg) => cg['name'] == 'Income',
+      orElse: () => categoryGroups.last, // Fallback to last group
+    );
+
     for (final category in incomeCategories) {
       final categoryId = category['id'] as String;
 
       // Insert parent category
-      await database.into(database.categories).insert(
+      await database
+          .into(database.categories)
+          .insert(
             CategoriesCompanion(
               id: Value(categoryId),
               tempId: Value(categoryId),
               name: Value(category['name'] as String),
-              type: Value(category['type'] as String),
-              icon: Value(category['icon'] as String),
+              iconEmoji: Value(category['icon'] as String),
               color: Value(category['color'] as String),
               isDefault: Value(category['isDefault'] as bool),
+              categoryGroupId: Value(incomeGroupMatch['id']),
               isSynced: const Value(false),
             ),
           );
 
-      // Insert subcategories
-      final subcategories = category['subcategories'] as List<Map<String, dynamic>>;
+      // Insert subcategories as independent categories
+      final subcategories =
+          category['subcategories'] as List<Map<String, dynamic>>;
       for (var i = 0; i < subcategories.length; i++) {
         final sub = subcategories[i];
         final subId = '${categoryId}_sub_$i';
 
-        await database.into(database.categories).insert(
+        await database
+            .into(database.categories)
+            .insert(
               CategoriesCompanion(
                 id: Value(subId),
                 tempId: Value(subId),
                 name: Value(sub['name'] as String),
-                type: Value(category['type'] as String),
-                icon: Value(sub['icon'] as String),
+                iconEmoji: Value(sub['icon'] as String),
                 color: Value(sub['color'] as String),
                 isDefault: Value(category['isDefault'] as bool),
-                parentCategoryId: Value(categoryId),
+                categoryGroupId: Value(incomeGroupMatch['id']),
                 isSynced: const Value(false),
               ),
             );

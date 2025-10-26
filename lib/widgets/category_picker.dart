@@ -22,102 +22,108 @@ class CategoryPicker extends ConsumerStatefulWidget {
 class _CategoryPickerState extends ConsumerState<CategoryPicker> {
   @override
   Widget build(BuildContext context) {
-    final categoriesAsync = widget.type == 'EXPENSE'
-        ? ref.watch(expenseCategoriesProvider)
-        : ref.watch(incomeCategoriesProvider);
+    final categoriesAsync = [];
+    return Placeholder();
+    // widget.type == 'EXPENSE'
+    //     ? ref.watch(expenseCategoriesProvider)
+    //     : ref.watch(incomeCategoriesProvider);
 
-    return categoriesAsync.when(
-      data: (categories) {
-        // Find selected category
-        Category? selectedCategory;
-        Category? selectedParent;
+    // return categoriesAsync.when(
+    //   data: (categories) {
+    //     // Find selected category
+    //     Category? selectedCategory;
+    //     Category? selectedParent;
 
-        if (widget.selectedCategoryId != null) {
-          // Check if it's a parent category
-          selectedCategory = categories.firstWhere(
-            (c) => c.id == widget.selectedCategoryId,
-            orElse: () {
-              // It might be a subcategory, need to find its parent
-              return categories.first;
-            },
-          );
+    //     if (widget.selectedCategoryId != null) {
+    //       // Check if it's a parent category
+    //       selectedCategory = categories.firstWhere(
+    //         (c) => c.id == widget.selectedCategoryId,
+    //         orElse: () {
+    //           // It might be a subcategory, need to find its parent
+    //           return categories.first;
+    //         },
+    //       );
 
-          // If not found in parents, search in subcategories
-          if (selectedCategory.id != widget.selectedCategoryId) {
-            for (final parent in categories) {
-              final subcategoriesAsync = ref.watch(subcategoriesProvider(parent.id));
-              subcategoriesAsync.whenData((subs) {
-                final found = subs.firstWhere(
-                  (s) => s.id == widget.selectedCategoryId,
-                  orElse: () => subs.first,
-                );
-                if (found.id == widget.selectedCategoryId) {
-                  selectedCategory = found;
-                  selectedParent = parent;
-                }
-              });
-            }
-          }
-        }
+    //       // If not found in parents, search in subcategories
+    //       // if (selectedCategory.id != widget.selectedCategoryId) {
+    //       //   for (final parent in categories) {
+    //       //     final subcategoriesAsync = ref.watch(subcategoriesProvider(parent.id));
+    //       //     subcategoriesAsync.whenData((subs) {
+    //       //       final found = subs.firstWhere(
+    //       //         (s) => s.id == widget.selectedCategoryId,
+    //       //         orElse: () => subs.first,
+    //       //       );
+    //       //       if (found.id == widget.selectedCategoryId) {
+    //       //         selectedCategory = found;
+    //       //         selectedParent = parent;
+    //       //       }
+    //       //     });
+    //       //   }
+    //       // }
+    //     }
 
-        return InkWell(
-          onTap: () => _showCategoryPickerDialog(context, categories),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                if (selectedCategory != null) ...[
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: selectedCategory?.color != null
-                        ? Color(int.parse(
-                            selectedCategory!.color!.replaceFirst('#', '0xFF')))
-                        : Colors.grey,
-                    child: Text(
-                      selectedCategory?.icon ?? '📁',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (selectedParent != null)
-                          Text(
-                            selectedParent!.name,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        Text(
-                          selectedCategory!.name,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ] else ...[
-                  const Icon(Icons.category_outlined),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text('Select Category'),
-                  ),
-                ],
-                const Icon(Icons.arrow_drop_down),
-              ],
-            ),
-          ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Text('Error: $error'),
-    );
+    //     return InkWell(
+    //       onTap: () => _showCategoryPickerDialog(context, categories),
+    //       child: Container(
+    //         padding: const EdgeInsets.all(12),
+    //         decoration: BoxDecoration(
+    //           border: Border.all(color: Colors.grey),
+    //           borderRadius: BorderRadius.circular(8),
+    //         ),
+    //         child: Row(
+    //           children: [
+    //             if (selectedCategory != null) ...[
+    //               CircleAvatar(
+    //                 radius: 16,
+    //                 backgroundColor: selectedCategory?.color != null
+    //                     ? Color(
+    //                         int.parse(
+    //                           selectedCategory!.color!.replaceFirst(
+    //                             '#',
+    //                             '0xFF',
+    //                           ),
+    //                         ),
+    //                       )
+    //                     : Colors.grey,
+    //                 child: Text(
+    //                   selectedCategory?.icon ?? '📁',
+    //                   style: const TextStyle(fontSize: 16),
+    //                 ),
+    //               ),
+    //               const SizedBox(width: 12),
+    //               Expanded(
+    //                 child: Column(
+    //                   crossAxisAlignment: CrossAxisAlignment.start,
+    //                   children: [
+    //                     if (selectedParent != null)
+    //                       Text(
+    //                         selectedParent!.name,
+    //                         style: const TextStyle(
+    //                           fontSize: 12,
+    //                           color: Colors.grey,
+    //                         ),
+    //                       ),
+    //                     Text(
+    //                       selectedCategory!.name,
+    //                       style: const TextStyle(fontSize: 16),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ),
+    //             ] else ...[
+    //               const Icon(Icons.category_outlined),
+    //               const SizedBox(width: 12),
+    //               const Expanded(child: Text('Select Category')),
+    //             ],
+    //             const Icon(Icons.arrow_drop_down),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    //   loading: () => const Center(child: CircularProgressIndicator()),
+    //   error: (error, stack) => Text('Error: $error'),
+    // );
   }
 
   void _showCategoryPickerDialog(
@@ -208,7 +214,7 @@ class CategoryPickerTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final subcategoriesAsync = ref.watch(subcategoriesProvider(category.id));
+    // final subcategoriesAsync = ref.watch(subcategoriesProvider(category.id));
 
     return ExpansionTile(
       leading: CircleAvatar(
@@ -216,7 +222,7 @@ class CategoryPickerTile extends ConsumerWidget {
             ? Color(int.parse(category.color!.replaceFirst('#', '0xFF')))
             : Colors.grey,
         child: Text(
-          category.icon ?? '📁',
+          category.iconEmoji ?? '📁',
           style: const TextStyle(fontSize: 20),
         ),
       ),
@@ -227,7 +233,8 @@ class CategoryPickerTile extends ConsumerWidget {
       onExpansionChanged: (expanded) {
         if (!expanded) {
           // When collapsing, if no subcategory selected, select parent
-          final subcategories = subcategoriesAsync.value ?? [];
+          // final subcategories = subcategoriesAsync.value ?? [];
+          final subcategories = [];
           final hasSelectedSubcategory = subcategories.any(
             (sub) => sub.id == selectedCategoryId,
           );
@@ -237,37 +244,37 @@ class CategoryPickerTile extends ConsumerWidget {
         }
       },
       children: [
-        subcategoriesAsync.when(
-          data: (subcategories) {
-            if (subcategories.isEmpty) {
-              return ListTile(
-                onTap: () => onCategorySelected(category.id),
-                title: const Text('No subcategories'),
-              );
-            }
+        // subcategoriesAsync.when(
+        //   data: (subcategories) {
+        //     if (subcategories.isEmpty) {
+        //       return ListTile(
+        //         onTap: () => onCategorySelected(category.id),
+        //         title: const Text('No subcategories'),
+        //       );
+        //     }
 
-            return Column(
-              children: subcategories.map((sub) {
-                final isSelected = selectedCategoryId == sub.id;
-                return ListTile(
-                  contentPadding: const EdgeInsets.only(left: 72, right: 16),
-                  leading: Text(
-                    sub.icon ?? '📄',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  title: Text(sub.name),
-                  trailing: isSelected
-                      ? const Icon(Icons.check, color: Colors.blue)
-                      : null,
-                  selected: isSelected,
-                  onTap: () => onCategorySelected(sub.id),
-                );
-              }).toList(),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Text('Error: $error'),
-        ),
+        //     return Column(
+        //       children: subcategories.map((sub) {
+        //         final isSelected = selectedCategoryId == sub.id;
+        //         return ListTile(
+        //           contentPadding: const EdgeInsets.only(left: 72, right: 16),
+        //           leading: Text(
+        //             sub.icon ?? '📄',
+        //             style: const TextStyle(fontSize: 20),
+        //           ),
+        //           title: Text(sub.name),
+        //           trailing: isSelected
+        //               ? const Icon(Icons.check, color: Colors.blue)
+        //               : null,
+        //           selected: isSelected,
+        //           onTap: () => onCategorySelected(sub.id),
+        //         );
+        //       }).toList(),
+        //     );
+        //   },
+        //   loading: () => const Center(child: CircularProgressIndicator()),
+        //   error: (error, stack) => Text('Error: $error'),
+        // ),
       ],
     );
   }
