@@ -1,4 +1,5 @@
 import 'package:billkeep/utils/default_merchants.dart';
+import 'package:billkeep/utils/default_wallet_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/screens/home/main_navigation_screen.dart';
@@ -6,9 +7,21 @@ import 'package:billkeep/screens/splash/splash_screen.dart';
 import 'package:billkeep/providers/database_provider.dart';
 import 'package:billkeep/utils/default_categories.dart';
 import 'package:billkeep/utils/default_currencies.dart';
+import 'package:camera/camera.dart';
+
+// Global list of available cameras
+List<CameraDescription> cameras = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize cameras
+  try {
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    print('Error initializing cameras: $e');
+  }
+
   runApp(const ProviderScope(child: BillKeepApp()));
 }
 
@@ -34,6 +47,7 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
     await DefaultCategories.seedDefaultCategories(database);
     await DefaultMerchants.seedDefaultMerchants(database);
     await DefaultCurrencies.seedDefaultCurrencies(database);
+    await DefaultWalletProviders.seedDefaultProviders(database);
 
     // Wait for minimum splash duration
     await Future.delayed(const Duration(seconds: 2));

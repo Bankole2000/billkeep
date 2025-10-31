@@ -35,7 +35,9 @@ class IdGenerator {
   static String tempContact() => generateTempId('cont');
   static String tempContactInfo() => generateTempId('continfo');
   static String tempWallet() => generateTempId('wall');
+  static String tempWalletProvider() => generateTempId('prov');
   static String tempWalletMeta() => generateTempId('wallmeta');
+  static String tempWalletProviderMeta() => generateTempId('provmeta');
   static String tempBudget() => generateTempId('budg');
   static String tempCurrency() => generateTempId('curr');
   static String tempGoal() => generateTempId('goal');

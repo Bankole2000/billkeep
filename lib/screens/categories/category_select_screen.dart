@@ -1,4 +1,8 @@
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/category_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/utils/app_colors.dart';
+import 'package:billkeep/utils/app_enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +35,11 @@ class _TransactionCategorySelectScreenState
   Widget build(BuildContext context) {
     final colors = ref.watch(appColorsProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
+
+    final groupedAsync = ref.watch(groupedCategoriesProvider);
+    final viewMode = ref.watch(categoryViewModeProvider);
+    final expandedGroups = ref.watch(expandedGroupsProvider);
+
     return Scaffold(
       backgroundColor: colors.background,
       appBar: AppBar(
@@ -67,38 +76,148 @@ class _TransactionCategorySelectScreenState
                 color: Colors.redAccent, // 🔹 Clear button color
               ),
               onChanged: (value) {
+                ref.read(categorySearchQueryProvider.notifier).state = value;
                 // handle search
               },
             ),
           ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+          IconButton(
+            tooltip: 'Toggle view',
+            icon: Icon(
+              viewMode == ViewModeOptions.grid
+                  ? Icons.view_list
+                  : Icons.grid_view,
+            ),
+            onPressed: () {
+              final notifier = ref.read(categoryViewModeProvider.notifier);
+              notifier.state = viewMode == ViewModeOptions.grid
+                  ? ViewModeOptions.list
+                  : ViewModeOptions.grid;
+            },
+          ),
           IconButton(onPressed: () {}, icon: Icon(Icons.add)),
         ],
       ),
-      body: Container(),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.all(16.0),
-      //   child: SizedBox(
-      //     height: 56,
-      //     width: double.infinity,
-      //     child: ElevatedButton(
-      //       onPressed: () {},
-      //       style: ElevatedButton.styleFrom(
-      //         backgroundColor: activeColor,
-      //         foregroundColor: colors.textInverse,
-      //         shape: RoundedRectangleBorder(
-      //           borderRadius: BorderRadius.circular(6),
-      //         ),
-      //       ),
-      //       child: const Text(
-      //         'SAVE',
-      //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-      //       ),
-      //     ),
-      //   ),
-      // ),
+      body: groupedAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text('Error: $err')),
+        data: (groups) {
+          if (groups.isEmpty) {
+            return const Center(child: Text('No categories found.'));
+          }
+
+          if (expandedGroups.isEmpty && groups.isNotEmpty) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final ids = groups.map((g) => g.group.id);
+              ref.read(expandedGroupsProvider.notifier).expandAll(ids);
+            });
+          }
+
+          return SingleChildScrollView(
+            child: ExpansionPanelList(
+              expandedHeaderPadding: EdgeInsets.zero,
+              animationDuration: const Duration(milliseconds: 200),
+              expansionCallback: (index, isExpanded) {
+                final id = groups[index].group.id;
+                ref.read(expandedGroupsProvider.notifier).toggle(id);
+              },
+              children: groups.map((groupData) {
+                final group = groupData.group;
+                final cats = groupData.categories;
+
+                final isExpanded = expandedGroups.contains(group.id);
+
+                return ExpansionPanel(
+                  canTapOnHeader: true,
+                  isExpanded: isExpanded,
+                  headerBuilder: (context, isExpanded) => ListTile(
+                    title: Text(
+                      group.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  body: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: viewMode == ViewModeOptions.grid
+                        ? _buildGridView(cats)
+                        : _buildListView(cats),
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildGridView(List<Category> cats) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: cats.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        childAspectRatio: 1,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 0,
+      ),
+      itemBuilder: (context, index) {
+        final cat = cats[index];
+        return GestureDetector(
+          onTap: () {
+            ref.read(categorySearchQueryProvider.notifier).state = '';
+            Navigator.pop(context, cat);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              // color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (cat.iconEmoji != null)
+                  CircleAvatar(
+                    backgroundColor: HexColor.fromHex(cat.color!),
+                    child: Text(
+                      cat.iconEmoji!,
+                      style: const TextStyle(fontSize: 24),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                // Text(cat.iconEmoji!, style: const TextStyle(fontSize: 24)),
+                SizedBox(height: 4),
+                Text(
+                  cat.name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 10),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildListView(List<Category> cats) {
+    return Column(
+      children: cats.map((cat) {
+        return ListTile(
+          leading: cat.iconEmoji != null
+              ? Text(cat.iconEmoji!, style: const TextStyle(fontSize: 20))
+              : const Icon(Icons.category),
+          title: Text(cat.name),
+          onTap: () {
+            ref.read(categorySearchQueryProvider.notifier).state = '';
+            Navigator.pop(context, cat);
+          },
+        );
+      }).toList(),
     );
   }
 }

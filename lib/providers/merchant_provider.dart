@@ -7,9 +7,9 @@ import 'database_provider.dart';
 // Stream provider for all merchants
 final allMerchantsProvider = StreamProvider<List<Merchant>>((ref) {
   final database = ref.watch(databaseProvider);
-  return (database.select(database.merchants)
-        ..orderBy([(m) => OrderingTerm.asc(m.name)]))
-      .watch();
+  return (database.select(
+    database.merchants,
+  )..orderBy([(m) => OrderingTerm.asc(m.name)])).watch();
 });
 
 // Stream provider for default merchants only
@@ -30,15 +30,34 @@ final customMerchantsProvider = StreamProvider<List<Merchant>>((ref) {
       .watch();
 });
 
+final merchantSearchQueryProvider = StateProvider<String>((ref) => '');
+
+final filteredMerchantsProvider = Provider<List<Merchant>>((ref) {
+  final query = ref.watch(merchantSearchQueryProvider);
+  final merchantsAsync = ref.watch(allMerchantsProvider);
+
+  return merchantsAsync.when(
+    data: (merchants) {
+      if (query.isEmpty) return merchants;
+      final lowerQuery = query.toLowerCase();
+      return merchants
+          .where((m) => m.name.toLowerCase().contains(lowerQuery))
+          .toList();
+    },
+    loading: () => [],
+    error: (_, __) => [],
+  );
+});
+
 // Stream provider family for a single merchant
 final merchantProvider = StreamProviderFamily<Merchant?, String>((
   ref,
   merchantId,
 ) {
   final database = ref.watch(databaseProvider);
-  return (database.select(database.merchants)
-        ..where((m) => m.id.equals(merchantId)))
-      .watchSingleOrNull();
+  return (database.select(
+    database.merchants,
+  )..where((m) => m.id.equals(merchantId))).watchSingleOrNull();
 });
 
 final merchantRepositoryProvider = Provider((ref) {
@@ -65,7 +84,9 @@ class MerchantRepository {
   }) async {
     final tempId = IdGenerator.tempMerchant();
 
-    await _database.into(_database.merchants).insert(
+    await _database
+        .into(_database.merchants)
+        .insert(
           MerchantsCompanion(
             id: Value(tempId),
             tempId: Value(tempId),
@@ -98,9 +119,9 @@ class MerchantRepository {
     String? color,
   }) async {
     // Check if merchant is default
-    final merchant = await (_database.select(_database.merchants)
-          ..where((m) => m.id.equals(merchantId)))
-        .getSingleOrNull();
+    final merchant = await (_database.select(
+      _database.merchants,
+    )..where((m) => m.id.equals(merchantId))).getSingleOrNull();
 
     if (merchant == null) {
       throw Exception('Merchant not found');
@@ -110,9 +131,9 @@ class MerchantRepository {
       throw Exception('Cannot update default merchants');
     }
 
-    await (_database.update(_database.merchants)
-          ..where((m) => m.id.equals(merchantId)))
-        .write(
+    await (_database.update(
+      _database.merchants,
+    )..where((m) => m.id.equals(merchantId))).write(
       MerchantsCompanion(
         name: name != null ? Value(name) : const Value.absent(),
         website: Value(website),
@@ -130,9 +151,9 @@ class MerchantRepository {
   /// Delete a merchant (only if not default and not used in any expenses)
   Future<void> deleteMerchant(String merchantId) async {
     // Check if merchant is default
-    final merchant = await (_database.select(_database.merchants)
-          ..where((m) => m.id.equals(merchantId)))
-        .getSingleOrNull();
+    final merchant = await (_database.select(
+      _database.merchants,
+    )..where((m) => m.id.equals(merchantId))).getSingleOrNull();
 
     if (merchant == null) {
       throw Exception('Merchant not found');
@@ -143,9 +164,9 @@ class MerchantRepository {
     }
 
     // Check if any expenses use this merchant
-    final expensesWithMerchant = await (_database.select(_database.expenses)
-          ..where((e) => e.merchantId.equals(merchantId)))
-        .get();
+    final expensesWithMerchant = await (_database.select(
+      _database.expenses,
+    )..where((e) => e.merchantId.equals(merchantId))).get();
 
     if (expensesWithMerchant.isNotEmpty) {
       throw Exception(
@@ -154,9 +175,9 @@ class MerchantRepository {
     }
 
     // Check if any income uses this merchant
-    final incomeWithMerchant = await (_database.select(_database.income)
-          ..where((i) => i.merchantId.equals(merchantId)))
-        .get();
+    final incomeWithMerchant = await (_database.select(
+      _database.income,
+    )..where((i) => i.merchantId.equals(merchantId))).get();
 
     if (incomeWithMerchant.isNotEmpty) {
       throw Exception(
@@ -165,28 +186,28 @@ class MerchantRepository {
     }
 
     // Delete merchant metadata first
-    await (_database.delete(_database.merchantMetadata)
-          ..where((m) => m.merchantId.equals(merchantId)))
-        .go();
+    await (_database.delete(
+      _database.merchantMetadata,
+    )..where((m) => m.merchantId.equals(merchantId))).go();
 
     // Delete the merchant
-    await (_database.delete(_database.merchants)
-          ..where((m) => m.id.equals(merchantId)))
-        .go();
+    await (_database.delete(
+      _database.merchants,
+    )..where((m) => m.id.equals(merchantId))).go();
   }
 
   /// Get merchant by ID
   Future<Merchant?> getMerchant(String merchantId) async {
-    return await (_database.select(_database.merchants)
-          ..where((m) => m.id.equals(merchantId)))
-        .getSingleOrNull();
+    return await (_database.select(
+      _database.merchants,
+    )..where((m) => m.id.equals(merchantId))).getSingleOrNull();
   }
 
   /// Get all merchants
   Future<List<Merchant>> getAllMerchants() async {
-    return await (_database.select(_database.merchants)
-          ..orderBy([(m) => OrderingTerm.asc(m.name)]))
-        .get();
+    return await (_database.select(
+      _database.merchants,
+    )..orderBy([(m) => OrderingTerm.asc(m.name)])).get();
   }
 
   /// Get default merchants
@@ -215,9 +236,9 @@ class MerchantRepository {
 
   /// Stream all merchants
   Stream<List<Merchant>> watchAllMerchants() {
-    return (_database.select(_database.merchants)
-          ..orderBy([(m) => OrderingTerm.asc(m.name)]))
-        .watch();
+    return (_database.select(
+      _database.merchants,
+    )..orderBy([(m) => OrderingTerm.asc(m.name)])).watch();
   }
 
   /// Stream default merchants
@@ -242,7 +263,9 @@ class MerchantRepository {
     required String key,
     required String value,
   }) async {
-    await _database.into(_database.merchantMetadata).insert(
+    await _database
+        .into(_database.merchantMetadata)
+        .insert(
           MerchantMetadataCompanion(
             merchantId: Value(merchantId),
             key: Value(key),
@@ -255,9 +278,9 @@ class MerchantRepository {
   Future<List<MerchantMetadataData>> getMerchantMetadata(
     String merchantId,
   ) async {
-    return await (_database.select(_database.merchantMetadata)
-          ..where((m) => m.merchantId.equals(merchantId)))
-        .get();
+    return await (_database.select(
+      _database.merchantMetadata,
+    )..where((m) => m.merchantId.equals(merchantId))).get();
   }
 
   /// Get specific metadata value
@@ -265,11 +288,11 @@ class MerchantRepository {
     String merchantId,
     String key,
   ) async {
-    final metadata = await (_database.select(_database.merchantMetadata)
-          ..where(
-            (m) => m.merchantId.equals(merchantId) & m.key.equals(key),
-          ))
-        .getSingleOrNull();
+    final metadata =
+        await (_database.select(_database.merchantMetadata)..where(
+              (m) => m.merchantId.equals(merchantId) & m.key.equals(key),
+            ))
+            .getSingleOrNull();
 
     return metadata?.value;
   }
@@ -281,25 +304,21 @@ class MerchantRepository {
     required String value,
   }) async {
     await (_database.update(_database.merchantMetadata)
-          ..where(
-            (m) => m.merchantId.equals(merchantId) & m.key.equals(key),
-          ))
+          ..where((m) => m.merchantId.equals(merchantId) & m.key.equals(key)))
         .write(MerchantMetadataCompanion(value: Value(value)));
   }
 
   /// Delete specific metadata
   Future<void> deleteMerchantMetadata(String merchantId, String key) async {
-    await (_database.delete(_database.merchantMetadata)
-          ..where(
-            (m) => m.merchantId.equals(merchantId) & m.key.equals(key),
-          ))
-        .go();
+    await (_database.delete(
+      _database.merchantMetadata,
+    )..where((m) => m.merchantId.equals(merchantId) & m.key.equals(key))).go();
   }
 
   /// Delete all metadata for a merchant
   Future<void> deleteAllMerchantMetadata(String merchantId) async {
-    await (_database.delete(_database.merchantMetadata)
-          ..where((m) => m.merchantId.equals(merchantId)))
-        .go();
+    await (_database.delete(
+      _database.merchantMetadata,
+    )..where((m) => m.merchantId.equals(merchantId))).go();
   }
 }

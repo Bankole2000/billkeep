@@ -60,6 +60,13 @@ class ProjectRepository {
   Future<String> createProject({
     required String name,
     String? description,
+    String? emoji,
+    String? imageUrl,
+    String? localImagePath,
+    String? color,
+    required String iconType,
+    int? iconCodePoint,
+    bool? isArchived,
   }) async {
     final tempId = IdGenerator.tempProject();
 
@@ -73,6 +80,13 @@ class ProjectRepository {
           name: drift.Value(name),
           description: drift.Value(description),
           isSynced: const drift.Value(false),
+          iconType: drift.Value(iconType),
+          iconEmoji: drift.Value(emoji),
+          imageUrl: drift.Value(imageUrl),
+          localImagePath: drift.Value(localImagePath),
+          iconCodePoint: drift.Value(iconCodePoint),
+          color: drift.Value(color),
+          isArchived: drift.Value(isArchived!),
         ),
       );
     } catch (e) {
@@ -135,19 +149,41 @@ class ProjectRepository {
   //   );
   // }
 
-  Future<void> updateProject({
+  Future<String> updateProject({
     required String projectId,
     required String name,
     String? description,
+    String? emoji,
+    String? imageUrl,
+    String? localImagePath,
+    String? color,
+    required String iconType,
+    int? iconCodePoint,
+    bool? isArchived,
   }) async {
-    await (_database.update(
-      _database.projects,
-    )..where((p) => p.id.equals(projectId))).write(
-      ProjectsCompanion(
-        name: drift.Value(name),
-        description: drift.Value(description),
-      ),
-    );
+    try {
+      await (_database.update(
+        _database.projects,
+      )..where((p) => p.id.equals(projectId))).write(
+        ProjectsCompanion(
+          name: drift.Value(name),
+          description: drift.Value(description),
+          isSynced: const drift.Value(false),
+          iconType: drift.Value(iconType),
+          iconEmoji: drift.Value(emoji),
+          imageUrl: drift.Value(imageUrl),
+          localImagePath: drift.Value(localImagePath),
+          iconCodePoint: drift.Value(iconCodePoint),
+          color: drift.Value(color),
+          isArchived: drift.Value(isArchived!),
+        ),
+      );
+    } catch (e) {
+      print('Error creating project: $e');
+    }
+    print('Project created successfully');
+
+    return projectId;
   }
 
   Future<void> deleteProject(String projectId) async {

@@ -1,73 +1,52 @@
+import 'package:billkeep/providers/currency_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
-import 'package:billkeep/widgets/merchants/merchant_select_list.dart';
+import 'package:billkeep/widgets/currencies/currency_select_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CurrencySelectScreen extends ConsumerStatefulWidget {
+class CurrencySelectScreen extends ConsumerWidget {
   const CurrencySelectScreen({super.key});
 
   @override
-  ConsumerState<CurrencySelectScreen> createState() =>
-      _CurrencySelectScreenState();
-}
-
-class _CurrencySelectScreenState extends ConsumerState<CurrencySelectScreen> {
-  late TextEditingController searchTextController;
-
-  @override
-  void initState() {
-    super.initState();
-    searchTextController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    searchTextController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(appColorsProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
+    final filteredCurrencies = ref.watch(filteredCurrenciesProvider);
+
     return Scaffold(
-      backgroundColor: colors.background,
+      backgroundColor: colors.surface,
       appBar: AppBar(
-        backgroundColor: activeColor,
-        iconTheme: IconThemeData(color: colors.textInverse),
-        actionsIconTheme: IconThemeData(color: colors.textInverse),
-        title: Text(
-          'Select Currency',
-          style: TextStyle(color: colors.textInverse),
-        ),
+        backgroundColor: colors.surface,
+        iconTheme: IconThemeData(color: colors.text),
+        actionsIconTheme: IconThemeData(color: colors.text),
+        title: Text('Select Currency', style: TextStyle(color: colors.text)),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
             child: CupertinoSearchTextField(
               backgroundColor: const Color(0xFFE0E0E0),
-              controller: searchTextController,
-              placeholder: 'Search',
+              placeholder: 'Search by name, code, or symbol',
               placeholderStyle: const TextStyle(
-                color: Color(0xFF9E9E9E), // 🔹 Placeholder color
+                color: Color(0xFF9E9E9E),
                 fontSize: 20,
               ),
               style: const TextStyle(
-                color: Colors.black, // 🔹 Input text color
+                color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: const Icon(
                 CupertinoIcons.search,
-                color: Colors.blueAccent, // 🔹 Icon color
+                color: Colors.blueAccent,
               ),
               suffixIcon: const Icon(
                 CupertinoIcons.xmark_circle_fill,
-                color: Colors.redAccent, // 🔹 Clear button color
+                color: Colors.redAccent,
               ),
               onChanged: (value) {
-                // handle search
+                ref.read(currencySearchQueryProvider.notifier).state = value;
               },
             ),
           ),
@@ -77,28 +56,14 @@ class _CurrencySelectScreenState extends ConsumerState<CurrencySelectScreen> {
           IconButton(onPressed: () {}, icon: Icon(Icons.add)),
         ],
       ),
-      body: MerchantsList(),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.all(16.0),
-      //   child: SizedBox(
-      //     height: 56,
-      //     width: double.infinity,
-      //     child: ElevatedButton(
-      //       onPressed: () {},
-      //       style: ElevatedButton.styleFrom(
-      //         backgroundColor: activeColor,
-      //         foregroundColor: colors.textInverse,
-      //         shape: RoundedRectangleBorder(
-      //           borderRadius: BorderRadius.circular(6),
-      //         ),
-      //       ),
-      //       child: const Text(
-      //         'SAVE',
-      //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-      //       ),
-      //     ),
-      //   ),
-      // ),
+      body: CurrencyList(
+        currencies: filteredCurrencies,
+        onCurrencySelected: (currency) {
+          ref.read(currencySearchQueryProvider.notifier).state = '';
+          print(currency);
+          Navigator.pop(context, currency);
+        },
+      ),
     );
   }
 }

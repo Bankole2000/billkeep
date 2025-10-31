@@ -1,3 +1,4 @@
+import 'package:billkeep/providers/merchant_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/merchants/add_merchant_screen.dart';
 import 'package:billkeep/utils/page_transitions.dart';
@@ -5,15 +6,17 @@ import 'package:billkeep/widgets/common/app_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../database/database.dart';
-import '../../providers/merchant_provider.dart';
+// import '../../providers/merchant_provider.dart';
 
 class MerchantsList extends ConsumerWidget {
   final Function(Merchant)? onMerchantSelected;
   final bool showDefaultMerchantsOnly;
   final bool showCustomMerchantsOnly;
+  final List<Merchant> merchants;
 
   const MerchantsList({
     super.key,
+    required this.merchants,
     this.onMerchantSelected,
     this.showDefaultMerchantsOnly = false,
     this.showCustomMerchantsOnly = false,
@@ -21,65 +24,34 @@ class MerchantsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Select the appropriate provider based on filters
-    final merchantsAsync = showDefaultMerchantsOnly
-        ? ref.watch(defaultMerchantsProvider)
-        : showCustomMerchantsOnly
-        ? ref.watch(customMerchantsProvider)
-        : ref.watch(allMerchantsProvider);
-
-    return merchantsAsync.when(
-      data: (merchants) {
-        if (merchants.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.store, size: 64, color: Colors.grey.shade400),
-                const SizedBox(height: 16),
-                Text(
-                  'No merchants found',
-                  style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: merchants.length,
-          itemBuilder: (context, index) {
-            final merchant = merchants[index];
-            return MerchantListItem(
-              merchant: merchant,
-              onTap: () {},
-              // onTap: onMerchantSelected != null
-              //     ? () => onMerchantSelected!(merchant)
-              //     : null,
-            );
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
+    if (merchants.isEmpty) {
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            Icon(Icons.store, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
             Text(
-              'Error loading merchants',
-              style: TextStyle(color: Colors.grey.shade600),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-              textAlign: TextAlign.center,
+              'No merchants found',
+              style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
             ),
           ],
         ),
-      ),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: merchants.length,
+      itemBuilder: (context, index) {
+        final merchant = merchants[index];
+        return MerchantListItem(
+          merchant: merchant,
+          onTap: () {
+            ref.read(merchantSearchQueryProvider.notifier).state = '';
+            Navigator.pop(context, merchant);
+          },
+        );
+      },
     );
   }
 }
@@ -93,16 +65,14 @@ class MerchantListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(appColorsProvider);
-    final activeColor = ref.watch(activeThemeColorProvider);
+    // final activeColor = ref.watch(activeThemeColorProvider);
     return ListTile(
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: colors.textMute,
+          color: colors.textMute.withAlpha(50),
           width: .5,
         ), // Customize color and width
-        borderRadius: BorderRadius.circular(
-          8.0,
-        ), // Optional: Add rounded corners
+        borderRadius: BorderRadius.circular(0), // Optional: Add rounded corners
       ),
       contentPadding: EdgeInsets.only(right: 10, left: 16),
       leading: _buildMerchantAvatar(),
@@ -118,14 +88,6 @@ class MerchantListItem extends ConsumerWidget {
               style: TextStyle(fontSize: 12, color: colors.textMute),
             )
           : null,
-      // trailing: merchant.isDefault
-      //     ? Chip(
-      //         label: const Text('Default', style: TextStyle(fontSize: 10)),
-      //         backgroundColor: Colors.blue.shade50,
-      //         labelStyle: TextStyle(color: Colors.blue.shade700),
-      //         visualDensity: VisualDensity.compact,
-      //       )
-      //     : null,
       trailing: IconButton(
         onPressed: () => {
           Navigator.push(

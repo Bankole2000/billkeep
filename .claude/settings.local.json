@@ -10,7 +10,10 @@
       "WebFetch(domain:github.com)",
       "Bash(find:*)",
       "Read(//c/Users/techy/AppData/Local/Pub/Cache/hosted/pub.dev/contacts_service-0.6.3/android/**)",
-      "Bash(flutter pub get:*)"
+      "Bash(flutter pub get:*)",
+      "Read(//c/Users/techy/Projects/flutter_projects/windows_camera_app/**)",
+      "Bash(cat:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

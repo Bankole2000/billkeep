@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -65,69 +66,68 @@ class SimpleColorPickerWidget extends StatelessWidget {
       child: BlockPicker(
         pickerColor: currentColor,
         onColorChanged: onColorChanged,
-        availableColors: availableColors ??
+        availableColors:
+            availableColors ??
             [
-              Colors.red,
               Colors.pink,
-              Colors.purple,
-              Colors.deepPurple,
-              Colors.indigo,
-              Colors.blue,
-              Colors.lightBlue,
-              Colors.cyan,
-              Colors.teal,
-              Colors.green,
-              Colors.lightGreen,
-              Colors.lime,
-              Colors.yellow,
-              Colors.amber,
-              Colors.orange,
+              Colors.red,
               Colors.deepOrange,
+              Colors.orange,
+              Colors.amber,
+              Colors.yellow,
+              Colors.lime,
+              Colors.lightGreen,
+              Colors.green,
+              Colors.teal,
+              Colors.cyan,
+              Colors.lightBlue,
+              Colors.blue,
+              Colors.indigo,
+              Colors.deepPurple,
+              Colors.purple,
               Colors.brown,
               Colors.grey,
               Colors.blueGrey,
               Colors.black,
             ],
-        itemBuilder: (Color color, bool isCurrentColor, void Function() changeColor) {
-          return Container(
-            margin: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: color,
-              border: Border.all(
-                color: isCurrentColor ? Colors.white : Colors.transparent,
-                width: 3,
-              ),
-              boxShadow: isCurrentColor
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 4,
-                        spreadRadius: 1,
-                      ),
-                    ]
-                  : null,
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: changeColor,
-                borderRadius: BorderRadius.circular(8),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: itemSize,
-                  height: itemSize,
-                  child: isCurrentColor
-                      ? const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        )
+        itemBuilder:
+            (Color color, bool isCurrentColor, void Function() changeColor) {
+              return Container(
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: color,
+                  border: Border.all(
+                    color: isCurrentColor ? Colors.white : Colors.transparent,
+                    width: 3,
+                  ),
+                  boxShadow: isCurrentColor
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.3),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                          ),
+                        ]
                       : null,
                 ),
-              ),
-            ),
-          );
-        },
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: changeColor,
+                    borderRadius: BorderRadius.circular(8),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: itemSize,
+                      height: itemSize,
+                      child: isCurrentColor
+                          ? const Icon(Icons.check, color: Colors.white)
+                          : null,
+                    ),
+                  ),
+                ),
+              );
+            },
       ),
     );
   }
@@ -150,7 +150,7 @@ class MaterialColorPickerWidget extends StatelessWidget {
       child: MaterialPicker(
         pickerColor: currentColor,
         onColorChanged: onColorChanged,
-        enableLabel: true,
+        enableLabel: false,
       ),
     );
   }
@@ -181,11 +181,13 @@ class ColorSelectorButton extends StatefulWidget {
 
 class _ColorSelectorButtonState extends State<ColorSelectorButton> {
   late Color _currentColor;
+  late ColorPickerType _pickerType;
 
   @override
   void initState() {
     super.initState();
     _currentColor = widget.selectedColor ?? Colors.blue;
+    _pickerType = widget.pickerType ?? ColorPickerType.block;
   }
 
   void _showColorPicker() {
@@ -196,79 +198,183 @@ class _ColorSelectorButtonState extends State<ColorSelectorButton> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return Container(
-          height: widget.pickerHeight,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: widget.pickerHeight,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: _buildColorPicker(tempColor, (color) {
-                  tempColor = color;
-                }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentColor = tempColor;
-                      });
-                      widget.onColorChanged(tempColor);
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: tempColor,
-                      foregroundColor: _getContrastColor(tempColor),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: CupertinoColors.systemGrey5),
                       ),
                     ),
-                    child: const Text(
-                      'Select Color',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // SizedBox(width: 24),
+                        Padding(
+                          padding: EdgeInsetsGeometry.only(left: 10),
+                          child: CupertinoButton(
+                            borderRadius: BorderRadius.circular(25),
+                            onPressed: () => Navigator.pop(context),
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            minimumSize: Size(20, 20),
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: CupertinoColors.systemGrey5,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                CupertinoIcons.clear,
+                                color: CupertinoColors.label,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Select Color',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsetsGeometry.only(right: 10),
+                          child: IconButton(
+                            tooltip: 'Toggle view',
+                            icon: Icon(
+                              _pickerType == ColorPickerType.block
+                                  ? Icons.grid_view
+                                  : Icons.view_list,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                print(_pickerType);
+                                if (_pickerType == ColorPickerType.block) {
+                                  _pickerType = ColorPickerType.material;
+                                } else {
+                                  _pickerType = ColorPickerType.block;
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: _pickerType == ColorPickerType.block
+                        ? _buildColorPicker(tempColor, (color) {
+                            setState(() {
+                              _currentColor = color;
+                              tempColor = color;
+                              // widget.onColorChanged(tempColor);
+                            });
+                          })
+                        // SimpleColorPickerWidget(
+                        //     currentColor: tempColor,
+                        //     onColorChanged: (color) {
+                        //       setState(() {
+                        //         // _currentColor = color;
+                        //         tempColor = color;
+                        //         // widget.onColorChanged(tempColor);
+                        //       });
+                        //     },
+                        //   )
+                        : _pickerType == ColorPickerType.material
+                        ? _buildColorPicker(tempColor, (color) {
+                            setState(() {
+                              _currentColor = color;
+                              tempColor = color;
+                              // widget.onColorChanged(tempColor);
+                            });
+                          })
+                        // MaterialColorPickerWidget(
+                        //     currentColor: tempColor,
+                        //     onColorChanged: (color) {
+                        //       setState(() {
+                        //         // _currentColor = color;
+                        //         tempColor = color;
+                        //         // widget.onColorChanged(tempColor);
+                        //       });
+                        //     },
+                        //   )
+                        : _buildColorPicker(tempColor, (color) {
+                            setState(() {
+                              _currentColor = color;
+                              tempColor = color;
+                              // widget.onColorChanged(tempColor);
+                            });
+                          }),
+
+                    // ColorPickerWidget(
+                    //     currentColor: tempColor,
+                    //     onColorChanged: (color) {
+                    //       setState(() {
+                    //         // _currentColor = color;
+                    //         tempColor = color;
+                    //         // widget.onColorChanged(tempColor);
+                    //       });
+                    //     },
+                    //   ),
+
+                    // _buildColorPicker(tempColor, ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _currentColor = tempColor;
+                          });
+                          widget.onColorChanged(tempColor);
+                          Navigator.of(context).pop(tempColor);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: tempColor,
+                          foregroundColor: _getContrastColor(tempColor),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Select Color',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
 
   Widget _buildColorPicker(Color color, Function(Color) onChanged) {
-    switch (widget.pickerType) {
+    switch (_pickerType) {
       case ColorPickerType.full:
         return ColorPickerWidget(
           currentColor: color,
@@ -298,60 +404,62 @@ class _ColorSelectorButtonState extends State<ColorSelectorButton> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: _showColorPicker,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: widget.buttonSize,
-                  height: widget.buttonSize,
-                  decoration: BoxDecoration(
-                    color: _currentColor,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade300, width: 2),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Color Selected',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '#${_currentColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: Colors.grey.shade600,
-            ),
-          ],
-        ),
-      ),
+    return IconButton(
+      onPressed: _showColorPicker,
+      icon: Icon(Icons.invert_colors, size: 36, color: _currentColor),
     );
+
+    // InkWell(
+    //   onTap: _showColorPicker,
+    //   borderRadius: BorderRadius.circular(12),
+    //   child: Container(
+    //     padding: const EdgeInsets.all(16),
+    //     decoration: BoxDecoration(
+    //       border: Border.all(color: Colors.grey.shade300),
+    //       borderRadius: BorderRadius.circular(12),
+    //     ),
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //       children: [
+    //         Row(
+    //           children: [
+    //             Container(
+    //               width: widget.buttonSize,
+    //               height: widget.buttonSize,
+    //               decoration: BoxDecoration(
+    //                 color: _currentColor,
+    //                 borderRadius: BorderRadius.circular(8),
+    //                 border: Border.all(color: Colors.grey.shade300, width: 2),
+    //               ),
+    //             ),
+    //             const SizedBox(width: 12),
+    //             Column(
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               children: [
+    //                 const Text(
+    //                   'Color Selected',
+    //                   style: TextStyle(
+    //                     fontSize: 16,
+    //                     fontWeight: FontWeight.w500,
+    //                   ),
+    //                 ),
+    //                 const SizedBox(height: 2),
+    //                 Text(
+    //                   '#${_currentColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}',
+    //                   style: TextStyle(
+    //                     fontSize: 12,
+    //                     color: Colors.grey.shade600,
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ],
+    //         ),
+    //         Icon(Icons.chevron_right, color: Colors.grey.shade600),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:billkeep/models/category_models.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart';
@@ -17,6 +18,11 @@ class Projects extends Table {
   TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
   TextColumn get iconType =>
       text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  // For remote images
+  TextColumn get imageUrl => text().nullable()();
+
+  // For local images (store file path, not binary data)
+  TextColumn get localImagePath => text().nullable()();
   TextColumn get color => text().nullable()();
   BoolColumn get isSynced =>
       boolean().withDefault(const Constant(false))(); // NEW
@@ -47,6 +53,14 @@ class Reminders extends Table {
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   TextColumn get reminderType =>
       text()(); // e.g., '15_min_before', '1_day_before'
+
+  TextColumn get tempId => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 // Add this table definition before the @DriftDatabase annotation
@@ -369,10 +383,18 @@ class Merchants extends Table {
 }
 
 class MerchantMetadata extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  TextColumn get id => text()();
   TextColumn get merchantId => text()();
   TextColumn get key => text()();
   TextColumn get value => text()();
+
+  TextColumn get tempId => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 
   @override
   List<Set<Column>> get uniqueKeys => [
@@ -441,10 +463,10 @@ class Wallets extends Table {
 
   // For remote images
   TextColumn get imageUrl => text().nullable()();
-  TextColumn get provider =>
-      text().nullable()(); // Bank Name or Credit Card / Crypto Provider
-  TextColumn get providerUrl =>
-      text().nullable()(); // Bank, Credit Card or Crypto provider Url
+  TextColumn get providerId => text().nullable().references(
+    WalletProviders,
+    #id,
+  )(); // Bank Name or Credit Card / Crypto Provider
 
   // For local images (store file path, not binary data)
   TextColumn get localImagePath => text().nullable()();
@@ -487,6 +509,53 @@ class WalletMetadata extends Table {
   ];
 }
 
+class WalletProviders extends Table {
+  // For remote images
+  TextColumn get imageUrl => text().nullable()();
+
+  // For local images (store file path, not binary data)
+  TextColumn get localImagePath => text().nullable()();
+  IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
+  TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
+  TextColumn get iconType =>
+      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+  TextColumn get color => text().nullable()();
+  TextColumn get websiteUrl => text().nullable()();
+  BoolColumn get isFiatBank => boolean().withDefault(const Constant(false))();
+  BoolColumn get isCrypto => boolean().withDefault(const Constant(false))();
+  BoolColumn get isMobileMoney =>
+      boolean().withDefault(const Constant(false))();
+  BoolColumn get isCreditCard => boolean().withDefault(const Constant(false))();
+  BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
+
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get description => text().nullable()();
+  TextColumn get tempId => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class WalletProviderMetadata extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get providerId => text()();
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+  TextColumn get tempId => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {providerId, key},
+  ];
+}
+
 class Budgets extends Table {
   IntColumn get underLimitGoal =>
       integer().nullable()(); // Aspirational savings goal
@@ -512,6 +581,7 @@ class Budgets extends Table {
 
   TextColumn get id => text()();
   TextColumn get name => text()();
+  TextColumn get description => text().nullable()();
   TextColumn get tempId => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -1065,6 +1135,8 @@ class _ReturnCalculationTypeConverter
     InvestmentPayments,
     InvestmentReturns,
     Reminders,
+    WalletProviders,
+    WalletProviderMetadata,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -1117,6 +1189,8 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(contacts);
           await m.createTable(contactInfo);
           await m.createTable(currencies);
+          await m.createTable(walletProviders);
+          await m.createTable(walletProviderMetadata);
           await m.createTable(wallets);
           await m.createTable(walletMetadata);
           await m.createTable(budgets);
@@ -1240,6 +1314,38 @@ class AppDatabase extends _$AppDatabase {
       idMappings,
     )..where((t) => t.tempId.equals(tempId))).getSingleOrNull();
     return result?.canonicalId;
+  }
+
+  // Put this inside your AppDatabase class (or DAO)
+  Stream<List<CategoryGroupWithCategories>>
+  watchCategoryGroupsWithCategories() {
+    final query = select(categoryGroups).join([
+      leftOuterJoin(
+        categories,
+        categories.categoryGroupId.equalsExp(categoryGroups.id),
+      ),
+    ]);
+
+    return query.watch().map((rows) {
+      // rows is List<TypedResult>
+      final Map<String, CategoryGroupWithCategories> map = {};
+
+      for (final row in rows) {
+        final group = row.readTable(categoryGroups);
+        final category = row.readTableOrNull(categories);
+
+        final entry = map.putIfAbsent(group.id, () {
+          return CategoryGroupWithCategories(group: group, categories: []);
+        });
+
+        if (category != null) {
+          entry.categories.add(category);
+        }
+      }
+
+      // If you want groups in the original DB order:
+      return map.values.toList();
+    });
   }
 }
 

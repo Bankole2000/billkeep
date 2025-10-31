@@ -71,6 +71,28 @@ class $ProjectsTable extends Projects with TableInfo<$ProjectsTable, Project> {
     requiredDuringInsert: false,
     defaultValue: const Constant('MaterialIcons'),
   );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localImagePathMeta = const VerificationMeta(
+    'localImagePath',
+  );
+  @override
+  late final GeneratedColumn<String> localImagePath = GeneratedColumn<String>(
+    'local_image_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
   late final GeneratedColumn<String> color = GeneratedColumn<String>(
@@ -151,6 +173,8 @@ class $ProjectsTable extends Projects with TableInfo<$ProjectsTable, Project> {
     iconCodePoint,
     iconEmoji,
     iconType,
+    imageUrl,
+    localImagePath,
     color,
     isSynced,
     tempId,
@@ -211,6 +235,21 @@ class $ProjectsTable extends Projects with TableInfo<$ProjectsTable, Project> {
       context.handle(
         _iconTypeMeta,
         iconType.isAcceptableOrUnknown(data['icon_type']!, _iconTypeMeta),
+      );
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('local_image_path')) {
+      context.handle(
+        _localImagePathMeta,
+        localImagePath.isAcceptableOrUnknown(
+          data['local_image_path']!,
+          _localImagePathMeta,
+        ),
       );
     }
     if (data.containsKey('color')) {
@@ -282,6 +321,14 @@ class $ProjectsTable extends Projects with TableInfo<$ProjectsTable, Project> {
         DriftSqlType.string,
         data['${effectivePrefix}icon_type'],
       )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      localImagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_image_path'],
+      ),
       color: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}color'],
@@ -322,6 +369,8 @@ class Project extends DataClass implements Insertable<Project> {
   final int? iconCodePoint;
   final String? iconEmoji;
   final String iconType;
+  final String? imageUrl;
+  final String? localImagePath;
   final String? color;
   final bool isSynced;
   final String? tempId;
@@ -335,6 +384,8 @@ class Project extends DataClass implements Insertable<Project> {
     this.iconCodePoint,
     this.iconEmoji,
     required this.iconType,
+    this.imageUrl,
+    this.localImagePath,
     this.color,
     required this.isSynced,
     this.tempId,
@@ -357,6 +408,12 @@ class Project extends DataClass implements Insertable<Project> {
       map['icon_emoji'] = Variable<String>(iconEmoji);
     }
     map['icon_type'] = Variable<String>(iconType);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || localImagePath != null) {
+      map['local_image_path'] = Variable<String>(localImagePath);
+    }
     if (!nullToAbsent || color != null) {
       map['color'] = Variable<String>(color);
     }
@@ -384,6 +441,12 @@ class Project extends DataClass implements Insertable<Project> {
           ? const Value.absent()
           : Value(iconEmoji),
       iconType: Value(iconType),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      localImagePath: localImagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localImagePath),
       color: color == null && nullToAbsent
           ? const Value.absent()
           : Value(color),
@@ -409,6 +472,8 @@ class Project extends DataClass implements Insertable<Project> {
       iconCodePoint: serializer.fromJson<int?>(json['iconCodePoint']),
       iconEmoji: serializer.fromJson<String?>(json['iconEmoji']),
       iconType: serializer.fromJson<String>(json['iconType']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      localImagePath: serializer.fromJson<String?>(json['localImagePath']),
       color: serializer.fromJson<String?>(json['color']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       tempId: serializer.fromJson<String?>(json['tempId']),
@@ -427,6 +492,8 @@ class Project extends DataClass implements Insertable<Project> {
       'iconCodePoint': serializer.toJson<int?>(iconCodePoint),
       'iconEmoji': serializer.toJson<String?>(iconEmoji),
       'iconType': serializer.toJson<String>(iconType),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'localImagePath': serializer.toJson<String?>(localImagePath),
       'color': serializer.toJson<String?>(color),
       'isSynced': serializer.toJson<bool>(isSynced),
       'tempId': serializer.toJson<String?>(tempId),
@@ -443,6 +510,8 @@ class Project extends DataClass implements Insertable<Project> {
     Value<int?> iconCodePoint = const Value.absent(),
     Value<String?> iconEmoji = const Value.absent(),
     String? iconType,
+    Value<String?> imageUrl = const Value.absent(),
+    Value<String?> localImagePath = const Value.absent(),
     Value<String?> color = const Value.absent(),
     bool? isSynced,
     Value<String?> tempId = const Value.absent(),
@@ -458,6 +527,10 @@ class Project extends DataClass implements Insertable<Project> {
         : this.iconCodePoint,
     iconEmoji: iconEmoji.present ? iconEmoji.value : this.iconEmoji,
     iconType: iconType ?? this.iconType,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    localImagePath: localImagePath.present
+        ? localImagePath.value
+        : this.localImagePath,
     color: color.present ? color.value : this.color,
     isSynced: isSynced ?? this.isSynced,
     tempId: tempId.present ? tempId.value : this.tempId,
@@ -477,6 +550,10 @@ class Project extends DataClass implements Insertable<Project> {
           : this.iconCodePoint,
       iconEmoji: data.iconEmoji.present ? data.iconEmoji.value : this.iconEmoji,
       iconType: data.iconType.present ? data.iconType.value : this.iconType,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      localImagePath: data.localImagePath.present
+          ? data.localImagePath.value
+          : this.localImagePath,
       color: data.color.present ? data.color.value : this.color,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
@@ -497,6 +574,8 @@ class Project extends DataClass implements Insertable<Project> {
           ..write('iconCodePoint: $iconCodePoint, ')
           ..write('iconEmoji: $iconEmoji, ')
           ..write('iconType: $iconType, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath, ')
           ..write('color: $color, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
@@ -515,6 +594,8 @@ class Project extends DataClass implements Insertable<Project> {
     iconCodePoint,
     iconEmoji,
     iconType,
+    imageUrl,
+    localImagePath,
     color,
     isSynced,
     tempId,
@@ -532,6 +613,8 @@ class Project extends DataClass implements Insertable<Project> {
           other.iconCodePoint == this.iconCodePoint &&
           other.iconEmoji == this.iconEmoji &&
           other.iconType == this.iconType &&
+          other.imageUrl == this.imageUrl &&
+          other.localImagePath == this.localImagePath &&
           other.color == this.color &&
           other.isSynced == this.isSynced &&
           other.tempId == this.tempId &&
@@ -547,6 +630,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
   final Value<int?> iconCodePoint;
   final Value<String?> iconEmoji;
   final Value<String> iconType;
+  final Value<String?> imageUrl;
+  final Value<String?> localImagePath;
   final Value<String?> color;
   final Value<bool> isSynced;
   final Value<String?> tempId;
@@ -561,6 +646,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
     this.iconCodePoint = const Value.absent(),
     this.iconEmoji = const Value.absent(),
     this.iconType = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
     this.color = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
@@ -576,6 +663,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
     this.iconCodePoint = const Value.absent(),
     this.iconEmoji = const Value.absent(),
     this.iconType = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
     this.color = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
@@ -592,6 +681,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
     Expression<int>? iconCodePoint,
     Expression<String>? iconEmoji,
     Expression<String>? iconType,
+    Expression<String>? imageUrl,
+    Expression<String>? localImagePath,
     Expression<String>? color,
     Expression<bool>? isSynced,
     Expression<String>? tempId,
@@ -607,6 +698,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
       if (iconCodePoint != null) 'icon_code_point': iconCodePoint,
       if (iconEmoji != null) 'icon_emoji': iconEmoji,
       if (iconType != null) 'icon_type': iconType,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (localImagePath != null) 'local_image_path': localImagePath,
       if (color != null) 'color': color,
       if (isSynced != null) 'is_synced': isSynced,
       if (tempId != null) 'temp_id': tempId,
@@ -624,6 +717,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
     Value<int?>? iconCodePoint,
     Value<String?>? iconEmoji,
     Value<String>? iconType,
+    Value<String?>? imageUrl,
+    Value<String?>? localImagePath,
     Value<String?>? color,
     Value<bool>? isSynced,
     Value<String?>? tempId,
@@ -639,6 +734,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
       iconCodePoint: iconCodePoint ?? this.iconCodePoint,
       iconEmoji: iconEmoji ?? this.iconEmoji,
       iconType: iconType ?? this.iconType,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
       color: color ?? this.color,
       isSynced: isSynced ?? this.isSynced,
       tempId: tempId ?? this.tempId,
@@ -669,6 +766,12 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
     }
     if (iconType.present) {
       map['icon_type'] = Variable<String>(iconType.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (localImagePath.present) {
+      map['local_image_path'] = Variable<String>(localImagePath.value);
     }
     if (color.present) {
       map['color'] = Variable<String>(color.value);
@@ -703,6 +806,8 @@ class ProjectsCompanion extends UpdateCompanion<Project> {
           ..write('iconCodePoint: $iconCodePoint, ')
           ..write('iconEmoji: $iconEmoji, ')
           ..write('iconType: $iconType, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath, ')
           ..write('color: $color, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
@@ -4073,6 +4178,1084 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
   }
 }
 
+class $WalletProvidersTable extends WalletProviders
+    with TableInfo<$WalletProvidersTable, WalletProvider> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WalletProvidersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localImagePathMeta = const VerificationMeta(
+    'localImagePath',
+  );
+  @override
+  late final GeneratedColumn<String> localImagePath = GeneratedColumn<String>(
+    'local_image_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iconCodePointMeta = const VerificationMeta(
+    'iconCodePoint',
+  );
+  @override
+  late final GeneratedColumn<int> iconCodePoint = GeneratedColumn<int>(
+    'icon_code_point',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iconEmojiMeta = const VerificationMeta(
+    'iconEmoji',
+  );
+  @override
+  late final GeneratedColumn<String> iconEmoji = GeneratedColumn<String>(
+    'icon_emoji',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iconTypeMeta = const VerificationMeta(
+    'iconType',
+  );
+  @override
+  late final GeneratedColumn<String> iconType = GeneratedColumn<String>(
+    'icon_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('MaterialIcons'),
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _websiteUrlMeta = const VerificationMeta(
+    'websiteUrl',
+  );
+  @override
+  late final GeneratedColumn<String> websiteUrl = GeneratedColumn<String>(
+    'website_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isFiatBankMeta = const VerificationMeta(
+    'isFiatBank',
+  );
+  @override
+  late final GeneratedColumn<bool> isFiatBank = GeneratedColumn<bool>(
+    'is_fiat_bank',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_fiat_bank" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isCryptoMeta = const VerificationMeta(
+    'isCrypto',
+  );
+  @override
+  late final GeneratedColumn<bool> isCrypto = GeneratedColumn<bool>(
+    'is_crypto',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_crypto" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isMobileMoneyMeta = const VerificationMeta(
+    'isMobileMoney',
+  );
+  @override
+  late final GeneratedColumn<bool> isMobileMoney = GeneratedColumn<bool>(
+    'is_mobile_money',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_mobile_money" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isCreditCardMeta = const VerificationMeta(
+    'isCreditCard',
+  );
+  @override
+  late final GeneratedColumn<bool> isCreditCard = GeneratedColumn<bool>(
+    'is_credit_card',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_credit_card" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDefaultMeta = const VerificationMeta(
+    'isDefault',
+  );
+  @override
+  late final GeneratedColumn<bool> isDefault = GeneratedColumn<bool>(
+    'is_default',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_default" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
+  @override
+  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
+    'temp_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    imageUrl,
+    localImagePath,
+    iconCodePoint,
+    iconEmoji,
+    iconType,
+    color,
+    websiteUrl,
+    isFiatBank,
+    isCrypto,
+    isMobileMoney,
+    isCreditCard,
+    isDefault,
+    id,
+    name,
+    description,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wallet_providers';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WalletProvider> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('local_image_path')) {
+      context.handle(
+        _localImagePathMeta,
+        localImagePath.isAcceptableOrUnknown(
+          data['local_image_path']!,
+          _localImagePathMeta,
+        ),
+      );
+    }
+    if (data.containsKey('icon_code_point')) {
+      context.handle(
+        _iconCodePointMeta,
+        iconCodePoint.isAcceptableOrUnknown(
+          data['icon_code_point']!,
+          _iconCodePointMeta,
+        ),
+      );
+    }
+    if (data.containsKey('icon_emoji')) {
+      context.handle(
+        _iconEmojiMeta,
+        iconEmoji.isAcceptableOrUnknown(data['icon_emoji']!, _iconEmojiMeta),
+      );
+    }
+    if (data.containsKey('icon_type')) {
+      context.handle(
+        _iconTypeMeta,
+        iconType.isAcceptableOrUnknown(data['icon_type']!, _iconTypeMeta),
+      );
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    }
+    if (data.containsKey('website_url')) {
+      context.handle(
+        _websiteUrlMeta,
+        websiteUrl.isAcceptableOrUnknown(data['website_url']!, _websiteUrlMeta),
+      );
+    }
+    if (data.containsKey('is_fiat_bank')) {
+      context.handle(
+        _isFiatBankMeta,
+        isFiatBank.isAcceptableOrUnknown(
+          data['is_fiat_bank']!,
+          _isFiatBankMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_crypto')) {
+      context.handle(
+        _isCryptoMeta,
+        isCrypto.isAcceptableOrUnknown(data['is_crypto']!, _isCryptoMeta),
+      );
+    }
+    if (data.containsKey('is_mobile_money')) {
+      context.handle(
+        _isMobileMoneyMeta,
+        isMobileMoney.isAcceptableOrUnknown(
+          data['is_mobile_money']!,
+          _isMobileMoneyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_credit_card')) {
+      context.handle(
+        _isCreditCardMeta,
+        isCreditCard.isAcceptableOrUnknown(
+          data['is_credit_card']!,
+          _isCreditCardMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_default')) {
+      context.handle(
+        _isDefaultMeta,
+        isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('temp_id')) {
+      context.handle(
+        _tempIdMeta,
+        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WalletProvider map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WalletProvider(
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      localImagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_image_path'],
+      ),
+      iconCodePoint: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}icon_code_point'],
+      ),
+      iconEmoji: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_emoji'],
+      ),
+      iconType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_type'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      ),
+      websiteUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}website_url'],
+      ),
+      isFiatBank: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_fiat_bank'],
+      )!,
+      isCrypto: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_crypto'],
+      )!,
+      isMobileMoney: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_mobile_money'],
+      )!,
+      isCreditCard: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_credit_card'],
+      )!,
+      isDefault: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_default'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      tempId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_id'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WalletProvidersTable createAlias(String alias) {
+    return $WalletProvidersTable(attachedDatabase, alias);
+  }
+}
+
+class WalletProvider extends DataClass implements Insertable<WalletProvider> {
+  final String? imageUrl;
+  final String? localImagePath;
+  final int? iconCodePoint;
+  final String? iconEmoji;
+  final String iconType;
+  final String? color;
+  final String? websiteUrl;
+  final bool isFiatBank;
+  final bool isCrypto;
+  final bool isMobileMoney;
+  final bool isCreditCard;
+  final bool isDefault;
+  final String id;
+  final String name;
+  final String? description;
+  final String? tempId;
+  final bool isSynced;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const WalletProvider({
+    this.imageUrl,
+    this.localImagePath,
+    this.iconCodePoint,
+    this.iconEmoji,
+    required this.iconType,
+    this.color,
+    this.websiteUrl,
+    required this.isFiatBank,
+    required this.isCrypto,
+    required this.isMobileMoney,
+    required this.isCreditCard,
+    required this.isDefault,
+    required this.id,
+    required this.name,
+    this.description,
+    this.tempId,
+    required this.isSynced,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || localImagePath != null) {
+      map['local_image_path'] = Variable<String>(localImagePath);
+    }
+    if (!nullToAbsent || iconCodePoint != null) {
+      map['icon_code_point'] = Variable<int>(iconCodePoint);
+    }
+    if (!nullToAbsent || iconEmoji != null) {
+      map['icon_emoji'] = Variable<String>(iconEmoji);
+    }
+    map['icon_type'] = Variable<String>(iconType);
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<String>(color);
+    }
+    if (!nullToAbsent || websiteUrl != null) {
+      map['website_url'] = Variable<String>(websiteUrl);
+    }
+    map['is_fiat_bank'] = Variable<bool>(isFiatBank);
+    map['is_crypto'] = Variable<bool>(isCrypto);
+    map['is_mobile_money'] = Variable<bool>(isMobileMoney);
+    map['is_credit_card'] = Variable<bool>(isCreditCard);
+    map['is_default'] = Variable<bool>(isDefault);
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || tempId != null) {
+      map['temp_id'] = Variable<String>(tempId);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  WalletProvidersCompanion toCompanion(bool nullToAbsent) {
+    return WalletProvidersCompanion(
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      localImagePath: localImagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localImagePath),
+      iconCodePoint: iconCodePoint == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconCodePoint),
+      iconEmoji: iconEmoji == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconEmoji),
+      iconType: Value(iconType),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
+      websiteUrl: websiteUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(websiteUrl),
+      isFiatBank: Value(isFiatBank),
+      isCrypto: Value(isCrypto),
+      isMobileMoney: Value(isMobileMoney),
+      isCreditCard: Value(isCreditCard),
+      isDefault: Value(isDefault),
+      id: Value(id),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      tempId: tempId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tempId),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory WalletProvider.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WalletProvider(
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      localImagePath: serializer.fromJson<String?>(json['localImagePath']),
+      iconCodePoint: serializer.fromJson<int?>(json['iconCodePoint']),
+      iconEmoji: serializer.fromJson<String?>(json['iconEmoji']),
+      iconType: serializer.fromJson<String>(json['iconType']),
+      color: serializer.fromJson<String?>(json['color']),
+      websiteUrl: serializer.fromJson<String?>(json['websiteUrl']),
+      isFiatBank: serializer.fromJson<bool>(json['isFiatBank']),
+      isCrypto: serializer.fromJson<bool>(json['isCrypto']),
+      isMobileMoney: serializer.fromJson<bool>(json['isMobileMoney']),
+      isCreditCard: serializer.fromJson<bool>(json['isCreditCard']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      tempId: serializer.fromJson<String?>(json['tempId']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'localImagePath': serializer.toJson<String?>(localImagePath),
+      'iconCodePoint': serializer.toJson<int?>(iconCodePoint),
+      'iconEmoji': serializer.toJson<String?>(iconEmoji),
+      'iconType': serializer.toJson<String>(iconType),
+      'color': serializer.toJson<String?>(color),
+      'websiteUrl': serializer.toJson<String?>(websiteUrl),
+      'isFiatBank': serializer.toJson<bool>(isFiatBank),
+      'isCrypto': serializer.toJson<bool>(isCrypto),
+      'isMobileMoney': serializer.toJson<bool>(isMobileMoney),
+      'isCreditCard': serializer.toJson<bool>(isCreditCard),
+      'isDefault': serializer.toJson<bool>(isDefault),
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'tempId': serializer.toJson<String?>(tempId),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  WalletProvider copyWith({
+    Value<String?> imageUrl = const Value.absent(),
+    Value<String?> localImagePath = const Value.absent(),
+    Value<int?> iconCodePoint = const Value.absent(),
+    Value<String?> iconEmoji = const Value.absent(),
+    String? iconType,
+    Value<String?> color = const Value.absent(),
+    Value<String?> websiteUrl = const Value.absent(),
+    bool? isFiatBank,
+    bool? isCrypto,
+    bool? isMobileMoney,
+    bool? isCreditCard,
+    bool? isDefault,
+    String? id,
+    String? name,
+    Value<String?> description = const Value.absent(),
+    Value<String?> tempId = const Value.absent(),
+    bool? isSynced,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => WalletProvider(
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    localImagePath: localImagePath.present
+        ? localImagePath.value
+        : this.localImagePath,
+    iconCodePoint: iconCodePoint.present
+        ? iconCodePoint.value
+        : this.iconCodePoint,
+    iconEmoji: iconEmoji.present ? iconEmoji.value : this.iconEmoji,
+    iconType: iconType ?? this.iconType,
+    color: color.present ? color.value : this.color,
+    websiteUrl: websiteUrl.present ? websiteUrl.value : this.websiteUrl,
+    isFiatBank: isFiatBank ?? this.isFiatBank,
+    isCrypto: isCrypto ?? this.isCrypto,
+    isMobileMoney: isMobileMoney ?? this.isMobileMoney,
+    isCreditCard: isCreditCard ?? this.isCreditCard,
+    isDefault: isDefault ?? this.isDefault,
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    tempId: tempId.present ? tempId.value : this.tempId,
+    isSynced: isSynced ?? this.isSynced,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  WalletProvider copyWithCompanion(WalletProvidersCompanion data) {
+    return WalletProvider(
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      localImagePath: data.localImagePath.present
+          ? data.localImagePath.value
+          : this.localImagePath,
+      iconCodePoint: data.iconCodePoint.present
+          ? data.iconCodePoint.value
+          : this.iconCodePoint,
+      iconEmoji: data.iconEmoji.present ? data.iconEmoji.value : this.iconEmoji,
+      iconType: data.iconType.present ? data.iconType.value : this.iconType,
+      color: data.color.present ? data.color.value : this.color,
+      websiteUrl: data.websiteUrl.present
+          ? data.websiteUrl.value
+          : this.websiteUrl,
+      isFiatBank: data.isFiatBank.present
+          ? data.isFiatBank.value
+          : this.isFiatBank,
+      isCrypto: data.isCrypto.present ? data.isCrypto.value : this.isCrypto,
+      isMobileMoney: data.isMobileMoney.present
+          ? data.isMobileMoney.value
+          : this.isMobileMoney,
+      isCreditCard: data.isCreditCard.present
+          ? data.isCreditCard.value
+          : this.isCreditCard,
+      isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletProvider(')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath, ')
+          ..write('iconCodePoint: $iconCodePoint, ')
+          ..write('iconEmoji: $iconEmoji, ')
+          ..write('iconType: $iconType, ')
+          ..write('color: $color, ')
+          ..write('websiteUrl: $websiteUrl, ')
+          ..write('isFiatBank: $isFiatBank, ')
+          ..write('isCrypto: $isCrypto, ')
+          ..write('isMobileMoney: $isMobileMoney, ')
+          ..write('isCreditCard: $isCreditCard, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    imageUrl,
+    localImagePath,
+    iconCodePoint,
+    iconEmoji,
+    iconType,
+    color,
+    websiteUrl,
+    isFiatBank,
+    isCrypto,
+    isMobileMoney,
+    isCreditCard,
+    isDefault,
+    id,
+    name,
+    description,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WalletProvider &&
+          other.imageUrl == this.imageUrl &&
+          other.localImagePath == this.localImagePath &&
+          other.iconCodePoint == this.iconCodePoint &&
+          other.iconEmoji == this.iconEmoji &&
+          other.iconType == this.iconType &&
+          other.color == this.color &&
+          other.websiteUrl == this.websiteUrl &&
+          other.isFiatBank == this.isFiatBank &&
+          other.isCrypto == this.isCrypto &&
+          other.isMobileMoney == this.isMobileMoney &&
+          other.isCreditCard == this.isCreditCard &&
+          other.isDefault == this.isDefault &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.tempId == this.tempId &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class WalletProvidersCompanion extends UpdateCompanion<WalletProvider> {
+  final Value<String?> imageUrl;
+  final Value<String?> localImagePath;
+  final Value<int?> iconCodePoint;
+  final Value<String?> iconEmoji;
+  final Value<String> iconType;
+  final Value<String?> color;
+  final Value<String?> websiteUrl;
+  final Value<bool> isFiatBank;
+  final Value<bool> isCrypto;
+  final Value<bool> isMobileMoney;
+  final Value<bool> isCreditCard;
+  final Value<bool> isDefault;
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<String?> tempId;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const WalletProvidersCompanion({
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
+    this.iconCodePoint = const Value.absent(),
+    this.iconEmoji = const Value.absent(),
+    this.iconType = const Value.absent(),
+    this.color = const Value.absent(),
+    this.websiteUrl = const Value.absent(),
+    this.isFiatBank = const Value.absent(),
+    this.isCrypto = const Value.absent(),
+    this.isMobileMoney = const Value.absent(),
+    this.isCreditCard = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WalletProvidersCompanion.insert({
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
+    this.iconCodePoint = const Value.absent(),
+    this.iconEmoji = const Value.absent(),
+    this.iconType = const Value.absent(),
+    this.color = const Value.absent(),
+    this.websiteUrl = const Value.absent(),
+    this.isFiatBank = const Value.absent(),
+    this.isCrypto = const Value.absent(),
+    this.isMobileMoney = const Value.absent(),
+    this.isCreditCard = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    required String id,
+    required String name,
+    this.description = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name);
+  static Insertable<WalletProvider> custom({
+    Expression<String>? imageUrl,
+    Expression<String>? localImagePath,
+    Expression<int>? iconCodePoint,
+    Expression<String>? iconEmoji,
+    Expression<String>? iconType,
+    Expression<String>? color,
+    Expression<String>? websiteUrl,
+    Expression<bool>? isFiatBank,
+    Expression<bool>? isCrypto,
+    Expression<bool>? isMobileMoney,
+    Expression<bool>? isCreditCard,
+    Expression<bool>? isDefault,
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? tempId,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (localImagePath != null) 'local_image_path': localImagePath,
+      if (iconCodePoint != null) 'icon_code_point': iconCodePoint,
+      if (iconEmoji != null) 'icon_emoji': iconEmoji,
+      if (iconType != null) 'icon_type': iconType,
+      if (color != null) 'color': color,
+      if (websiteUrl != null) 'website_url': websiteUrl,
+      if (isFiatBank != null) 'is_fiat_bank': isFiatBank,
+      if (isCrypto != null) 'is_crypto': isCrypto,
+      if (isMobileMoney != null) 'is_mobile_money': isMobileMoney,
+      if (isCreditCard != null) 'is_credit_card': isCreditCard,
+      if (isDefault != null) 'is_default': isDefault,
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (tempId != null) 'temp_id': tempId,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WalletProvidersCompanion copyWith({
+    Value<String?>? imageUrl,
+    Value<String?>? localImagePath,
+    Value<int?>? iconCodePoint,
+    Value<String?>? iconEmoji,
+    Value<String>? iconType,
+    Value<String?>? color,
+    Value<String?>? websiteUrl,
+    Value<bool>? isFiatBank,
+    Value<bool>? isCrypto,
+    Value<bool>? isMobileMoney,
+    Value<bool>? isCreditCard,
+    Value<bool>? isDefault,
+    Value<String>? id,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<String?>? tempId,
+    Value<bool>? isSynced,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return WalletProvidersCompanion(
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      websiteUrl: websiteUrl ?? this.websiteUrl,
+      isFiatBank: isFiatBank ?? this.isFiatBank,
+      isCrypto: isCrypto ?? this.isCrypto,
+      isMobileMoney: isMobileMoney ?? this.isMobileMoney,
+      isCreditCard: isCreditCard ?? this.isCreditCard,
+      isDefault: isDefault ?? this.isDefault,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (localImagePath.present) {
+      map['local_image_path'] = Variable<String>(localImagePath.value);
+    }
+    if (iconCodePoint.present) {
+      map['icon_code_point'] = Variable<int>(iconCodePoint.value);
+    }
+    if (iconEmoji.present) {
+      map['icon_emoji'] = Variable<String>(iconEmoji.value);
+    }
+    if (iconType.present) {
+      map['icon_type'] = Variable<String>(iconType.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (websiteUrl.present) {
+      map['website_url'] = Variable<String>(websiteUrl.value);
+    }
+    if (isFiatBank.present) {
+      map['is_fiat_bank'] = Variable<bool>(isFiatBank.value);
+    }
+    if (isCrypto.present) {
+      map['is_crypto'] = Variable<bool>(isCrypto.value);
+    }
+    if (isMobileMoney.present) {
+      map['is_mobile_money'] = Variable<bool>(isMobileMoney.value);
+    }
+    if (isCreditCard.present) {
+      map['is_credit_card'] = Variable<bool>(isCreditCard.value);
+    }
+    if (isDefault.present) {
+      map['is_default'] = Variable<bool>(isDefault.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (tempId.present) {
+      map['temp_id'] = Variable<String>(tempId.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletProvidersCompanion(')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath, ')
+          ..write('iconCodePoint: $iconCodePoint, ')
+          ..write('iconEmoji: $iconEmoji, ')
+          ..write('iconType: $iconType, ')
+          ..write('color: $color, ')
+          ..write('websiteUrl: $websiteUrl, ')
+          ..write('isFiatBank: $isFiatBank, ')
+          ..write('isCrypto: $isCrypto, ')
+          ..write('isMobileMoney: $isMobileMoney, ')
+          ..write('isCreditCard: $isCreditCard, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -4124,6 +5307,20 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
+  );
+  static const VerificationMeta _providerIdMeta = const VerificationMeta(
+    'providerId',
+  );
+  @override
+  late final GeneratedColumn<String> providerId = GeneratedColumn<String>(
+    'provider_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_providers (id)',
+    ),
   );
   static const VerificationMeta _localImagePathMeta = const VerificationMeta(
     'localImagePath',
@@ -4266,6 +5463,7 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
     currency,
     balance,
     imageUrl,
+    providerId,
     localImagePath,
     isGlobal,
     iconCodePoint,
@@ -4319,6 +5517,12 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
       context.handle(
         _imageUrlMeta,
         imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('provider_id')) {
+      context.handle(
+        _providerIdMeta,
+        providerId.isAcceptableOrUnknown(data['provider_id']!, _providerIdMeta),
       );
     }
     if (data.containsKey('local_image_path')) {
@@ -4425,6 +5629,10 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
       ),
+      providerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}provider_id'],
+      ),
       localImagePath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}local_image_path'],
@@ -4487,6 +5695,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
   final String currency;
   final int balance;
   final String? imageUrl;
+  final String? providerId;
   final String? localImagePath;
   final bool isGlobal;
   final int? iconCodePoint;
@@ -4504,6 +5713,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     required this.currency,
     required this.balance,
     this.imageUrl,
+    this.providerId,
     this.localImagePath,
     required this.isGlobal,
     this.iconCodePoint,
@@ -4525,6 +5735,9 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     map['balance'] = Variable<int>(balance);
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || providerId != null) {
+      map['provider_id'] = Variable<String>(providerId);
     }
     if (!nullToAbsent || localImagePath != null) {
       map['local_image_path'] = Variable<String>(localImagePath);
@@ -4559,6 +5772,9 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       imageUrl: imageUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(imageUrl),
+      providerId: providerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(providerId),
       localImagePath: localImagePath == null && nullToAbsent
           ? const Value.absent()
           : Value(localImagePath),
@@ -4594,6 +5810,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       currency: serializer.fromJson<String>(json['currency']),
       balance: serializer.fromJson<int>(json['balance']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      providerId: serializer.fromJson<String?>(json['providerId']),
       localImagePath: serializer.fromJson<String?>(json['localImagePath']),
       isGlobal: serializer.fromJson<bool>(json['isGlobal']),
       iconCodePoint: serializer.fromJson<int?>(json['iconCodePoint']),
@@ -4616,6 +5833,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       'currency': serializer.toJson<String>(currency),
       'balance': serializer.toJson<int>(balance),
       'imageUrl': serializer.toJson<String?>(imageUrl),
+      'providerId': serializer.toJson<String?>(providerId),
       'localImagePath': serializer.toJson<String?>(localImagePath),
       'isGlobal': serializer.toJson<bool>(isGlobal),
       'iconCodePoint': serializer.toJson<int?>(iconCodePoint),
@@ -4636,6 +5854,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     String? currency,
     int? balance,
     Value<String?> imageUrl = const Value.absent(),
+    Value<String?> providerId = const Value.absent(),
     Value<String?> localImagePath = const Value.absent(),
     bool? isGlobal,
     Value<int?> iconCodePoint = const Value.absent(),
@@ -4653,6 +5872,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     currency: currency ?? this.currency,
     balance: balance ?? this.balance,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    providerId: providerId.present ? providerId.value : this.providerId,
     localImagePath: localImagePath.present
         ? localImagePath.value
         : this.localImagePath,
@@ -4678,6 +5898,9 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       currency: data.currency.present ? data.currency.value : this.currency,
       balance: data.balance.present ? data.balance.value : this.balance,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      providerId: data.providerId.present
+          ? data.providerId.value
+          : this.providerId,
       localImagePath: data.localImagePath.present
           ? data.localImagePath.value
           : this.localImagePath,
@@ -4704,6 +5927,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
           ..write('currency: $currency, ')
           ..write('balance: $balance, ')
           ..write('imageUrl: $imageUrl, ')
+          ..write('providerId: $providerId, ')
           ..write('localImagePath: $localImagePath, ')
           ..write('isGlobal: $isGlobal, ')
           ..write('iconCodePoint: $iconCodePoint, ')
@@ -4726,6 +5950,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     currency,
     balance,
     imageUrl,
+    providerId,
     localImagePath,
     isGlobal,
     iconCodePoint,
@@ -4747,6 +5972,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
           other.currency == this.currency &&
           other.balance == this.balance &&
           other.imageUrl == this.imageUrl &&
+          other.providerId == this.providerId &&
           other.localImagePath == this.localImagePath &&
           other.isGlobal == this.isGlobal &&
           other.iconCodePoint == this.iconCodePoint &&
@@ -4766,6 +5992,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
   final Value<String> currency;
   final Value<int> balance;
   final Value<String?> imageUrl;
+  final Value<String?> providerId;
   final Value<String?> localImagePath;
   final Value<bool> isGlobal;
   final Value<int?> iconCodePoint;
@@ -4784,6 +6011,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     this.currency = const Value.absent(),
     this.balance = const Value.absent(),
     this.imageUrl = const Value.absent(),
+    this.providerId = const Value.absent(),
     this.localImagePath = const Value.absent(),
     this.isGlobal = const Value.absent(),
     this.iconCodePoint = const Value.absent(),
@@ -4803,6 +6031,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     required String currency,
     required int balance,
     this.imageUrl = const Value.absent(),
+    this.providerId = const Value.absent(),
     this.localImagePath = const Value.absent(),
     this.isGlobal = const Value.absent(),
     this.iconCodePoint = const Value.absent(),
@@ -4826,6 +6055,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     Expression<String>? currency,
     Expression<int>? balance,
     Expression<String>? imageUrl,
+    Expression<String>? providerId,
     Expression<String>? localImagePath,
     Expression<bool>? isGlobal,
     Expression<int>? iconCodePoint,
@@ -4845,6 +6075,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
       if (currency != null) 'currency': currency,
       if (balance != null) 'balance': balance,
       if (imageUrl != null) 'image_url': imageUrl,
+      if (providerId != null) 'provider_id': providerId,
       if (localImagePath != null) 'local_image_path': localImagePath,
       if (isGlobal != null) 'is_global': isGlobal,
       if (iconCodePoint != null) 'icon_code_point': iconCodePoint,
@@ -4866,6 +6097,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     Value<String>? currency,
     Value<int>? balance,
     Value<String?>? imageUrl,
+    Value<String?>? providerId,
     Value<String?>? localImagePath,
     Value<bool>? isGlobal,
     Value<int?>? iconCodePoint,
@@ -4885,6 +6117,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
       currency: currency ?? this.currency,
       balance: balance ?? this.balance,
       imageUrl: imageUrl ?? this.imageUrl,
+      providerId: providerId ?? this.providerId,
       localImagePath: localImagePath ?? this.localImagePath,
       isGlobal: isGlobal ?? this.isGlobal,
       iconCodePoint: iconCodePoint ?? this.iconCodePoint,
@@ -4915,6 +6148,9 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (providerId.present) {
+      map['provider_id'] = Variable<String>(providerId.value);
     }
     if (localImagePath.present) {
       map['local_image_path'] = Variable<String>(localImagePath.value);
@@ -4965,6 +6201,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
           ..write('currency: $currency, ')
           ..write('balance: $balance, ')
           ..write('imageUrl: $imageUrl, ')
+          ..write('providerId: $providerId, ')
           ..write('localImagePath: $localImagePath, ')
           ..write('isGlobal: $isGlobal, ')
           ..write('iconCodePoint: $iconCodePoint, ')
@@ -7453,12 +8690,64 @@ class $RemindersTable extends Reminders
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
+  @override
+  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
+    'temp_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     reminderDate,
     isActive,
     reminderType,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7505,11 +8794,35 @@ class $RemindersTable extends Reminders
     } else if (isInserting) {
       context.missing(_reminderTypeMeta);
     }
+    if (data.containsKey('temp_id')) {
+      context.handle(
+        _tempIdMeta,
+        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Reminder map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -7530,6 +8843,22 @@ class $RemindersTable extends Reminders
         DriftSqlType.string,
         data['${effectivePrefix}reminder_type'],
       )!,
+      tempId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_id'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -7544,11 +8873,19 @@ class Reminder extends DataClass implements Insertable<Reminder> {
   final DateTime reminderDate;
   final bool isActive;
   final String reminderType;
+  final String? tempId;
+  final bool isSynced;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const Reminder({
     required this.id,
     required this.reminderDate,
     required this.isActive,
     required this.reminderType,
+    this.tempId,
+    required this.isSynced,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7557,6 +8894,12 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     map['reminder_date'] = Variable<DateTime>(reminderDate);
     map['is_active'] = Variable<bool>(isActive);
     map['reminder_type'] = Variable<String>(reminderType);
+    if (!nullToAbsent || tempId != null) {
+      map['temp_id'] = Variable<String>(tempId);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -7566,6 +8909,12 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       reminderDate: Value(reminderDate),
       isActive: Value(isActive),
       reminderType: Value(reminderType),
+      tempId: tempId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tempId),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -7579,6 +8928,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       reminderDate: serializer.fromJson<DateTime>(json['reminderDate']),
       isActive: serializer.fromJson<bool>(json['isActive']),
       reminderType: serializer.fromJson<String>(json['reminderType']),
+      tempId: serializer.fromJson<String?>(json['tempId']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -7589,6 +8942,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       'reminderDate': serializer.toJson<DateTime>(reminderDate),
       'isActive': serializer.toJson<bool>(isActive),
       'reminderType': serializer.toJson<String>(reminderType),
+      'tempId': serializer.toJson<String?>(tempId),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -7597,11 +8954,19 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     DateTime? reminderDate,
     bool? isActive,
     String? reminderType,
+    Value<String?> tempId = const Value.absent(),
+    bool? isSynced,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => Reminder(
     id: id ?? this.id,
     reminderDate: reminderDate ?? this.reminderDate,
     isActive: isActive ?? this.isActive,
     reminderType: reminderType ?? this.reminderType,
+    tempId: tempId.present ? tempId.value : this.tempId,
+    isSynced: isSynced ?? this.isSynced,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   Reminder copyWithCompanion(RemindersCompanion data) {
     return Reminder(
@@ -7613,6 +8978,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       reminderType: data.reminderType.present
           ? data.reminderType.value
           : this.reminderType,
+      tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -7622,13 +8991,26 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ..write('id: $id, ')
           ..write('reminderDate: $reminderDate, ')
           ..write('isActive: $isActive, ')
-          ..write('reminderType: $reminderType')
+          ..write('reminderType: $reminderType, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, reminderDate, isActive, reminderType);
+  int get hashCode => Object.hash(
+    id,
+    reminderDate,
+    isActive,
+    reminderType,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -7636,7 +9018,11 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           other.id == this.id &&
           other.reminderDate == this.reminderDate &&
           other.isActive == this.isActive &&
-          other.reminderType == this.reminderType);
+          other.reminderType == this.reminderType &&
+          other.tempId == this.tempId &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class RemindersCompanion extends UpdateCompanion<Reminder> {
@@ -7644,12 +9030,20 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
   final Value<DateTime> reminderDate;
   final Value<bool> isActive;
   final Value<String> reminderType;
+  final Value<String?> tempId;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const RemindersCompanion({
     this.id = const Value.absent(),
     this.reminderDate = const Value.absent(),
     this.isActive = const Value.absent(),
     this.reminderType = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RemindersCompanion.insert({
@@ -7657,6 +9051,10 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     required DateTime reminderDate,
     this.isActive = const Value.absent(),
     required String reminderType,
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        reminderDate = Value(reminderDate),
@@ -7666,6 +9064,10 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Expression<DateTime>? reminderDate,
     Expression<bool>? isActive,
     Expression<String>? reminderType,
+    Expression<String>? tempId,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -7673,6 +9075,10 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       if (reminderDate != null) 'reminder_date': reminderDate,
       if (isActive != null) 'is_active': isActive,
       if (reminderType != null) 'reminder_type': reminderType,
+      if (tempId != null) 'temp_id': tempId,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -7682,6 +9088,10 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Value<DateTime>? reminderDate,
     Value<bool>? isActive,
     Value<String>? reminderType,
+    Value<String?>? tempId,
+    Value<bool>? isSynced,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
     return RemindersCompanion(
@@ -7689,6 +9099,10 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       reminderDate: reminderDate ?? this.reminderDate,
       isActive: isActive ?? this.isActive,
       reminderType: reminderType ?? this.reminderType,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -7708,6 +9122,18 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     if (reminderType.present) {
       map['reminder_type'] = Variable<String>(reminderType.value);
     }
+    if (tempId.present) {
+      map['temp_id'] = Variable<String>(tempId.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -7721,6 +9147,10 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
           ..write('reminderDate: $reminderDate, ')
           ..write('isActive: $isActive, ')
           ..write('reminderType: $reminderType, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -15948,16 +17378,12 @@ class $MerchantMetadataTable extends MerchantMetadata
   $MerchantMetadataTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _merchantIdMeta = const VerificationMeta(
     'merchantId',
@@ -15988,8 +17414,65 @@ class $MerchantMetadataTable extends MerchantMetadata
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
   @override
-  List<GeneratedColumn> get $columns => [id, merchantId, key, value];
+  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
+    'temp_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    merchantId,
+    key,
+    value,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -16004,6 +17487,8 @@ class $MerchantMetadataTable extends MerchantMetadata
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('merchant_id')) {
       context.handle(
@@ -16029,6 +17514,30 @@ class $MerchantMetadataTable extends MerchantMetadata
     } else if (isInserting) {
       context.missing(_valueMeta);
     }
+    if (data.containsKey('temp_id')) {
+      context.handle(
+        _tempIdMeta,
+        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -16043,7 +17552,7 @@ class $MerchantMetadataTable extends MerchantMetadata
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MerchantMetadataData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       merchantId: attachedDatabase.typeMapping.read(
@@ -16058,6 +17567,22 @@ class $MerchantMetadataTable extends MerchantMetadata
         DriftSqlType.string,
         data['${effectivePrefix}value'],
       )!,
+      tempId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_id'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -16069,23 +17594,37 @@ class $MerchantMetadataTable extends MerchantMetadata
 
 class MerchantMetadataData extends DataClass
     implements Insertable<MerchantMetadataData> {
-  final int id;
+  final String id;
   final String merchantId;
   final String key;
   final String value;
+  final String? tempId;
+  final bool isSynced;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const MerchantMetadataData({
     required this.id,
     required this.merchantId,
     required this.key,
     required this.value,
+    this.tempId,
+    required this.isSynced,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['merchant_id'] = Variable<String>(merchantId);
     map['key'] = Variable<String>(key);
     map['value'] = Variable<String>(value);
+    if (!nullToAbsent || tempId != null) {
+      map['temp_id'] = Variable<String>(tempId);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -16095,6 +17634,12 @@ class MerchantMetadataData extends DataClass
       merchantId: Value(merchantId),
       key: Value(key),
       value: Value(value),
+      tempId: tempId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tempId),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -16104,33 +17649,49 @@ class MerchantMetadataData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MerchantMetadataData(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       merchantId: serializer.fromJson<String>(json['merchantId']),
       key: serializer.fromJson<String>(json['key']),
       value: serializer.fromJson<String>(json['value']),
+      tempId: serializer.fromJson<String?>(json['tempId']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'merchantId': serializer.toJson<String>(merchantId),
       'key': serializer.toJson<String>(key),
       'value': serializer.toJson<String>(value),
+      'tempId': serializer.toJson<String?>(tempId),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
   MerchantMetadataData copyWith({
-    int? id,
+    String? id,
     String? merchantId,
     String? key,
     String? value,
+    Value<String?> tempId = const Value.absent(),
+    bool? isSynced,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => MerchantMetadataData(
     id: id ?? this.id,
     merchantId: merchantId ?? this.merchantId,
     key: key ?? this.key,
     value: value ?? this.value,
+    tempId: tempId.present ? tempId.value : this.tempId,
+    isSynced: isSynced ?? this.isSynced,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   MerchantMetadataData copyWithCompanion(MerchantMetadataCompanion data) {
     return MerchantMetadataData(
@@ -16140,6 +17701,10 @@ class MerchantMetadataData extends DataClass
           : this.merchantId,
       key: data.key.present ? data.key.value : this.key,
       value: data.value.present ? data.value.value : this.value,
+      tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -16149,13 +17714,26 @@ class MerchantMetadataData extends DataClass
           ..write('id: $id, ')
           ..write('merchantId: $merchantId, ')
           ..write('key: $key, ')
-          ..write('value: $value')
+          ..write('value: $value, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, merchantId, key, value);
+  int get hashCode => Object.hash(
+    id,
+    merchantId,
+    key,
+    value,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -16163,53 +17741,93 @@ class MerchantMetadataData extends DataClass
           other.id == this.id &&
           other.merchantId == this.merchantId &&
           other.key == this.key &&
-          other.value == this.value);
+          other.value == this.value &&
+          other.tempId == this.tempId &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> merchantId;
   final Value<String> key;
   final Value<String> value;
+  final Value<String?> tempId;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
   const MerchantMetadataCompanion({
     this.id = const Value.absent(),
     this.merchantId = const Value.absent(),
     this.key = const Value.absent(),
     this.value = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MerchantMetadataCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String merchantId,
     required String key,
     required String value,
-  }) : merchantId = Value(merchantId),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       merchantId = Value(merchantId),
        key = Value(key),
        value = Value(value);
   static Insertable<MerchantMetadataData> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? merchantId,
     Expression<String>? key,
     Expression<String>? value,
+    Expression<String>? tempId,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (merchantId != null) 'merchant_id': merchantId,
       if (key != null) 'key': key,
       if (value != null) 'value': value,
+      if (tempId != null) 'temp_id': tempId,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   MerchantMetadataCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? merchantId,
     Value<String>? key,
     Value<String>? value,
+    Value<String?>? tempId,
+    Value<bool>? isSynced,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
   }) {
     return MerchantMetadataCompanion(
       id: id ?? this.id,
       merchantId: merchantId ?? this.merchantId,
       key: key ?? this.key,
       value: value ?? this.value,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -16217,7 +17835,7 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (merchantId.present) {
       map['merchant_id'] = Variable<String>(merchantId.value);
@@ -16228,6 +17846,21 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
     if (value.present) {
       map['value'] = Variable<String>(value.value);
     }
+    if (tempId.present) {
+      map['temp_id'] = Variable<String>(tempId.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -16237,7 +17870,12 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
           ..write('id: $id, ')
           ..write('merchantId: $merchantId, ')
           ..write('key: $key, ')
-          ..write('value: $value')
+          ..write('value: $value, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -17796,6 +19434,17 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
   @override
   late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
@@ -17862,6 +19511,7 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     color,
     id,
     name,
+    description,
     tempId,
     isSynced,
     createdAt,
@@ -18001,6 +19651,15 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
     if (data.containsKey('temp_id')) {
       context.handle(
         _tempIdMeta,
@@ -18098,6 +19757,10 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
       tempId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}temp_id'],
@@ -18140,6 +19803,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   final String? color;
   final String id;
   final String name;
+  final String? description;
   final String? tempId;
   final bool isSynced;
   final DateTime createdAt;
@@ -18161,6 +19825,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     this.color,
     required this.id,
     required this.name,
+    this.description,
     this.tempId,
     required this.isSynced,
     required this.createdAt,
@@ -18195,6 +19860,9 @@ class Budget extends DataClass implements Insertable<Budget> {
     }
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
     if (!nullToAbsent || tempId != null) {
       map['temp_id'] = Variable<String>(tempId);
     }
@@ -18232,6 +19900,9 @@ class Budget extends DataClass implements Insertable<Budget> {
           : Value(color),
       id: Value(id),
       name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
       tempId: tempId == null && nullToAbsent
           ? const Value.absent()
           : Value(tempId),
@@ -18265,6 +19936,7 @@ class Budget extends DataClass implements Insertable<Budget> {
       color: serializer.fromJson<String?>(json['color']),
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
       tempId: serializer.fromJson<String?>(json['tempId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -18291,6 +19963,7 @@ class Budget extends DataClass implements Insertable<Budget> {
       'color': serializer.toJson<String?>(color),
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
       'tempId': serializer.toJson<String?>(tempId),
       'isSynced': serializer.toJson<bool>(isSynced),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -18315,6 +19988,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     Value<String?> color = const Value.absent(),
     String? id,
     String? name,
+    Value<String?> description = const Value.absent(),
     Value<String?> tempId = const Value.absent(),
     bool? isSynced,
     DateTime? createdAt,
@@ -18340,6 +20014,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     color: color.present ? color.value : this.color,
     id: id ?? this.id,
     name: name ?? this.name,
+    description: description.present ? description.value : this.description,
     tempId: tempId.present ? tempId.value : this.tempId,
     isSynced: isSynced ?? this.isSynced,
     createdAt: createdAt ?? this.createdAt,
@@ -18375,6 +20050,9 @@ class Budget extends DataClass implements Insertable<Budget> {
       color: data.color.present ? data.color.value : this.color,
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -18401,6 +20079,7 @@ class Budget extends DataClass implements Insertable<Budget> {
           ..write('color: $color, ')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('description: $description, ')
           ..write('tempId: $tempId, ')
           ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
@@ -18410,7 +20089,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     underLimitGoal,
     startDate,
     endDate,
@@ -18427,11 +20106,12 @@ class Budget extends DataClass implements Insertable<Budget> {
     color,
     id,
     name,
+    description,
     tempId,
     isSynced,
     createdAt,
     updatedAt,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -18452,6 +20132,7 @@ class Budget extends DataClass implements Insertable<Budget> {
           other.color == this.color &&
           other.id == this.id &&
           other.name == this.name &&
+          other.description == this.description &&
           other.tempId == this.tempId &&
           other.isSynced == this.isSynced &&
           other.createdAt == this.createdAt &&
@@ -18475,6 +20156,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   final Value<String?> color;
   final Value<String> id;
   final Value<String> name;
+  final Value<String?> description;
   final Value<String?> tempId;
   final Value<bool> isSynced;
   final Value<DateTime> createdAt;
@@ -18497,6 +20179,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     this.color = const Value.absent(),
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.description = const Value.absent(),
     this.tempId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -18520,6 +20203,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     this.color = const Value.absent(),
     required String id,
     required String name,
+    this.description = const Value.absent(),
     this.tempId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -18549,6 +20233,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     Expression<String>? color,
     Expression<String>? id,
     Expression<String>? name,
+    Expression<String>? description,
     Expression<String>? tempId,
     Expression<bool>? isSynced,
     Expression<DateTime>? createdAt,
@@ -18573,6 +20258,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       if (color != null) 'color': color,
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (description != null) 'description': description,
       if (tempId != null) 'temp_id': tempId,
       if (isSynced != null) 'is_synced': isSynced,
       if (createdAt != null) 'created_at': createdAt,
@@ -18598,6 +20284,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     Value<String?>? color,
     Value<String>? id,
     Value<String>? name,
+    Value<String?>? description,
     Value<String?>? tempId,
     Value<bool>? isSynced,
     Value<DateTime>? createdAt,
@@ -18621,6 +20308,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       color: color ?? this.color,
       id: id ?? this.id,
       name: name ?? this.name,
+      description: description ?? this.description,
       tempId: tempId ?? this.tempId,
       isSynced: isSynced ?? this.isSynced,
       createdAt: createdAt ?? this.createdAt,
@@ -18680,6 +20368,9 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
     if (tempId.present) {
       map['temp_id'] = Variable<String>(tempId.value);
     }
@@ -18717,6 +20408,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
           ..write('color: $color, ')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('description: $description, ')
           ..write('tempId: $tempId, ')
           ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
@@ -20767,6 +22459,513 @@ class InvestmentReturnsCompanion extends UpdateCompanion<InvestmentReturn> {
   }
 }
 
+class $WalletProviderMetadataTable extends WalletProviderMetadata
+    with TableInfo<$WalletProviderMetadataTable, WalletProviderMetadataData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WalletProviderMetadataTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _providerIdMeta = const VerificationMeta(
+    'providerId',
+  );
+  @override
+  late final GeneratedColumn<String> providerId = GeneratedColumn<String>(
+    'provider_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
+  @override
+  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
+    'temp_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    providerId,
+    key,
+    value,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wallet_provider_metadata';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WalletProviderMetadataData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('provider_id')) {
+      context.handle(
+        _providerIdMeta,
+        providerId.isAcceptableOrUnknown(data['provider_id']!, _providerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_providerIdMeta);
+    }
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    if (data.containsKey('temp_id')) {
+      context.handle(
+        _tempIdMeta,
+        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {providerId, key},
+  ];
+  @override
+  WalletProviderMetadataData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WalletProviderMetadataData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      providerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}provider_id'],
+      )!,
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value'],
+      )!,
+      tempId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_id'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WalletProviderMetadataTable createAlias(String alias) {
+    return $WalletProviderMetadataTable(attachedDatabase, alias);
+  }
+}
+
+class WalletProviderMetadataData extends DataClass
+    implements Insertable<WalletProviderMetadataData> {
+  final int id;
+  final String providerId;
+  final String key;
+  final String value;
+  final String? tempId;
+  final bool isSynced;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const WalletProviderMetadataData({
+    required this.id,
+    required this.providerId,
+    required this.key,
+    required this.value,
+    this.tempId,
+    required this.isSynced,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['provider_id'] = Variable<String>(providerId);
+    map['key'] = Variable<String>(key);
+    map['value'] = Variable<String>(value);
+    if (!nullToAbsent || tempId != null) {
+      map['temp_id'] = Variable<String>(tempId);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  WalletProviderMetadataCompanion toCompanion(bool nullToAbsent) {
+    return WalletProviderMetadataCompanion(
+      id: Value(id),
+      providerId: Value(providerId),
+      key: Value(key),
+      value: Value(value),
+      tempId: tempId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tempId),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory WalletProviderMetadataData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WalletProviderMetadataData(
+      id: serializer.fromJson<int>(json['id']),
+      providerId: serializer.fromJson<String>(json['providerId']),
+      key: serializer.fromJson<String>(json['key']),
+      value: serializer.fromJson<String>(json['value']),
+      tempId: serializer.fromJson<String?>(json['tempId']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'providerId': serializer.toJson<String>(providerId),
+      'key': serializer.toJson<String>(key),
+      'value': serializer.toJson<String>(value),
+      'tempId': serializer.toJson<String?>(tempId),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  WalletProviderMetadataData copyWith({
+    int? id,
+    String? providerId,
+    String? key,
+    String? value,
+    Value<String?> tempId = const Value.absent(),
+    bool? isSynced,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => WalletProviderMetadataData(
+    id: id ?? this.id,
+    providerId: providerId ?? this.providerId,
+    key: key ?? this.key,
+    value: value ?? this.value,
+    tempId: tempId.present ? tempId.value : this.tempId,
+    isSynced: isSynced ?? this.isSynced,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  WalletProviderMetadataData copyWithCompanion(
+    WalletProviderMetadataCompanion data,
+  ) {
+    return WalletProviderMetadataData(
+      id: data.id.present ? data.id.value : this.id,
+      providerId: data.providerId.present
+          ? data.providerId.value
+          : this.providerId,
+      key: data.key.present ? data.key.value : this.key,
+      value: data.value.present ? data.value.value : this.value,
+      tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletProviderMetadataData(')
+          ..write('id: $id, ')
+          ..write('providerId: $providerId, ')
+          ..write('key: $key, ')
+          ..write('value: $value, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    providerId,
+    key,
+    value,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WalletProviderMetadataData &&
+          other.id == this.id &&
+          other.providerId == this.providerId &&
+          other.key == this.key &&
+          other.value == this.value &&
+          other.tempId == this.tempId &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class WalletProviderMetadataCompanion
+    extends UpdateCompanion<WalletProviderMetadataData> {
+  final Value<int> id;
+  final Value<String> providerId;
+  final Value<String> key;
+  final Value<String> value;
+  final Value<String?> tempId;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const WalletProviderMetadataCompanion({
+    this.id = const Value.absent(),
+    this.providerId = const Value.absent(),
+    this.key = const Value.absent(),
+    this.value = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  WalletProviderMetadataCompanion.insert({
+    this.id = const Value.absent(),
+    required String providerId,
+    required String key,
+    required String value,
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : providerId = Value(providerId),
+       key = Value(key),
+       value = Value(value);
+  static Insertable<WalletProviderMetadataData> custom({
+    Expression<int>? id,
+    Expression<String>? providerId,
+    Expression<String>? key,
+    Expression<String>? value,
+    Expression<String>? tempId,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (providerId != null) 'provider_id': providerId,
+      if (key != null) 'key': key,
+      if (value != null) 'value': value,
+      if (tempId != null) 'temp_id': tempId,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  WalletProviderMetadataCompanion copyWith({
+    Value<int>? id,
+    Value<String>? providerId,
+    Value<String>? key,
+    Value<String>? value,
+    Value<String?>? tempId,
+    Value<bool>? isSynced,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return WalletProviderMetadataCompanion(
+      id: id ?? this.id,
+      providerId: providerId ?? this.providerId,
+      key: key ?? this.key,
+      value: value ?? this.value,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (providerId.present) {
+      map['provider_id'] = Variable<String>(providerId.value);
+    }
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (tempId.present) {
+      map['temp_id'] = Variable<String>(tempId.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletProviderMetadataCompanion(')
+          ..write('id: $id, ')
+          ..write('providerId: $providerId, ')
+          ..write('key: $key, ')
+          ..write('value: $value, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -20779,6 +22978,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $MerchantsTable merchants = $MerchantsTable(this);
   late final $ContactsTable contacts = $ContactsTable(this);
+  late final $WalletProvidersTable walletProviders = $WalletProvidersTable(
+    this,
+  );
   late final $WalletsTable wallets = $WalletsTable(this);
   late final $InvestmentTypesTable investmentTypes = $InvestmentTypesTable(
     this,
@@ -20813,6 +23015,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $InvestmentPaymentsTable(this);
   late final $InvestmentReturnsTable investmentReturns =
       $InvestmentReturnsTable(this);
+  late final $WalletProviderMetadataTable walletProviderMetadata =
+      $WalletProviderMetadataTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -20825,6 +23029,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     categories,
     merchants,
     contacts,
+    walletProviders,
     wallets,
     investmentTypes,
     investments,
@@ -20849,6 +23054,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     investmentMetadata,
     investmentPayments,
     investmentReturns,
+    walletProviderMetadata,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -20919,6 +23125,8 @@ typedef $$ProjectsTableCreateCompanionBuilder =
       Value<int?> iconCodePoint,
       Value<String?> iconEmoji,
       Value<String> iconType,
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
       Value<String?> color,
       Value<bool> isSynced,
       Value<String?> tempId,
@@ -20935,6 +23143,8 @@ typedef $$ProjectsTableUpdateCompanionBuilder =
       Value<int?> iconCodePoint,
       Value<String?> iconEmoji,
       Value<String> iconType,
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
       Value<String?> color,
       Value<bool> isSynced,
       Value<String?> tempId,
@@ -21078,6 +23288,16 @@ class $$ProjectsTableFilterComposer
 
   ColumnFilters<String> get iconType => $composableBuilder(
     column: $table.iconType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -21276,6 +23496,16 @@ class $$ProjectsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get color => $composableBuilder(
     column: $table.color,
     builder: (column) => ColumnOrderings(column),
@@ -21337,6 +23567,14 @@ class $$ProjectsTableAnnotationComposer
 
   GeneratedColumn<String> get iconType =>
       $composableBuilder(column: $table.iconType, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
@@ -21524,6 +23762,8 @@ class $$ProjectsTableTableManager
                 Value<int?> iconCodePoint = const Value.absent(),
                 Value<String?> iconEmoji = const Value.absent(),
                 Value<String> iconType = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
                 Value<String?> color = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
@@ -21538,6 +23778,8 @@ class $$ProjectsTableTableManager
                 iconCodePoint: iconCodePoint,
                 iconEmoji: iconEmoji,
                 iconType: iconType,
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
                 color: color,
                 isSynced: isSynced,
                 tempId: tempId,
@@ -21554,6 +23796,8 @@ class $$ProjectsTableTableManager
                 Value<int?> iconCodePoint = const Value.absent(),
                 Value<String?> iconEmoji = const Value.absent(),
                 Value<String> iconType = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
                 Value<String?> color = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
@@ -21568,6 +23812,8 @@ class $$ProjectsTableTableManager
                 iconCodePoint: iconCodePoint,
                 iconEmoji: iconEmoji,
                 iconType: iconType,
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
                 color: color,
                 isSynced: isSynced,
                 tempId: tempId,
@@ -25400,12 +27646,605 @@ typedef $$ContactsTableProcessedTableManager =
         bool contactInfoRefs,
       })
     >;
+typedef $$WalletProvidersTableCreateCompanionBuilder =
+    WalletProvidersCompanion Function({
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
+      Value<int?> iconCodePoint,
+      Value<String?> iconEmoji,
+      Value<String> iconType,
+      Value<String?> color,
+      Value<String?> websiteUrl,
+      Value<bool> isFiatBank,
+      Value<bool> isCrypto,
+      Value<bool> isMobileMoney,
+      Value<bool> isCreditCard,
+      Value<bool> isDefault,
+      required String id,
+      required String name,
+      Value<String?> description,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$WalletProvidersTableUpdateCompanionBuilder =
+    WalletProvidersCompanion Function({
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
+      Value<int?> iconCodePoint,
+      Value<String?> iconEmoji,
+      Value<String> iconType,
+      Value<String?> color,
+      Value<String?> websiteUrl,
+      Value<bool> isFiatBank,
+      Value<bool> isCrypto,
+      Value<bool> isMobileMoney,
+      Value<bool> isCreditCard,
+      Value<bool> isDefault,
+      Value<String> id,
+      Value<String> name,
+      Value<String?> description,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$WalletProvidersTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $WalletProvidersTable, WalletProvider> {
+  $$WalletProvidersTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$WalletsTable, List<Wallet>> _walletsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.wallets,
+    aliasName: $_aliasNameGenerator(
+      db.walletProviders.id,
+      db.wallets.providerId,
+    ),
+  );
+
+  $$WalletsTableProcessedTableManager get walletsRefs {
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.providerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_walletsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$WalletProvidersTableFilterComposer
+    extends Composer<_$AppDatabase, $WalletProvidersTable> {
+  $$WalletProvidersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get iconCodePoint => $composableBuilder(
+    column: $table.iconCodePoint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconEmoji => $composableBuilder(
+    column: $table.iconEmoji,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconType => $composableBuilder(
+    column: $table.iconType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get websiteUrl => $composableBuilder(
+    column: $table.websiteUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFiatBank => $composableBuilder(
+    column: $table.isFiatBank,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCrypto => $composableBuilder(
+    column: $table.isCrypto,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isMobileMoney => $composableBuilder(
+    column: $table.isMobileMoney,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCreditCard => $composableBuilder(
+    column: $table.isCreditCard,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> walletsRefs(
+    Expression<bool> Function($$WalletsTableFilterComposer f) f,
+  ) {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.providerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WalletProvidersTableOrderingComposer
+    extends Composer<_$AppDatabase, $WalletProvidersTable> {
+  $$WalletProvidersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get iconCodePoint => $composableBuilder(
+    column: $table.iconCodePoint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconEmoji => $composableBuilder(
+    column: $table.iconEmoji,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconType => $composableBuilder(
+    column: $table.iconType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get websiteUrl => $composableBuilder(
+    column: $table.websiteUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isFiatBank => $composableBuilder(
+    column: $table.isFiatBank,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isCrypto => $composableBuilder(
+    column: $table.isCrypto,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isMobileMoney => $composableBuilder(
+    column: $table.isMobileMoney,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isCreditCard => $composableBuilder(
+    column: $table.isCreditCard,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WalletProvidersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WalletProvidersTable> {
+  $$WalletProvidersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get iconCodePoint => $composableBuilder(
+    column: $table.iconCodePoint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get iconEmoji =>
+      $composableBuilder(column: $table.iconEmoji, builder: (column) => column);
+
+  GeneratedColumn<String> get iconType =>
+      $composableBuilder(column: $table.iconType, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<String> get websiteUrl => $composableBuilder(
+    column: $table.websiteUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isFiatBank => $composableBuilder(
+    column: $table.isFiatBank,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isCrypto =>
+      $composableBuilder(column: $table.isCrypto, builder: (column) => column);
+
+  GeneratedColumn<bool> get isMobileMoney => $composableBuilder(
+    column: $table.isMobileMoney,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isCreditCard => $composableBuilder(
+    column: $table.isCreditCard,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isDefault =>
+      $composableBuilder(column: $table.isDefault, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get tempId =>
+      $composableBuilder(column: $table.tempId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> walletsRefs<T extends Object>(
+    Expression<T> Function($$WalletsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.providerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WalletProvidersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WalletProvidersTable,
+          WalletProvider,
+          $$WalletProvidersTableFilterComposer,
+          $$WalletProvidersTableOrderingComposer,
+          $$WalletProvidersTableAnnotationComposer,
+          $$WalletProvidersTableCreateCompanionBuilder,
+          $$WalletProvidersTableUpdateCompanionBuilder,
+          (WalletProvider, $$WalletProvidersTableReferences),
+          WalletProvider,
+          PrefetchHooks Function({bool walletsRefs})
+        > {
+  $$WalletProvidersTableTableManager(
+    _$AppDatabase db,
+    $WalletProvidersTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WalletProvidersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WalletProvidersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WalletProvidersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
+                Value<int?> iconCodePoint = const Value.absent(),
+                Value<String?> iconEmoji = const Value.absent(),
+                Value<String> iconType = const Value.absent(),
+                Value<String?> color = const Value.absent(),
+                Value<String?> websiteUrl = const Value.absent(),
+                Value<bool> isFiatBank = const Value.absent(),
+                Value<bool> isCrypto = const Value.absent(),
+                Value<bool> isMobileMoney = const Value.absent(),
+                Value<bool> isCreditCard = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WalletProvidersCompanion(
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
+                iconCodePoint: iconCodePoint,
+                iconEmoji: iconEmoji,
+                iconType: iconType,
+                color: color,
+                websiteUrl: websiteUrl,
+                isFiatBank: isFiatBank,
+                isCrypto: isCrypto,
+                isMobileMoney: isMobileMoney,
+                isCreditCard: isCreditCard,
+                isDefault: isDefault,
+                id: id,
+                name: name,
+                description: description,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
+                Value<int?> iconCodePoint = const Value.absent(),
+                Value<String?> iconEmoji = const Value.absent(),
+                Value<String> iconType = const Value.absent(),
+                Value<String?> color = const Value.absent(),
+                Value<String?> websiteUrl = const Value.absent(),
+                Value<bool> isFiatBank = const Value.absent(),
+                Value<bool> isCrypto = const Value.absent(),
+                Value<bool> isMobileMoney = const Value.absent(),
+                Value<bool> isCreditCard = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+                required String id,
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WalletProvidersCompanion.insert(
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
+                iconCodePoint: iconCodePoint,
+                iconEmoji: iconEmoji,
+                iconType: iconType,
+                color: color,
+                websiteUrl: websiteUrl,
+                isFiatBank: isFiatBank,
+                isCrypto: isCrypto,
+                isMobileMoney: isMobileMoney,
+                isCreditCard: isCreditCard,
+                isDefault: isDefault,
+                id: id,
+                name: name,
+                description: description,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletProvidersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({walletsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (walletsRefs) db.wallets],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (walletsRefs)
+                    await $_getPrefetchedData<
+                      WalletProvider,
+                      $WalletProvidersTable,
+                      Wallet
+                    >(
+                      currentTable: table,
+                      referencedTable: $$WalletProvidersTableReferences
+                          ._walletsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$WalletProvidersTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).walletsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.providerId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$WalletProvidersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WalletProvidersTable,
+      WalletProvider,
+      $$WalletProvidersTableFilterComposer,
+      $$WalletProvidersTableOrderingComposer,
+      $$WalletProvidersTableAnnotationComposer,
+      $$WalletProvidersTableCreateCompanionBuilder,
+      $$WalletProvidersTableUpdateCompanionBuilder,
+      (WalletProvider, $$WalletProvidersTableReferences),
+      WalletProvider,
+      PrefetchHooks Function({bool walletsRefs})
+    >;
 typedef $$WalletsTableCreateCompanionBuilder =
     WalletsCompanion Function({
       required String walletType,
       required String currency,
       required int balance,
       Value<String?> imageUrl,
+      Value<String?> providerId,
       Value<String?> localImagePath,
       Value<bool> isGlobal,
       Value<int?> iconCodePoint,
@@ -25426,6 +28265,7 @@ typedef $$WalletsTableUpdateCompanionBuilder =
       Value<String> currency,
       Value<int> balance,
       Value<String?> imageUrl,
+      Value<String?> providerId,
       Value<String?> localImagePath,
       Value<bool> isGlobal,
       Value<int?> iconCodePoint,
@@ -25458,6 +28298,25 @@ final class $$WalletsTableReferences
       $_db.currencies,
     ).filter((f) => f.code.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_currencyTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletProvidersTable _providerIdTable(_$AppDatabase db) =>
+      db.walletProviders.createAlias(
+        $_aliasNameGenerator(db.wallets.providerId, db.walletProviders.id),
+      );
+
+  $$WalletProvidersTableProcessedTableManager? get providerId {
+    final $_column = $_itemColumn<String>('provider_id');
+    if ($_column == null) return null;
+    final manager = $$WalletProvidersTableTableManager(
+      $_db,
+      $_db.walletProviders,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_providerIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -25601,6 +28460,29 @@ class $$WalletsTableFilterComposer
           }) => $$CurrenciesTableFilterComposer(
             $db: $db,
             $table: $db.currencies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletProvidersTableFilterComposer get providerId {
+    final $$WalletProvidersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.providerId,
+      referencedTable: $db.walletProviders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletProvidersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletProviders,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -25767,6 +28649,29 @@ class $$WalletsTableOrderingComposer
     );
     return composer;
   }
+
+  $$WalletProvidersTableOrderingComposer get providerId {
+    final $$WalletProvidersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.providerId,
+      referencedTable: $db.walletProviders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletProvidersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletProviders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletsTableAnnotationComposer
@@ -25852,6 +28757,29 @@ class $$WalletsTableAnnotationComposer
     return composer;
   }
 
+  $$WalletProvidersTableAnnotationComposer get providerId {
+    final $$WalletProvidersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.providerId,
+      referencedTable: $db.walletProviders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletProvidersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletProviders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   Expression<T> expensesRefs<T extends Object>(
     Expression<T> Function($$ExpensesTableAnnotationComposer a) f,
   ) {
@@ -25918,6 +28846,7 @@ class $$WalletsTableTableManager
           Wallet,
           PrefetchHooks Function({
             bool currency,
+            bool providerId,
             bool expensesRefs,
             bool incomeRefs,
           })
@@ -25939,6 +28868,7 @@ class $$WalletsTableTableManager
                 Value<String> currency = const Value.absent(),
                 Value<int> balance = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
+                Value<String?> providerId = const Value.absent(),
                 Value<String?> localImagePath = const Value.absent(),
                 Value<bool> isGlobal = const Value.absent(),
                 Value<int?> iconCodePoint = const Value.absent(),
@@ -25957,6 +28887,7 @@ class $$WalletsTableTableManager
                 currency: currency,
                 balance: balance,
                 imageUrl: imageUrl,
+                providerId: providerId,
                 localImagePath: localImagePath,
                 isGlobal: isGlobal,
                 iconCodePoint: iconCodePoint,
@@ -25977,6 +28908,7 @@ class $$WalletsTableTableManager
                 required String currency,
                 required int balance,
                 Value<String?> imageUrl = const Value.absent(),
+                Value<String?> providerId = const Value.absent(),
                 Value<String?> localImagePath = const Value.absent(),
                 Value<bool> isGlobal = const Value.absent(),
                 Value<int?> iconCodePoint = const Value.absent(),
@@ -25995,6 +28927,7 @@ class $$WalletsTableTableManager
                 currency: currency,
                 balance: balance,
                 imageUrl: imageUrl,
+                providerId: providerId,
                 localImagePath: localImagePath,
                 isGlobal: isGlobal,
                 iconCodePoint: iconCodePoint,
@@ -26018,7 +28951,12 @@ class $$WalletsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({currency = false, expensesRefs = false, incomeRefs = false}) {
+              ({
+                currency = false,
+                providerId = false,
+                expensesRefs = false,
+                incomeRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
@@ -26051,6 +28989,19 @@ class $$WalletsTableTableManager
                                     referencedColumn: $$WalletsTableReferences
                                         ._currencyTable(db)
                                         .code,
+                                  )
+                                  as T;
+                        }
+                        if (providerId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.providerId,
+                                    referencedTable: $$WalletsTableReferences
+                                        ._providerIdTable(db),
+                                    referencedColumn: $$WalletsTableReferences
+                                        ._providerIdTable(db)
+                                        .id,
                                   )
                                   as T;
                         }
@@ -26123,6 +29074,7 @@ typedef $$WalletsTableProcessedTableManager =
       Wallet,
       PrefetchHooks Function({
         bool currency,
+        bool providerId,
         bool expensesRefs,
         bool incomeRefs,
       })
@@ -28651,6 +31603,10 @@ typedef $$RemindersTableCreateCompanionBuilder =
       required DateTime reminderDate,
       Value<bool> isActive,
       required String reminderType,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 typedef $$RemindersTableUpdateCompanionBuilder =
@@ -28659,6 +31615,10 @@ typedef $$RemindersTableUpdateCompanionBuilder =
       Value<DateTime> reminderDate,
       Value<bool> isActive,
       Value<String> reminderType,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 
@@ -28731,6 +31691,26 @@ class $$RemindersTableFilterComposer
 
   ColumnFilters<String> get reminderType => $composableBuilder(
     column: $table.reminderType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28813,6 +31793,26 @@ class $$RemindersTableOrderingComposer
     column: $table.reminderType,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$RemindersTableAnnotationComposer
@@ -28839,6 +31839,18 @@ class $$RemindersTableAnnotationComposer
     column: $table.reminderType,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get tempId =>
+      $composableBuilder(column: $table.tempId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   Expression<T> expensesRefs<T extends Object>(
     Expression<T> Function($$ExpensesTableAnnotationComposer a) f,
@@ -28923,12 +31935,20 @@ class $$RemindersTableTableManager
                 Value<DateTime> reminderDate = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<String> reminderType = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RemindersCompanion(
                 id: id,
                 reminderDate: reminderDate,
                 isActive: isActive,
                 reminderType: reminderType,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -28937,12 +31957,20 @@ class $$RemindersTableTableManager
                 required DateTime reminderDate,
                 Value<bool> isActive = const Value.absent(),
                 required String reminderType,
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RemindersCompanion.insert(
                 id: id,
                 reminderDate: reminderDate,
                 isActive: isActive,
                 reminderType: reminderType,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -35208,17 +38236,27 @@ typedef $$IdMappingsTableProcessedTableManager =
     >;
 typedef $$MerchantMetadataTableCreateCompanionBuilder =
     MerchantMetadataCompanion Function({
-      Value<int> id,
+      required String id,
       required String merchantId,
       required String key,
       required String value,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
     });
 typedef $$MerchantMetadataTableUpdateCompanionBuilder =
     MerchantMetadataCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> merchantId,
       Value<String> key,
       Value<String> value,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
     });
 
 class $$MerchantMetadataTableFilterComposer
@@ -35230,7 +38268,7 @@ class $$MerchantMetadataTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
@@ -35249,6 +38287,26 @@ class $$MerchantMetadataTableFilterComposer
     column: $table.value,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$MerchantMetadataTableOrderingComposer
@@ -35260,7 +38318,7 @@ class $$MerchantMetadataTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
@@ -35279,6 +38337,26 @@ class $$MerchantMetadataTableOrderingComposer
     column: $table.value,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$MerchantMetadataTableAnnotationComposer
@@ -35290,7 +38368,7 @@ class $$MerchantMetadataTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get merchantId => $composableBuilder(
@@ -35303,6 +38381,18 @@ class $$MerchantMetadataTableAnnotationComposer
 
   GeneratedColumn<String> get value =>
       $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumn<String> get tempId =>
+      $composableBuilder(column: $table.tempId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
 class $$MerchantMetadataTableTableManager
@@ -35342,27 +38432,47 @@ class $$MerchantMetadataTableTableManager
               $$MerchantMetadataTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> merchantId = const Value.absent(),
                 Value<String> key = const Value.absent(),
                 Value<String> value = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => MerchantMetadataCompanion(
                 id: id,
                 merchantId: merchantId,
                 key: key,
                 value: value,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String merchantId,
                 required String key,
                 required String value,
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => MerchantMetadataCompanion.insert(
                 id: id,
                 merchantId: merchantId,
                 key: key,
                 value: value,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -36242,6 +39352,7 @@ typedef $$BudgetsTableCreateCompanionBuilder =
       Value<String?> color,
       required String id,
       required String name,
+      Value<String?> description,
       Value<String?> tempId,
       Value<bool> isSynced,
       Value<DateTime> createdAt,
@@ -36266,6 +39377,7 @@ typedef $$BudgetsTableUpdateCompanionBuilder =
       Value<String?> color,
       Value<String> id,
       Value<String> name,
+      Value<String?> description,
       Value<String?> tempId,
       Value<bool> isSynced,
       Value<DateTime> createdAt,
@@ -36404,6 +39516,11 @@ class $$BudgetsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -36571,6 +39688,11 @@ class $$BudgetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get tempId => $composableBuilder(
     column: $table.tempId,
     builder: (column) => ColumnOrderings(column),
@@ -36719,6 +39841,11 @@ class $$BudgetsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get tempId =>
       $composableBuilder(column: $table.tempId, builder: (column) => column);
 
@@ -36849,6 +39976,7 @@ class $$BudgetsTableTableManager
                 Value<String?> color = const Value.absent(),
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -36871,6 +39999,7 @@ class $$BudgetsTableTableManager
                 color: color,
                 id: id,
                 name: name,
+                description: description,
                 tempId: tempId,
                 isSynced: isSynced,
                 createdAt: createdAt,
@@ -36895,6 +40024,7 @@ class $$BudgetsTableTableManager
                 Value<String?> color = const Value.absent(),
                 required String id,
                 required String name,
+                Value<String?> description = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -36917,6 +40047,7 @@ class $$BudgetsTableTableManager
                 color: color,
                 id: id,
                 name: name,
+                description: description,
                 tempId: tempId,
                 isSynced: isSynced,
                 createdAt: createdAt,
@@ -38703,6 +41834,278 @@ typedef $$InvestmentReturnsTableProcessedTableManager =
       InvestmentReturn,
       PrefetchHooks Function({bool investmentId})
     >;
+typedef $$WalletProviderMetadataTableCreateCompanionBuilder =
+    WalletProviderMetadataCompanion Function({
+      Value<int> id,
+      required String providerId,
+      required String key,
+      required String value,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$WalletProviderMetadataTableUpdateCompanionBuilder =
+    WalletProviderMetadataCompanion Function({
+      Value<int> id,
+      Value<String> providerId,
+      Value<String> key,
+      Value<String> value,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$WalletProviderMetadataTableFilterComposer
+    extends Composer<_$AppDatabase, $WalletProviderMetadataTable> {
+  $$WalletProviderMetadataTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get providerId => $composableBuilder(
+    column: $table.providerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WalletProviderMetadataTableOrderingComposer
+    extends Composer<_$AppDatabase, $WalletProviderMetadataTable> {
+  $$WalletProviderMetadataTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get providerId => $composableBuilder(
+    column: $table.providerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WalletProviderMetadataTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WalletProviderMetadataTable> {
+  $$WalletProviderMetadataTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get providerId => $composableBuilder(
+    column: $table.providerId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumn<String> get tempId =>
+      $composableBuilder(column: $table.tempId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$WalletProviderMetadataTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WalletProviderMetadataTable,
+          WalletProviderMetadataData,
+          $$WalletProviderMetadataTableFilterComposer,
+          $$WalletProviderMetadataTableOrderingComposer,
+          $$WalletProviderMetadataTableAnnotationComposer,
+          $$WalletProviderMetadataTableCreateCompanionBuilder,
+          $$WalletProviderMetadataTableUpdateCompanionBuilder,
+          (
+            WalletProviderMetadataData,
+            BaseReferences<
+              _$AppDatabase,
+              $WalletProviderMetadataTable,
+              WalletProviderMetadataData
+            >,
+          ),
+          WalletProviderMetadataData,
+          PrefetchHooks Function()
+        > {
+  $$WalletProviderMetadataTableTableManager(
+    _$AppDatabase db,
+    $WalletProviderMetadataTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WalletProviderMetadataTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$WalletProviderMetadataTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$WalletProviderMetadataTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> providerId = const Value.absent(),
+                Value<String> key = const Value.absent(),
+                Value<String> value = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => WalletProviderMetadataCompanion(
+                id: id,
+                providerId: providerId,
+                key: key,
+                value: value,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String providerId,
+                required String key,
+                required String value,
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => WalletProviderMetadataCompanion.insert(
+                id: id,
+                providerId: providerId,
+                key: key,
+                value: value,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WalletProviderMetadataTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WalletProviderMetadataTable,
+      WalletProviderMetadataData,
+      $$WalletProviderMetadataTableFilterComposer,
+      $$WalletProviderMetadataTableOrderingComposer,
+      $$WalletProviderMetadataTableAnnotationComposer,
+      $$WalletProviderMetadataTableCreateCompanionBuilder,
+      $$WalletProviderMetadataTableUpdateCompanionBuilder,
+      (
+        WalletProviderMetadataData,
+        BaseReferences<
+          _$AppDatabase,
+          $WalletProviderMetadataTable,
+          WalletProviderMetadataData
+        >,
+      ),
+      WalletProviderMetadataData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -38721,6 +42124,8 @@ class $AppDatabaseManager {
       $$MerchantsTableTableManager(_db, _db.merchants);
   $$ContactsTableTableManager get contacts =>
       $$ContactsTableTableManager(_db, _db.contacts);
+  $$WalletProvidersTableTableManager get walletProviders =>
+      $$WalletProvidersTableTableManager(_db, _db.walletProviders);
   $$WalletsTableTableManager get wallets =>
       $$WalletsTableTableManager(_db, _db.wallets);
   $$InvestmentTypesTableTableManager get investmentTypes =>
@@ -38768,4 +42173,9 @@ class $AppDatabaseManager {
       $$InvestmentPaymentsTableTableManager(_db, _db.investmentPayments);
   $$InvestmentReturnsTableTableManager get investmentReturns =>
       $$InvestmentReturnsTableTableManager(_db, _db.investmentReturns);
+  $$WalletProviderMetadataTableTableManager get walletProviderMetadata =>
+      $$WalletProviderMetadataTableTableManager(
+        _db,
+        _db.walletProviderMetadata,
+      );
 }

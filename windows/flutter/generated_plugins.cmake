@@ -3,7 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  camera_windows
   emoji_picker_flutter
+  file_selector_windows
   permission_handler_windows
   sqlite3_flutter_libs
 )

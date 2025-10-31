@@ -1,11 +1,18 @@
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/currencies/currency_select_screen.dart';
+import 'package:billkeep/screens/wallets/providers/select_wallet_provider_screen.dart';
 import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/wallet_types.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
 import 'package:billkeep/widgets/common/sliding_segment_control_label.dart';
+import 'package:billkeep/widgets/wallets/select_wallet_type_bottomsheet.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:flutter_multi_formatter/formatters/money_input_enums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddWalletScreen extends ConsumerStatefulWidget {
@@ -17,13 +24,25 @@ class AddWalletScreen extends ConsumerStatefulWidget {
   ConsumerState<AddWalletScreen> createState() => _AddWalletScreenState();
 }
 
+class MenuItem {
+  final String value;
+  final String label;
+  final IconData icon;
+  final String description;
+
+  MenuItem(this.value, this.label, this.icon, this.description);
+}
+
 class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
-  late TextEditingController searchTextController;
+  WalletType? _selectedWalletType;
+  Currency? _selectedCurrency;
+  late TextEditingController amountController;
+  var enteredName = '';
+  WalletProvider? _selectedWalletProvider;
+
   IconSelectionType _selectedSegment = IconSelectionType.emoji;
   String? merchantId;
   final _formKey = GlobalKey<FormState>();
-  bool _isFocused = false;
-  var enteredName = '';
   var enteredDescription = '';
   var enteredWebsite = '';
   var imageUrl = '';
@@ -31,23 +50,47 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
   @override
   void initState() {
     super.initState();
-    // if (widget.merchant != null) {
-    //   merchantId = widget.merchant?.id;
-    //   setState(() {
-    //     enteredName = widget.merchant!.name;
-    //     enteredDescription = widget.merchant!.description ?? '';
-    //     enteredWebsite = widget.merchant!.website ?? '';
-    //     imageUrl = widget.merchant!.imageUrl ?? '';
-    //     if (imageUrl.isNotEmpty) _selectedSegment = IconSelectionType.image;
-    //   });
-    // }
-    searchTextController = TextEditingController();
+    amountController = TextEditingController();
   }
 
   @override
   void dispose() {
-    searchTextController.dispose();
+    amountController.dispose();
     super.dispose();
+  }
+
+  void _selectCurrency() async {
+    final result = await Navigator.of(context).push<Currency>(
+      CupertinoPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => CurrencySelectScreen(),
+      ),
+    );
+    print(result);
+    if (result != null) {
+      setState(() {
+        _selectedCurrency = result;
+      });
+    }
+  }
+
+  void _selectWalletProvider() async {
+    final result = await Navigator.of(context).push<Currency>(
+      CupertinoPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => WalletProviderSelectScreen(),
+      ),
+    );
+    print(result);
+    if (result != null) {
+      setState(() {
+        _selectedCurrency = result;
+      });
+    }
+  }
+
+  void _saveWallet() async {
+    // TODO: check currency
   }
 
   @override
@@ -61,38 +104,53 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
         iconTheme: IconThemeData(color: colors.textInverse),
         actionsIconTheme: IconThemeData(color: colors.textInverse),
         title: Text(
-          '${merchantId == null ? 'New' : 'Edit'} Merchant',
+          '${merchantId == null ? 'New' : 'Edit'} Wallet',
           style: TextStyle(color: colors.textInverse),
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
-            child: CupertinoSearchTextField(
-              backgroundColor: const Color(0xFFE0E0E0),
-              controller: searchTextController,
-              placeholder: 'Search',
-              placeholderStyle: const TextStyle(
-                color: Color(0xFF9E9E9E), // 🔹 Placeholder color
-                fontSize: 20,
+            child: SizedBox(
+              width: double.infinity,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minWidth: double.infinity),
+                child: WalletTypeDropdown(
+                  selectedType: _selectedWalletType,
+                  onChanged: (WalletType? value) {
+                    setState(() {
+                      _selectedWalletType = value;
+                    });
+                  },
+                ),
               ),
-              style: const TextStyle(
-                color: Colors.black, // 🔹 Input text color
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-              prefixIcon: const Icon(
-                CupertinoIcons.search,
-                color: Colors.blueAccent, // 🔹 Icon color
-              ),
-              suffixIcon: const Icon(
-                CupertinoIcons.xmark_circle_fill,
-                color: Colors.redAccent, // 🔹 Clear button color
-              ),
-              onChanged: (value) {
-                // handle search
-              },
             ),
+
+            // CupertinoSearchTextField(
+            //   backgroundColor: const Color(0xFFE0E0E0),
+            //   controller: searchTextController,
+            //   placeholder: 'Search',
+            //   placeholderStyle: const TextStyle(
+            //     color: Color(0xFF9E9E9E), // 🔹 Placeholder color
+            //     fontSize: 20,
+            //   ),
+            //   style: const TextStyle(
+            //     color: Colors.black, // 🔹 Input text color
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.w500,
+            //   ),
+            //   prefixIcon: const Icon(
+            //     CupertinoIcons.search,
+            //     color: Colors.blueAccent, // 🔹 Icon color
+            //   ),
+            //   suffixIcon: const Icon(
+            //     CupertinoIcons.xmark_circle_fill,
+            //     color: Colors.redAccent, // 🔹 Clear button color
+            //   ),
+            //   onChanged: (value) {
+            //     // handle search
+            //   },
+            // ),
           ),
         ),
         actions: [
@@ -106,12 +164,96 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
           height: MediaQuery.of(context).size.height - ((100 as num)),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    top: 20,
+                    left: 20,
+                    bottom: 0,
+                  ),
+                  child: Text('Currency & Starting Balance'),
+                ),
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: _selectCurrency,
+                        label: Text(
+                          _selectedCurrency != null
+                              ? _selectedCurrency!.symbol
+                              : '₦',
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                            color: colors.text,
+                          ),
+                        ),
+                        icon: Icon(Icons.chevron_right),
+                        iconAlignment: IconAlignment.end,
+                      ),
+                      // const Spacer(),
+                      Expanded(
+                        child: TextFormField(
+                          // textDirection: TextDirection.rtl,
+                          // initialValue: amount.toString(),
+                          controller: amountController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9.]'),
+                            ),
+                            CurrencyInputFormatter(
+                              thousandSeparator: ThousandSeparator.Comma,
+                            ),
+                          ],
+                          textAlign: TextAlign.end,
+                          keyboardType: TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          style: TextStyle(
+                            fontSize: 44, // large font size
+                            fontWeight: FontWeight.w600,
+                            color: colors.text,
+                          ),
+                          decoration: InputDecoration(
+                            // prefixText: '₦', // or '$', '€', etc.
+                            // prefixStyle: const TextStyle(
+                            //   fontSize: 50,
+                            //   fontWeight: FontWeight.w600,
+                            //   color: Colors.black,
+                            // ),
+                            border:
+                                InputBorder.none, // removes underline/borders
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            hintText: '0.00',
+                            hintStyle: TextStyle(
+                              fontSize: 50,
+                              color: colors.text,
+                            ),
+                            contentPadding:
+                                EdgeInsets.zero, // keeps alignment tight
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Divider(height: 1, color: colors.textMute),
+
                 AnimatedContainer(
                   duration: Duration(milliseconds: 200),
                   child: Material(
                     // elevation: 5,
-                    elevation: _isFocused ? 4.0 : 0.0,
+                    // elevation: _isFocused ? 4.0 : 0.0,
                     child: ListTile(
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
@@ -132,10 +274,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                       ),
                       title: Padding(
                         padding: EdgeInsetsGeometry.only(top: 0, left: 10),
-                        child: Text(
-                          'Merchant Name',
-                          textAlign: TextAlign.start,
-                        ),
+                        child: Text('Wallet Name', textAlign: TextAlign.start),
                       ),
                       subtitle: CupertinoTextFormFieldRow(
                         // focusNode: _focusNode,
@@ -151,12 +290,19 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                 ),
                 Divider(height: 1),
                 SizedBox(height: 20),
+                Divider(height: 1),
+                ListTile(
+                  leading: DynamicAvatar(icon: Icons.account_balance),
+                  title: Text('Select Provider'),
+                  onTap: _selectWalletProvider,
+                ),
+                Divider(height: 1),
 
                 AnimatedContainer(
                   duration: Duration(milliseconds: 200),
                   child: Material(
                     // elevation: 5,
-                    elevation: _isFocused ? 4.0 : 0.0,
+                    // elevation: _isFocused ? 4.0 : 0.0,
                     child: ListTile(
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
@@ -198,7 +344,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                   duration: Duration(milliseconds: 200),
                   child: Material(
                     // elevation: 5,
-                    elevation: _isFocused ? 4.0 : 0.0,
+                    // elevation: _isFocused ? 4.0 : 0.0,
                     child: ListTile(
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
@@ -239,7 +385,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                   duration: Duration(milliseconds: 200),
                   child: Material(
                     // elevation: 5,
-                    elevation: _isFocused ? 4.0 : 0.0,
+                    // elevation: _isFocused ? 4.0 : 0.0,
                     child: ListTile(
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
@@ -422,7 +568,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
           height: 56,
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: _saveWallet,
             style: ElevatedButton.styleFrom(
               backgroundColor: activeColor,
               foregroundColor: colors.textInverse,

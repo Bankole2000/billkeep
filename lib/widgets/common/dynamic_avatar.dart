@@ -4,7 +4,9 @@ class DynamicAvatar extends StatelessWidget {
   final VoidCallback? onTap;
   final Color? color;
   final IconData? icon;
+  final Offset? emojiOffset;
   final ImageProvider? image;
+  final String? emoji;
   final double size;
   final bool circular;
   final double borderRadius;
@@ -15,11 +17,13 @@ class DynamicAvatar extends StatelessWidget {
     this.color,
     this.icon,
     this.image,
+    this.emoji,
+    this.emojiOffset,
     this.size = 40,
     this.circular = true,
     this.borderRadius = 8,
     this.onTap,
-  }) : assert(icon != null || image != null || color != null);
+  }) : assert(icon != null || image != null || color != null || emoji != null);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,12 @@ class DynamicAvatar extends StatelessWidget {
           shape: circular ? BoxShape.circle : BoxShape.rectangle,
           borderRadius: circular ? null : BorderRadius.circular(borderRadius),
         ),
-        child: icon != null
+        child: emoji != null
+            ? Transform.translate(
+                offset: emojiOffset ?? Offset(7, 5),
+                child: Text(emoji!, style: TextStyle(fontSize: 26)),
+              )
+            : icon != null
             ? Icon(icon, color: Colors.white, size: size * 0.5)
             : null,
       ),

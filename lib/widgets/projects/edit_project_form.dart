@@ -39,15 +39,15 @@ class _EditProjectFormState extends ConsumerState<EditProjectForm> {
       setState(() => _isLoading = true);
 
       try {
-        await ref
-            .read(projectRepositoryProvider)
-            .updateProject(
-              projectId: widget.project.id,
-              name: _nameController.text.trim(),
-              description: _descriptionController.text.trim().isEmpty
-                  ? null
-                  : _descriptionController.text.trim(),
-            );
+        // await ref
+        //     .read(projectRepositoryProvider)
+        //     .updateProject(
+        //       projectId: widget.project.id,
+        //       name: _nameController.text.trim(),
+        //       description: _descriptionController.text.trim().isEmpty
+        //           ? null
+        //           : _descriptionController.text.trim(),
+        //     );
 
         if (mounted) {
           Navigator.pop(context);
