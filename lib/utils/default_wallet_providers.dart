@@ -1,3 +1,4 @@
+import 'package:billkeep/utils/app_enums.dart';
 import 'package:drift/drift.dart';
 import 'package:billkeep/database/database.dart';
 
@@ -781,8 +782,9 @@ class DefaultWalletProviders {
   /// Only seeds if no providers exist yet
   static Future<void> seedDefaultProviders(AppDatabase database) async {
     // Check if providers already exist
-    final existingProviders =
-        await database.select(database.walletProviders).get();
+    final existingProviders = await database
+        .select(database.walletProviders)
+        .get();
     if (existingProviders.isNotEmpty) {
       return; // Already seeded
     }
@@ -790,13 +792,16 @@ class DefaultWalletProviders {
     // Insert all default providers
     for (final provider in walletProviders) {
       // Insert the provider
-      await database.into(database.walletProviders).insert(
+      await database
+          .into(database.walletProviders)
+          .insert(
             WalletProvidersCompanion(
               id: Value(provider['id'] as String),
               tempId: Value(provider['id'] as String),
               name: Value(provider['name'] as String),
               description: Value(provider['description'] as String?),
               imageUrl: Value(provider['imageUrl'] as String?),
+              iconType: Value(IconSelectionType.image.name),
               websiteUrl: Value(provider['websiteUrl'] as String?),
               isFiatBank: Value(provider['isFiatBank'] as bool? ?? false),
               isCrypto: Value(provider['isCrypto'] as bool? ?? false),
@@ -809,7 +814,9 @@ class DefaultWalletProviders {
 
       // Insert countryISO2 as metadata if available
       if (provider['countryISO2'] != null) {
-        await database.into(database.walletProviderMetadata).insert(
+        await database
+            .into(database.walletProviderMetadata)
+            .insert(
               WalletProviderMetadataCompanion(
                 providerId: Value(provider['id'] as String),
                 key: const Value('countryISO2'),

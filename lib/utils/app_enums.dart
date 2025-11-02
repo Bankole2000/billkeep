@@ -1,6 +1,27 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 enum TransactionType { expense, income, transfer }
+
+enum TransactionSource { MANUAL, SMS, TODO, SHOPPING, SDK }
+
+TransactionSource stringToTransactionSource(String source) {
+  switch (source) {
+    case 'MANUAL':
+      return TransactionSource.MANUAL;
+    case 'SMS':
+      return TransactionSource.SMS;
+    case 'TODO':
+      return TransactionSource.TODO;
+    case 'SHOPPING':
+      return TransactionSource.SHOPPING;
+    case 'SDK':
+      return TransactionSource.SDK;
+    default:
+      return TransactionSource.MANUAL;
+  }
+}
 
 enum TaskType { todo, shopping, meeting }
 
@@ -19,6 +40,19 @@ const taskIcons = {
 };
 
 enum IconSelectionType { icon, emoji, image }
+
+IconSelectionType stringToIconSelectionType(String key) {
+  switch (key) {
+    case 'icon':
+      return IconSelectionType.icon;
+    case 'emoji':
+      return IconSelectionType.emoji;
+    case 'image':
+      return IconSelectionType.image;
+    default:
+      return IconSelectionType.icon;
+  }
+}
 
 const iconSelectionTypeIcons = {
   IconSelectionType.emoji: Icons.insert_emoticon_sharp,
@@ -40,6 +74,39 @@ enum TransactionRecurrence {
   lastDayOfTheMonth,
   everySixMonths,
   everyYear,
+}
+
+TransactionRecurrence stringToTransactionRecurrence(String recurrence) {
+  switch (recurrence) {
+    case 'never':
+      return TransactionRecurrence.never;
+    case 'everyDay':
+      return TransactionRecurrence.everyDay;
+    case 'everyWorkDay':
+      return TransactionRecurrence.everyWorkDay;
+    case 'everyWeek':
+      return TransactionRecurrence.everyWeek;
+    case 'everySecondWeek':
+      return TransactionRecurrence.everySecondWeek;
+    case 'everyThirdWeek':
+      return TransactionRecurrence.everyThirdWeek;
+    case 'everyMonth':
+      return TransactionRecurrence.everyMonth;
+    case 'everySecondMonth':
+      return TransactionRecurrence.everySecondMonth;
+    case 'everyThirdMonth':
+      return TransactionRecurrence.everyThirdMonth;
+    case 'firstDayOfTheMonth':
+      return TransactionRecurrence.firstDayOfTheMonth;
+    case 'lastDayOfTheMonth':
+      return TransactionRecurrence.lastDayOfTheMonth;
+    case 'everySixMonths':
+      return TransactionRecurrence.everySixMonths;
+    case 'everyYear':
+      return TransactionRecurrence.everyYear;
+    default:
+      return TransactionRecurrence.never;
+  }
 }
 
 const recurrenceOptions = {

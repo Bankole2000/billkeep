@@ -34,17 +34,17 @@ class _ShoppingListFormState extends ConsumerState<ShoppingListForm> {
         String? expenseId;
 
         // Create expense if tracking is enabled
-        if (_trackAsExpense) {
-          expenseId = await ref
-              .read(expenseRepositoryProvider)
-              .createExpense(
-                projectId: widget.projectId,
-                name: 'Shopping List: ${_nameController.text.trim()}',
-                amount: '0', // Will be calculated from items
-                type: 'ONE_TIME',
-                createInitialPayment: false, // Don't create initial payment
-              );
-        }
+        // if (_trackAsExpense) {
+        //   expenseId = await ref
+        //       .read(expenseRepositoryProvider)
+        //       .createExpense(
+        //         projectId: widget.projectId,
+        //         name: 'Shopping List: ${_nameController.text.trim()}',
+        //         amount: '0', // Will be calculated from items
+        //         type: 'ONE_TIME',
+        //         createInitialPayment: false, // Don't create initial payment
+        //       );
+        // }
 
         // Create shopping list with linked expense
         await ref

@@ -4,12 +4,10 @@ import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/validators.dart';
-import 'package:billkeep/widgets/common/app_image.dart';
 import 'package:billkeep/widgets/common/color_picker_widget.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
 import 'package:billkeep/widgets/common/emoji_picker_widget.dart';
 import 'package:billkeep/widgets/common/icon_picker_widget.dart';
-import 'package:billkeep/widgets/common/select_color_bottomsheet.dart';
 import 'package:billkeep/widgets/common/sliding_segment_control_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +17,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:billkeep/utils/app_enums.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:camera/camera.dart';
 import 'package:billkeep/main.dart' as main;
 import 'package:billkeep/screens/camera/camera_screen.dart';
 
@@ -37,13 +34,11 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   IconSelectionType _selectedSegment = IconSelectionType.icon;
-  // String _enteredName = '';
-  // String _enteredDescription = '';
+
   Color? _selectedColor;
   IconData? _selectedIcon = Icons.folder;
   String? _selectedEmoji = '📂';
   String? projectId;
-  String? _imageUrl = 'https://picsum.photos/200/300';
   File? _localImageFile;
   final ImagePicker _picker = ImagePicker();
   bool? _isArchived = false;
@@ -66,6 +61,10 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
         }
         _imageUrlController.text =
             widget.projectToEdit?.imageUrl ?? 'https://picsum.photos/200/300';
+      } else {
+        _selectedSegment = stringToIconSelectionType(
+          widget.projectToEdit!.iconType,
+        );
       }
       _nameController.text = widget.projectToEdit!.name;
       _descriptionController.text = widget.projectToEdit!.description!;
@@ -81,7 +80,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
     } else {
       _imageUrlController.text = 'https://picsum.photos/200/300';
     }
-    // searchTextController = TextEditingController();
   }
 
   @override
@@ -89,13 +87,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
     // searchTextController.dispose();
     _imageUrlController.dispose();
     super.dispose();
-  }
-
-  void _selectColor() async {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) => SelectColorBottomSheet(),
-    );
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -110,7 +101,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
       if (image != null) {
         setState(() {
           _localImageFile = File(image.path);
-          _imageUrl = image.path; // Clear URL when local file is selected
           _imageUrlController.text = image.path;
         });
       }
@@ -152,7 +142,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
     if (photo != null) {
       setState(() {
         _localImageFile = File(photo.path);
-        _imageUrl = photo.path; // Clear URL when local file is selected
         _imageUrlController.text = photo.path;
       });
     }
@@ -163,7 +152,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
     final pastedText = clipboardData?.text;
     if (pastedText != null && Validators.isValidUrl(pastedText)) {
       setState(() {
-        _imageUrl = pastedText;
         _imageUrlController.text = pastedText;
       });
     } else {
@@ -177,16 +165,14 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
   }
 
   void _copyToClipboard(String text) async {
-    await Clipboard.setData(ClipboardData(text: _imageUrl ?? ''));
+    await Clipboard.setData(ClipboardData(text: _imageUrlController.text));
   }
 
   void _saveProject() async {
-    // print(_enteredName);
-    // print(_enteredDescription);
     print(_selectedColor);
     print(_selectedIcon);
     print(_selectedEmoji);
-    print(_imageUrl);
+    print(_imageUrlController.text);
     print(_localImageFile);
     print(_localImageFile?.path);
     print(_selectedSegment);
@@ -202,7 +188,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
               Validators.isValidUrl(_imageUrlController.text)
           ? IconSelectionType.image.name
           : _selectedSegment == IconSelectionType.image &&
-                Validators.isValidUrl(_imageUrlController.text)
+                !Validators.isValidUrl(_imageUrlController.text)
           ? 'localImage'
           : _selectedSegment.name;
       try {
@@ -291,38 +277,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
           '${projectId == null ? 'New' : 'Edit'} Project',
           style: TextStyle(color: colors.text),
         ),
-
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(kToolbarHeight),
-        //   child: Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
-        //     child: CupertinoSearchTextField(
-        //       backgroundColor: const Color(0xFFE0E0E0),
-        //       // controller: searchTextController,
-        //       placeholder: 'Search',
-        //       placeholderStyle: const TextStyle(
-        //         color: Color(0xFF9E9E9E), // 🔹 Placeholder color
-        //         fontSize: 20,
-        //       ),
-        //       style: const TextStyle(
-        //         color: Colors.black, // 🔹 Input text color
-        //         fontSize: 20,
-        //         fontWeight: FontWeight.w500,
-        //       ),
-        //       prefixIcon: const Icon(
-        //         CupertinoIcons.search,
-        //         color: Colors.blueAccent, // 🔹 Icon color
-        //       ),
-        //       suffixIcon: const Icon(
-        //         CupertinoIcons.xmark_circle_fill,
-        //         color: Colors.redAccent, // 🔹 Clear button color
-        //       ),
-        //       onChanged: (value) {
-        //         // handle search
-        //       },
-        //     ),
-        //   ),
-        // ),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
           SizedBox(width: 10),
@@ -382,11 +336,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                           }
                           return null;
                         },
-                        // onChanged: (value) {
-                        //   setState(() {
-                        //     _enteredName = value;
-                        //   });
-                        // },
                       ),
                       onTap: () {},
                       minTileHeight: 10,
@@ -499,8 +448,10 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                             image: _selectedSegment == IconSelectionType.image
                                 ? (_localImageFile != null
                                       ? FileImage(_localImageFile!)
-                                      : _imageUrl != null
-                                      ? NetworkImage(_imageUrl!)
+                                      : _imageUrlController.text
+                                            .trim()
+                                            .isNotEmpty
+                                      ? NetworkImage(_imageUrlController.text)
                                       : null)
                                 : null,
                             size: 50,
@@ -570,15 +521,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                             ),
                           ),
                           Spacer(),
-                          // ColorSelectorButton(onColorChanged: (color) {}),
-                          // IconButton(
-                          //   onPressed: _selectColor,
-                          //   icon: Icon(
-                          //     Icons.invert_colors,
-                          //     size: 36,
-                          //     color: colors.textMute,
-                          //   ),
-                          // ),
                         ],
                       ),
                       onTap: () {},
@@ -587,11 +529,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                   ),
                 ),
                 Divider(height: 1),
-                // SizedBox(
-                //   height: 400,
-                //   child:
-                // SingleChildScrollView(
-                //     child:
                 if (_selectedSegment == IconSelectionType.icon)
                   IconPickerWidget(
                     onIconSelected: (icon) {
@@ -601,8 +538,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                       print(icon);
                     },
                   ),
-                //   ),
-                // ),
                 if (_selectedSegment == IconSelectionType.emoji)
                   EmojiPickerWidget(
                     onEmojiSelected: (emoji) {
@@ -626,13 +561,11 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                               'Url: ',
                               style: TextStyle(color: colors.textMute),
                             ),
-
-                            // placeholder: 'Title',
                           ),
                         ),
                         IconButton(
                           onPressed: () {
-                            _copyToClipboard(_imageUrl ?? '');
+                            _copyToClipboard(_imageUrlController.text);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('ImageURL Copied to Clipboard'),

@@ -132,23 +132,6 @@ class ProjectRepository {
     )..where((t) => t.isSynced.equals(false))).get();
   }
 
-  // Future<void> updateProjectBudget({
-  //   required String projectId,
-  //   required int budgetAmount,
-  //   required String budgetType,
-  //   String? budgetFrequency,
-  // }) async {
-  //   await (_database.update(
-  //     _database.projects,
-  //   )..where((p) => p.id.equals(projectId))).write(
-  //     ProjectsCompanion(
-  //       budgetAmount: drift.Value(budgetAmount),
-  //       budgetType: drift.Value(budgetType),
-  //       budgetFrequency: drift.Value(budgetFrequency),
-  //     ),
-  //   );
-  // }
-
   Future<String> updateProject({
     required String projectId,
     required String name,

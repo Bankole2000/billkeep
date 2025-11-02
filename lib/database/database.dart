@@ -518,7 +518,7 @@ class WalletProviders extends Table {
   IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
   TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
   TextColumn get iconType =>
-      text().withDefault(const Constant('MaterialIcons'))(); // Icon or Emoji
+      text().withDefault(const Constant('image'))(); // Icon or Emoji
   TextColumn get color => text().nullable()();
   TextColumn get websiteUrl => text().nullable()();
   BoolColumn get isFiatBank => boolean().withDefault(const Constant(false))();

@@ -147,13 +147,13 @@ class _WalletTypeDropdownState extends ConsumerState<WalletTypeDropdown> {
             ] else ...[
               Icon(
                 Icons.account_balance_wallet_outlined,
-                color: colors.textMute,
+                color: colors.textMuteInverse,
               ),
               SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Select wallet type',
-                  style: TextStyle(color: colors.textMute),
+                  'Select Wallet type',
+                  style: TextStyle(color: colors.textMuteInverse),
                 ),
               ),
             ],

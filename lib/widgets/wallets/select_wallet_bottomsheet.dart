@@ -1,14 +1,20 @@
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/wallet_provider.dart';
 import 'package:billkeep/screens/wallets/add_wallet_screen.dart';
 import 'package:billkeep/utils/page_transitions.dart';
+import 'package:billkeep/widgets/wallets/wallet_list_select_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SelectWalletBottomSheet extends ConsumerWidget {
-  const SelectWalletBottomSheet({super.key});
+  const SelectWalletBottomSheet({super.key, this.selectedWallet});
+
+  final Wallet? selectedWallet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final wallets = ref.watch(walletsWithRelationsProvider);
     return Container(
       height: 400, // Adjust height as needed
       decoration: BoxDecoration(
@@ -100,41 +106,41 @@ class SelectWalletBottomSheet extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // SizedBox(height: 40),
-                      // ...projects.when(
-                      //   data: (ps) {
-                      //     if (ps.isEmpty) {
-                      //       return const [
-                      //         Center(
-                      //           child: Text(
-                      //             'No projects yet. Tap + to create one.',
-                      //           ),
-                      //         ),
-                      //       ];
-                      //     }
-                      //     return ps
-                      //         .expand(
-                      //           (p) => [
-                      //             ProjectListSelectItem(
-                      //               isSelected:
-                      //                   false, // _selectedProject?.id == p.id,
-                      //               project: p,
-                      //               onSelectProject: () {
-                      //                 // selectProject(p);
-                      //                 // Navigator.of(context).pop();
-                      //               },
-                      //             ),
-                      //             Divider(),
-                      //           ],
-                      //         )
-                      //         .toList();
-                      //   },
-                      //   error: (error, stack) => [
-                      //     Text('Error loading Projects'),
-                      //   ],
-                      //   loading: () => [
-                      //     Center(child: CircularProgressIndicator()),
-                      //   ],
-                      // ),
+                      ...wallets.when(
+                        data: (wt) {
+                          if (wt.isEmpty) {
+                            return const [
+                              Center(
+                                child: Text(
+                                  'No projects yet. Tap + to create one.',
+                                ),
+                              ),
+                            ];
+                          }
+                          return wt
+                              .expand(
+                                (w) => [
+                                  WalletListSelectItem(
+                                    isSelected:
+                                        selectedWallet?.id == w.wallet.id,
+                                    walletWithRelations: w,
+                                    onSelectWallet: () {
+                                      // selectProject(p);
+                                      Navigator.of(context).pop(w);
+                                    },
+                                  ),
+                                  Divider(),
+                                ],
+                              )
+                              .toList();
+                        },
+                        error: (error, stack) => [
+                          Text('Error loading Projects'),
+                        ],
+                        loading: () => [
+                          Center(child: CircularProgressIndicator()),
+                        ],
+                      ),
                     ],
                   ),
                 ),

@@ -36,22 +36,21 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
       setState(() => _isLoading = true);
 
       try {
-        await ref
-            .read(expenseRepositoryProvider)
-            .createExpense(
-              projectId: widget.projectId,
-              name: _nameController.text.trim(),
-              amount: _amountController.text.trim(),
-              type: _type,
-              startDate: _datePayed,
-              frequency: _frequency,
-              notes: _notesController.text.trim().isEmpty
-                  ? null
-                  : _notesController.text.trim(),
-              createInitialPayment: _type == 'RECURRING'
-                  ? _createInitialPayment
-                  : true,
-            );
+        await ref.read(expenseRepositoryProvider);
+        // .createExpense(
+        //   projectId: widget.projectId,
+        //   name: _nameController.text.trim(),
+        //   amount: _amountController.text.trim(),
+        //   type: _type,
+        //   startDate: _datePayed,
+        //   frequency: _frequency,
+        //   notes: _notesController.text.trim().isEmpty
+        //       ? null
+        //       : _notesController.text.trim(),
+        //   createInitialPayment: _type == 'RECURRING'
+        //       ? _createInitialPayment
+        //       : true,
+        // );
 
         if (mounted) {
           Navigator.pop(context);

@@ -1,3 +1,5 @@
+import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/date_helpers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
 import 'package:billkeep/database/database.dart';
@@ -39,25 +41,33 @@ class ExpenseRepository {
     required String projectId,
     required String name,
     required String amount,
-    required String type,
-    DateTime? startDate, // For recurring expenses
-    String? frequency,
+    required String walletId, // NEW: Wallet
+    required String categoryId, // NEW: Category
+    String? merchantId, // NEW: Merchant
+    required String currency, // NEW: Currency
+    required DateTime startDate, // For recurring expenses
+    required TransactionRecurrence frequency,
+    bool createInitialPayment = true,
+    // required String type,
     String? notes,
-    String? categoryId, // NEW: Category
-    bool createInitialPayment = true, // For one-time expenses
+    TransactionSource? source,
   }) async {
     final tempExpenseId = IdGenerator.tempExpense();
-    final now = DateTime.now();
+    final now = startDate;
 
     DateTime? nextRenewal;
-    if (type == 'RECURRING' && frequency != null) {
-      if (frequency == 'MONTHLY') {
-        nextRenewal = DateTime(now.year, now.month + 1, now.day);
-      } else if (frequency == 'YEARLY') {
-        nextRenewal = DateTime(now.year + 1, now.month, now.day);
-      }
+    String type = 'ONE_TIME';
+    if (frequency != TransactionRecurrence.never) {
+      type = 'RECURRING';
+      nextRenewal = frequency.calculateNextDueDate(startDate);
     }
-
+    // if (type == 'RECURRING' && frequency != null) {
+    //   if (frequency == 'MONTHLY') {
+    //     nextRenewal = DateTime(now.year, now.month + 1, now.day);
+    //   } else if (frequency == 'YEARLY') {
+    //     nextRenewal = DateTime(now.year + 1, now.month, now.day);
+    //   }
+    // }
     // Create expense
     await _database.createExpense(
       ExpensesCompanion(
@@ -65,9 +75,10 @@ class ExpenseRepository {
         tempId: Value(tempExpenseId),
         projectId: Value(projectId),
         name: Value(name),
+        currency: Value(currency),
         expectedAmount: Value(CurrencyHelper.dollarsToCents(amount)),
         type: Value(type),
-        frequency: Value(frequency),
+        frequency: Value(frequency.name),
         startDate: Value(now),
         nextRenewalDate: Value(nextRenewal),
         categoryId: Value(categoryId),
@@ -84,6 +95,7 @@ class ExpenseRepository {
           tempId: Value(IdGenerator.tempPayment()),
           paymentType: const Value('DEBIT'), // Expense = DEBIT
           expenseId: Value(tempExpenseId),
+          currency: Value(currency),
           actualAmount: Value(CurrencyHelper.dollarsToCents(amount)),
           paymentDate: Value(now),
           source: const Value('MANUAL'),

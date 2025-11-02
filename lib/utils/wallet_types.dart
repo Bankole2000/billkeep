@@ -83,7 +83,28 @@ class WalletTypes {
   ];
 
   // Helper method to get info by type
-  static WalletTypeInfo getInfo(WalletType type) {
-    return all.firstWhere((info) => info.type == type);
+  static WalletTypeInfo getInfo(WalletType walletType) {
+    return all.firstWhere((info) => info.type == walletType);
+  }
+
+  static WalletType stringToEnum(String walletType) {
+    switch (walletType) {
+      case 'CASH':
+        return WalletType.CASH;
+      case 'BANK_ACCOUNT':
+        return WalletType.BANK_ACCOUNT;
+      case 'MOBILE_MONEY':
+        return WalletType.MOBILE_MONEY;
+      case 'CREDIT_CARD':
+        return WalletType.CREDIT_CARD;
+      case 'DIGITAL_WALLET':
+        return WalletType.DIGITAL_WALLET;
+      case 'CRYPTO_WALLET':
+        return WalletType.CRYPTO_WALLET;
+      case 'OTHER':
+        return WalletType.OTHER;
+      default:
+        throw ArgumentError('Invalid wallet type string: $walletType');
+    }
   }
 }

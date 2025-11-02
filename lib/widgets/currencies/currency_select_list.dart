@@ -23,7 +23,22 @@ class CurrencyList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (currencies.isEmpty) {
+    // Filter currencies based on the provided flags
+    List<Currency> filteredCurrencies = currencies;
+
+    if (showActiveCurrenciesOnly) {
+      filteredCurrencies = filteredCurrencies.where((c) => c.isActive).toList();
+    }
+
+    if (showCryptoOnly) {
+      filteredCurrencies = filteredCurrencies.where((c) => c.isCrypto).toList();
+    }
+
+    if (showFiatOnly) {
+      filteredCurrencies = filteredCurrencies.where((c) => !c.isCrypto).toList();
+    }
+
+    if (filteredCurrencies.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -44,9 +59,9 @@ class CurrencyList extends ConsumerWidget {
     }
 
     return ListView.builder(
-      itemCount: currencies.length,
+      itemCount: filteredCurrencies.length,
       itemBuilder: (context, index) {
-        final currency = currencies[index];
+        final currency = filteredCurrencies[index];
         return CurrencyListItem(
           currency: currency,
           onTap: () {

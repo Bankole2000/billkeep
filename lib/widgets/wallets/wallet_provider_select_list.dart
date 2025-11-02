@@ -1,5 +1,7 @@
 import 'package:billkeep/providers/bank_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/wallets/providers/add_wallet_provider_screen.dart';
+import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/widgets/common/app_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,23 +10,57 @@ import '../../database/database.dart';
 
 class WalletProviderList extends ConsumerWidget {
   final Function(WalletProvider)? onWalletProviderSelected;
-  final bool showActiveCurrenciesOnly;
+  final bool showActiveWalletProvidersOnly;
   final bool showCryptoOnly;
   final bool showFiatOnly;
+  final bool showMobileMoneyOnly;
+  final bool showCreditCardOnly;
   final List<WalletProvider> walletProviders;
 
   const WalletProviderList({
     super.key,
     required this.walletProviders,
     this.onWalletProviderSelected,
-    this.showActiveCurrenciesOnly = false,
+    this.showActiveWalletProvidersOnly = false,
     this.showCryptoOnly = false,
     this.showFiatOnly = false,
+    this.showCreditCardOnly = false,
+    this.showMobileMoneyOnly = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (walletProviders.isEmpty) {
+    List<WalletProvider> filteredWalletProviders = walletProviders;
+
+    // if (showActiveWalletProvidersOnly) {
+    //   filteredWalletProviders = filteredWalletProviders.where((c) => c.isActive).toList();
+    // }
+
+    if (showCryptoOnly) {
+      filteredWalletProviders = filteredWalletProviders
+          .where((c) => c.isCrypto)
+          .toList();
+    }
+
+    if (showFiatOnly) {
+      filteredWalletProviders = filteredWalletProviders
+          .where((c) => c.isFiatBank)
+          .toList();
+    }
+
+    if (showMobileMoneyOnly) {
+      filteredWalletProviders = filteredWalletProviders
+          .where((c) => c.isMobileMoney)
+          .toList();
+    }
+
+    if (showCreditCardOnly) {
+      filteredWalletProviders = filteredWalletProviders
+          .where((c) => c.isCreditCard)
+          .toList();
+    }
+
+    if (filteredWalletProviders.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -41,9 +77,9 @@ class WalletProviderList extends ConsumerWidget {
     }
 
     return ListView.builder(
-      itemCount: walletProviders.length,
+      itemCount: filteredWalletProviders.length,
       itemBuilder: (context, index) {
-        final walletProvider = walletProviders[index];
+        final walletProvider = filteredWalletProviders[index];
         return WalletProviderListItem(
           walletProvider: walletProvider,
           onTap: () {
@@ -123,7 +159,18 @@ class WalletProviderListItem extends ConsumerWidget {
         '${walletProvider.description}',
         style: TextStyle(fontSize: 12, color: colors.textMute),
       ),
-      trailing: Icon(Icons.chevron_right_rounded, color: colors.text),
+      trailing: IconButton(
+        icon: Icon(Icons.chevron_right_rounded),
+        color: colors.text,
+        onPressed: () {
+          Navigator.push(
+            context,
+            AppPageRoute.slideRight(
+              AddWalletProviderScreen(walletProvider: walletProvider),
+            ),
+          );
+        },
+      ),
       onTap: onTap,
     );
   }

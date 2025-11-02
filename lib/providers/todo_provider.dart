@@ -57,15 +57,15 @@ class TodoRepository {
     if (directExpenseAmount != null) {
       final amountInDollars = (directExpenseAmount / 100).toStringAsFixed(2);
 
-      createdExpenseId = await _expenseRepository.createExpense(
-        projectId: projectId,
-        name: directExpenseDescription ?? 'Todo: $title',
-        amount: amountInDollars,
-        type: directExpenseType ?? 'ONE_TIME',
-        frequency: directExpenseFrequency,
-        notes: 'Linked to todo',
-        createInitialPayment: false, // Don't create payment yet
-      );
+      // createdExpenseId = await _expenseRepository.createExpense(
+      //   projectId: projectId,
+      //   name: directExpenseDescription ?? 'Todo: $title',
+      //   amount: amountInDollars,
+      //   type: directExpenseType ?? 'ONE_TIME',
+      //   frequency: directExpenseFrequency,
+      //   notes: 'Linked to todo',
+      //   createInitialPayment: false, // Don't create payment yet
+      // );
     }
 
     await _database

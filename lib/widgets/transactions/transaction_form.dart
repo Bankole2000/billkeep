@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/expense_provider.dart';
 import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/providers/wallet_provider.dart';
 import 'package:billkeep/screens/categories/category_select_screen.dart';
 import 'package:billkeep/screens/contacts/contact_select_screen.dart';
 import 'package:billkeep/screens/merchants/add_merchant_screen.dart';
@@ -38,16 +40,24 @@ enum SingingCharacter { lafayette, jefferson }
 
 class _TransactionFormState extends ConsumerState<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
-  final amountController = TextEditingController();
-  var _title = '';
+  final _amountController = TextEditingController();
+  final _titleController = TextEditingController();
   Category? _selectedCategory;
   Merchant? _selectedMerchant;
   Wallet? _fromWallet;
+  Currency? _fromCurrency;
+  Currency? _toCurrency;
+  WalletWithRelations? _fromWalletWithRelations;
   Wallet? _toWallet;
+  WalletWithRelations? _toWalletWithRelations;
   Project? _selectedProject;
   DateTime? _selectedDate = DateTime.now();
   TransactionRecurrence _recurrence = TransactionRecurrence.never;
+  bool _setReminder = true;
+
+  TransactionSource source = TransactionSource.MANUAL;
 
   // bool _createInitialPayment = true;
 
@@ -69,10 +79,24 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
   }
 
   void _selectWallet({bool to = false}) async {
-    showModalBottomSheet(
+    final result = await showModalBottomSheet<WalletWithRelations>(
       context: context,
-      builder: (BuildContext context) => SelectWalletBottomSheet(),
+      builder: (BuildContext context) =>
+          SelectWalletBottomSheet(selectedWallet: to ? _toWallet : _fromWallet),
     );
+    if (result != null) {
+      setState(() {
+        if (to) {
+          _toWalletWithRelations = result;
+          _toWallet = result.wallet;
+          _toCurrency = result.currency;
+        } else {
+          _fromWalletWithRelations = result;
+          _fromWallet = result.wallet;
+          _fromCurrency = result.currency;
+        }
+      });
+    }
   }
 
   void _selectRecurrence() async {
@@ -108,6 +132,9 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
       print(result);
       setState(() {
         _selectedCategory = result;
+        if (_titleController.text.trim().isEmpty) {
+          _titleController.text = _selectedCategory!.name;
+        }
       });
     }
   }
@@ -165,11 +192,55 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
     });
   }
 
+  Future<void> _saveExpense() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+    }
+
+    try {
+      await ref
+          .read(expenseRepositoryProvider)
+          .createExpense(
+            projectId: _selectedProject!.id,
+            name: _titleController.text.trim(),
+            amount: _amountController.text.trim(),
+            walletId: _fromWallet!.id,
+            categoryId: _selectedCategory!.id,
+            merchantId: _selectedMerchant!.id,
+
+            currency: _fromWallet!.currency,
+            // type: _type,
+            startDate: _selectedDate!,
+            frequency: _recurrence,
+            // notes: _notesController.text.trim().isEmpty
+            //     ? null
+            //     : _notesController.text.trim(),
+            createInitialPayment: _selectedDate!.isBefore(DateTime.now()),
+            source: source,
+          );
+
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   void _saveTransaction() {
     print(widget.transactionType);
     switch (widget.transactionType) {
       case TransactionType.expense:
         print('Create expense record');
+        _saveExpense();
         break;
       case TransactionType.income:
         print('Create income record');
@@ -185,6 +256,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
     // TODO: implement initState
     // _selectedProject = ref.watch(activeProjectProvider).project?.id;
     super.initState();
+    _amountController.text = '0';
+    _titleController.text = '';
 
     // Delay access to ref until after widget is mounted
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -206,7 +279,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
 
   @override
   void dispose() {
-    amountController.dispose();
+    _amountController.dispose();
+    _titleController.dispose();
     super.dispose();
   }
 
@@ -240,19 +314,30 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          '₦',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w600,
-                            color: colors.text,
+                        if (widget.transactionType != TransactionType.income)
+                          Text(
+                            _fromCurrency?.symbol ?? '?',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w600,
+                              color: colors.text,
+                            ),
                           ),
-                        ),
+                        if (widget.transactionType == TransactionType.income)
+                          Text(
+                            _toCurrency?.symbol ?? '?',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w600,
+                              color: colors.text,
+                            ),
+                          ),
                         // const Spacer(),
                         Expanded(
                           child: TextFormField(
                             // textDirection: TextDirection.rtl,
-                            initialValue: amount.toString(),
+                            // initialValue: amount.toString(),
+                            controller: _amountController,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                 RegExp(r'[0-9.]'),
@@ -295,7 +380,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     ),
                   ),
 
-                  Divider(height: 1, color: colors.textMute),
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Title Input Field
                   ListTile(
@@ -304,6 +389,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     visualDensity: VisualDensity(vertical: 0.1),
                     leading: Icon(Icons.edit_sharp, color: colors.text),
                     title: CupertinoTextFormFieldRow(
+                      controller: _titleController,
                       style: TextStyle(color: colors.text),
                       padding: EdgeInsets.all(0),
                       prefix: Text(
@@ -322,14 +408,11 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                         }
                         return null;
                       },
-                      onSaved: (value) {
-                        _title = value!;
-                      },
                     ),
                     onTap: () {},
                   ),
 
-                  Divider(height: 1, color: colors.textMute),
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Category Select
                   ListTile(
@@ -364,7 +447,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                   ),
 
                   if (widget.transactionType == TransactionType.expense)
-                    Divider(height: 1, color: colors.textMute),
+                    Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Merchant Select
                   ClipRect(
@@ -396,16 +479,11 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                                 'Merchant: ',
                                 style: TextStyle(color: colors.textMute),
                               ),
-                              Text(
-                                _selectedMerchant != null
-                                    ? _selectedMerchant!.name
-                                    : 'Select Merchant',
-                                style: TextStyle(
-                                  color: _selectedMerchant != null
-                                      ? colors.text
-                                      : colors.textMute,
+                              if (_selectedMerchant != null)
+                                Text(
+                                  _selectedMerchant!.name,
+                                  style: TextStyle(color: colors.text),
                                 ),
-                              ),
                             ],
                           ),
                           onTap: _selectMerchant,
@@ -420,13 +498,14 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     ),
                   ),
 
-                  Divider(height: 1, color: colors.textMute),
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Project Select
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 20),
                     visualDensity: VisualDensity(vertical: 0.1),
                     leading: DynamicAvatar(
+                      emojiOffset: Offset(3, -1),
                       icon:
                           _selectedProject?.iconType ==
                               IconSelectionType.icon.name
@@ -471,7 +550,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                   ),
 
                   if (widget.transactionType != TransactionType.income)
-                    Divider(height: 1, color: colors.textMute),
+                    Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Wallet Select (From)
                   ClipRect(
@@ -488,7 +567,33 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: 20),
                           visualDensity: VisualDensity(vertical: 0.1),
-                          leading: DynamicAvatar(icon: Icons.folder),
+                          leading: DynamicAvatar(
+                            emojiOffset: Offset(3, -1),
+                            icon:
+                                _fromWallet?.iconType ==
+                                    IconSelectionType.icon.name
+                                ? IconData(
+                                    _fromWallet!.iconCodePoint!,
+                                    fontFamily: 'MaterialIcons',
+                                  )
+                                : null,
+                            emoji:
+                                _fromWallet?.iconType ==
+                                    IconSelectionType.emoji.name
+                                ? _fromWallet?.iconEmoji
+                                : null,
+                            image:
+                                _fromWallet?.iconType ==
+                                        IconSelectionType.image.name &&
+                                    _fromWallet?.localImagePath != null
+                                ? FileImage(File(_fromWallet!.localImagePath!))
+                                : _fromWallet?.imageUrl != null
+                                ? NetworkImage(_fromWallet!.imageUrl!)
+                                : null,
+                            color: _fromWallet?.color != null
+                                ? HexColor.fromHex('#${_fromWallet?.color}')
+                                : Colors.grey.shade100,
+                          ),
 
                           title: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -497,10 +602,15 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                                 'From: ',
                                 style: TextStyle(color: colors.textMute),
                               ),
+                              if (_fromWallet != null)
+                                Text(
+                                  '${_fromWallet?.currency} - ${_fromWallet?.name} ',
+                                  style: TextStyle(color: colors.text),
+                                ),
                             ],
                           ),
                           onTap: () {
-                            _selectWallet(to: true);
+                            _selectWallet(to: false);
                           },
                         ),
                       ),
@@ -508,7 +618,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                   ),
 
                   if (widget.transactionType != TransactionType.expense)
-                    Divider(height: 1, color: colors.textMute),
+                    Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Wallet Select (To)
                   ClipRect(
@@ -525,7 +635,33 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(horizontal: 20),
                           visualDensity: VisualDensity(vertical: 0.1),
-                          leading: DynamicAvatar(icon: Icons.folder),
+                          leading: DynamicAvatar(
+                            emojiOffset: Offset(3, -1),
+                            icon:
+                                _toWallet?.iconType ==
+                                    IconSelectionType.icon.name
+                                ? IconData(
+                                    _toWallet!.iconCodePoint!,
+                                    fontFamily: 'MaterialIcons',
+                                  )
+                                : null,
+                            emoji:
+                                _toWallet?.iconType ==
+                                    IconSelectionType.emoji.name
+                                ? _toWallet?.iconEmoji
+                                : null,
+                            image:
+                                _toWallet?.iconType ==
+                                        IconSelectionType.image.name &&
+                                    _toWallet?.localImagePath != null
+                                ? FileImage(File(_toWallet!.localImagePath!))
+                                : _toWallet?.imageUrl != null
+                                ? NetworkImage(_toWallet!.imageUrl!)
+                                : null,
+                            color: _toWallet?.color != null
+                                ? HexColor.fromHex('#${_toWallet?.color}')
+                                : Colors.grey.shade100,
+                          ),
 
                           title: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -534,15 +670,22 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                                 'To: ',
                                 style: TextStyle(color: colors.textMute),
                               ),
+                              if (_toWallet != null)
+                                Text(
+                                  ' ${_toWallet?.currency} - ${_toWallet?.name}',
+                                  style: TextStyle(color: colors.text),
+                                ),
                             ],
                           ),
-                          onTap: _selectWallet,
+                          onTap: () {
+                            _selectWallet(to: true);
+                          },
                         ),
                       ),
                     ),
                   ),
 
-                  Divider(height: 1, color: colors.textMute),
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Date Select Input
                   ListTile(
@@ -570,7 +713,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     onTap: _presentDatePicker,
                   ),
 
-                  Divider(height: 1, color: colors.textMute),
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Repeat select
                   ListTile(
@@ -591,10 +734,43 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                         ),
                       ],
                     ),
+                    trailing:
+                        _recurrence != TransactionRecurrence.never &&
+                            _setReminder == true
+                        ? IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.settings),
+                          )
+                        : null,
                     onTap: _selectRecurrence,
                   ),
 
-                  Divider(height: 1, color: colors.textMute),
+                  ClipRect(
+                    child: AnimatedSize(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      child: SizedBox(
+                        height: _recurrence == TransactionRecurrence.never
+                            ? 0
+                            : null,
+                        child: SwitchListTile(
+                          value: _setReminder,
+                          onChanged: (isChecked) {
+                            setState(() {
+                              _setReminder = isChecked;
+                            });
+                          },
+                          title: Text('Send me Reminders'),
+                          subtitle: Text(
+                            'You\'ll be notified of upcoming transactions',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Tags Input Select
                   ListTile(
@@ -614,7 +790,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     onTap: _selectTags,
                   ),
 
-                  Divider(height: 1, color: colors.textMute),
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   // Contacts Input Select
                   ListTile(
@@ -633,7 +809,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     ),
                     onTap: _selectContact,
                   ),
-                  Divider(height: 1, color: colors.textMute),
+                  Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
                   SizedBox(height: 300),
                 ],
