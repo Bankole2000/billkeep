@@ -1,4 +1,5 @@
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/home/old_ui.dart';
 import 'package:billkeep/screens/settings/database_management_screen.dart';
 import 'package:billkeep/screens/sms/sms_import_screen.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,19 @@ class SideNavigationDrawer extends ConsumerWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const DatabaseManagementScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.storage),
+            title: const Text('Old UI'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OldUIHomeScreen(),
                 ),
               );
             },
