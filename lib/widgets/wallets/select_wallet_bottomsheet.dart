@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/wallet_provider.dart';
 import 'package:billkeep/screens/wallets/add_wallet_screen.dart';
@@ -96,7 +98,7 @@ class SelectWalletBottomSheet extends ConsumerWidget {
             left: 20,
             right: 20,
             bottom: 20 + MediaQuery.of(context).padding.bottom,
-            // top: 50,
+            top: Platform.isIOS ? 50 : null,
             child: ClipRRect(
               child: SizedBox(
                 height: 320,
@@ -105,16 +107,26 @@ class SelectWalletBottomSheet extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // SizedBox(height: 40),
+                      
                       ...wallets.when(
                         data: (wt) {
                           if (wt.isEmpty) {
-                            return const [
-                              Center(
-                                child: Text(
-                                  'No projects yet. Tap + to create one.',
+                            return [
+                                if(!Platform.isIOS)
+                                Center(
+                                  child: Text(
+                                    'No Wallets yet. Tap + to create one.',
+                                  ),
                                 ),
-                              ),
+                              if(Platform.isIOS)
+                                SizedBox(
+                                  height: 250,
+                                  child: Center(
+                                    child: Text(
+                                      'No Wallets yet. Tap + to create one.',
+                                    ),
+                                  ),
+                                ),
                             ];
                           }
                           return wt

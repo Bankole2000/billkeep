@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:billkeep/providers/currency_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +156,7 @@ class CurrencyListItem extends ConsumerWidget {
         child: ClipOval(
           child: currency.isCrypto
               ? Transform.translate(
-                  offset: Offset(0, -5),
+                  offset: Platform.isIOS ? Offset(6, -1) : Offset(0, -5),
                   child: Text(
                     currency.countryISO2!,
                     style: TextStyle(fontSize: 35),

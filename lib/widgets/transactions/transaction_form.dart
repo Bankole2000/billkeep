@@ -426,7 +426,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           ? HexColor.fromHex(_selectedCategory!.color!)
                           : Colors.blueGrey,
                       icon: _selectedCategory != null ? null : Icons.folder,
-                      emojiOffset: Offset(1, -2),
+                      emojiOffset: Platform.isIOS ? Offset(6, 0) : Offset(1, -2),
                     ),
 
                     title: Row(
@@ -568,7 +568,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           contentPadding: EdgeInsets.symmetric(horizontal: 20),
                           visualDensity: VisualDensity(vertical: 0.1),
                           leading: DynamicAvatar(
-                            emojiOffset: Offset(3, -1),
+                            emojiOffset: Platform.isIOS ? Offset(6, 2) : Offset(3, -1),
                             icon:
                                 _fromWallet?.iconType ==
                                     IconSelectionType.icon.name
@@ -636,7 +636,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           contentPadding: EdgeInsets.symmetric(horizontal: 20),
                           visualDensity: VisualDensity(vertical: 0.1),
                           leading: DynamicAvatar(
-                            emojiOffset: Offset(3, -1),
+                            emojiOffset: Platform.isIOS ? Offset(6, 2) : Offset(3, -1),
                             icon:
                                 _toWallet?.iconType ==
                                     IconSelectionType.icon.name

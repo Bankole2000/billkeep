@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/screens/projects/add_project_screen.dart';
@@ -96,7 +98,7 @@ class SelectProjectBottomSheet extends ConsumerWidget {
             left: 20,
             right: 20,
             bottom: 20 + MediaQuery.of(context).padding.bottom,
-            // top: 50,
+            top: Platform.isIOS ? 50 : null,
             child: ClipRRect(
               child: SizedBox(
                 height: 320,
@@ -105,16 +107,26 @@ class SelectProjectBottomSheet extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // SizedBox(height: 40),
+                      
                       ...projects.when(
-                        data: (ps) {
+                        data: (ps) {  
                           if (ps.isEmpty) {
-                            return const [
-                              Center(
-                                child: Text(
-                                  'No projects yet. Tap + to create one.',
+                            return [
+                              if(!Platform.isIOS)
+                                Center(
+                                  child: Text(
+                                    'No projects yet. Tap + to create one.',
+                                  ),
                                 ),
-                              ),
+                              if(Platform.isIOS)
+                                SizedBox(
+                                  height: 250,
+                                  child: Center(
+                                    child: Text(
+                                      'No projects yet. Tap + to create one.',
+                                    ),
+                                  ),
+                                ),
                             ];
                           }
                           return ps

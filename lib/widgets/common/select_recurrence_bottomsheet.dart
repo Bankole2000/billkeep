@@ -1,6 +1,7 @@
+import 'dart:io' show Platform;
+
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/utils/app_enums.dart';
-import 'package:billkeep/utils/page_transitions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -91,7 +92,7 @@ class SelectRecurrenceBottomSheet extends ConsumerWidget {
             left: 20,
             right: 20,
             bottom: 20 + MediaQuery.of(context).padding.bottom,
-            // top: 50,
+            top: Platform.isIOS ? 50 : null,
             child: ClipRRect(
               child: SizedBox(
                 height: 320,
@@ -118,64 +119,29 @@ class SelectRecurrenceBottomSheet extends ConsumerWidget {
                               fontWeight: selectedRecurrence == entry.key
                                   ? FontWeight.bold
                                   : FontWeight.normal,
+                              color: selectedRecurrence == entry.key
+                                  ? colors.navy
+                                  : colors.textMute,
                             ),
                           ),
                           leading: Icon(
                             recurrenceIcons[entry.key],
                             color: selectedRecurrence == entry.key
-                                ? Theme.of(context).primaryColor
+                                ? colors.navy
                                 : Colors.grey,
                           ),
                           trailing: selectedRecurrence == entry.key
                               ? Icon(
                                   Icons.check,
-                                  color: Theme.of(context).primaryColor,
+                                  color: colors.navy,
                                 )
                               : null,
                           onTap: () {
                             Navigator.pop(context, entry.key);
-                            // setState(() {
-                            //   selectedRecurrence = entry.key;
-                            // });
                           },
                         );
                       }),
-                      // SizedBox(height: 40),
-                      // ...projects.when(
-                      //   data: (ps) {
-                      //     if (ps.isEmpty) {
-                      //       return const [
-                      //         Center(
-                      //           child: Text(
-                      //             'No projects yet. Tap + to create one.',
-                      //           ),
-                      //         ),
-                      //       ];
-                      //     }
-                      //     return ps
-                      //         .expand(
-                      //           (p) => [
-                      //             ProjectListSelectItem(
-                      //               isSelected:
-                      //                   false, // _selectedProject?.id == p.id,
-                      //               project: p,
-                      //               onSelectProject: () {
-                      //                 // selectProject(p);
-                      //                 // Navigator.of(context).pop();
-                      //               },
-                      //             ),
-                      //             Divider(),
-                      //           ],
-                      //         )
-                      //         .toList();
-                      //   },
-                      //   error: (error, stack) => [
-                      //     Text('Error loading Projects'),
-                      //   ],
-                      //   loading: () => [
-                      //     Center(child: CircularProgressIndicator()),
-                      //   ],
-                      // ),
+                      
                     ],
                   ),
                 ),

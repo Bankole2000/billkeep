@@ -35,7 +35,7 @@ class ProjectListSelectItem extends ConsumerWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 20),
         // visualDensity: VisualDensity(vertical: -5),
         leading: DynamicAvatar(
-          emojiOffset: Offset(3, -1),
+          emojiOffset: Platform.isIOS ? Offset(6, 2) : Offset(3, -1),
           icon: project.iconType == IconSelectionType.icon.name
               ? IconData(project.iconCodePoint!, fontFamily: 'MaterialIcons')
               : null,
@@ -49,7 +49,7 @@ class ProjectListSelectItem extends ConsumerWidget {
               : project.imageUrl != null
               ? NetworkImage(project.imageUrl!)
               : null,
-          color: isSelected && project.color != null
+          color: project.color != null
               ? HexColor.fromHex('#${project.color}')
               : colors.textMute,
         ),
@@ -63,6 +63,7 @@ class ProjectListSelectItem extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: isSelected ? colors.text : colors.textMute,
+                fontWeight: isSelected ? FontWeight.bold : null,
               ),
             ),
           ],
@@ -71,6 +72,10 @@ class ProjectListSelectItem extends ConsumerWidget {
           project.description ?? 'No description',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: isSelected ? colors.navy : colors.textMute.withAlpha(150),
+            fontWeight: isSelected ? FontWeight.w600 : null,
+          ),
         ),
         trailing: IconButton(
           onPressed: () {

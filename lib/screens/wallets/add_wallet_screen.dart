@@ -723,18 +723,12 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                           mainAxisSize: MainAxisSize.min,
                           // children: [],
                           children: [
-                            ColorSelectorButton(
-                              selectedColor: _selectedColor,
-                              onColorChanged: (color) {
-                                print(color);
-                                setState(() {
-                                  _selectedColor = color;
-                                });
-                              },
-                              pickerType: ColorPickerType.block,
-                            ),
+                            
                             SizedBox(width: 4),
                             DynamicAvatar(
+                              emojiOffset: Platform.isIOS
+                                  ? Offset(11, 6)
+                                  : Offset(7, 5),
                               icon: _selectedSegment == IconSelectionType.icon
                                   ? _selectedIcon
                                   : null,
@@ -817,6 +811,16 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                               ),
                             ),
                             Spacer(),
+                            ColorSelectorButton(
+                              selectedColor: _selectedColor,
+                              onColorChanged: (color) {
+                                print(color);
+                                setState(() {
+                                  _selectedColor = color;
+                                });
+                              },
+                              pickerType: ColorPickerType.block,
+                            ),
                           ],
                         ),
                         onTap: () {},

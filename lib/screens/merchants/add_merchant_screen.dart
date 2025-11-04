@@ -1,12 +1,22 @@
+import 'dart:io';
+
 import 'package:billkeep/database/database.dart';
+import 'package:billkeep/main.dart' as main;
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/camera/camera_screen.dart';
 import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/validators.dart';
+import 'package:billkeep/widgets/common/color_picker_widget.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
+import 'package:billkeep/widgets/common/emoji_picker_widget.dart';
+import 'package:billkeep/widgets/common/icon_picker_widget.dart';
 import 'package:billkeep/widgets/common/sliding_segment_control_label.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddMerchantScreen extends ConsumerStatefulWidget {
   const AddMerchantScreen({super.key, this.merchant});
@@ -19,9 +29,19 @@ class AddMerchantScreen extends ConsumerStatefulWidget {
 
 class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
   late TextEditingController searchTextController;
+  final TextEditingController _imageUrlController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   IconSelectionType _selectedSegment = IconSelectionType.emoji;
   String? merchantId;
   final _formKey = GlobalKey<FormState>();
+
+    Color? _selectedColor;
+  IconData? _selectedIcon = Icons.folder;
+  String? _selectedEmoji = '📂';
+  String? projectId;
+  File? _localImageFile;
+  final ImagePicker _picker = ImagePicker();
   bool _isFocused = false;
   var enteredName = '';
   var enteredDescription = '';
@@ -49,6 +69,86 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
     searchTextController.dispose();
     super.dispose();
   }
+
+    Future<void> _pickImageFromGallery() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        setState(() {
+          _localImageFile = File(image.path);
+          _imageUrlController.text = image.path;
+        });
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error selecting image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _takePhoto() async {
+    // Check if cameras are available
+    if (main.cameras.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No camera available on this device'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    // Navigate to camera screen and wait for result
+    final XFile? photo = await Navigator.push<XFile>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CameraScreen(camera: main.cameras.first),
+      ),
+    );
+
+    if (photo != null) {
+      setState(() {
+        _localImageFile = File(photo.path);
+        _imageUrlController.text = photo.path;
+      });
+    }
+  }
+
+  void _pasteUrl() async {
+    final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+    final pastedText = clipboardData?.text;
+    if (pastedText != null && Validators.isValidUrl(pastedText)) {
+      setState(() {
+        _imageUrlController.text = pastedText;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invalid Image url in Clipboard'),
+          backgroundColor: ref.read(appColorsProvider).fire,
+        ),
+      );
+    }
+  }
+
+  void _copyToClipboard(String text) async {
+    await Clipboard.setData(ClipboardData(text: _imageUrlController.text));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +341,7 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                     // elevation: 5,
                     elevation: _isFocused ? 4.0 : 0.0,
                     child: ListTile(
+                      tileColor: colors.surface,
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
                       splashColor: Colors.transparent,
@@ -248,7 +349,6 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                         top: 0,
                         left: 10,
                         right: 20,
-                        bottom: 0,
                       ),
                       visualDensity: VisualDensity(vertical: 0.1),
                       title: Padding(
@@ -257,7 +357,11 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                           left: 8,
                           bottom: 10,
                         ),
-                        child: Text('Appearance', textAlign: TextAlign.start),
+                        child: Text(
+                          'Appearance',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(color: colors.text),
+                        ),
                       ),
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -265,12 +369,27 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                         mainAxisSize: MainAxisSize.min,
                         // children: [],
                         children: [
+                          
+                          SizedBox(width: 4),
                           DynamicAvatar(
-                            icon: imageUrl.isEmpty ? Icons.shop : null,
+                            emojiOffset: Platform.isIOS ? Offset(11, 6) : Offset(7, 5),
+                            icon: _selectedSegment == IconSelectionType.icon
+                                ? _selectedIcon
+                                : null,
+                            emoji: _selectedSegment == IconSelectionType.emoji
+                                ? _selectedEmoji
+                                : null,
+                            image: _selectedSegment == IconSelectionType.image
+                                ? (_localImageFile != null
+                                      ? FileImage(_localImageFile!)
+                                      : _imageUrlController.text
+                                            .trim()
+                                            .isNotEmpty
+                                      ? NetworkImage(_imageUrlController.text)
+                                      : null)
+                                : null,
                             size: 50,
-                            image: imageUrl.isEmpty
-                                ? null
-                                : NetworkImage(imageUrl),
+                            color: _selectedColor,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -336,80 +455,119 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                             ),
                           ),
                           Spacer(),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.invert_colors,
-                              size: 36,
-                              color: colors.textMute,
-                            ),
+                          ColorSelectorButton(
+                            selectedColor: _selectedColor,
+                            onColorChanged: (color) {
+                              print(color);
+                              setState(() {
+                                _selectedColor = color;
+                              });
+                            },
+                            pickerType: ColorPickerType.block,
                           ),
                         ],
                       ),
                       onTap: () {},
-                      // minTileHeight: 10,
-                    ),
-                  ),
-                ),
-
-                ClipRect(
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    child: SizedBox(
-                      height: _selectedSegment == IconSelectionType.image
-                          ? null
-                          : 0,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.only(top: 0, left: 20),
-
-                        title: CupertinoTextFormFieldRow(
-                          initialValue: imageUrl,
-                          padding: EdgeInsets.all(0),
-                          prefix: Text(
-                            'ImageUrl: ',
-                            style: TextStyle(color: colors.textMute),
-                          ),
-
-                          // placeholder: 'Title',
-                        ),
-                        subtitle: Padding(
-                          padding: EdgeInsetsGeometry.only(top: 8, bottom: 16),
-                          child: Row(
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () {},
-                                label: Text('Select Image'),
-                                icon: Icon(Icons.image),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: activeColor,
-                                  foregroundColor: colors.textInverse,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              ElevatedButton.icon(
-                                onPressed: () {},
-                                label: Text('Take Photo'),
-                                icon: Icon(Icons.camera_alt),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: activeColor,
-                                  foregroundColor: colors.textInverse,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      minTileHeight: 10,
                     ),
                   ),
                 ),
                 Divider(height: 1),
+                if (_selectedSegment == IconSelectionType.icon)
+                  IconPickerWidget(
+                    onIconSelected: (icon) {
+                      setState(() {
+                        _selectedIcon = icon;
+                      });
+                      print(icon);
+                    },
+                  ),
+                if (_selectedSegment == IconSelectionType.emoji)
+                  EmojiPickerWidget(
+                    onEmojiSelected: (emoji) {
+                      setState(() {
+                        _selectedEmoji = emoji;
+                      });
+                      print(emoji);
+                    },
+                  ),
+                if (_selectedSegment == IconSelectionType.image)
+                  ListTile(
+                    // leading: AppImage(height: 50, width: 50),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: CupertinoTextFormFieldRow(
+                            controller: _imageUrlController,
+                            // initialValue: _imageUrl,
+                            padding: EdgeInsets.all(0),
+                            prefix: Text(
+                              'Url: ',
+                              style: TextStyle(color: colors.textMute),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _copyToClipboard(_imageUrlController.text);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('ImageURL Copied to Clipboard'),
+                                backgroundColor: colors.navy,
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.copy),
+                        ),
+                      ],
+                    ),
+                    subtitle: Padding(
+                      padding: EdgeInsetsGeometry.only(top: 8, bottom: 16),
+                      child: Row(
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: _pickImageFromGallery,
+                            label: Text('Gallery'),
+                            icon: Icon(Icons.image),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: activeColor,
+                              foregroundColor: colors.textInverse,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          ElevatedButton.icon(
+                            onPressed: _takePhoto,
+                            label: Text('Camera'),
+                            icon: Icon(Icons.camera_alt),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: activeColor,
+                              foregroundColor: colors.textInverse,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          ElevatedButton.icon(
+                            onPressed: _pasteUrl,
+                            label: Text('Url'),
+                            icon: Icon(Icons.link),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: activeColor,
+                              foregroundColor: colors.textInverse,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                Divider(),
               ],
             ),
           ),

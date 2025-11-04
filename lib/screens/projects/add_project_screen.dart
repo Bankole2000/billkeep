@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/projects/add_project_settings_screen.dart';
 import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/validators.dart';
 import 'package:billkeep/widgets/common/color_picker_widget.dart';
@@ -280,7 +281,14 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
           SizedBox(width: 10),
-          IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+          IconButton(onPressed: () {
+            Navigator.of(context).push<Currency>(
+              CupertinoPageRoute(
+                fullscreenDialog: true,
+                builder: (context) => AddProjectSettingsScreen(project: widget.projectToEdit,),
+              ),
+            );
+          }, icon: Icon(Icons.settings)),
           SizedBox(width: 10),
         ],
       ),
@@ -427,18 +435,10 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                         mainAxisSize: MainAxisSize.min,
                         // children: [],
                         children: [
-                          ColorSelectorButton(
-                            selectedColor: _selectedColor,
-                            onColorChanged: (color) {
-                              print(color);
-                              setState(() {
-                                _selectedColor = color;
-                              });
-                            },
-                            pickerType: ColorPickerType.block,
-                          ),
+                          
                           SizedBox(width: 4),
                           DynamicAvatar(
+                            emojiOffset: Platform.isIOS ? Offset(11, 6) : Offset(7, 5),
                             icon: _selectedSegment == IconSelectionType.icon
                                 ? _selectedIcon
                                 : null,
@@ -521,6 +521,16 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                             ),
                           ),
                           Spacer(),
+                          ColorSelectorButton(
+                            selectedColor: _selectedColor,
+                            onColorChanged: (color) {
+                              print(color);
+                              setState(() {
+                                _selectedColor = color;
+                              });
+                            },
+                            pickerType: ColorPickerType.block,
+                          ),
                         ],
                       ),
                       onTap: () {},

@@ -36,7 +36,7 @@ class WalletListSelectItem extends ConsumerWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 20),
         // visualDensity: VisualDensity(vertical: -5),
         leading: DynamicAvatar(
-          emojiOffset: Offset(3, -1),
+          emojiOffset: Platform.isIOS ? Offset(6, 2) : Offset(3, -1),
           icon: wallet.iconType == IconSelectionType.icon.name
               ? IconData(wallet.iconCodePoint!, fontFamily: 'MaterialIcons')
               : null,
