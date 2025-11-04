@@ -1,5 +1,9 @@
+import 'dart:io' show Platform;
+
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/page_transitions.dart';
+import 'package:billkeep/widgets/common/dynamic_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/screens/projects/project_details_screen.dart';
@@ -13,7 +17,7 @@ class ProjectList extends ConsumerWidget {
     final projectsAsync = ref.watch(projectsProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
     final activeProject = ref.watch(activeProjectProvider);
-
+    final colors = ref.watch(appColorsProvider);
     return projectsAsync.when(
       data: (projects) {
         if (projects.isEmpty) {
@@ -47,11 +51,24 @@ class ProjectList extends ConsumerWidget {
                 ),
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image.network(
-                    "https://avatars.githubusercontent.com/u/23138415?v=4",
+                  child: project.iconType == 'image' ? Image.network(
+                    project.imageUrl!,
                     height: 40,
                     width: 40,
                     fit: BoxFit.cover,
+                  ) : DynamicAvatar(
+                    circular: false,
+
+                    emojiOffset: Platform.isIOS ? Offset(8, 3) : Offset(3, -1),
+                    icon: project.iconType == 'icon'
+                        ? IconData(project.iconCodePoint!, fontFamily: 'MaterialIcons')
+                        : null,
+                    emoji: project.iconType == 'emoji' ? project.iconEmoji : null,
+                    image: null,
+                    color: project.color != null
+                        ? HexColor.fromHex('#${project.color}')
+                        : Colors.grey.shade400,
+                    size: 45,
                   ),
                 ),
                 title: Text(
@@ -60,7 +77,8 @@ class ProjectList extends ConsumerWidget {
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
+                    color: activeProject.project?.id == project.id
+                      ? colors.navy :  Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
