@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:billkeep/models/user_model.dart';
 import 'api_client.dart';
 
@@ -9,23 +8,24 @@ class AuthService {
   AuthService() : _apiClient = ApiClient();
 
   /// Sign up a new user with email, username, and password
-  Future<AuthResponse> signup({
+  Future<SignupResponse> signup({
     required String email,
     required String username,
     required String password,
   }) async {
     try {
       final response = await _apiClient.dio.post(
-        '/auth/signup',
-        data: {'email': email, 'username': username, 'password': password},
+        '/users/records',
+        data: {'email': email, 'name': username, 'password': password, 'passwordConfirm': password, 'verified': false, 'emailVisibility': true},
       );
 
-      final authResponse = AuthResponse.fromJson(response.data);
-
-      // Save token to shared preferences
-      await ApiClient.saveToken(authResponse.token);
-
-      return authResponse;
+      print(response);
+      print(response.data);
+      final signupResponse = SignupResponse.fromJson(response.data);
+      print(signupResponse);
+      // // Save token to secure storage
+      // await ApiClient.saveToken(authResponse.token);
+      return signupResponse;
     } on DioException catch (e) {
       throw _handleError(e);
     }
@@ -38,8 +38,8 @@ class AuthService {
   }) async {
     try {
       final response = await _apiClient.dio.post(
-        '/auth/login',
-        data: {'email': email, 'password': password},
+        '/users/auth-with-password',
+        data: {'identity': email, 'password': password},
       );
 
       final authResponse = AuthResponse.fromJson(response.data);

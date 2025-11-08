@@ -4,10 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../services/auth_service.dart';
-import '../../services/analytics_service.dart';
-import '../../services/biometric_service.dart';
-import '../../models/user_model.dart';
+import 'package:billkeep/services/auth_service.dart';
+import 'package:billkeep/services/analytics_service.dart';
+import 'package:billkeep/services/biometric_service.dart';
+import 'package:billkeep/models/user_model.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -22,7 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool _isLogin = true;
+  bool _isLogin = false;
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _agreedToTerms = false;
@@ -253,6 +253,7 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       }
     } catch (e) {
+      print(e);
       if (_isLogin) {
         _analytics.logLoginFailure(method: 'email', error: e.toString());
       } else {
@@ -331,66 +332,71 @@ class _AuthScreenState extends State<AuthScreen> {
 
                 // Social login buttons
                 if (!_isLogin) ...[
-                  _buildSocialButton(
-                    onPressed: _handleGoogleSignIn,
-                    icon: 'assets/images/google_icon.png', // TODO: Add Google icon asset
-                    label: 'Continue with Google',
-                    color: Colors.white,
-                    textColor: Colors.black87,
-                  ),
+                  // TODO: Google login
+                  // _buildSocialButton(
+                  //   onPressed: _handleGoogleSignIn,
+                  //   icon: 'assets/images/google_icon.png', // TODO: Add Google icon asset
+                  //   label: 'Continue with Google',
+                  //   color: Colors.white,
+                  //   textColor: Colors.black87,
+                  // ),
                   const SizedBox(height: 12),
-                  if (Platform.isIOS)
-                    _buildSocialButton(
-                      onPressed: _handleAppleSignIn,
-                      icon: 'assets/images/apple_icon.png', // TODO: Add Apple icon asset
-                      label: 'Continue with Apple',
-                      color: Colors.black,
-                      textColor: Colors.white,
-                    ),
+                  // TODO: IOS login
+                  // if (Platform.isIOS)
+                  //   _buildSocialButton(
+                  //     onPressed: _handleAppleSignIn,
+                  //     icon: 'assets/images/apple_icon.png', // TODO: Add Apple icon asset
+                  //     label: 'Continue with Apple',
+                  //     color: Colors.black,
+                  //     textColor: Colors.white,
+                  //   ),
                   if (Platform.isIOS) const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: Colors.grey[300])),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ),
-                      Expanded(child: Divider(color: Colors.grey[300])),
-                    ],
-                  ),
+                  // Divider with "OR"
+                  // Row(
+                  //   children: [
+                  //     Expanded(child: Divider(color: Colors.grey[300])),
+                  //     Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //       child: Text(
+                  //         'OR',
+                  //         style: TextStyle(color: Colors.grey[600]),
+                  //       ),
+                  //     ),
+                  //     Expanded(child: Divider(color: Colors.grey[300])),
+                  //   ],
+                  // ),
                   const SizedBox(height: 20),
                 ],
 
                 // Biometric auth button (login only)
                 if (_isLogin && _showBiometric) ...[
-                  OutlinedButton.icon(
-                    onPressed: _handleBiometricAuth,
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 56),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    icon: const Icon(Icons.fingerprint),
-                    label: Text('Login with $_biometricType'),
-                  ),
+                  // TODO: Biometric login
+                  // OutlinedButton.icon(
+                  //   onPressed: _handleBiometricAuth,
+                  //   style: OutlinedButton.styleFrom(
+                  //     minimumSize: const Size(double.infinity, 56),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(12),
+                  //     ),
+                  //   ),
+                  //   icon: const Icon(Icons.fingerprint),
+                  //   label: Text('Login with $_biometricType'),
+                  // ),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: Colors.grey[300])),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ),
-                      Expanded(child: Divider(color: Colors.grey[300])),
-                    ],
-                  ),
+                  // Divider with "OR" for Login
+                  // Row(
+                  //   children: [
+                  //     Expanded(child: Divider(color: Colors.grey[300])),
+                  //     Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //       child: Text(
+                  //         'OR',
+                  //         style: TextStyle(color: Colors.grey[600]),
+                  //       ),
+                  //     ),
+                  //     Expanded(child: Divider(color: Colors.grey[300])),
+                  //   ],
+                  // ),
                   const SizedBox(height: 20),
                 ],
 

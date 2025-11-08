@@ -2,6 +2,7 @@ import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/home/old_ui.dart';
 import 'package:billkeep/screens/settings/database_management_screen.dart';
 import 'package:billkeep/screens/sms/sms_import_screen.dart';
+import 'package:billkeep/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,6 +11,7 @@ class SideNavigationDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AuthService _authService = AuthService();
     final activeColor = ref.watch(activeThemeColorProvider);
     return Drawer(
       child: ListView(
@@ -76,6 +78,7 @@ class SideNavigationDrawer extends ConsumerWidget {
               );
             },
           ),
+          
           ListTile(
             leading: const Icon(Icons.storage),
             title: const Text('Old UI'),
@@ -96,6 +99,14 @@ class SideNavigationDrawer extends ConsumerWidget {
               Navigator.pop(context);
               // TODO: Export functionality
             },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () {
+              _authService.logout();
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
           ),
           const Divider(),
           ListTile(

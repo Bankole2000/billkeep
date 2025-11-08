@@ -1,11 +1,9 @@
 import 'dart:io' show Platform;
-
-import 'package:billkeep/providers/currency_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:country_flags/country_flags.dart';
-import '../../database/database.dart';
+import 'package:billkeep/database/database.dart';
 
 class CurrencyList extends ConsumerWidget {
   final Function(Currency)? onCurrencySelected;
@@ -13,10 +11,12 @@ class CurrencyList extends ConsumerWidget {
   final bool showCryptoOnly;
   final bool showFiatOnly;
   final List<Currency> currencies;
+  final Currency? selectedCurrency;
 
   const CurrencyList({
     super.key,
     required this.currencies,
+    this.selectedCurrency,
     this.onCurrencySelected,
     this.showActiveCurrenciesOnly = false,
     this.showCryptoOnly = false,
@@ -65,6 +65,7 @@ class CurrencyList extends ConsumerWidget {
       itemBuilder: (context, index) {
         final currency = filteredCurrencies[index];
         return CurrencyListItem(
+          isSelected: selectedCurrency?.code == currency.code,
           currency: currency,
           onTap: () {
             onCurrencySelected!(currency);
@@ -78,14 +79,16 @@ class CurrencyList extends ConsumerWidget {
 class CurrencyListItem extends ConsumerWidget {
   final Currency currency;
   final VoidCallback? onTap;
+  final bool isSelected;
 
-  const CurrencyListItem({super.key, required this.currency, this.onTap});
+  const CurrencyListItem({super.key, required this.currency, this.onTap, this.isSelected = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(appColorsProvider);
 
     return ListTile(
+      tileColor: isSelected ? colors.navy!.withAlpha(40) : null,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: colors.textMute.withAlpha(50), width: .5),
         borderRadius: BorderRadius.circular(0),

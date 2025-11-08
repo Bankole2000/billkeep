@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
-import '../../services/auth_service.dart';
-import '../../models/user_model.dart';
+import 'package:billkeep/services/auth_service.dart';
+import 'package:billkeep/models/user_model.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   final User user;
@@ -19,8 +20,9 @@ class EmailVerificationScreen extends StatefulWidget {
 }
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
-  // ignore: unused_field
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService(); // Used in TODO API calls
+  final TextEditingController _codeController = TextEditingController();
+  final FocusNode _codeFocusNode = FocusNode();
   bool _isVerifying = false;
   bool _canResend = true;
   int _resendCountdown = 0;
@@ -30,32 +32,64 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   void initState() {
     super.initState();
-    _startVerificationCheck();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _codeController.dispose();
+    _codeFocusNode.dispose();
     super.dispose();
   }
 
-  void _startVerificationCheck() {
-    // TODO: Implement automatic verification checking
-    // This should periodically check if the email has been verified
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      await _checkVerificationStatus();
+  Future<void> _verifyCode() async {
+    final code = _codeController.text.trim();
+    
+    if (code.length != 6) {
+      setState(() {
+        _errorMessage = 'Please enter a valid 6-digit verification code';
+      });
+      return;
+    }
+
+    setState(() {
+      _isVerifying = true;
+      _errorMessage = null;
     });
-  }
 
-  Future<void> _checkVerificationStatus() async {
     try {
-      // TODO: Implement email verification check API endpoint
-      // final isVerified = await _authService.checkEmailVerification();
-
-      // Placeholder - replace with actual API call
-      // For now, this does nothing
+      // TODO: Implement verification code API endpoint
+      // final isVerified = await _authService.verifyEmailWithCode(code);
+      
+      // Placeholder API call
+      await Future.delayed(const Duration(seconds: 2));
+      
+      // Simulate verification result - replace with actual API response
+      final isVerified = code == '123456'; // Placeholder for demo
+      
+      if (isVerified) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Email verified successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          _navigateToNextScreen();
+        }
+      } else {
+        setState(() {
+          _errorMessage = 'Invalid verification code. Please try again.';
+        });
+      }
     } catch (e) {
-      // Silently fail - user can manually check
+      setState(() {
+        _errorMessage = 'Failed to verify code. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isVerifying = false;
+      });
     }
   }
 
@@ -179,7 +213,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'We\'ve sent a verification email to:',
+                'We\'ve sent a 6-digit verification code to:',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -208,7 +242,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     Icon(Icons.info_outline, color: Colors.blue[700]),
                     const SizedBox(height: 8),
                     Text(
-                      'Please check your email and click the verification link to activate your account.',
+                      'Please enter the 6-digit verification code from your email below.',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.blue[700],
@@ -219,6 +253,104 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ),
               ),
               const SizedBox(height: 24),
+
+              // Verification code input
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _errorMessage != null ? Colors.red : Colors.grey[300]!,
+                    width: 1,
+                  ),
+                ),
+                child: TextField(
+                  controller: _codeController,
+                  focusNode: _codeFocusNode,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 8,
+                  ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 6,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  onChanged: (value) {
+                    if (_errorMessage != null) {
+                      setState(() {
+                        _errorMessage = null;
+                      });
+                    }
+                    if (value.length == 6) {
+                      _codeFocusNode.unfocus();
+                    }
+                  },
+                  onSubmitted: (value) {
+                    if (value.length == 6) {
+                      _verifyCode();
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    hintText: '000000',
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      letterSpacing: 8,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 16,
+                    ),
+                    counterText: '',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Verify button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ValueListenableBuilder(
+                  valueListenable: _codeController,
+                  builder: (context, value, _) {
+                    final isDisabled = _isVerifying || value.text.length < 6;
+                  return 
+                    ElevatedButton(
+                    onPressed: isDisabled ? null : _verifyCode,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: _isVerifying
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Verify Code',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  );
+                  }
+
+
+                ),
+              ),
+              const SizedBox(height: 16),
 
               // Error message
               if (_errorMessage != null)
@@ -245,74 +377,27 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ),
 
               // Resend button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton.icon(
-                  onPressed:
-                      _canResend && !_isVerifying ? _resendVerificationEmail : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  icon: _isVerifying
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Icon(Icons.refresh),
-                  label: Text(
-                    _canResend
-                        ? 'Resend Verification Email'
-                        : 'Resend in $_resendCountdown seconds',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Manual verification check button
-              OutlinedButton(
-                onPressed: () async {
-                  await _checkVerificationStatus();
-                  // TODO: If verified, navigate to next screen
-                  // For now, show a message
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Email not yet verified. Please check your inbox.',
-                        ),
-                      ),
-                    );
-                  }
-                },
+              OutlinedButton.icon(
+                onPressed: _canResend && !_isVerifying ? _resendVerificationEmail : null,
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 56),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'I\'ve Verified My Email',
-                  style: TextStyle(fontSize: 16),
+                icon: const Icon(Icons.refresh),
+                label: Text(
+                  _canResend
+                      ? 'Resend Code'
+                      : 'Resend in $_resendCountdown seconds',
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
               const SizedBox(height: 24),
 
               // Help text
               Text(
-                'Didn\'t receive the email?',
+                'Didn\'t receive the code?',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],

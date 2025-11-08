@@ -70,6 +70,14 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
             _isInitialized ? const OnboardingCoordinator() : SplashScreen(),
         '/onboarding/welcome': (context) => const WelcomeCarouselScreen(),
         '/auth': (context) => const AuthScreen(),
+        '/onboarding/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/onboarding/verify-email': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return EmailVerificationScreen(
+            user: args['user'] as User,
+            email: args['email'] as String,
+          );
+        },
         '/onboarding/config': (context) {
           final user = ModalRoute.of(context)!.settings.arguments as User;
           return InitialConfigScreen(user: user);

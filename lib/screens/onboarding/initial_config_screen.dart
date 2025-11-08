@@ -1,11 +1,20 @@
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/currency_provider.dart';
+import 'package:billkeep/providers/ui_providers.dart';
+
+import 'package:billkeep/utils/currency_country_mapping.dart';
+import 'package:billkeep/widgets/currencies/currency_select_list.dart';
 import 'package:flutter/material.dart';
+import 'package:country_flags/country_flags.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import '../../models/user_model.dart';
 import '../../services/wallet_service.dart';
 import '../../services/project_service.dart';
 import '../../services/analytics_service.dart';
 
-class InitialConfigScreen extends StatefulWidget {
+class InitialConfigScreen extends ConsumerStatefulWidget {
   final User user;
 
   const InitialConfigScreen({
@@ -14,10 +23,10 @@ class InitialConfigScreen extends StatefulWidget {
   });
 
   @override
-  State<InitialConfigScreen> createState() => _InitialConfigScreenState();
+  ConsumerState<InitialConfigScreen> createState() => _InitialConfigScreenState();
 }
 
-class _InitialConfigScreenState extends State<InitialConfigScreen> {
+class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   final _formKey = GlobalKey<FormState>();
   final PageController _pageController = PageController();
 
@@ -30,7 +39,7 @@ class _InitialConfigScreenState extends State<InitialConfigScreen> {
   final AnalyticsService _analytics = AnalyticsService();
 
   // Step 1: Currency selection
-  String? _selectedCurrency;
+  Currency? _selectedCurrency;
   final Map<String, String> _currencies = {
     'USD': '\$ - US Dollar',
     'EUR': '€ - Euro',
@@ -80,36 +89,45 @@ class _InitialConfigScreenState extends State<InitialConfigScreen> {
       if (parts.length > 1) {
         final countryCode = parts[1];
 
-        // Map country codes to currencies
-        final currencyMap = {
-          'US': 'USD',
-          'GB': 'GBP',
-          'EU': 'EUR',
-          'JP': 'JPY',
-          'CN': 'CNY',
-          'IN': 'INR',
-          'CA': 'CAD',
-          'AU': 'AUD',
-          'NG': 'NGN',
-          'ZA': 'ZAR',
-        };
+        final currencyMap = currencyToCountryMapping.entries.firstWhere(
+          (entry) => entry.value == countryCode,
+          orElse: () => const MapEntry('USD', 'US'),
+        );
 
-        setState(() {
-          _selectedCurrency = currencyMap[countryCode] ?? 'USD';
+        final currencyAsync = ref.watch(currencyProvider(currencyMap.key));
+
+        currencyAsync.when(data: (currency) => setState(() {
+          _selectedCurrency = currency;
+        }), error: (Object error, StackTrace stackTrace) { 
+          _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
+        }, loading: () { 
+          _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
         });
+
       } else {
         setState(() {
-          _selectedCurrency = 'USD';
+          _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
         });
       }
     } catch (e) {
       setState(() {
-        _selectedCurrency = 'USD';
+        _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
       });
     }
   }
 
   void _nextStep() {
+    if (_currentStep == 1) {
+      if (_selectedCurrency == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a currency to continue.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+    }
     if (_currentStep < 2) {
       setState(() {
         _currentStep++;
@@ -390,47 +408,137 @@ class _InitialConfigScreenState extends State<InitialConfigScreen> {
   }
 
   Widget _buildCurrencyStep() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Choose Your Currency',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'This will be your default currency for tracking expenses and income.',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Currency list
-          ..._currencies.entries.map((entry) {
-            return RadioListTile<String>(
-              value: entry.key,
-              groupValue: _selectedCurrency,
-              onChanged: (value) {
-                setState(() {
-                  _selectedCurrency = value;
-                });
-              },
-              title: Text(entry.value),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+    final colors = ref.watch(appColorsProvider);
+    final activeColor = ref.watch(activeThemeColorProvider);
+    final filteredCurrencies = ref.watch(filteredCurrenciesProvider);
+    return    Scaffold(
+      backgroundColor: colors.surface,
+      appBar: AppBar(
+        backgroundColor: colors.surface,
+        iconTheme: IconThemeData(color: colors.text),
+        actionsIconTheme: IconThemeData(color: colors.text),
+        title: Text('Select Currency', style: TextStyle(color: colors.text)),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
+            child: CupertinoSearchTextField(
+              backgroundColor: const Color(0xFFE0E0E0),
+              placeholder: 'Search by name, code, or symbol',
+              placeholderStyle: const TextStyle(
+                color: Color(0xFF9E9E9E),
+                fontSize: 20,
               ),
-            );
-          }),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+              prefixIcon: const Icon(
+                CupertinoIcons.search,
+                color: Colors.blueAccent,
+              ),
+              suffixIcon: const Icon(
+                CupertinoIcons.xmark_circle_fill,
+                color: Colors.redAccent,
+              ),
+              onChanged: (value) {
+                ref.read(currencySearchQueryProvider.notifier).state = value;
+              },
+            ),
+          ),
+        ),
+        actions: [
+          if (_selectedCurrency != null)
+            Text(_selectedCurrency!.code, style: TextStyle(fontSize: 24),),
+          SizedBox(width: 10),
+          if (_selectedCurrency != null)
+            Container(
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.grey.shade300, width: 1),
+              ),
+              child: ClipOval(
+                child: _selectedCurrency!.isCrypto
+                    ? Transform.translate(
+                        offset: Platform.isIOS ? Offset(4, -1) : Offset(0, -5),
+                        child: Text(
+                          _selectedCurrency!.countryISO2!,
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      )
+                    : CountryFlag.fromCountryCode(
+                        _selectedCurrency!.countryISO2!,
+                        // width: 50,
+                        // height: 50,
+                      ),
+              ),
+            ),
+          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
         ],
       ),
+      body: CurrencyList(
+        selectedCurrency: _selectedCurrency,
+        currencies: filteredCurrencies,
+        onCurrencySelected: (currency) {
+          ref.read(currencySearchQueryProvider.notifier).state = '';
+          setState(() {
+            _selectedCurrency = currency;
+          });
+          print(currency);
+        },
+      ),
     );
+
+    
+    // SingleChildScrollView(
+    //   padding: const EdgeInsets.all(24.0),
+    //   child: 
+    //   Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       const Text(
+    //         'Choose Your Currency',
+    //         style: TextStyle(
+    //           fontSize: 24,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //       ),
+    //       const SizedBox(height: 8),
+    //       Text(
+    //         'This will be your default currency for tracking expenses and income.',
+    //         style: TextStyle(
+    //           fontSize: 14,
+    //           color: Colors.grey[600],
+    //         ),
+    //       ),
+    //       const SizedBox(height: 24),
+
+    //       // Currency list
+    //       ..._currencies.entries.map((entry) {
+    //         return RadioListTile<String>(
+    //           value: entry.key,
+    //           groupValue: _selectedCurrency,
+    //           onChanged: (value) {
+    //             setState(() {
+    //               _selectedCurrency = value;
+    //             });
+    //           },
+    //           title: Text(entry.value),
+    //           shape: RoundedRectangleBorder(
+    //             borderRadius: BorderRadius.circular(8),
+    //           ),
+    //         );
+    //       }),
+    //     ],
+    //   ),
+
+
+    // );
+
+
   }
 
   Widget _buildWalletStep() {

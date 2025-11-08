@@ -1,3 +1,4 @@
+import 'package:billkeep/database/database.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
@@ -208,7 +209,7 @@ class AnalyticsService {
 
   /// Log when user completes initial configuration
   Future<void> logInitialConfigCompleted({
-    required String currency,
+    required Currency currency,
     required String walletType,
   }) async {
     await logEvent(

@@ -7,7 +7,7 @@ class ApiClient {
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
   late final Dio dio;
 
-  static const String baseUrl = 'http://localhost:8090/api';
+  static const String baseUrl = 'http://localhost:8090/api/collections';
   static const String tokenKey = 'auth_token';
 
   factory ApiClient() {

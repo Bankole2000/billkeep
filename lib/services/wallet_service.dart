@@ -1,3 +1,4 @@
+import 'package:billkeep/database/database.dart';
 import 'package:dio/dio.dart';
 import '../models/wallet_model.dart';
 import 'api_client.dart';
@@ -11,7 +12,7 @@ class WalletService {
   Future<WalletModel> createWallet({
     required String name,
     required String walletType,
-    required String currency,
+    required Currency currency,
     required int balance,
     String? imageUrl,
     String? providerId,
