@@ -34,7 +34,7 @@ class _AddTaskSubscreenState extends ConsumerState<AddTaskSubscreen> {
                   isActive: _selectedSegment == TaskType.todo,
                   label: 'Todo',
                   icon: taskIcons[TaskType.todo]!,
-                  activeColor: colors.fire,
+                  activeColor: colors.wave,
                 ),
                 TaskType.shopping: SlidingSegmentControlLabel(
                   isActive: _selectedSegment == TaskType.shopping,
@@ -44,7 +44,7 @@ class _AddTaskSubscreenState extends ConsumerState<AddTaskSubscreen> {
                 ),
                 TaskType.meeting: SlidingSegmentControlLabel(
                   isActive: _selectedSegment == TaskType.meeting,
-                  label: 'Meeting',
+                  label: 'Event',
                   icon: taskIcons[TaskType.meeting]!,
                   activeColor: colors.navy,
                 ),

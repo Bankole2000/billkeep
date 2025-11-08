@@ -1,6 +1,7 @@
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/widgets/common/app_bar_active_project_selector.dart';
 import 'package:billkeep/widgets/common/tabbar_icon_label.dart';
+import 'package:billkeep/widgets/examples/simple_line_chart.dart';
 import 'package:billkeep/widgets/navigation/side_drawer_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +18,7 @@ class HomeScreen extends ConsumerWidget {
       child: Scaffold(
         drawer: const SideNavigationDrawer(),
         backgroundColor: colors.background,
-        extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: false,
 
         appBar: AppBar(
           backgroundColor: colors.surface,
@@ -40,9 +41,9 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
 
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            Center(child: Text('Overview - Coming Soon')),
+            SimpleLineChartExample(),
             Center(child: Text('Finances - Coming Soon')),
             Center(child: Text('Tasks - Coming Soon')),
           ],

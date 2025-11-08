@@ -159,7 +159,7 @@ class CategoryRepository {
             name: Value(name),
             iconEmoji: Value(icon),
             color: Value(color),
-            categoryGroupId: Value(categoryGroupId!),
+            categoryGroupId: Value(categoryGroupId),
             isDefault: const Value(false),
             isSynced: const Value(false),
           ),

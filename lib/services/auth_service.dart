@@ -1,0 +1,116 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:billkeep/models/user_model.dart';
+import 'api_client.dart';
+
+class AuthService {
+  final ApiClient _apiClient;
+
+  AuthService() : _apiClient = ApiClient();
+
+  /// Sign up a new user with email, username, and password
+  Future<AuthResponse> signup({
+    required String email,
+    required String username,
+    required String password,
+  }) async {
+    try {
+      final response = await _apiClient.dio.post(
+        '/auth/signup',
+        data: {'email': email, 'username': username, 'password': password},
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data);
+
+      // Save token to shared preferences
+      await ApiClient.saveToken(authResponse.token);
+
+      return authResponse;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// Login an existing user
+  Future<AuthResponse> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await _apiClient.dio.post(
+        '/auth/login',
+        data: {'email': email, 'password': password},
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data);
+
+      // Save token to shared preferences
+      await ApiClient.saveToken(authResponse.token);
+
+      return authResponse;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// Logout the current user
+  Future<void> logout() async {
+    try {
+      // Call logout endpoint if needed
+      await _apiClient.dio.post('/auth/logout');
+    } on DioException catch (e) {
+      // Continue with logout even if API call fails
+      print('Logout API error: ${e.message}');
+    } finally {
+      // Always clear the token
+      await ApiClient.clearToken();
+    }
+  }
+
+  /// Get current user profile
+  Future<User> getCurrentUser() async {
+    try {
+      final response = await _apiClient.dio.get('/auth/me');
+      return User.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// Check if user is authenticated
+  Future<bool> isAuthenticated() async {
+    return await ApiClient.isAuthenticated();
+  }
+
+  /// Handle DioException and return appropriate error message
+  String _handleError(DioException error) {
+    if (error.response != null) {
+      final statusCode = error.response!.statusCode;
+      final data = error.response!.data;
+
+      switch (statusCode) {
+        case 400:
+          return data['message'] ?? 'Bad request';
+        case 401:
+          return data['message'] ?? 'Unauthorized';
+        case 403:
+          return data['message'] ?? 'Forbidden';
+        case 404:
+          return data['message'] ?? 'Not found';
+        case 409:
+          return data['message'] ?? 'Conflict - resource already exists';
+        case 500:
+          return 'Internal server error';
+        default:
+          return data['message'] ?? 'An error occurred';
+      }
+    } else if (error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.receiveTimeout) {
+      return 'Connection timeout';
+    } else if (error.type == DioExceptionType.connectionError) {
+      return 'No internet connection';
+    } else {
+      return error.message ?? 'An unexpected error occurred';
+    }
+  }
+}
