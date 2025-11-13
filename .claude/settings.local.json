@@ -14,7 +14,8 @@
       "Read(//c/Users/techy/Projects/flutter_projects/windows_camera_app/**)",
       "Bash(cat:*)",
       "Bash(python3:*)",
-      "Bash(flutter analyze:*)"
+      "Bash(flutter analyze:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

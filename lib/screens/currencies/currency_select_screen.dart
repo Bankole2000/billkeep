@@ -60,7 +60,6 @@ class CurrencySelectScreen extends ConsumerWidget {
         currencies: filteredCurrencies,
         onCurrencySelected: (currency) {
           ref.read(currencySearchQueryProvider.notifier).state = '';
-          print(currency);
           Navigator.pop(context, currency);
         },
       ),

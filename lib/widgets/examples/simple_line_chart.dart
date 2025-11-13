@@ -67,13 +67,13 @@ class SimpleLineChartWidget extends StatelessWidget {
                   verticalInterval: 1,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: 0.2),
                       strokeWidth: 1,
                     );
                   },
                   getDrawingVerticalLine: (value) {
                     return FlLine(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: 0.2),
                       strokeWidth: 1,
                     );
                   },
@@ -105,7 +105,9 @@ class SimpleLineChartWidget extends StatelessWidget {
                 ),
                 borderData: FlBorderData(
                   show: true,
-                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                  border: Border.all(
+                    color: Colors.grey.withValues(alpha: (256 / 5)),
+                  ),
                 ),
                 minX: 0,
                 maxX: 11,
@@ -121,7 +123,7 @@ class SimpleLineChartWidget extends StatelessWidget {
                     dotData: FlDotData(show: showDots),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha: (0.1)),
                     ),
                   ),
                 ],
@@ -290,13 +292,13 @@ class MultiLineChartWidget extends StatelessWidget {
                   verticalInterval: 1,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: (0.2)),
                       strokeWidth: 1,
                     );
                   },
                   getDrawingVerticalLine: (value) {
                     return FlLine(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: (0.2)),
                       strokeWidth: 1,
                     );
                   },
@@ -328,7 +330,9 @@ class MultiLineChartWidget extends StatelessWidget {
                 ),
                 borderData: FlBorderData(
                   show: true,
-                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                  border: Border.all(
+                    color: Colors.grey.withValues(alpha: (0.2)),
+                  ),
                 ),
                 minX: 0,
                 maxX: 11,

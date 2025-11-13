@@ -261,7 +261,6 @@ class _ColorSelectorButtonState extends State<ColorSelectorButton> {
                             ),
                             onPressed: () {
                               setState(() {
-                                print(_pickerType);
                                 if (_pickerType == ColorPickerType.block) {
                                   _pickerType = ColorPickerType.material;
                                 } else {

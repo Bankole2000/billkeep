@@ -25,14 +25,8 @@ class AnalyticsService {
       _analytics = FirebaseAnalytics.instance;
       _observer = FirebaseAnalyticsObserver(analytics: _analytics!);
       _isEnabled = true;
-      if (kDebugMode) {
-        print('Analytics: Firebase Analytics initialized successfully');
-      }
     } catch (e) {
       _isEnabled = false;
-      if (kDebugMode) {
-        print('Analytics: Firebase not initialized. Analytics disabled. Error: $e');
-      }
     }
   }
 
@@ -49,9 +43,6 @@ class AnalyticsService {
     Map<String, dynamic>? parameters,
   }) async {
     if (!_isEnabled || _analytics == null) {
-      if (kDebugMode) {
-        print('Analytics Event (disabled): $name ${parameters ?? ""}');
-      }
       return;
     }
 
@@ -60,13 +51,7 @@ class AnalyticsService {
         name: name,
         parameters: parameters?.map((key, value) => MapEntry(key, value as Object)),
       );
-      if (kDebugMode) {
-        print('Analytics Event: $name ${parameters ?? ""}');
-      }
     } catch (e) {
-      if (kDebugMode) {
-        print('Analytics Error: $e');
-      }
     }
   }
 
@@ -80,9 +65,6 @@ class AnalyticsService {
     try {
       await _analytics!.setUserProperty(name: name, value: value);
     } catch (e) {
-      if (kDebugMode) {
-        print('Analytics Error: $e');
-      }
     }
   }
 
@@ -93,9 +75,6 @@ class AnalyticsService {
     try {
       await _analytics!.setUserId(id: userId);
     } catch (e) {
-      if (kDebugMode) {
-        print('Analytics Error: $e');
-      }
     }
   }
 

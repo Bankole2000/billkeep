@@ -253,7 +253,6 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       }
     } catch (e) {
-      print(e);
       if (_isLogin) {
         _analytics.logLoginFailure(method: 'email', error: e.toString());
       } else {

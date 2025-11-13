@@ -1,12 +1,7 @@
-import 'package:dio/dio.dart';
 import '../models/budget_model.dart';
-import 'api_client.dart';
+import 'base_api_service.dart';
 
-class BudgetService {
-  final ApiClient _apiClient;
-
-  BudgetService() : _apiClient = ApiClient();
-
+class BudgetService extends BaseApiService {
   /// Create a new budget
   Future<BudgetModel> createBudget({
     required String name,
@@ -26,9 +21,9 @@ class BudgetService {
     String? iconType,
     String? color,
   }) async {
-    try {
-      final response = await _apiClient.dio.post(
-        '/budgets',
+    return executeRequest<BudgetModel>(
+      request: () => dio.post(
+        '/budgets/records',
         data: {
           'name': name,
           'description': description,
@@ -47,12 +42,9 @@ class BudgetService {
           'iconType': iconType,
           'color': color,
         },
-      );
-
-      return BudgetModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => BudgetModel.fromJson(data),
+    );
   }
 
   /// Get all budgets
@@ -63,44 +55,26 @@ class BudgetService {
     int? page,
     int? limit,
   }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
 
-      if (projectId != null) queryParameters['projectId'] = projectId;
-      if (categoryId != null) queryParameters['categoryId'] = categoryId;
-      if (isActive != null) queryParameters['isActive'] = isActive;
-      if (page != null) queryParameters['page'] = page;
-      if (limit != null) queryParameters['limit'] = limit;
+    if (projectId != null) queryParameters['projectId'] = projectId;
+    if (categoryId != null) queryParameters['categoryId'] = categoryId;
+    if (isActive != null) queryParameters['isActive'] = isActive;
+    if (page != null) queryParameters['page'] = page;
+    if (limit != null) queryParameters['limit'] = limit;
 
-      final response = await _apiClient.dio.get(
-        '/budgets',
-        queryParameters: queryParameters,
-      );
-
-      if (response.data is List) {
-        return (response.data as List)
-            .map((budget) => BudgetModel.fromJson(budget))
-            .toList();
-      } else if (response.data is Map && response.data['data'] != null) {
-        return (response.data['data'] as List)
-            .map((budget) => BudgetModel.fromJson(budget))
-            .toList();
-      } else {
-        return [];
-      }
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeListRequest<BudgetModel>(
+      request: () => dio.get('/budgets', queryParameters: queryParameters),
+      itemParser: (json) => BudgetModel.fromJson(json),
+    );
   }
 
   /// Get a single budget by ID
   Future<BudgetModel> getBudgetById(String id) async {
-    try {
-      final response = await _apiClient.dio.get('/budgets/$id');
-      return BudgetModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeRequest<BudgetModel>(
+      request: () => dio.get('/budgets/$id'),
+      parser: (data) => BudgetModel.fromJson(data),
+    );
   }
 
   /// Update an existing budget
@@ -123,73 +97,35 @@ class BudgetService {
     String? iconType,
     String? color,
   }) async {
-    try {
-      final data = <String, dynamic>{};
+    final data = <String, dynamic>{};
 
-      if (name != null) data['name'] = name;
-      if (description != null) data['description'] = description;
-      if (underLimitGoal != null) data['underLimitGoal'] = underLimitGoal;
-      if (startDate != null) data['startDate'] = startDate.toIso8601String();
-      if (endDate != null) data['endDate'] = endDate.toIso8601String();
-      if (isActive != null) data['isActive'] = isActive;
-      if (projectId != null) data['projectId'] = projectId;
-      if (categoryId != null) data['categoryId'] = categoryId;
-      if (currency != null) data['currency'] = currency;
-      if (limitAmount != null) data['limitAmount'] = limitAmount;
-      if (spentAmount != null) data['spentAmount'] = spentAmount;
-      if (overBudgetAllowance != null) {
-        data['overBudgetAllowance'] = overBudgetAllowance;
-      }
-      if (iconCodePoint != null) data['iconCodePoint'] = iconCodePoint;
-      if (iconEmoji != null) data['iconEmoji'] = iconEmoji;
-      if (iconType != null) data['iconType'] = iconType;
-      if (color != null) data['color'] = color;
-
-      final response = await _apiClient.dio.put('/budgets/$id', data: data);
-      return BudgetModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
+    if (name != null) data['name'] = name;
+    if (description != null) data['description'] = description;
+    if (underLimitGoal != null) data['underLimitGoal'] = underLimitGoal;
+    if (startDate != null) data['startDate'] = startDate.toIso8601String();
+    if (endDate != null) data['endDate'] = endDate.toIso8601String();
+    if (isActive != null) data['isActive'] = isActive;
+    if (projectId != null) data['projectId'] = projectId;
+    if (categoryId != null) data['categoryId'] = categoryId;
+    if (currency != null) data['currency'] = currency;
+    if (limitAmount != null) data['limitAmount'] = limitAmount;
+    if (spentAmount != null) data['spentAmount'] = spentAmount;
+    if (overBudgetAllowance != null) {
+      data['overBudgetAllowance'] = overBudgetAllowance;
     }
+    if (iconCodePoint != null) data['iconCodePoint'] = iconCodePoint;
+    if (iconEmoji != null) data['iconEmoji'] = iconEmoji;
+    if (iconType != null) data['iconType'] = iconType;
+    if (color != null) data['color'] = color;
+
+    return executeRequest<BudgetModel>(
+      request: () => dio.put('/budgets/$id', data: data),
+      parser: (data) => BudgetModel.fromJson(data),
+    );
   }
 
   /// Delete a budget
   Future<void> deleteBudget(String id) async {
-    try {
-      await _apiClient.dio.delete('/budgets/$id');
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  /// Handle DioException and return appropriate error message
-  String _handleError(DioException error) {
-    if (error.response != null) {
-      final statusCode = error.response!.statusCode;
-      final data = error.response!.data;
-
-      switch (statusCode) {
-        case 400:
-          return data['message'] ?? 'Bad request';
-        case 401:
-          return data['message'] ?? 'Unauthorized';
-        case 403:
-          return data['message'] ?? 'Forbidden';
-        case 404:
-          return data['message'] ?? 'Budget not found';
-        case 409:
-          return data['message'] ?? 'Conflict';
-        case 500:
-          return 'Internal server error';
-        default:
-          return data['message'] ?? 'An error occurred';
-      }
-    } else if (error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout) {
-      return 'Connection timeout';
-    } else if (error.type == DioExceptionType.connectionError) {
-      return 'No internet connection';
-    } else {
-      return error.message ?? 'An unexpected error occurred';
-    }
+    return executeVoidRequest(request: () => dio.delete('/budgets/$id'));
   }
 }

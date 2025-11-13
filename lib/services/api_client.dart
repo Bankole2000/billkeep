@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import '../config/app_config.dart';
 
+/// Singleton API client for making HTTP requests
+///
+/// Handles authentication, token management, and request/response interceptors
 class ApiClient {
   static final ApiClient _instance = ApiClient._internal();
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
   late final Dio dio;
 
-  static const String baseUrl = 'http://localhost:8090/api/collections';
   static const String tokenKey = 'auth_token';
 
   factory ApiClient() {
@@ -17,9 +19,9 @@ class ApiClient {
   ApiClient._internal() {
     dio = Dio(
       BaseOptions(
-        baseUrl: baseUrl,
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
+        baseUrl: AppConfig.apiBaseUrl,
+        connectTimeout: Duration(seconds: AppConfig.apiTimeout),
+        receiveTimeout: Duration(seconds: AppConfig.apiTimeout),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -35,7 +37,6 @@ class ApiClient {
           // final prefs = await SharedPreferences.getInstance();
           // final token = prefs.getString(tokenKey);
           final token = await _secureStorage.read(key: tokenKey);
-          print(token);
           if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }

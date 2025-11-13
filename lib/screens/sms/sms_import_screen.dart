@@ -268,8 +268,8 @@ class _ParsedMessageCardState extends ConsumerState<_ParsedMessageCard> {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isDebit
-                ? Colors.red.withOpacity(0.1)
-                : Colors.green.withOpacity(0.1),
+                ? Colors.red.withValues(alpha: 256 / 10)
+                : Colors.green.withValues(alpha: 256 / 10),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(

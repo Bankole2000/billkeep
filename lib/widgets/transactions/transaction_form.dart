@@ -126,7 +126,6 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
       ),
     );
     if (result != null) {
-      print(result);
       setState(() {
         _selectedCategory = result;
         if (_titleController.text.trim().isEmpty) {
@@ -137,7 +136,6 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
   }
 
   void _selectTags() async {
-    print('select tags');
     // Navigator.of(context).push(
     //   CupertinoPageRoute(
     //     fullscreenDialog: true,
@@ -169,7 +167,6 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
         _selectedMerchant = result;
       });
     }
-    print(_selectedMerchant);
   }
 
   void _presentDatePicker() async {
@@ -183,7 +180,6 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
       firstDate: firstDate,
       lastDate: lastDate,
     );
-    print(pickedDate);
     setState(() {
       _selectedDate = pickedDate;
     });
@@ -233,17 +229,13 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
   }
 
   void _saveTransaction() {
-    print(widget.transactionType);
     switch (widget.transactionType) {
       case TransactionType.expense:
-        print('Create expense record');
         _saveExpense();
         break;
       case TransactionType.income:
-        print('Create income record');
         break;
       case TransactionType.transfer:
-        print('Create transfer record');
         break;
     }
   }
@@ -267,8 +259,6 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
   }
 
   void selectProject(Project project) {
-    print('selected project');
-    print(project.name);
     setState(() {
       _selectedProject = project;
     });

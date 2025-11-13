@@ -70,8 +70,6 @@ class ProjectRepository {
   }) async {
     final tempId = IdGenerator.tempProject();
 
-    print('Creating project with ID: $tempId');
-
     try {
       await _database.createProject(
         ProjectsCompanion(
@@ -92,8 +90,6 @@ class ProjectRepository {
     } catch (e) {
       print('Error creating project: $e');
     }
-
-    print('Project created successfully');
 
     return tempId;
   }
@@ -164,7 +160,6 @@ class ProjectRepository {
     } catch (e) {
       print('Error creating project: $e');
     }
-    print('Project created successfully');
 
     return projectId;
   }

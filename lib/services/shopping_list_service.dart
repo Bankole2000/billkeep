@@ -1,12 +1,7 @@
-import 'package:dio/dio.dart';
 import '../models/shopping_list_model.dart';
-import 'api_client.dart';
+import 'base_api_service.dart';
 
-class ShoppingListService {
-  final ApiClient _apiClient;
-
-  ShoppingListService() : _apiClient = ApiClient();
-
+class ShoppingListService extends BaseApiService {
   /// Create a new shopping list
   Future<ShoppingListModel> createShoppingList({
     required String projectId,
@@ -14,8 +9,8 @@ class ShoppingListService {
     String? description,
     String? linkedExpenseId,
   }) async {
-    try {
-      final response = await _apiClient.dio.post(
+    return executeRequest<ShoppingListModel>(
+      request: () => dio.post(
         '/shopping-lists',
         data: {
           'projectId': projectId,
@@ -23,12 +18,9 @@ class ShoppingListService {
           'description': description,
           'linkedExpenseId': linkedExpenseId,
         },
-      );
-
-      return ShoppingListModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => ShoppingListModel.fromJson(data),
+    );
   }
 
   /// Get all shopping lists
@@ -37,42 +29,27 @@ class ShoppingListService {
     int? page,
     int? limit,
   }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
 
-      if (projectId != null) queryParameters['projectId'] = projectId;
-      if (page != null) queryParameters['page'] = page;
-      if (limit != null) queryParameters['limit'] = limit;
+    if (projectId != null) queryParameters['projectId'] = projectId;
+    if (page != null) queryParameters['page'] = page;
+    if (limit != null) queryParameters['limit'] = limit;
 
-      final response = await _apiClient.dio.get(
+    return executeListRequest<ShoppingListModel>(
+      request: () => dio.get(
         '/shopping-lists',
         queryParameters: queryParameters,
-      );
-
-      if (response.data is List) {
-        return (response.data as List)
-            .map((list) => ShoppingListModel.fromJson(list))
-            .toList();
-      } else if (response.data is Map && response.data['data'] != null) {
-        return (response.data['data'] as List)
-            .map((list) => ShoppingListModel.fromJson(list))
-            .toList();
-      } else {
-        return [];
-      }
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      itemParser: (json) => ShoppingListModel.fromJson(json),
+    );
   }
 
   /// Get a single shopping list by ID
   Future<ShoppingListModel> getShoppingListById(String id) async {
-    try {
-      final response = await _apiClient.dio.get('/shopping-lists/$id');
-      return ShoppingListModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeRequest<ShoppingListModel>(
+      request: () => dio.get('/shopping-lists/$id'),
+      parser: (data) => ShoppingListModel.fromJson(data),
+    );
   }
 
   /// Update an existing shopping list
@@ -82,28 +59,23 @@ class ShoppingListService {
     String? description,
     String? linkedExpenseId,
   }) async {
-    try {
-      final data = <String, dynamic>{};
+    final data = <String, dynamic>{};
 
-      if (name != null) data['name'] = name;
-      if (description != null) data['description'] = description;
-      if (linkedExpenseId != null) data['linkedExpenseId'] = linkedExpenseId;
+    if (name != null) data['name'] = name;
+    if (description != null) data['description'] = description;
+    if (linkedExpenseId != null) data['linkedExpenseId'] = linkedExpenseId;
 
-      final response =
-          await _apiClient.dio.put('/shopping-lists/$id', data: data);
-      return ShoppingListModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeRequest<ShoppingListModel>(
+      request: () => dio.put('/shopping-lists/$id', data: data),
+      parser: (data) => ShoppingListModel.fromJson(data),
+    );
   }
 
   /// Delete a shopping list
   Future<void> deleteShoppingList(String id) async {
-    try {
-      await _apiClient.dio.delete('/shopping-lists/$id');
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeVoidRequest(
+      request: () => dio.delete('/shopping-lists/$id'),
+    );
   }
 
   /// Create a new shopping list item
@@ -118,8 +90,8 @@ class ShoppingListService {
     DateTime? purchasedAt,
     String? notes,
   }) async {
-    try {
-      final response = await _apiClient.dio.post(
+    return executeRequest<ShoppingListItemModel>(
+      request: () => dio.post(
         '/shopping-lists/$shoppingListId/items',
         data: {
           'name': name,
@@ -131,12 +103,9 @@ class ShoppingListService {
           'purchasedAt': purchasedAt?.toIso8601String(),
           'notes': notes,
         },
-      );
-
-      return ShoppingListItemModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => ShoppingListItemModel.fromJson(data),
+    );
   }
 
   /// Get all items for a shopping list
@@ -144,29 +113,16 @@ class ShoppingListService {
     required String shoppingListId,
     bool? isPurchased,
   }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
-      if (isPurchased != null) queryParameters['isPurchased'] = isPurchased;
+    final queryParameters = <String, dynamic>{};
+    if (isPurchased != null) queryParameters['isPurchased'] = isPurchased;
 
-      final response = await _apiClient.dio.get(
+    return executeListRequest<ShoppingListItemModel>(
+      request: () => dio.get(
         '/shopping-lists/$shoppingListId/items',
         queryParameters: queryParameters,
-      );
-
-      if (response.data is List) {
-        return (response.data as List)
-            .map((item) => ShoppingListItemModel.fromJson(item))
-            .toList();
-      } else if (response.data is Map && response.data['data'] != null) {
-        return (response.data['data'] as List)
-            .map((item) => ShoppingListItemModel.fromJson(item))
-            .toList();
-      } else {
-        return [];
-      }
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      itemParser: (json) => ShoppingListItemModel.fromJson(json),
+    );
   }
 
   /// Update a shopping list item
@@ -182,28 +138,26 @@ class ShoppingListService {
     DateTime? purchasedAt,
     String? notes,
   }) async {
-    try {
-      final data = <String, dynamic>{};
+    final data = <String, dynamic>{};
 
-      if (name != null) data['name'] = name;
-      if (estimatedAmount != null) data['estimatedAmount'] = estimatedAmount;
-      if (actualAmount != null) data['actualAmount'] = actualAmount;
-      if (currency != null) data['currency'] = currency;
-      if (quantity != null) data['quantity'] = quantity;
-      if (isPurchased != null) data['isPurchased'] = isPurchased;
-      if (purchasedAt != null) {
-        data['purchasedAt'] = purchasedAt.toIso8601String();
-      }
-      if (notes != null) data['notes'] = notes;
+    if (name != null) data['name'] = name;
+    if (estimatedAmount != null) data['estimatedAmount'] = estimatedAmount;
+    if (actualAmount != null) data['actualAmount'] = actualAmount;
+    if (currency != null) data['currency'] = currency;
+    if (quantity != null) data['quantity'] = quantity;
+    if (isPurchased != null) data['isPurchased'] = isPurchased;
+    if (purchasedAt != null) {
+      data['purchasedAt'] = purchasedAt.toIso8601String();
+    }
+    if (notes != null) data['notes'] = notes;
 
-      final response = await _apiClient.dio.put(
+    return executeRequest<ShoppingListItemModel>(
+      request: () => dio.put(
         '/shopping-lists/$shoppingListId/items/$itemId',
         data: data,
-      );
-      return ShoppingListItemModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => ShoppingListItemModel.fromJson(data),
+    );
   }
 
   /// Delete a shopping list item
@@ -211,43 +165,8 @@ class ShoppingListService {
     required String shoppingListId,
     required String itemId,
   }) async {
-    try {
-      await _apiClient.dio
-          .delete('/shopping-lists/$shoppingListId/items/$itemId');
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  /// Handle DioException and return appropriate error message
-  String _handleError(DioException error) {
-    if (error.response != null) {
-      final statusCode = error.response!.statusCode;
-      final data = error.response!.data;
-
-      switch (statusCode) {
-        case 400:
-          return data['message'] ?? 'Bad request';
-        case 401:
-          return data['message'] ?? 'Unauthorized';
-        case 403:
-          return data['message'] ?? 'Forbidden';
-        case 404:
-          return data['message'] ?? 'Shopping list not found';
-        case 409:
-          return data['message'] ?? 'Conflict';
-        case 500:
-          return 'Internal server error';
-        default:
-          return data['message'] ?? 'An error occurred';
-      }
-    } else if (error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout) {
-      return 'Connection timeout';
-    } else if (error.type == DioExceptionType.connectionError) {
-      return 'No internet connection';
-    } else {
-      return error.message ?? 'An unexpected error occurred';
-    }
+    return executeVoidRequest(
+      request: () => dio.delete('/shopping-lists/$shoppingListId/items/$itemId'),
+    );
   }
 }

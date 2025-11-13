@@ -1,12 +1,7 @@
-import 'package:dio/dio.dart';
 import '../models/income_model.dart';
-import 'api_client.dart';
+import 'base_api_service.dart';
 
-class IncomeService {
-  final ApiClient _apiClient;
-
-  IncomeService() : _apiClient = ApiClient();
-
+class IncomeService extends BaseApiService {
   /// Create a new income
   Future<IncomeModel> createIncome({
     required String projectId,
@@ -29,8 +24,8 @@ class IncomeService {
     String? notes,
     bool? isActive,
   }) async {
-    try {
-      final response = await _apiClient.dio.post(
+    return executeRequest<IncomeModel>(
+      request: () => dio.post(
         '/income',
         data: {
           'projectId': projectId,
@@ -53,12 +48,9 @@ class IncomeService {
           'notes': notes,
           'isActive': isActive,
         },
-      );
-
-      return IncomeModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => IncomeModel.fromJson(data),
+    );
   }
 
   /// Get all income
@@ -69,44 +61,29 @@ class IncomeService {
     int? page,
     int? limit,
   }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
 
-      if (projectId != null) queryParameters['projectId'] = projectId;
-      if (type != null) queryParameters['type'] = type;
-      if (isActive != null) queryParameters['isActive'] = isActive;
-      if (page != null) queryParameters['page'] = page;
-      if (limit != null) queryParameters['limit'] = limit;
+    if (projectId != null) queryParameters['projectId'] = projectId;
+    if (type != null) queryParameters['type'] = type;
+    if (isActive != null) queryParameters['isActive'] = isActive;
+    if (page != null) queryParameters['page'] = page;
+    if (limit != null) queryParameters['limit'] = limit;
 
-      final response = await _apiClient.dio.get(
+    return executeListRequest<IncomeModel>(
+      request: () => dio.get(
         '/income',
         queryParameters: queryParameters,
-      );
-
-      if (response.data is List) {
-        return (response.data as List)
-            .map((income) => IncomeModel.fromJson(income))
-            .toList();
-      } else if (response.data is Map && response.data['data'] != null) {
-        return (response.data['data'] as List)
-            .map((income) => IncomeModel.fromJson(income))
-            .toList();
-      } else {
-        return [];
-      }
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      itemParser: (json) => IncomeModel.fromJson(json),
+    );
   }
 
   /// Get a single income by ID
   Future<IncomeModel> getIncomeById(String id) async {
-    try {
-      final response = await _apiClient.dio.get('/income/$id');
-      return IncomeModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeRequest<IncomeModel>(
+      request: () => dio.get('/income/$id'),
+      parser: (data) => IncomeModel.fromJson(data),
+    );
   }
 
   /// Update an existing income
@@ -131,75 +108,39 @@ class IncomeService {
     String? notes,
     bool? isActive,
   }) async {
-    try {
-      final data = <String, dynamic>{};
+    final data = <String, dynamic>{};
 
-      if (description != null) data['description'] = description;
-      if (expectedAmount != null) data['expectedAmount'] = expectedAmount;
-      if (currency != null) data['currency'] = currency;
-      if (type != null) data['type'] = type;
-      if (frequency != null) data['frequency'] = frequency;
-      if (startDate != null) data['startDate'] = startDate.toIso8601String();
-      if (nextExpectedDate != null) {
-        data['nextExpectedDate'] = nextExpectedDate.toIso8601String();
-      }
-      if (categoryId != null) data['categoryId'] = categoryId;
-      if (merchantId != null) data['merchantId'] = merchantId;
-      if (contactId != null) data['contactId'] = contactId;
-      if (walletId != null) data['walletId'] = walletId;
-      if (investmentId != null) data['investmentId'] = investmentId;
-      if (goalId != null) data['goalId'] = goalId;
-      if (reminderId != null) data['reminderId'] = reminderId;
-      if (source != null) data['source'] = source;
-      if (invoiceNumber != null) data['invoiceNumber'] = invoiceNumber;
-      if (notes != null) data['notes'] = notes;
-      if (isActive != null) data['isActive'] = isActive;
-
-      final response = await _apiClient.dio.put('/income/$id', data: data);
-      return IncomeModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
+    if (description != null) data['description'] = description;
+    if (expectedAmount != null) data['expectedAmount'] = expectedAmount;
+    if (currency != null) data['currency'] = currency;
+    if (type != null) data['type'] = type;
+    if (frequency != null) data['frequency'] = frequency;
+    if (startDate != null) data['startDate'] = startDate.toIso8601String();
+    if (nextExpectedDate != null) {
+      data['nextExpectedDate'] = nextExpectedDate.toIso8601String();
     }
+    if (categoryId != null) data['categoryId'] = categoryId;
+    if (merchantId != null) data['merchantId'] = merchantId;
+    if (contactId != null) data['contactId'] = contactId;
+    if (walletId != null) data['walletId'] = walletId;
+    if (investmentId != null) data['investmentId'] = investmentId;
+    if (goalId != null) data['goalId'] = goalId;
+    if (reminderId != null) data['reminderId'] = reminderId;
+    if (source != null) data['source'] = source;
+    if (invoiceNumber != null) data['invoiceNumber'] = invoiceNumber;
+    if (notes != null) data['notes'] = notes;
+    if (isActive != null) data['isActive'] = isActive;
+
+    return executeRequest<IncomeModel>(
+      request: () => dio.put('/income/$id', data: data),
+      parser: (data) => IncomeModel.fromJson(data),
+    );
   }
 
   /// Delete an income
   Future<void> deleteIncome(String id) async {
-    try {
-      await _apiClient.dio.delete('/income/$id');
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  /// Handle DioException and return appropriate error message
-  String _handleError(DioException error) {
-    if (error.response != null) {
-      final statusCode = error.response!.statusCode;
-      final data = error.response!.data;
-
-      switch (statusCode) {
-        case 400:
-          return data['message'] ?? 'Bad request';
-        case 401:
-          return data['message'] ?? 'Unauthorized';
-        case 403:
-          return data['message'] ?? 'Forbidden';
-        case 404:
-          return data['message'] ?? 'Income not found';
-        case 409:
-          return data['message'] ?? 'Conflict';
-        case 500:
-          return 'Internal server error';
-        default:
-          return data['message'] ?? 'An error occurred';
-      }
-    } else if (error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout) {
-      return 'Connection timeout';
-    } else if (error.type == DioExceptionType.connectionError) {
-      return 'No internet connection';
-    } else {
-      return error.message ?? 'An unexpected error occurred';
-    }
+    return executeVoidRequest(
+      request: () => dio.delete('/income/$id'),
+    );
   }
 }

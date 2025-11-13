@@ -48,7 +48,6 @@ class _CameraScreenState extends State<CameraScreen> {
         _imageFile = picture;
       });
     } catch (e) {
-      print('Error taking picture: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

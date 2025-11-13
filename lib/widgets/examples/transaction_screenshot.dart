@@ -53,7 +53,7 @@ class NewTransactionSheet extends StatelessWidget {
             // Transaction type selector
             Container(
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: (0.2)),
                 borderRadius: BorderRadius.circular(32),
               ),
               padding: const EdgeInsets.all(4),
@@ -191,7 +191,7 @@ class _InfoRow extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           leading: CircleAvatar(
             backgroundColor:
-                leadingColor?.withOpacity(0.15) ?? Colors.transparent,
+                leadingColor?.withValues(alpha: 0.15) ?? Colors.transparent,
             child: Icon(icon, color: leadingColor ?? Colors.white70),
           ),
           title: Text(

@@ -1,5 +1,4 @@
 import 'package:local_auth/local_auth.dart';
-import 'package:flutter/foundation.dart';
 
 /// Service for handling biometric authentication
 class BiometricService {
@@ -19,9 +18,6 @@ class BiometricService {
       final isDeviceSupported = await _auth.isDeviceSupported();
       return isAvailable && isDeviceSupported;
     } catch (e) {
-      if (kDebugMode) {
-        print('Biometric availability check error: $e');
-      }
       return false;
     }
   }
@@ -31,9 +27,6 @@ class BiometricService {
     try {
       return await _auth.getAvailableBiometrics();
     } catch (e) {
-      if (kDebugMode) {
-        print('Get available biometrics error: $e');
-      }
       return [];
     }
   }
@@ -62,9 +55,6 @@ class BiometricService {
 
       return authenticated;
     } catch (e) {
-      if (kDebugMode) {
-        print('Biometric authentication error: $e');
-      }
       return false;
     }
   }
@@ -73,11 +63,7 @@ class BiometricService {
   Future<void> stopAuthentication() async {
     try {
       await _auth.stopAuthentication();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Stop authentication error: $e');
-      }
-    }
+    } catch (e) {}
   }
 
   /// Get a user-friendly description of available biometrics

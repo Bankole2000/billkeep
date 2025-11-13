@@ -20,6 +20,10 @@ class UserPreferencesService {
   static const String _expenseReminderKey = 'expense_reminder_enabled';
   static const String _dateFormatKey = 'date_format';
   static const String _timeFormatKey = 'time_format';
+  static const String _defaultExpenseCategoryKey = 'default_expense_category';
+  static const String _defaultIncomeCategoryKey = 'default_income_category';
+  static const String _defaultProjectKey = 'default_project';
+  static const String _defaultMerchantKey = 'default_merchant';
 
   UserPreferencesService() : _apiClient = ApiClient();
 
@@ -150,6 +154,70 @@ class UserPreferencesService {
     await _prefs!.setString(_timeFormatKey, format);
   }
 
+  /// Get default expense category
+  Future<String?> getDefaultExpenseCategory() async {
+    await _ensureInitialized();
+    return _prefs!.getString(_defaultExpenseCategoryKey);
+  }
+
+  /// Set default expense category
+  Future<void> setDefaultExpenseCategory(String? categoryId) async {
+    await _ensureInitialized();
+    if (categoryId == null) {
+      await _prefs!.remove(_defaultExpenseCategoryKey);
+    } else {
+      await _prefs!.setString(_defaultExpenseCategoryKey, categoryId);
+    }
+  }
+
+  /// Get default income category
+  Future<String?> getDefaultIncomeCategory() async {
+    await _ensureInitialized();
+    return _prefs!.getString(_defaultIncomeCategoryKey);
+  }
+
+  /// Set default income category
+  Future<void> setDefaultIncomeCategory(String? categoryId) async {
+    await _ensureInitialized();
+    if (categoryId == null) {
+      await _prefs!.remove(_defaultIncomeCategoryKey);
+    } else {
+      await _prefs!.setString(_defaultIncomeCategoryKey, categoryId);
+    }
+  }
+
+  /// Get default project
+  Future<String?> getDefaultProject() async {
+    await _ensureInitialized();
+    return _prefs!.getString(_defaultProjectKey);
+  }
+
+  /// Set default project
+  Future<void> setDefaultProject(String? projectId) async {
+    await _ensureInitialized();
+    if (projectId == null) {
+      await _prefs!.remove(_defaultProjectKey);
+    } else {
+      await _prefs!.setString(_defaultProjectKey, projectId);
+    }
+  }
+
+  /// Get default merchant
+  Future<String?> getDefaultMerchant() async {
+    await _ensureInitialized();
+    return _prefs!.getString(_defaultMerchantKey);
+  }
+
+  /// Set default merchant
+  Future<void> setDefaultMerchant(String? merchantId) async {
+    await _ensureInitialized();
+    if (merchantId == null) {
+      await _prefs!.remove(_defaultMerchantKey);
+    } else {
+      await _prefs!.setString(_defaultMerchantKey, merchantId);
+    }
+  }
+
   /// Get all preferences as a map
   Future<Map<String, dynamic>> getAllPreferences() async {
     await _ensureInitialized();
@@ -164,6 +232,10 @@ class UserPreferencesService {
       'expenseReminderEnabled': await getExpenseReminderEnabled(),
       'dateFormat': await getDateFormat(),
       'timeFormat': await getTimeFormat(),
+      'defaultExpenseCategory': await getDefaultExpenseCategory(),
+      'defaultIncomeCategory': await getDefaultIncomeCategory(),
+      'defaultProject': await getDefaultProject(),
+      'defaultMerchant': await getDefaultMerchant(),
     };
   }
 
@@ -184,12 +256,7 @@ class UserPreferencesService {
         '/preferences/records',
         queryParameters: {'filter': 'user="$userId"'},
       );
-      print(response.data);
       if (response.data['items'] != null && response.data['items'].isNotEmpty) {
-        print({
-          ...response.data['items'][0]['preferences'],
-          'id': response.data['items'][0]['id'],
-        });
         return {
           ...response.data['items'][0]['preferences'],
           'id': response.data['items'][0]['id'] as String,
@@ -210,12 +277,10 @@ class UserPreferencesService {
   }) async {
     try {
       final data = {'user': userId, 'preferences': jsonEncode(preferences)};
-      print(data);
       final response = await _apiClient.dio.post(
         '/preferences/records',
         data: data,
       );
-      print(response.data);
       return response.data;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -312,6 +377,18 @@ class UserPreferencesService {
         }
         if (backendPrefs['timeFormat'] != null) {
           await setTimeFormat(backendPrefs['timeFormat']);
+        }
+        if (backendPrefs['defaultExpenseCategory'] != null) {
+          await setDefaultExpenseCategory(backendPrefs['defaultExpenseCategory']);
+        }
+        if (backendPrefs['defaultIncomeCategory'] != null) {
+          await setDefaultIncomeCategory(backendPrefs['defaultIncomeCategory']);
+        }
+        if (backendPrefs['defaultProject'] != null) {
+          await setDefaultProject(backendPrefs['defaultProject']);
+        }
+        if (backendPrefs['defaultMerchant'] != null) {
+          await setDefaultMerchant(backendPrefs['defaultMerchant']);
         }
       }
     } catch (e) {

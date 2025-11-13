@@ -83,7 +83,6 @@ class WalletProviderSelectScreen extends ConsumerWidget {
         walletProviders: filteredWalletProviders,
         onWalletProviderSelected: (walletProvider) {
           ref.read(walletProviderSearchQueryProvider.notifier).state = '';
-          print(walletProvider);
           Navigator.pop(context, walletProvider);
         },
       ),

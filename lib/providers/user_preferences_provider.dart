@@ -36,6 +36,18 @@ final dateFormatProvider = StateProvider<String>((ref) => 'MM/dd/yyyy');
 // State provider for time format
 final timeFormatProvider = StateProvider<String>((ref) => '12h');
 
+// State provider for default expense category
+final defaultExpenseCategoryProvider = StateProvider<String?>((ref) => null);
+
+// State provider for default income category
+final defaultIncomeCategoryProvider = StateProvider<String?>((ref) => null);
+
+// State provider for default project
+final defaultProjectProvider = StateProvider<String?>((ref) => null);
+
+// State provider for default merchant
+final defaultMerchantProvider = StateProvider<String?>((ref) => null);
+
 // Provider to load all preferences from SharedPreferences
 final loadPreferencesProvider = FutureProvider<void>((ref) async {
   final prefsService = ref.read(userPreferencesServiceProvider);
@@ -51,6 +63,10 @@ final loadPreferencesProvider = FutureProvider<void>((ref) async {
   final expenseReminderEnabled = await prefsService.getExpenseReminderEnabled();
   final dateFormat = await prefsService.getDateFormat();
   final timeFormat = await prefsService.getTimeFormat();
+  final defaultExpenseCategory = await prefsService.getDefaultExpenseCategory();
+  final defaultIncomeCategory = await prefsService.getDefaultIncomeCategory();
+  final defaultProject = await prefsService.getDefaultProject();
+  final defaultMerchant = await prefsService.getDefaultMerchant();
 
   // Update the state providers with loaded values
   ref.read(defaultCurrencyProvider.notifier).state = defaultCurrency;
@@ -64,6 +80,10 @@ final loadPreferencesProvider = FutureProvider<void>((ref) async {
       expenseReminderEnabled;
   ref.read(dateFormatProvider.notifier).state = dateFormat;
   ref.read(timeFormatProvider.notifier).state = timeFormat;
+  ref.read(defaultExpenseCategoryProvider.notifier).state = defaultExpenseCategory;
+  ref.read(defaultIncomeCategoryProvider.notifier).state = defaultIncomeCategory;
+  ref.read(defaultProjectProvider.notifier).state = defaultProject;
+  ref.read(defaultMerchantProvider.notifier).state = defaultMerchant;
 });
 
 // Helper class to manage preferences with auto-save
@@ -130,6 +150,30 @@ class UserPreferencesNotifier extends StateNotifier<Map<String, dynamic>> {
   Future<void> setTimeFormat(String format) async {
     await _prefsService.setTimeFormat(format);
     state = {...state, 'timeFormat': format};
+  }
+
+  // Update default expense category and save to SharedPreferences
+  Future<void> setDefaultExpenseCategory(String? categoryId) async {
+    await _prefsService.setDefaultExpenseCategory(categoryId);
+    state = {...state, 'defaultExpenseCategory': categoryId};
+  }
+
+  // Update default income category and save to SharedPreferences
+  Future<void> setDefaultIncomeCategory(String? categoryId) async {
+    await _prefsService.setDefaultIncomeCategory(categoryId);
+    state = {...state, 'defaultIncomeCategory': categoryId};
+  }
+
+  // Update default project and save to SharedPreferences
+  Future<void> setDefaultProject(String? projectId) async {
+    await _prefsService.setDefaultProject(projectId);
+    state = {...state, 'defaultProject': projectId};
+  }
+
+  // Update default merchant and save to SharedPreferences
+  Future<void> setDefaultMerchant(String? merchantId) async {
+    await _prefsService.setDefaultMerchant(merchantId);
+    state = {...state, 'defaultMerchant': merchantId};
   }
 
   // Load all preferences

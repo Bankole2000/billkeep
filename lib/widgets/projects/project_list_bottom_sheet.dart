@@ -101,9 +101,7 @@ class ProjectList extends ConsumerWidget {
                   children: [
                     if (activeProject.project?.id == project.id)
                       IconButton(
-                        onPressed: () {
-                          print('Project settings');
-                        },
+                        onPressed: () {},
                         icon: Icon(Icons.star, size: 24, color: activeColor),
                         style: IconButton.styleFrom(
                           shape: CircleBorder(),

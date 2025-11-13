@@ -1,11 +1,7 @@
-import 'package:dio/dio.dart';
 import '../models/expense_model.dart';
-import 'api_client.dart';
+import 'base_api_service.dart';
 
-class ExpenseService {
-  final ApiClient _apiClient;
-
-  ExpenseService() : _apiClient = ApiClient();
+class ExpenseService extends BaseApiService {
 
   /// Create a new expense
   Future<ExpenseModel> createExpense({
@@ -28,8 +24,8 @@ class ExpenseService {
     String? notes,
     bool? isActive,
   }) async {
-    try {
-      final response = await _apiClient.dio.post(
+    return executeRequest<ExpenseModel>(
+      request: () => dio.post(
         '/expenses',
         data: {
           'projectId': projectId,
@@ -51,12 +47,9 @@ class ExpenseService {
           'notes': notes,
           'isActive': isActive,
         },
-      );
-
-      return ExpenseModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => ExpenseModel.fromJson(data),
+    );
   }
 
   /// Get all expenses
@@ -67,44 +60,26 @@ class ExpenseService {
     int? page,
     int? limit,
   }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
 
-      if (projectId != null) queryParameters['projectId'] = projectId;
-      if (type != null) queryParameters['type'] = type;
-      if (isActive != null) queryParameters['isActive'] = isActive;
-      if (page != null) queryParameters['page'] = page;
-      if (limit != null) queryParameters['limit'] = limit;
+    if (projectId != null) queryParameters['projectId'] = projectId;
+    if (type != null) queryParameters['type'] = type;
+    if (isActive != null) queryParameters['isActive'] = isActive;
+    if (page != null) queryParameters['page'] = page;
+    if (limit != null) queryParameters['limit'] = limit;
 
-      final response = await _apiClient.dio.get(
-        '/expenses',
-        queryParameters: queryParameters,
-      );
-
-      if (response.data is List) {
-        return (response.data as List)
-            .map((expense) => ExpenseModel.fromJson(expense))
-            .toList();
-      } else if (response.data is Map && response.data['data'] != null) {
-        return (response.data['data'] as List)
-            .map((expense) => ExpenseModel.fromJson(expense))
-            .toList();
-      } else {
-        return [];
-      }
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeListRequest<ExpenseModel>(
+      request: () => dio.get('/expenses', queryParameters: queryParameters),
+      itemParser: (json) => ExpenseModel.fromJson(json),
+    );
   }
 
   /// Get a single expense by ID
   Future<ExpenseModel> getExpenseById(String id) async {
-    try {
-      final response = await _apiClient.dio.get('/expenses/$id');
-      return ExpenseModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeRequest<ExpenseModel>(
+      request: () => dio.get('/expenses/$id'),
+      parser: (data) => ExpenseModel.fromJson(data),
+    );
   }
 
   /// Update an existing expense
@@ -128,74 +103,38 @@ class ExpenseService {
     String? notes,
     bool? isActive,
   }) async {
-    try {
-      final data = <String, dynamic>{};
+    final data = <String, dynamic>{};
 
-      if (name != null) data['name'] = name;
-      if (expectedAmount != null) data['expectedAmount'] = expectedAmount;
-      if (currency != null) data['currency'] = currency;
-      if (type != null) data['type'] = type;
-      if (frequency != null) data['frequency'] = frequency;
-      if (startDate != null) data['startDate'] = startDate.toIso8601String();
-      if (nextRenewalDate != null) {
-        data['nextRenewalDate'] = nextRenewalDate.toIso8601String();
-      }
-      if (categoryId != null) data['categoryId'] = categoryId;
-      if (merchantId != null) data['merchantId'] = merchantId;
-      if (contactId != null) data['contactId'] = contactId;
-      if (walletId != null) data['walletId'] = walletId;
-      if (investmentId != null) data['investmentId'] = investmentId;
-      if (goalId != null) data['goalId'] = goalId;
-      if (reminderId != null) data['reminderId'] = reminderId;
-      if (source != null) data['source'] = source;
-      if (notes != null) data['notes'] = notes;
-      if (isActive != null) data['isActive'] = isActive;
-
-      final response = await _apiClient.dio.put('/expenses/$id', data: data);
-      return ExpenseModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
+    if (name != null) data['name'] = name;
+    if (expectedAmount != null) data['expectedAmount'] = expectedAmount;
+    if (currency != null) data['currency'] = currency;
+    if (type != null) data['type'] = type;
+    if (frequency != null) data['frequency'] = frequency;
+    if (startDate != null) data['startDate'] = startDate.toIso8601String();
+    if (nextRenewalDate != null) {
+      data['nextRenewalDate'] = nextRenewalDate.toIso8601String();
     }
+    if (categoryId != null) data['categoryId'] = categoryId;
+    if (merchantId != null) data['merchantId'] = merchantId;
+    if (contactId != null) data['contactId'] = contactId;
+    if (walletId != null) data['walletId'] = walletId;
+    if (investmentId != null) data['investmentId'] = investmentId;
+    if (goalId != null) data['goalId'] = goalId;
+    if (reminderId != null) data['reminderId'] = reminderId;
+    if (source != null) data['source'] = source;
+    if (notes != null) data['notes'] = notes;
+    if (isActive != null) data['isActive'] = isActive;
+
+    return executeRequest<ExpenseModel>(
+      request: () => dio.put('/expenses/$id', data: data),
+      parser: (data) => ExpenseModel.fromJson(data),
+    );
   }
 
   /// Delete an expense
   Future<void> deleteExpense(String id) async {
-    try {
-      await _apiClient.dio.delete('/expenses/$id');
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  /// Handle DioException and return appropriate error message
-  String _handleError(DioException error) {
-    if (error.response != null) {
-      final statusCode = error.response!.statusCode;
-      final data = error.response!.data;
-
-      switch (statusCode) {
-        case 400:
-          return data['message'] ?? 'Bad request';
-        case 401:
-          return data['message'] ?? 'Unauthorized';
-        case 403:
-          return data['message'] ?? 'Forbidden';
-        case 404:
-          return data['message'] ?? 'Expense not found';
-        case 409:
-          return data['message'] ?? 'Conflict';
-        case 500:
-          return 'Internal server error';
-        default:
-          return data['message'] ?? 'An error occurred';
-      }
-    } else if (error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout) {
-      return 'Connection timeout';
-    } else if (error.type == DioExceptionType.connectionError) {
-      return 'No internet connection';
-    } else {
-      return error.message ?? 'An unexpected error occurred';
-    }
+    return executeVoidRequest(
+      request: () => dio.delete('/expenses/$id'),
+    );
   }
 }

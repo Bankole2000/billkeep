@@ -26,10 +26,7 @@ class AuthService {
         },
       );
 
-      print(response);
-      print(response.data);
       final signupResponse = SignupResponse.fromJson(response.data);
-      print(signupResponse);
       await login(email: email, password: password);
       // // Save token to secure storage
       // await ApiClient.saveToken(authResponse.token);

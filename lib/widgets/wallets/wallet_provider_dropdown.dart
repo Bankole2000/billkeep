@@ -53,7 +53,6 @@ class _WalletProviderDropdownState
               WalletProviderSelectScreen(walletType: widget.selectedWalletType),
         ),
       );
-      print(result);
       if (result != null) {
         setState(() {
           _selectedWalletProvider = result;

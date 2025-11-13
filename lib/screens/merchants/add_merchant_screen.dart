@@ -87,7 +87,6 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
         });
       }
     } catch (e) {
-      print('Error picking image: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -459,7 +458,6 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                           ColorSelectorButton(
                             selectedColor: _selectedColor,
                             onColorChanged: (color) {
-                              print(color);
                               setState(() {
                                 _selectedColor = color;
                               });
@@ -480,7 +478,6 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                       setState(() {
                         _selectedIcon = icon;
                       });
-                      print(icon);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.emoji)
@@ -489,7 +486,6 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                       setState(() {
                         _selectedEmoji = emoji;
                       });
-                      print(emoji);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.image)

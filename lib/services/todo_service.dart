@@ -1,12 +1,7 @@
-import 'package:dio/dio.dart';
 import '../models/todo_model.dart';
-import 'api_client.dart';
+import 'base_api_service.dart';
 
-class TodoService {
-  final ApiClient _apiClient;
-
-  TodoService() : _apiClient = ApiClient();
-
+class TodoService extends BaseApiService {
   /// Create a new todo
   Future<TodoModel> createTodo({
     required String projectId,
@@ -22,8 +17,8 @@ class TodoService {
     String? linkedShoppingListId,
     String? parentTodoId,
   }) async {
-    try {
-      final response = await _apiClient.dio.post(
+    return executeRequest<TodoModel>(
+      request: () => dio.post(
         '/todos',
         data: {
           'projectId': projectId,
@@ -39,12 +34,9 @@ class TodoService {
           'linkedShoppingListId': linkedShoppingListId,
           'parentTodoId': parentTodoId,
         },
-      );
-
-      return TodoModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => TodoModel.fromJson(data),
+    );
   }
 
   /// Get all todos
@@ -55,44 +47,29 @@ class TodoService {
     int? page,
     int? limit,
   }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
 
-      if (projectId != null) queryParameters['projectId'] = projectId;
-      if (isCompleted != null) queryParameters['isCompleted'] = isCompleted;
-      if (parentTodoId != null) queryParameters['parentTodoId'] = parentTodoId;
-      if (page != null) queryParameters['page'] = page;
-      if (limit != null) queryParameters['limit'] = limit;
+    if (projectId != null) queryParameters['projectId'] = projectId;
+    if (isCompleted != null) queryParameters['isCompleted'] = isCompleted;
+    if (parentTodoId != null) queryParameters['parentTodoId'] = parentTodoId;
+    if (page != null) queryParameters['page'] = page;
+    if (limit != null) queryParameters['limit'] = limit;
 
-      final response = await _apiClient.dio.get(
+    return executeListRequest<TodoModel>(
+      request: () => dio.get(
         '/todos',
         queryParameters: queryParameters,
-      );
-
-      if (response.data is List) {
-        return (response.data as List)
-            .map((todo) => TodoModel.fromJson(todo))
-            .toList();
-      } else if (response.data is Map && response.data['data'] != null) {
-        return (response.data['data'] as List)
-            .map((todo) => TodoModel.fromJson(todo))
-            .toList();
-      } else {
-        return [];
-      }
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      itemParser: (json) => TodoModel.fromJson(json),
+    );
   }
 
   /// Get a single todo by ID
   Future<TodoModel> getTodoById(String id) async {
-    try {
-      final response = await _apiClient.dio.get('/todos/$id');
-      return TodoModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeRequest<TodoModel>(
+      request: () => dio.get('/todos/$id'),
+      parser: (data) => TodoModel.fromJson(data),
+    );
   }
 
   /// Update an existing todo
@@ -110,80 +87,44 @@ class TodoService {
     String? linkedShoppingListId,
     String? parentTodoId,
   }) async {
-    try {
-      final data = <String, dynamic>{};
+    final data = <String, dynamic>{};
 
-      if (title != null) data['title'] = title;
-      if (description != null) data['description'] = description;
-      if (isCompleted != null) data['isCompleted'] = isCompleted;
-      if (completedAt != null) {
-        data['completedAt'] = completedAt.toIso8601String();
-      }
-      if (directExpenseAmount != null) {
-        data['directExpenseAmount'] = directExpenseAmount;
-      }
-      if (directExpenseCurrency != null) {
-        data['directExpenseCurrency'] = directExpenseCurrency;
-      }
-      if (directExpenseType != null) {
-        data['directExpenseType'] = directExpenseType;
-      }
-      if (directExpenseFrequency != null) {
-        data['directExpenseFrequency'] = directExpenseFrequency;
-      }
-      if (directExpenseDescription != null) {
-        data['directExpenseDescription'] = directExpenseDescription;
-      }
-      if (linkedShoppingListId != null) {
-        data['linkedShoppingListId'] = linkedShoppingListId;
-      }
-      if (parentTodoId != null) data['parentTodoId'] = parentTodoId;
-
-      final response = await _apiClient.dio.put('/todos/$id', data: data);
-      return TodoModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
+    if (title != null) data['title'] = title;
+    if (description != null) data['description'] = description;
+    if (isCompleted != null) data['isCompleted'] = isCompleted;
+    if (completedAt != null) {
+      data['completedAt'] = completedAt.toIso8601String();
     }
+    if (directExpenseAmount != null) {
+      data['directExpenseAmount'] = directExpenseAmount;
+    }
+    if (directExpenseCurrency != null) {
+      data['directExpenseCurrency'] = directExpenseCurrency;
+    }
+    if (directExpenseType != null) {
+      data['directExpenseType'] = directExpenseType;
+    }
+    if (directExpenseFrequency != null) {
+      data['directExpenseFrequency'] = directExpenseFrequency;
+    }
+    if (directExpenseDescription != null) {
+      data['directExpenseDescription'] = directExpenseDescription;
+    }
+    if (linkedShoppingListId != null) {
+      data['linkedShoppingListId'] = linkedShoppingListId;
+    }
+    if (parentTodoId != null) data['parentTodoId'] = parentTodoId;
+
+    return executeRequest<TodoModel>(
+      request: () => dio.put('/todos/$id', data: data),
+      parser: (data) => TodoModel.fromJson(data),
+    );
   }
 
   /// Delete a todo
   Future<void> deleteTodo(String id) async {
-    try {
-      await _apiClient.dio.delete('/todos/$id');
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  /// Handle DioException and return appropriate error message
-  String _handleError(DioException error) {
-    if (error.response != null) {
-      final statusCode = error.response!.statusCode;
-      final data = error.response!.data;
-
-      switch (statusCode) {
-        case 400:
-          return data['message'] ?? 'Bad request';
-        case 401:
-          return data['message'] ?? 'Unauthorized';
-        case 403:
-          return data['message'] ?? 'Forbidden';
-        case 404:
-          return data['message'] ?? 'Todo not found';
-        case 409:
-          return data['message'] ?? 'Conflict';
-        case 500:
-          return 'Internal server error';
-        default:
-          return data['message'] ?? 'An error occurred';
-      }
-    } else if (error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout) {
-      return 'Connection timeout';
-    } else if (error.type == DioExceptionType.connectionError) {
-      return 'No internet connection';
-    } else {
-      return error.message ?? 'An unexpected error occurred';
-    }
+    return executeVoidRequest(
+      request: () => dio.delete('/todos/$id'),
+    );
   }
 }

@@ -189,7 +189,6 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
         builder: (context) => CurrencySelectScreen(),
       ),
     );
-    print(result);
     if (result != null) {
       setState(() {
         _selectedCurrency = result;
@@ -205,7 +204,6 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
             WalletProviderSelectScreen(walletType: _selectedWalletType),
       ),
     );
-    print(result);
     if (result != null) {
       setState(() {
         _selectedWalletProvider = result;
@@ -229,7 +227,6 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
         });
       }
     } catch (e) {
-      print('Error picking image: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -306,17 +303,11 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
       }
       return;
     }
-    print(_selectedWalletType);
-    print(_selectedCurrency);
-    print(_amountController.text);
-    print(_nameController.text);
-    print(_selectedWalletProvider);
     if (_formKey.currentState!.validate()) {
       if (mounted) {
         setState(() => _isLoading = true);
       }
       String iconType = '';
-      print('Form validated');
       if (_useProviderAppearance && _selectedWalletProvider != null) {
         iconType =
             _selectedWalletProvider!.iconType == IconSelectionType.image.name &&
@@ -815,7 +806,6 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                             ColorSelectorButton(
                               selectedColor: _selectedColor,
                               onColorChanged: (color) {
-                                print(color);
                                 setState(() {
                                   _selectedColor = color;
                                 });
@@ -837,7 +827,6 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                       setState(() {
                         _selectedIcon = icon;
                       });
-                      print(icon);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.emoji &&
@@ -847,7 +836,6 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                       setState(() {
                         _selectedEmoji = emoji;
                       });
-                      print(emoji);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.image &&

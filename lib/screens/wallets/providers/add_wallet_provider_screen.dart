@@ -101,7 +101,6 @@ class _AddWalletProviderScreenState
         });
       }
     } catch (e) {
-      print('Error picking image: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -473,7 +472,6 @@ class _AddWalletProviderScreenState
                           ColorSelectorButton(
                             selectedColor: _selectedColor,
                             onColorChanged: (color) {
-                              print(color);
                               setState(() {
                                 _selectedColor = color;
                               });
@@ -494,7 +492,6 @@ class _AddWalletProviderScreenState
                       setState(() {
                         _selectedIcon = icon;
                       });
-                      print(icon);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.emoji)
@@ -503,7 +500,6 @@ class _AddWalletProviderScreenState
                       setState(() {
                         _selectedEmoji = emoji;
                       });
-                      print(emoji);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.image)

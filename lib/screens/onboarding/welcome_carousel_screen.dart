@@ -91,10 +91,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: _navigateToAuth,
-                  child: const Text(
-                    'Skip',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  child: const Text('Skip', style: TextStyle(fontSize: 16)),
                 ),
               ),
             ),
@@ -139,9 +136,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
                     ),
                   ),
                   child: Text(
-                    _currentPage == _slides.length - 1
-                        ? 'Get Started'
-                        : 'Next',
+                    _currentPage == _slides.length - 1 ? 'Get Started' : 'Next',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -167,24 +162,17 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: slide.color.withOpacity(0.1),
+              color: slide.color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              slide.icon,
-              size: 64,
-              color: slide.color,
-            ),
+            child: Icon(slide.icon, size: 64, color: slide.color),
           ),
           const SizedBox(height: 40),
 
           // Title
           Text(
             slide.title,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -192,10 +180,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
           // Description
           Text(
             slide.description,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 40),
@@ -207,18 +192,12 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.check_circle,
-                      color: slide.color,
-                      size: 24,
-                    ),
+                    Icon(Icons.check_circle, color: slide.color, size: 24),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         feature,
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ],

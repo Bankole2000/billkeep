@@ -62,7 +62,6 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     _suggestCurrency();
     _analytics.logInitialConfigViewed(step: _currentStep);
     if (widget.user != null) {
-      print('User ID: ${widget.user.id}');
       _walletNameController.text = '${widget.user.username}\'s Wallet';
       _projectNameController.text = '${widget.user.username}\'s Project';
       _projectDescriptionController.text =
@@ -165,8 +164,6 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     setState(() {
       _isLoading = true;
     });
-    print(_currentStep);
-    print(widget?.user?.id);
     if (_currentStep == 0) {
       if (_selectedCurrency == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -188,7 +185,6 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
         // Save currency to backend
         await _preferencesService.syncToBackend(widget.user.id);
 
-        print('Currency saved: ${_selectedCurrency!.code}');
         ref.read(defaultCurrencyProvider.notifier).state =
             _selectedCurrency!.code;
         // Move to next step
@@ -203,7 +199,6 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
         );
         _analytics.logInitialConfigViewed(step: _currentStep);
       } catch (e) {
-        print('Error saving currency: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -244,7 +239,6 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           currency: _selectedCurrency!,
           balance: walletBalance.toInt(),
         );
-        print(wallet);
         setState(() {
           _isLoading = false;
           _currentStep++;
@@ -255,10 +249,8 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           );
           _analytics.logInitialConfigViewed(step: _currentStep);
         });
-        print('Wallet details valid, proceeding to next step.');
         return;
       } catch (e) {
-        print('Error creating wallet: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -626,7 +618,6 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           setState(() {
             _selectedCurrency = currency;
           });
-          print(currency);
         },
       ),
     );

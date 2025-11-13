@@ -107,7 +107,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
         });
       }
     } catch (e) {
-      print('Error picking image: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -171,20 +170,11 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
   }
 
   void _saveProject() async {
-    print(_selectedColor);
-    print(_selectedIcon);
-    print(_selectedEmoji);
-    print(_imageUrlController.text);
-    print(_localImageFile);
-    print(_localImageFile?.path);
-    print(_selectedSegment);
-    print('\n');
     // TODO: check
     if (_formKey.currentState!.validate()) {
       if (mounted) {
         setState(() => _isLoading = true);
       }
-      print('Form validated');
       var iconType =
           _selectedSegment == IconSelectionType.image &&
               Validators.isValidUrl(_imageUrlController.text)
@@ -530,7 +520,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                           ColorSelectorButton(
                             selectedColor: _selectedColor,
                             onColorChanged: (color) {
-                              print(color);
                               setState(() {
                                 _selectedColor = color;
                               });
@@ -551,7 +540,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                       setState(() {
                         _selectedIcon = icon;
                       });
-                      print(icon);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.emoji)
@@ -560,7 +548,6 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                       setState(() {
                         _selectedEmoji = emoji;
                       });
-                      print(emoji);
                     },
                   ),
                 if (_selectedSegment == IconSelectionType.image)

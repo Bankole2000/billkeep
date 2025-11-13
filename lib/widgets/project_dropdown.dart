@@ -53,7 +53,7 @@ class _WalletDropdownWithAddButtonState
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 256 / 10 * 9),
                     borderRadius: BorderRadius.circular(0),
                   ),
                   child: Column(
@@ -127,7 +127,7 @@ class _WalletDropdownWithAddButtonState
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.25),
+            color: Colors.white.withValues(alpha: 256 / 4),
             borderRadius: BorderRadius.circular(0),
           ),
           child: Row(

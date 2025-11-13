@@ -1,21 +1,29 @@
 import 'dart:math';
 
+/// Generates temporary client-side IDs for offline-first functionality
+///
+/// These IDs are used when creating resources locally before syncing with the server.
+/// Once synced, they are mapped to canonical server-generated IDs.
 class IdGenerator {
   static final _random = Random();
 
-  // Generate temporary client-side ID
+  /// Generate temporary client-side ID with a given prefix
+  ///
+  /// Format: {prefix}-temp-{timestamp}_{random}
+  /// Example: proj-temp-1234567890123_456789
   static String generateTempId(String prefix) {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final randomPart = _random.nextInt(999999).toString().padLeft(6, '0');
     return '$prefix-temp-${timestamp}_$randomPart';
   }
 
-  // Check if ID is temporary
+  /// Check if an ID is temporary (not yet synced with server)
   static bool isTemporaryId(String id) {
     return id.contains('-temp-');
   }
 
-  // Convenience methods for temporary IDs
+  // Convenience methods for common entity types
+  // Usage: IdGenerator.tempProject()
   static String tempProject() => generateTempId('proj');
   static String tempProjectMeta() => generateTempId('projmeta');
   static String tempExpense() => generateTempId('exp');
@@ -49,4 +57,11 @@ class IdGenerator {
   static String tempInvestmentPayment() => generateTempId('invpay');
   static String tempInvestmentReturn() => generateTempId('invret');
   static String tempReminder() => generateTempId('rem');
+}
+
+/// Extension to generate temp IDs with a more fluent syntax
+///
+/// Usage: 'project'.toTempId() instead of IdGenerator.generateTempId('project')
+extension TempIdGeneration on String {
+  String toTempId() => IdGenerator.generateTempId(this);
 }

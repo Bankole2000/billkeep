@@ -241,8 +241,6 @@ class WalletRepository {
   }) async {
     final tempId = IdGenerator.tempWallet();
 
-    print('Creating wallet with ID: $tempId');
-
     try {
       await _database
           .into(_database.wallets)
@@ -269,8 +267,6 @@ class WalletRepository {
       print('Error creating wallet: $e');
       rethrow;
     }
-
-    print('Wallet created successfully');
 
     return tempId;
   }
@@ -373,7 +369,6 @@ class WalletRepository {
       print('Error updating wallet: $e');
       rethrow;
     }
-    print('Wallet updated successfully');
     return walletId;
   }
 

@@ -1,12 +1,7 @@
-import 'package:dio/dio.dart';
 import '../models/payment_model.dart';
-import 'api_client.dart';
+import 'base_api_service.dart';
 
-class PaymentService {
-  final ApiClient _apiClient;
-
-  PaymentService() : _apiClient = ApiClient();
-
+class PaymentService extends BaseApiService {
   /// Create a new payment
   Future<PaymentModel> createPayment({
     required String paymentType,
@@ -25,8 +20,8 @@ class PaymentService {
     bool? verified,
     String? notes,
   }) async {
-    try {
-      final response = await _apiClient.dio.post(
+    return executeRequest<PaymentModel>(
+      request: () => dio.post(
         '/payments',
         data: {
           'paymentType': paymentType,
@@ -45,12 +40,9 @@ class PaymentService {
           'verified': verified,
           'notes': notes,
         },
-      );
-
-      return PaymentModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      parser: (data) => PaymentModel.fromJson(data),
+    );
   }
 
   /// Get all payments
@@ -68,55 +60,40 @@ class PaymentService {
     int? page,
     int? limit,
   }) async {
-    try {
-      final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
 
-      if (paymentType != null) queryParameters['paymentType'] = paymentType;
-      if (categoryId != null) queryParameters['categoryId'] = categoryId;
-      if (merchantId != null) queryParameters['merchantId'] = merchantId;
-      if (contactId != null) queryParameters['contactId'] = contactId;
-      if (walletId != null) queryParameters['walletId'] = walletId;
-      if (expenseId != null) queryParameters['expenseId'] = expenseId;
-      if (incomeId != null) queryParameters['incomeId'] = incomeId;
-      if (verified != null) queryParameters['verified'] = verified;
-      if (startDate != null) {
-        queryParameters['startDate'] = startDate.toIso8601String();
-      }
-      if (endDate != null) {
-        queryParameters['endDate'] = endDate.toIso8601String();
-      }
-      if (page != null) queryParameters['page'] = page;
-      if (limit != null) queryParameters['limit'] = limit;
+    if (paymentType != null) queryParameters['paymentType'] = paymentType;
+    if (categoryId != null) queryParameters['categoryId'] = categoryId;
+    if (merchantId != null) queryParameters['merchantId'] = merchantId;
+    if (contactId != null) queryParameters['contactId'] = contactId;
+    if (walletId != null) queryParameters['walletId'] = walletId;
+    if (expenseId != null) queryParameters['expenseId'] = expenseId;
+    if (incomeId != null) queryParameters['incomeId'] = incomeId;
+    if (verified != null) queryParameters['verified'] = verified;
+    if (startDate != null) {
+      queryParameters['startDate'] = startDate.toIso8601String();
+    }
+    if (endDate != null) {
+      queryParameters['endDate'] = endDate.toIso8601String();
+    }
+    if (page != null) queryParameters['page'] = page;
+    if (limit != null) queryParameters['limit'] = limit;
 
-      final response = await _apiClient.dio.get(
+    return executeListRequest<PaymentModel>(
+      request: () => dio.get(
         '/payments',
         queryParameters: queryParameters,
-      );
-
-      if (response.data is List) {
-        return (response.data as List)
-            .map((payment) => PaymentModel.fromJson(payment))
-            .toList();
-      } else if (response.data is Map && response.data['data'] != null) {
-        return (response.data['data'] as List)
-            .map((payment) => PaymentModel.fromJson(payment))
-            .toList();
-      } else {
-        return [];
-      }
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+      ),
+      itemParser: (json) => PaymentModel.fromJson(json),
+    );
   }
 
   /// Get a single payment by ID
   Future<PaymentModel> getPaymentById(String id) async {
-    try {
-      final response = await _apiClient.dio.get('/payments/$id');
-      return PaymentModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
+    return executeRequest<PaymentModel>(
+      request: () => dio.get('/payments/$id'),
+      parser: (data) => PaymentModel.fromJson(data),
+    );
   }
 
   /// Update an existing payment
@@ -138,72 +115,36 @@ class PaymentService {
     bool? verified,
     String? notes,
   }) async {
-    try {
-      final data = <String, dynamic>{};
+    final data = <String, dynamic>{};
 
-      if (paymentType != null) data['paymentType'] = paymentType;
-      if (categoryId != null) data['categoryId'] = categoryId;
-      if (merchantId != null) data['merchantId'] = merchantId;
-      if (contactId != null) data['contactId'] = contactId;
-      if (walletId != null) data['walletId'] = walletId;
-      if (expenseId != null) data['expenseId'] = expenseId;
-      if (incomeId != null) data['incomeId'] = incomeId;
-      if (investmentId != null) data['investmentId'] = investmentId;
-      if (debtId != null) data['debtId'] = debtId;
-      if (actualAmount != null) data['actualAmount'] = actualAmount;
-      if (currency != null) data['currency'] = currency;
-      if (paymentDate != null) {
-        data['paymentDate'] = paymentDate.toIso8601String();
-      }
-      if (source != null) data['source'] = source;
-      if (verified != null) data['verified'] = verified;
-      if (notes != null) data['notes'] = notes;
-
-      final response = await _apiClient.dio.put('/payments/$id', data: data);
-      return PaymentModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw _handleError(e);
+    if (paymentType != null) data['paymentType'] = paymentType;
+    if (categoryId != null) data['categoryId'] = categoryId;
+    if (merchantId != null) data['merchantId'] = merchantId;
+    if (contactId != null) data['contactId'] = contactId;
+    if (walletId != null) data['walletId'] = walletId;
+    if (expenseId != null) data['expenseId'] = expenseId;
+    if (incomeId != null) data['incomeId'] = incomeId;
+    if (investmentId != null) data['investmentId'] = investmentId;
+    if (debtId != null) data['debtId'] = debtId;
+    if (actualAmount != null) data['actualAmount'] = actualAmount;
+    if (currency != null) data['currency'] = currency;
+    if (paymentDate != null) {
+      data['paymentDate'] = paymentDate.toIso8601String();
     }
+    if (source != null) data['source'] = source;
+    if (verified != null) data['verified'] = verified;
+    if (notes != null) data['notes'] = notes;
+
+    return executeRequest<PaymentModel>(
+      request: () => dio.put('/payments/$id', data: data),
+      parser: (data) => PaymentModel.fromJson(data),
+    );
   }
 
   /// Delete a payment
   Future<void> deletePayment(String id) async {
-    try {
-      await _apiClient.dio.delete('/payments/$id');
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  /// Handle DioException and return appropriate error message
-  String _handleError(DioException error) {
-    if (error.response != null) {
-      final statusCode = error.response!.statusCode;
-      final data = error.response!.data;
-
-      switch (statusCode) {
-        case 400:
-          return data['message'] ?? 'Bad request';
-        case 401:
-          return data['message'] ?? 'Unauthorized';
-        case 403:
-          return data['message'] ?? 'Forbidden';
-        case 404:
-          return data['message'] ?? 'Payment not found';
-        case 409:
-          return data['message'] ?? 'Conflict';
-        case 500:
-          return 'Internal server error';
-        default:
-          return data['message'] ?? 'An error occurred';
-      }
-    } else if (error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout) {
-      return 'Connection timeout';
-    } else if (error.type == DioExceptionType.connectionError) {
-      return 'No internet connection';
-    } else {
-      return error.message ?? 'An unexpected error occurred';
-    }
+    return executeVoidRequest(
+      request: () => dio.delete('/payments/$id'),
+    );
   }
 }
