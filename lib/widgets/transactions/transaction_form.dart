@@ -9,15 +9,12 @@ import 'package:billkeep/screens/categories/category_select_screen.dart';
 import 'package:billkeep/screens/contacts/contact_select_screen.dart';
 import 'package:billkeep/screens/merchants/add_merchant_screen.dart';
 import 'package:billkeep/screens/merchants/merchant_select_screen.dart';
-import 'package:billkeep/screens/projects/add_project_screen.dart';
 import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/app_enums.dart';
 import 'package:billkeep/utils/date_helpers.dart';
-import 'package:billkeep/utils/page_transitions.dart';
+import 'package:billkeep/utils/image_helpers.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
 import 'package:billkeep/widgets/common/select_recurrence_bottomsheet.dart';
-import 'package:billkeep/widgets/projects/project_form.dart';
-import 'package:billkeep/widgets/projects/project_list_select.dart';
 import 'package:billkeep/widgets/projects/select_project_bottomsheet.dart';
 import 'package:billkeep/widgets/wallets/select_wallet_bottomsheet.dart';
 import 'package:flutter/material.dart';
@@ -426,7 +423,9 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           ? HexColor.fromHex(_selectedCategory!.color!)
                           : Colors.blueGrey,
                       icon: _selectedCategory != null ? null : Icons.folder,
-                      emojiOffset: Platform.isIOS ? Offset(6, 0) : Offset(1, -2),
+                      emojiOffset: Platform.isIOS
+                          ? Offset(6, 0)
+                          : Offset(1, -2),
                     ),
 
                     title: Row(
@@ -465,7 +464,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           visualDensity: VisualDensity(vertical: 0.1),
                           leading: DynamicAvatar(
                             image: _selectedMerchant?.imageUrl != null
-                                ? NetworkImage(_selectedMerchant!.imageUrl!)
+                                ? cachedImageProvider(_selectedMerchant!.imageUrl!)
                                 : null,
                             icon: _selectedMerchant != null
                                 ? null
@@ -525,7 +524,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                               _selectedProject?.localImagePath != null
                           ? FileImage(File(_selectedProject!.localImagePath!))
                           : _selectedProject?.imageUrl != null
-                          ? NetworkImage(_selectedProject!.imageUrl!)
+                          ? cachedImageProvider(_selectedProject!.imageUrl!)
                           : null,
                       color: _selectedProject?.color != null
                           ? HexColor.fromHex('#${_selectedProject?.color}')
@@ -568,7 +567,9 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           contentPadding: EdgeInsets.symmetric(horizontal: 20),
                           visualDensity: VisualDensity(vertical: 0.1),
                           leading: DynamicAvatar(
-                            emojiOffset: Platform.isIOS ? Offset(6, 2) : Offset(3, -1),
+                            emojiOffset: Platform.isIOS
+                                ? Offset(6, 2)
+                                : Offset(3, -1),
                             icon:
                                 _fromWallet?.iconType ==
                                     IconSelectionType.icon.name
@@ -588,7 +589,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                                     _fromWallet?.localImagePath != null
                                 ? FileImage(File(_fromWallet!.localImagePath!))
                                 : _fromWallet?.imageUrl != null
-                                ? NetworkImage(_fromWallet!.imageUrl!)
+                                ? cachedImageProvider(_fromWallet!.imageUrl!)
                                 : null,
                             color: _fromWallet?.color != null
                                 ? HexColor.fromHex('#${_fromWallet?.color}')
@@ -636,7 +637,9 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                           contentPadding: EdgeInsets.symmetric(horizontal: 20),
                           visualDensity: VisualDensity(vertical: 0.1),
                           leading: DynamicAvatar(
-                            emojiOffset: Platform.isIOS ? Offset(6, 2) : Offset(3, -1),
+                            emojiOffset: Platform.isIOS
+                                ? Offset(6, 2)
+                                : Offset(3, -1),
                             icon:
                                 _toWallet?.iconType ==
                                     IconSelectionType.icon.name
@@ -656,7 +659,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                                     _toWallet?.localImagePath != null
                                 ? FileImage(File(_toWallet!.localImagePath!))
                                 : _toWallet?.imageUrl != null
-                                ? NetworkImage(_toWallet!.imageUrl!)
+                                ? cachedImageProvider(_toWallet!.imageUrl!)
                                 : null,
                             color: _toWallet?.color != null
                                 ? HexColor.fromHex('#${_toWallet?.color}')

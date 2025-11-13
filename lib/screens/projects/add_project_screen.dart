@@ -4,6 +4,7 @@ import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/projects/add_project_settings_screen.dart';
 import 'package:billkeep/utils/app_colors.dart';
+import 'package:billkeep/utils/image_helpers.dart';
 import 'package:billkeep/utils/validators.dart';
 import 'package:billkeep/widgets/common/color_picker_widget.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
@@ -47,7 +48,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
 
   // late TextEditingController searchTextController;
   final _formKey = GlobalKey<FormState>();
-  bool _isFocused = false;
+  final bool _isFocused = false;
 
   @override
   void initState() {
@@ -281,14 +282,18 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
           SizedBox(width: 10),
-          IconButton(onPressed: () {
-            Navigator.of(context).push<Currency>(
-              CupertinoPageRoute(
-                fullscreenDialog: true,
-                builder: (context) => AddProjectSettingsScreen(project: widget.projectToEdit,),
-              ),
-            );
-          }, icon: Icon(Icons.settings)),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push<Currency>(
+                CupertinoPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) =>
+                      AddProjectSettingsScreen(project: widget.projectToEdit),
+                ),
+              );
+            },
+            icon: Icon(Icons.settings),
+          ),
           SizedBox(width: 10),
         ],
       ),
@@ -435,10 +440,11 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                         mainAxisSize: MainAxisSize.min,
                         // children: [],
                         children: [
-                          
                           SizedBox(width: 4),
                           DynamicAvatar(
-                            emojiOffset: Platform.isIOS ? Offset(11, 6) : Offset(7, 5),
+                            emojiOffset: Platform.isIOS
+                                ? Offset(11, 6)
+                                : Offset(7, 5),
                             icon: _selectedSegment == IconSelectionType.icon
                                 ? _selectedIcon
                                 : null,
@@ -451,7 +457,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                                       : _imageUrlController.text
                                             .trim()
                                             .isNotEmpty
-                                      ? NetworkImage(_imageUrlController.text)
+                                      ? cachedImageProvider(_imageUrlController.text)
                                       : null)
                                 : null,
                             size: 50,

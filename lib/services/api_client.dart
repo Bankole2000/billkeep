@@ -35,7 +35,7 @@ class ApiClient {
           // final prefs = await SharedPreferences.getInstance();
           // final token = prefs.getString(tokenKey);
           final token = await _secureStorage.read(key: tokenKey);
-
+          print(token);
           if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }

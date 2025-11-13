@@ -5,6 +5,7 @@ import 'package:billkeep/main.dart' as main;
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/camera/camera_screen.dart';
 import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/image_helpers.dart';
 import 'package:billkeep/utils/validators.dart';
 import 'package:billkeep/widgets/common/color_picker_widget.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
@@ -36,13 +37,13 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
   String? merchantId;
   final _formKey = GlobalKey<FormState>();
 
-    Color? _selectedColor;
+  Color? _selectedColor;
   IconData? _selectedIcon = Icons.folder;
   String? _selectedEmoji = '📂';
   String? projectId;
   File? _localImageFile;
   final ImagePicker _picker = ImagePicker();
-  bool _isFocused = false;
+  final bool _isFocused = false;
   var enteredName = '';
   var enteredDescription = '';
   var enteredWebsite = '';
@@ -70,7 +71,7 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
     super.dispose();
   }
 
-    Future<void> _pickImageFromGallery() async {
+  Future<void> _pickImageFromGallery() async {
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -148,7 +149,6 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
   void _copyToClipboard(String text) async {
     await Clipboard.setData(ClipboardData(text: _imageUrlController.text));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -369,10 +369,11 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                         mainAxisSize: MainAxisSize.min,
                         // children: [],
                         children: [
-                          
                           SizedBox(width: 4),
                           DynamicAvatar(
-                            emojiOffset: Platform.isIOS ? Offset(11, 6) : Offset(7, 5),
+                            emojiOffset: Platform.isIOS
+                                ? Offset(11, 6)
+                                : Offset(7, 5),
                             icon: _selectedSegment == IconSelectionType.icon
                                 ? _selectedIcon
                                 : null,
@@ -385,7 +386,7 @@ class _AddMerchantScreenState extends ConsumerState<AddMerchantScreen> {
                                       : _imageUrlController.text
                                             .trim()
                                             .isNotEmpty
-                                      ? NetworkImage(_imageUrlController.text)
+                                      ? cachedImageProvider(_imageUrlController.text)
                                       : null)
                                 : null,
                             size: 50,

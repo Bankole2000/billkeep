@@ -11,7 +11,7 @@ class SideNavigationDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AuthService _authService = AuthService();
+    final AuthService authService = AuthService();
     final activeColor = ref.watch(activeThemeColorProvider);
     return Drawer(
       child: ListView(
@@ -78,7 +78,7 @@ class SideNavigationDrawer extends ConsumerWidget {
               );
             },
           ),
-          
+
           ListTile(
             leading: const Icon(Icons.storage),
             title: const Text('Old UI'),
@@ -104,9 +104,9 @@ class SideNavigationDrawer extends ConsumerWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
-              _authService.logout();
+              authService.logout();
               Navigator.popUntil(context, (route) => route.isFirst);
-            }
+            },
           ),
           const Divider(),
           ListTile(

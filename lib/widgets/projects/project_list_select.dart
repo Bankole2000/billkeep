@@ -5,12 +5,11 @@ import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/projects/add_project_screen.dart';
 import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/image_helpers.dart';
 import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:billkeep/screens/projects/project_details_screen.dart';
-import 'package:billkeep/providers/project_provider.dart';
 
 class ProjectListSelectItem extends ConsumerWidget {
   const ProjectListSelectItem({
@@ -47,7 +46,7 @@ class ProjectListSelectItem extends ConsumerWidget {
                   project.localImagePath != null
               ? FileImage(File(project.localImagePath!))
               : project.imageUrl != null
-              ? NetworkImage(project.imageUrl!)
+              ? cachedImageProvider(project.imageUrl!)
               : null,
           color: project.color != null
               ? HexColor.fromHex('#${project.color}')

@@ -5,6 +5,8 @@ void main() {
 }
 
 class SlidingListTiles extends StatefulWidget {
+  const SlidingListTiles({super.key});
+
   @override
   _SlidingListTilesState createState() => _SlidingListTilesState();
 }
@@ -40,7 +42,7 @@ class _SlidingListTilesState extends State<SlidingListTiles> {
             AnimatedSize(
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              child: Container(
+              child: SizedBox(
                 height: _showTiles ? null : 0,
                 child: Column(
                   children: [

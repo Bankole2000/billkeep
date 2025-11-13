@@ -245,7 +245,7 @@ class _ToggleRowState extends State<_ToggleRow> {
           trailing: Switch(
             value: toggled,
             onChanged: (val) => setState(() => toggled = val),
-            activeColor: Colors.white,
+            activeThumbColor: Colors.white,
             inactiveThumbColor: Colors.grey,
           ),
         ),

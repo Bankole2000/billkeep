@@ -189,8 +189,9 @@ class _TodoFormState extends ConsumerState<TodoForm> {
                     _expenseType = value!;
                     if (_expenseType == 'ONE_TIME') {
                       _frequency = null;
-                    } else
+                    } else {
                       _frequency ??= 'MONTHLY';
+                    }
                   });
                 },
               ),

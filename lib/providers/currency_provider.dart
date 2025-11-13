@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
 import '../database/database.dart';
 import 'database_provider.dart';
+import 'user_preferences_provider.dart';
 
 // Stream provider for all currencies
 final allCurrenciesProvider = StreamProvider<List<Currency>>((ref) {
@@ -82,6 +83,15 @@ final currencyProvider = StreamProviderFamily<Currency?, String>((
   return (database.select(
     database.currencies,
   )..where((c) => c.code.equals(currencyCode))).watchSingleOrNull();
+});
+
+// Stream provider for the default currency based on user preferences
+final defaultCurrencyObjectProvider = StreamProvider<Currency?>((ref) {
+  final defaultCurrencyCode = ref.watch(defaultCurrencyProvider);
+  final database = ref.watch(databaseProvider);
+  return (database.select(
+    database.currencies,
+  )..where((c) => c.code.equals(defaultCurrencyCode))).watchSingleOrNull();
 });
 
 // Repository provider

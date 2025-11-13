@@ -3,22 +3,23 @@ import 'package:billkeep/utils/wallet_types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WalletTypeDropdown extends ConsumerStatefulWidget {
-  final WalletType? selectedType;
-  final ValueChanged<WalletType?> onChanged;
+class CurrencyTypeDropdown extends ConsumerStatefulWidget {
+  final CurrencyType? selectedType;
+  final ValueChanged<CurrencyType?> onChanged;
 
-  const WalletTypeDropdown({
+  const CurrencyTypeDropdown({
     super.key,
     this.selectedType,
     required this.onChanged,
   });
 
   @override
-  ConsumerState<WalletTypeDropdown> createState() => _WalletTypeDropdownState();
+  ConsumerState<CurrencyTypeDropdown> createState() =>
+      _CurrencyTypeDropdownState();
 }
 
-class _WalletTypeDropdownState extends ConsumerState<WalletTypeDropdown> {
-  void _showWalletTypeSelector() {
+class _CurrencyTypeDropdownState extends ConsumerState<CurrencyTypeDropdown> {
+  void _showCurrencyTypeSelector() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -26,8 +27,8 @@ class _WalletTypeDropdownState extends ConsumerState<WalletTypeDropdown> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
+        initialChildSize: 0.4,
+        minChildSize: 0.3,
         maxChildSize: 0.9,
         expand: false,
         builder: (context, scrollController) => Column(
@@ -37,7 +38,7 @@ class _WalletTypeDropdownState extends ConsumerState<WalletTypeDropdown> {
               child: Row(
                 children: [
                   Text(
-                    'Select Wallet Type',
+                    'Select Currency Type',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
@@ -52,10 +53,10 @@ class _WalletTypeDropdownState extends ConsumerState<WalletTypeDropdown> {
             Expanded(
               child: ListView.separated(
                 controller: scrollController,
-                itemCount: WalletTypes.all.length,
+                itemCount: CurrencyTypes.all.length,
                 separatorBuilder: (context, index) => Divider(height: 1),
                 itemBuilder: (context, index) {
-                  final walletType = WalletTypes.all[index];
+                  final walletType = CurrencyTypes.all[index];
                   final isSelected = widget.selectedType == walletType.type;
 
                   return ListTile(
@@ -122,42 +123,42 @@ class _WalletTypeDropdownState extends ConsumerState<WalletTypeDropdown> {
   Widget build(BuildContext context) {
     final colors = ref.watch(appColorsProvider);
     final selectedInfo = widget.selectedType != null
-        ? WalletTypes.getInfo(widget.selectedType!)
+        ? CurrencyTypes.getInfo(widget.selectedType!)
         : null;
 
     return InkWell(
-      onTap: _showWalletTypeSelector,
+      onTap: _showCurrencyTypeSelector,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          border: Border.all(color: colors.text),
+          border: Border.all(color: colors.textInverse),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
             if (selectedInfo != null) ...[
-              Icon(selectedInfo.icon, color: colors.text),
+              Icon(selectedInfo.icon, color: colors.textInverse),
               SizedBox(width: 12),
               Expanded(
                 child: Text(
                   selectedInfo.name,
-                  style: TextStyle(fontSize: 16, color: colors.text),
+                  style: TextStyle(fontSize: 16, color: colors.textInverse),
                 ),
               ),
             ] else ...[
               Icon(
                 Icons.account_balance_wallet_outlined,
-                color: colors.textMute,
+                color: colors.textMuteInverse,
               ),
               SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Select Wallet type',
-                  style: TextStyle(color: colors.textMute),
+                  'Select Currency type',
+                  style: TextStyle(color: colors.textMuteInverse),
                 ),
               ),
             ],
-            Icon(Icons.arrow_drop_down, color: colors.text),
+            Icon(Icons.arrow_drop_down, color: colors.textInverse),
           ],
         ),
       ),

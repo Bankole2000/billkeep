@@ -1,11 +1,9 @@
-import 'package:billkeep/providers/bank_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/wallets/providers/add_wallet_provider_screen.dart';
 import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/widgets/common/app_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:country_flags/country_flags.dart';
 import '../../database/database.dart';
 
 class WalletProviderList extends ConsumerWidget {

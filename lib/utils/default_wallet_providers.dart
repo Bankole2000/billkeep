@@ -10,7 +10,8 @@ class DefaultWalletProviders {
       'id': 'provider_chase',
       'name': 'Chase Bank',
       'description': 'One of the largest banks in the United States',
-      'imageUrl': 'https://logo.clearbit.com/chase.com',
+      'imageUrl':
+          'https://img.logokit.com/chase.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.chase.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -22,7 +23,8 @@ class DefaultWalletProviders {
       'id': 'provider_bank_of_america',
       'name': 'Bank of America',
       'description': 'Major banking and financial services corporation',
-      'imageUrl': 'https://logo.clearbit.com/bankofamerica.com',
+      'imageUrl':
+          'https://img.logokit.com/bankofamerica.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.bankofamerica.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -34,7 +36,8 @@ class DefaultWalletProviders {
       'id': 'provider_wells_fargo',
       'name': 'Wells Fargo',
       'description': 'Multinational financial services company',
-      'imageUrl': 'https://logo.clearbit.com/wellsfargo.com',
+      'imageUrl':
+          'https://img.logokit.com/wellsfargo.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.wellsfargo.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -46,7 +49,8 @@ class DefaultWalletProviders {
       'id': 'provider_citibank',
       'name': 'Citibank',
       'description': 'Global banking and financial services',
-      'imageUrl': 'https://logo.clearbit.com/citi.com',
+      'imageUrl':
+          'https://img.logokit.com/citi.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.citi.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -58,7 +62,8 @@ class DefaultWalletProviders {
       'id': 'provider_us_bank',
       'name': 'U.S. Bank',
       'description': 'American banking and financial services company',
-      'imageUrl': 'https://logo.clearbit.com/usbank.com',
+      'imageUrl':
+          'https://img.logokit.com/usbank.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.usbank.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -70,7 +75,8 @@ class DefaultWalletProviders {
       'id': 'provider_pnc',
       'name': 'PNC Bank',
       'description': 'Banking and financial services institution',
-      'imageUrl': 'https://logo.clearbit.com/pnc.com',
+      'imageUrl':
+          'https://img.logokit.com/pnc.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.pnc.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -82,7 +88,8 @@ class DefaultWalletProviders {
       'id': 'provider_td_bank',
       'name': 'TD Bank',
       'description': 'American national bank and financial services',
-      'imageUrl': 'https://logo.clearbit.com/td.com',
+      'imageUrl':
+          'https://img.logokit.com/td.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.td.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -94,7 +101,8 @@ class DefaultWalletProviders {
       'id': 'provider_capital_one',
       'name': 'Capital One',
       'description': 'Banking and credit card services',
-      'imageUrl': 'https://logo.clearbit.com/capitalone.com',
+      'imageUrl':
+          'https://img.logokit.com/capitalone.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.capitalone.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -106,7 +114,8 @@ class DefaultWalletProviders {
       'id': 'provider_ally_bank',
       'name': 'Ally Bank',
       'description': 'Online-only bank with high-yield savings',
-      'imageUrl': 'https://logo.clearbit.com/ally.com',
+      'imageUrl':
+          'https://img.logokit.com/ally.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.ally.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -118,7 +127,8 @@ class DefaultWalletProviders {
       'id': 'provider_chime',
       'name': 'Chime',
       'description': 'Mobile-first financial technology company',
-      'imageUrl': 'https://logo.clearbit.com/chime.com',
+      'imageUrl':
+          'https://img.logokit.com/chime.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.chime.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -130,7 +140,8 @@ class DefaultWalletProviders {
       'id': 'provider_discover',
       'name': 'Discover Bank',
       'description': 'Digital banking and payment services',
-      'imageUrl': 'https://logo.clearbit.com/discover.com',
+      'imageUrl':
+          'https://img.logokit.com/discover.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.discover.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -144,7 +155,8 @@ class DefaultWalletProviders {
       'id': 'provider_hsbc',
       'name': 'HSBC',
       'description': 'Global banking and financial services',
-      'imageUrl': 'https://logo.clearbit.com/hsbc.com',
+      'imageUrl':
+          'https://img.logokit.com/hsbc.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.hsbc.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -156,7 +168,8 @@ class DefaultWalletProviders {
       'id': 'provider_barclays',
       'name': 'Barclays',
       'description': 'British multinational bank',
-      'imageUrl': 'https://logo.clearbit.com/barclays.com',
+      'imageUrl':
+          'https://img.logokit.com/barclays.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.barclays.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -168,7 +181,8 @@ class DefaultWalletProviders {
       'id': 'provider_rbc',
       'name': 'RBC Royal Bank',
       'description': 'Canadian multinational financial services',
-      'imageUrl': 'https://logo.clearbit.com/rbc.com',
+      'imageUrl':
+          'https://img.logokit.com/rbc.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.rbc.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -180,7 +194,8 @@ class DefaultWalletProviders {
       'id': 'provider_scotiabank',
       'name': 'Scotiabank',
       'description': 'Canadian multinational banking corporation',
-      'imageUrl': 'https://logo.clearbit.com/scotiabank.com',
+      'imageUrl':
+          'https://img.logokit.com/scotiabank.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.scotiabank.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -192,7 +207,8 @@ class DefaultWalletProviders {
       'id': 'provider_deutsche_bank',
       'name': 'Deutsche Bank',
       'description': 'German multinational investment bank',
-      'imageUrl': 'https://logo.clearbit.com/db.com',
+      'imageUrl':
+          'https://img.logokit.com/db.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.db.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -204,7 +220,8 @@ class DefaultWalletProviders {
       'id': 'provider_bnp_paribas',
       'name': 'BNP Paribas',
       'description': 'French international banking group',
-      'imageUrl': 'https://logo.clearbit.com/bnpparibas.com',
+      'imageUrl':
+          'https://img.logokit.com/bnpparibas.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.bnpparibas.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -216,7 +233,8 @@ class DefaultWalletProviders {
       'id': 'provider_credit_suisse',
       'name': 'Credit Suisse',
       'description': 'Swiss multinational investment bank',
-      'imageUrl': 'https://logo.clearbit.com/credit-suisse.com',
+      'imageUrl':
+          'https://img.logokit.com/credit-suisse.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.credit-suisse.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -228,7 +246,8 @@ class DefaultWalletProviders {
       'id': 'provider_santander',
       'name': 'Santander',
       'description': 'Spanish multinational financial services',
-      'imageUrl': 'https://logo.clearbit.com/santander.com',
+      'imageUrl':
+          'https://img.logokit.com/santander.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.santander.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -242,7 +261,8 @@ class DefaultWalletProviders {
       'id': 'provider_american_express',
       'name': 'American Express',
       'description': 'Premium credit card and financial services',
-      'imageUrl': 'https://logo.clearbit.com/americanexpress.com',
+      'imageUrl':
+          'https://img.logokit.com/americanexpress.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.americanexpress.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -254,7 +274,8 @@ class DefaultWalletProviders {
       'id': 'provider_visa',
       'name': 'Visa',
       'description': 'Global payments technology company',
-      'imageUrl': 'https://logo.clearbit.com/visa.com',
+      'imageUrl':
+          'https://img.logokit.com/visa.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.visa.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -266,7 +287,8 @@ class DefaultWalletProviders {
       'id': 'provider_mastercard',
       'name': 'Mastercard',
       'description': 'Worldwide payment solutions and technology',
-      'imageUrl': 'https://logo.clearbit.com/mastercard.com',
+      'imageUrl':
+          'https://img.logokit.com/mastercard.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.mastercard.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -280,7 +302,8 @@ class DefaultWalletProviders {
       'id': 'provider_paypal',
       'name': 'PayPal',
       'description': 'Online payment and money transfer service',
-      'imageUrl': 'https://logo.clearbit.com/paypal.com',
+      'imageUrl':
+          'https://img.logokit.com/paypal.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.paypal.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -292,7 +315,8 @@ class DefaultWalletProviders {
       'id': 'provider_venmo',
       'name': 'Venmo',
       'description': 'Peer-to-peer mobile payment service',
-      'imageUrl': 'https://logo.clearbit.com/venmo.com',
+      'imageUrl':
+          'https://img.logokit.com/venmo.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://venmo.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -304,7 +328,8 @@ class DefaultWalletProviders {
       'id': 'provider_cash_app',
       'name': 'Cash App',
       'description': 'Mobile payment and investing platform',
-      'imageUrl': 'https://logo.clearbit.com/cash.app',
+      'imageUrl':
+          'https://img.logokit.com/cash.app?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://cash.app',
       'isFiatBank': false,
       'isCrypto': true,
@@ -316,7 +341,8 @@ class DefaultWalletProviders {
       'id': 'provider_apple_pay',
       'name': 'Apple Pay',
       'description': 'Mobile payment and digital wallet by Apple',
-      'imageUrl': 'https://logo.clearbit.com/apple.com',
+      'imageUrl':
+          'https://img.logokit.com/apple.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.apple.com/apple-pay',
       'isFiatBank': false,
       'isCrypto': false,
@@ -328,7 +354,8 @@ class DefaultWalletProviders {
       'id': 'provider_google_pay',
       'name': 'Google Pay',
       'description': 'Digital wallet and payment platform by Google',
-      'imageUrl': 'https://logo.clearbit.com/google.com',
+      'imageUrl':
+          'https://img.logokit.com/google.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://pay.google.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -340,7 +367,8 @@ class DefaultWalletProviders {
       'id': 'provider_samsung_pay',
       'name': 'Samsung Pay',
       'description': 'Mobile payment and digital wallet by Samsung',
-      'imageUrl': 'https://logo.clearbit.com/samsung.com',
+      'imageUrl':
+          'https://img.logokit.com/samsung.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.samsung.com/us/samsung-pay',
       'isFiatBank': false,
       'isCrypto': false,
@@ -352,7 +380,8 @@ class DefaultWalletProviders {
       'id': 'provider_zelle',
       'name': 'Zelle',
       'description': 'Bank-to-bank money transfer service',
-      'imageUrl': 'https://logo.clearbit.com/zellepay.com',
+      'imageUrl':
+          'https://img.logokit.com/zellepay.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.zellepay.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -364,7 +393,8 @@ class DefaultWalletProviders {
       'id': 'provider_mpesa',
       'name': 'M-Pesa',
       'description': 'Mobile money and payment service in Africa',
-      'imageUrl': 'https://logo.clearbit.com/safaricom.co.ke',
+      'imageUrl':
+          'https://img.logokit.com/safaricom.co.ke?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.safaricom.co.ke/personal/m-pesa',
       'isFiatBank': false,
       'isCrypto': false,
@@ -376,7 +406,8 @@ class DefaultWalletProviders {
       'id': 'provider_mtn_momo',
       'name': 'MTN Mobile Money',
       'description': 'Mobile financial services in Africa',
-      'imageUrl': 'https://logo.clearbit.com/mtn.com',
+      'imageUrl':
+          'https://img.logokit.com/mtn.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.mtn.com/what-we-do/mobile-financial-services',
       'isFiatBank': false,
       'isCrypto': false,
@@ -388,7 +419,8 @@ class DefaultWalletProviders {
       'id': 'provider_alipay',
       'name': 'Alipay',
       'description': 'Chinese third-party mobile and online payment',
-      'imageUrl': 'https://logo.clearbit.com/alipay.com',
+      'imageUrl':
+          'https://img.logokit.com/alipay.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://global.alipay.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -400,7 +432,8 @@ class DefaultWalletProviders {
       'id': 'provider_wechat_pay',
       'name': 'WeChat Pay',
       'description': 'Mobile payment platform by Tencent',
-      'imageUrl': 'https://logo.clearbit.com/wechat.com',
+      'imageUrl':
+          'https://img.logokit.com/wechat.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://pay.weixin.qq.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -412,7 +445,8 @@ class DefaultWalletProviders {
       'id': 'provider_paytm',
       'name': 'Paytm',
       'description': 'Indian digital payment and financial services',
-      'imageUrl': 'https://logo.clearbit.com/paytm.com',
+      'imageUrl':
+          'https://img.logokit.com/paytm.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://paytm.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -424,7 +458,8 @@ class DefaultWalletProviders {
       'id': 'provider_phonepe',
       'name': 'PhonePe',
       'description': 'Indian digital payments platform',
-      'imageUrl': 'https://logo.clearbit.com/phonepe.com',
+      'imageUrl':
+          'https://img.logokit.com/phonepe.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.phonepe.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -436,7 +471,8 @@ class DefaultWalletProviders {
       'id': 'provider_revolut',
       'name': 'Revolut',
       'description': 'Digital banking and financial technology',
-      'imageUrl': 'https://logo.clearbit.com/revolut.com',
+      'imageUrl':
+          'https://img.logokit.com/revolut.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.revolut.com',
       'isFiatBank': true,
       'isCrypto': true,
@@ -448,7 +484,8 @@ class DefaultWalletProviders {
       'id': 'provider_wise',
       'name': 'Wise',
       'description': 'International money transfer service',
-      'imageUrl': 'https://logo.clearbit.com/wise.com',
+      'imageUrl':
+          'https://img.logokit.com/wise.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://wise.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -460,7 +497,8 @@ class DefaultWalletProviders {
       'id': 'provider_n26',
       'name': 'N26',
       'description': 'Digital mobile bank',
-      'imageUrl': 'https://logo.clearbit.com/n26.com',
+      'imageUrl':
+          'https://img.logokit.com/n26.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://n26.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -472,7 +510,8 @@ class DefaultWalletProviders {
       'id': 'provider_monzo',
       'name': 'Monzo',
       'description': 'Digital mobile-only bank',
-      'imageUrl': 'https://logo.clearbit.com/monzo.com',
+      'imageUrl':
+          'https://img.logokit.com/monzo.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://monzo.com',
       'isFiatBank': true,
       'isCrypto': false,
@@ -486,7 +525,8 @@ class DefaultWalletProviders {
       'id': 'provider_coinbase',
       'name': 'Coinbase',
       'description': 'Cryptocurrency exchange and wallet platform',
-      'imageUrl': 'https://logo.clearbit.com/coinbase.com',
+      'imageUrl':
+          'https://img.logokit.com/coinbase.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.coinbase.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -498,7 +538,8 @@ class DefaultWalletProviders {
       'id': 'provider_binance',
       'name': 'Binance',
       'description': 'Global cryptocurrency exchange platform',
-      'imageUrl': 'https://logo.clearbit.com/binance.com',
+      'imageUrl':
+          'https://img.logokit.com/binance.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.binance.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -510,7 +551,8 @@ class DefaultWalletProviders {
       'id': 'provider_kraken',
       'name': 'Kraken',
       'description': 'Cryptocurrency exchange and trading platform',
-      'imageUrl': 'https://logo.clearbit.com/kraken.com',
+      'imageUrl':
+          'https://img.logokit.com/kraken.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.kraken.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -522,7 +564,8 @@ class DefaultWalletProviders {
       'id': 'provider_gemini',
       'name': 'Gemini',
       'description': 'Regulated cryptocurrency exchange',
-      'imageUrl': 'https://logo.clearbit.com/gemini.com',
+      'imageUrl':
+          'https://img.logokit.com/gemini.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.gemini.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -534,7 +577,8 @@ class DefaultWalletProviders {
       'id': 'provider_crypto_com',
       'name': 'Crypto.com',
       'description': 'Cryptocurrency platform and Visa card',
-      'imageUrl': 'https://logo.clearbit.com/crypto.com',
+      'imageUrl':
+          'https://img.logokit.com/crypto.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://crypto.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -546,7 +590,8 @@ class DefaultWalletProviders {
       'id': 'provider_blockchain_com',
       'name': 'Blockchain.com',
       'description': 'Cryptocurrency wallet and exchange',
-      'imageUrl': 'https://logo.clearbit.com/blockchain.com',
+      'imageUrl':
+          'https://img.logokit.com/blockchain.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.blockchain.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -558,7 +603,8 @@ class DefaultWalletProviders {
       'id': 'provider_metamask',
       'name': 'MetaMask',
       'description': 'Cryptocurrency wallet for Ethereum and tokens',
-      'imageUrl': 'https://logo.clearbit.com/metamask.io',
+      'imageUrl':
+          'https://img.logokit.com/metamask.io?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://metamask.io',
       'isFiatBank': false,
       'isCrypto': true,
@@ -570,7 +616,8 @@ class DefaultWalletProviders {
       'id': 'provider_trust_wallet',
       'name': 'Trust Wallet',
       'description': 'Multi-cryptocurrency mobile wallet',
-      'imageUrl': 'https://logo.clearbit.com/trustwallet.com',
+      'imageUrl':
+          'https://img.logokit.com/trustwallet.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://trustwallet.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -582,7 +629,8 @@ class DefaultWalletProviders {
       'id': 'provider_ledger',
       'name': 'Ledger',
       'description': 'Hardware cryptocurrency wallet',
-      'imageUrl': 'https://logo.clearbit.com/ledger.com',
+      'imageUrl':
+          'https://img.logokit.com/ledger.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.ledger.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -594,7 +642,8 @@ class DefaultWalletProviders {
       'id': 'provider_trezor',
       'name': 'Trezor',
       'description': 'Hardware wallet for cryptocurrency',
-      'imageUrl': 'https://logo.clearbit.com/trezor.io',
+      'imageUrl':
+          'https://img.logokit.com/trezor.io?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://trezor.io',
       'isFiatBank': false,
       'isCrypto': true,
@@ -606,7 +655,8 @@ class DefaultWalletProviders {
       'id': 'provider_exodus',
       'name': 'Exodus',
       'description': 'Multi-cryptocurrency software wallet',
-      'imageUrl': 'https://logo.clearbit.com/exodus.com',
+      'imageUrl':
+          'https://img.logokit.com/exodus.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.exodus.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -618,7 +668,8 @@ class DefaultWalletProviders {
       'id': 'provider_bitpay',
       'name': 'BitPay',
       'description': 'Bitcoin and cryptocurrency payment processor',
-      'imageUrl': 'https://logo.clearbit.com/bitpay.com',
+      'imageUrl':
+          'https://img.logokit.com/bitpay.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://bitpay.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -632,7 +683,8 @@ class DefaultWalletProviders {
       'id': 'provider_stripe',
       'name': 'Stripe',
       'description': 'Online payment processing for businesses',
-      'imageUrl': 'https://logo.clearbit.com/stripe.com',
+      'imageUrl':
+          'https://img.logokit.com/stripe.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://stripe.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -644,7 +696,8 @@ class DefaultWalletProviders {
       'id': 'provider_square',
       'name': 'Square',
       'description': 'Payment and point of sale solutions',
-      'imageUrl': 'https://logo.clearbit.com/squareup.com',
+      'imageUrl':
+          'https://img.logokit.com/squareup.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://squareup.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -656,7 +709,8 @@ class DefaultWalletProviders {
       'id': 'provider_payoneer',
       'name': 'Payoneer',
       'description': 'Global payment and money transfer service',
-      'imageUrl': 'https://logo.clearbit.com/payoneer.com',
+      'imageUrl':
+          'https://img.logokit.com/payoneer.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.payoneer.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -668,7 +722,8 @@ class DefaultWalletProviders {
       'id': 'provider_skrill',
       'name': 'Skrill',
       'description': 'Digital wallet and payment service',
-      'imageUrl': 'https://logo.clearbit.com/skrill.com',
+      'imageUrl':
+          'https://img.logokit.com/skrill.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.skrill.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -680,7 +735,8 @@ class DefaultWalletProviders {
       'id': 'provider_neteller',
       'name': 'Neteller',
       'description': 'Online payment and money transfer',
-      'imageUrl': 'https://logo.clearbit.com/neteller.com',
+      'imageUrl':
+          'https://img.logokit.com/neteller.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.neteller.com',
       'isFiatBank': false,
       'isCrypto': false,
@@ -694,7 +750,8 @@ class DefaultWalletProviders {
       'id': 'provider_airtel_money',
       'name': 'Airtel Money',
       'description': 'Mobile money service in Africa and Asia',
-      'imageUrl': 'https://logo.clearbit.com/airtel.com',
+      'imageUrl':
+          'https://img.logokit.com/airtel.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.airtel.in/bank',
       'isFiatBank': false,
       'isCrypto': false,
@@ -706,7 +763,8 @@ class DefaultWalletProviders {
       'id': 'provider_orange_money',
       'name': 'Orange Money',
       'description': 'Mobile payment service in Africa',
-      'imageUrl': 'https://logo.clearbit.com/orange.com',
+      'imageUrl':
+          'https://img.logokit.com/orange.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.orange.com/en/orange-money',
       'isFiatBank': false,
       'isCrypto': false,
@@ -718,7 +776,8 @@ class DefaultWalletProviders {
       'id': 'provider_tigo_pesa',
       'name': 'Tigo Pesa',
       'description': 'Mobile money service in Tanzania',
-      'imageUrl': 'https://logo.clearbit.com/tigo.co.tz',
+      'imageUrl':
+          'https://img.logokit.com/tigo.co.tz?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.tigo.co.tz',
       'isFiatBank': false,
       'isCrypto': false,
@@ -730,7 +789,8 @@ class DefaultWalletProviders {
       'id': 'provider_ecocash',
       'name': 'EcoCash',
       'description': 'Mobile money service in Zimbabwe',
-      'imageUrl': 'https://logo.clearbit.com/ecocash.co.zw',
+      'imageUrl':
+          'https://img.logokit.com/ecocash.co.zw?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.ecocash.co.zw',
       'isFiatBank': false,
       'isCrypto': false,
@@ -744,7 +804,8 @@ class DefaultWalletProviders {
       'id': 'provider_robinhood',
       'name': 'Robinhood',
       'description': 'Commission-free investing and trading',
-      'imageUrl': 'https://logo.clearbit.com/robinhood.com',
+      'imageUrl':
+          'https://img.logokit.com/robinhood.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://robinhood.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -756,7 +817,8 @@ class DefaultWalletProviders {
       'id': 'provider_webull',
       'name': 'Webull',
       'description': 'Commission-free stock and crypto trading',
-      'imageUrl': 'https://logo.clearbit.com/webull.com',
+      'imageUrl':
+          'https://img.logokit.com/webull.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.webull.com',
       'isFiatBank': false,
       'isCrypto': true,
@@ -768,7 +830,8 @@ class DefaultWalletProviders {
       'id': 'provider_etoro',
       'name': 'eToro',
       'description': 'Social trading and investment platform',
-      'imageUrl': 'https://logo.clearbit.com/etoro.com',
+      'imageUrl':
+          'https://img.logokit.com/etoro.com?token=pk_frbb016699d97004807432',
       'websiteUrl': 'https://www.etoro.com',
       'isFiatBank': false,
       'isCrypto': true,

@@ -12,6 +12,7 @@ import 'package:billkeep/screens/wallets/providers/select_wallet_provider_screen
 import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/app_enums.dart';
 import 'package:billkeep/utils/currency_helper.dart';
+import 'package:billkeep/utils/image_helpers.dart';
 import 'package:billkeep/utils/validators.dart';
 import 'package:billkeep/utils/wallet_types.dart';
 import 'package:billkeep/widgets/common/color_picker_widget.dart';
@@ -31,9 +32,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddWalletScreen extends ConsumerStatefulWidget {
-  const AddWalletScreen({super.key, this.wallet});
+  const AddWalletScreen({super.key, this.wallet, this.isInOnboarding = false});
 
   final Wallet? wallet;
+  final bool isInOnboarding;
 
   @override
   ConsumerState<AddWalletScreen> createState() => _AddWalletScreenState();
@@ -62,7 +64,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
   String? _selectedEmoji = '💳';
   File? _localImageFile;
   final ImagePicker _picker = ImagePicker();
-  bool? _isArchived = false;
+  final bool? _isArchived = false;
   bool? _isLoading = false;
 
   IconSelectionType _selectedSegment = IconSelectionType.emoji;
@@ -416,12 +418,12 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
     return Scaffold(
       // backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: activeColor,
-        iconTheme: IconThemeData(color: colors.textInverse),
-        actionsIconTheme: IconThemeData(color: colors.textInverse),
+        backgroundColor: colors.surface,
+        iconTheme: IconThemeData(color: colors.text),
+        actionsIconTheme: IconThemeData(color: colors.text),
         title: Text(
           '${walletId == null ? 'New' : 'Edit'} Wallet',
-          style: TextStyle(color: colors.textInverse),
+          style: TextStyle(color: colors.text),
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
@@ -634,7 +636,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                                           )
                                         : _selectedWalletProvider!.imageUrl !=
                                               null
-                                        ? NetworkImage(
+                                        ? cachedImageProvider(
                                             _selectedWalletProvider!.imageUrl!,
                                           )
                                         : null)
@@ -650,7 +652,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                           ? VisualDensity(vertical: 2)
                           : null,
                       title: _selectedWalletProvider != null
-                          ? Text(_selectedWalletProvider!.name!)
+                          ? Text(_selectedWalletProvider!.name)
                           : Text('Select Provider'),
                       subtitle: _selectedWalletProvider != null
                           ? Text(_selectedWalletProvider!.description!)
@@ -723,7 +725,6 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                           mainAxisSize: MainAxisSize.min,
                           // children: [],
                           children: [
-                            
                             SizedBox(width: 4),
                             DynamicAvatar(
                               emojiOffset: Platform.isIOS
@@ -741,7 +742,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                                         : _imageUrlController.text
                                               .trim()
                                               .isNotEmpty
-                                        ? NetworkImage(_imageUrlController.text)
+                                        ? cachedImageProvider(_imageUrlController.text)
                                         : null)
                                   : null,
                               size: 50,
@@ -933,27 +934,29 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
         ),
       ),
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SizedBox(
-          height: 56,
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _saveWallet,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: activeColor,
-              foregroundColor: colors.textInverse,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
+      bottomNavigationBar: widget.isInOnboarding
+          ? null
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                height: 56,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _saveWallet,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: activeColor,
+                    foregroundColor: colors.textInverse,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  child: const Text(
+                    'SAVE',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
               ),
             ),
-            child: const Text(
-              'SAVE',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/project_provider.dart';
 import '../../database/database.dart';
 
 class EditProjectForm extends ConsumerStatefulWidget {

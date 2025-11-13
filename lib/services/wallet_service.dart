@@ -11,6 +11,7 @@ class WalletService {
   /// Create a new wallet
   Future<WalletModel> createWallet({
     required String name,
+    required String userId,
     required String walletType,
     required Currency currency,
     required int balance,
@@ -25,11 +26,11 @@ class WalletService {
   }) async {
     try {
       final response = await _apiClient.dio.post(
-        '/wallets',
+        '/wallets/records',
         data: {
           'name': name,
           'walletType': walletType,
-          'currency': currency,
+          'currency': currency.code,
           'balance': balance,
           'imageUrl': imageUrl,
           'providerId': providerId,
@@ -39,6 +40,7 @@ class WalletService {
           'iconEmoji': iconEmoji,
           'iconType': iconType,
           'color': color,
+          'user': userId,
         },
       );
 

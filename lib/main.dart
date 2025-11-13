@@ -7,6 +7,7 @@ import 'package:billkeep/screens/home/main_navigation_screen.dart';
 import 'package:billkeep/screens/onboarding/index.dart';
 import 'package:billkeep/screens/splash/splash_screen.dart';
 import 'package:billkeep/providers/database_provider.dart';
+import 'package:billkeep/providers/user_preferences_provider.dart';
 import 'package:billkeep/utils/default_categories.dart';
 import 'package:billkeep/utils/default_currencies.dart';
 import 'package:camera/camera.dart';
@@ -50,6 +51,9 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
     await DefaultMerchants.seedDefaultMerchants(database);
     await DefaultCurrencies.seedDefaultCurrencies(database);
     await DefaultWalletProviders.seedDefaultProviders(database);
+
+    // Load user preferences from SharedPreferences into Riverpod providers
+    await ref.read(loadPreferencesProvider.future);
 
     // Wait for minimum splash duration
     await Future.delayed(const Duration(seconds: 2));

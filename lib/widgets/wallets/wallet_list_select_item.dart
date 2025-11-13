@@ -6,6 +6,7 @@ import 'package:billkeep/providers/wallet_provider.dart';
 import 'package:billkeep/screens/wallets/add_wallet_screen.dart';
 import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/image_helpers.dart';
 import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/utils/wallet_types.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
@@ -48,7 +49,7 @@ class WalletListSelectItem extends ConsumerWidget {
                   wallet.localImagePath != null
               ? FileImage(File(wallet.localImagePath!))
               : wallet.imageUrl != null
-              ? NetworkImage(wallet.imageUrl!)
+              ? cachedImageProvider(wallet.imageUrl!)
               : null,
           color: wallet.color != null
               ? HexColor.fromHex('#${wallet.color}')

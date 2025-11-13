@@ -1,9 +1,14 @@
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/currency_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/providers/user_preferences_provider.dart';
+import 'package:billkeep/screens/currencies/add_currency_screen.dart';
 
 import 'package:billkeep/utils/currency_country_mapping.dart';
+import 'package:billkeep/utils/wallet_types.dart';
 import 'package:billkeep/widgets/currencies/currency_select_list.dart';
+import 'package:billkeep/widgets/wallets/select_wallet_type_bottomsheet.dart';
+import 'package:billkeep/widgets/wallets/wallet_provider_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,17 +18,16 @@ import '../../models/user_model.dart';
 import '../../services/wallet_service.dart';
 import '../../services/project_service.dart';
 import '../../services/analytics_service.dart';
+import '../../services/user_preferences_service.dart';
 
 class InitialConfigScreen extends ConsumerStatefulWidget {
   final User user;
 
-  const InitialConfigScreen({
-    super.key,
-    required this.user,
-  });
+  const InitialConfigScreen({super.key, required this.user});
 
   @override
-  ConsumerState<InitialConfigScreen> createState() => _InitialConfigScreenState();
+  ConsumerState<InitialConfigScreen> createState() =>
+      _InitialConfigScreenState();
 }
 
 class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
@@ -37,27 +41,15 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   final WalletService _walletService = WalletService();
   final ProjectService _projectService = ProjectService();
   final AnalyticsService _analytics = AnalyticsService();
+  final UserPreferencesService _preferencesService = UserPreferencesService();
 
   // Step 1: Currency selection
   Currency? _selectedCurrency;
-  final Map<String, String> _currencies = {
-    'USD': '\$ - US Dollar',
-    'EUR': '€ - Euro',
-    'GBP': '£ - British Pound',
-    'JPY': '¥ - Japanese Yen',
-    'CNY': '¥ - Chinese Yuan',
-    'INR': '₹ - Indian Rupee',
-    'CAD': '\$ - Canadian Dollar',
-    'AUD': '\$ - Australian Dollar',
-    'NGN': '₦ - Nigerian Naira',
-    'ZAR': 'R - South African Rand',
-    'BTC': '₿ - Bitcoin',
-    'ETH': 'Ξ - Ethereum',
-  };
 
   // Step 2: First wallet
   final _walletNameController = TextEditingController();
-  String _walletType = 'cash';
+  WalletType? _walletType = WalletType.CASH;
+  WalletProvider? _walletProvider;
   final _initialBalanceController = TextEditingController(text: '0');
 
   // Step 3: First project
@@ -69,6 +61,13 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     super.initState();
     _suggestCurrency();
     _analytics.logInitialConfigViewed(step: _currentStep);
+    if (widget.user != null) {
+      print('User ID: ${widget.user.id}');
+      _walletNameController.text = '${widget.user.username}\'s Wallet';
+      _projectNameController.text = '${widget.user.username}\'s Project';
+      _projectDescriptionController.text =
+          'This is ${widget.user.username}\'s first project.';
+    }
   }
 
   @override
@@ -96,28 +95,79 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
         final currencyAsync = ref.watch(currencyProvider(currencyMap.key));
 
-        currencyAsync.when(data: (currency) => setState(() {
-          _selectedCurrency = currency;
-        }), error: (Object error, StackTrace stackTrace) { 
-          _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
-        }, loading: () { 
-          _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
-        });
-
+        currencyAsync.when(
+          data: (currency) => setState(() {
+            _selectedCurrency = currency;
+          }),
+          error: (Object error, StackTrace stackTrace) {
+            _selectedCurrency = Currency(
+              code: 'USD',
+              decimals: 2,
+              isActive: true,
+              isCrypto: false,
+              name: 'US Dollars',
+              symbol: '\$',
+              countryISO2: 'US',
+            );
+          },
+          loading: () {
+            _selectedCurrency = Currency(
+              code: 'USD',
+              decimals: 2,
+              isActive: true,
+              isCrypto: false,
+              name: 'US Dollars',
+              symbol: '\$',
+              countryISO2: 'US',
+            );
+          },
+        );
       } else {
         setState(() {
-          _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
+          _selectedCurrency = Currency(
+            code: 'USD',
+            decimals: 2,
+            isActive: true,
+            isCrypto: false,
+            name: 'US Dollars',
+            symbol: '\$',
+            countryISO2: 'US',
+          );
         });
       }
     } catch (e) {
       setState(() {
-        _selectedCurrency = Currency(code: 'USD', decimals: 2, isActive: true, isCrypto: false,name: 'US Dollars', symbol: '\$', countryISO2: 'US');
+        _selectedCurrency = Currency(
+          code: 'USD',
+          decimals: 2,
+          isActive: true,
+          isCrypto: false,
+          name: 'US Dollars',
+          symbol: '\$',
+          countryISO2: 'US',
+        );
       });
     }
   }
 
-  void _nextStep() {
-    if (_currentStep == 1) {
+  void _selectCustomCurrency() async {
+    final result = await Navigator.of(
+      context,
+    ).push(CupertinoModalPopupRoute(builder: (context) => AddCurrencyScreen()));
+    if (result != null && result is Currency) {
+      setState(() {
+        _selectedCurrency = result;
+      });
+    }
+  }
+
+  void _nextStep() async {
+    setState(() {
+      _isLoading = true;
+    });
+    print(_currentStep);
+    print(widget?.user?.id);
+    if (_currentStep == 0) {
       if (_selectedCurrency == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -125,7 +175,101 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
             backgroundColor: Colors.red,
           ),
         );
+        setState(() {
+          _isLoading = false;
+        });
         return;
+      }
+
+      try {
+        // Save currency locally using SharedPreferences
+        await _preferencesService.setDefaultCurrency(_selectedCurrency!.code);
+
+        // Save currency to backend
+        await _preferencesService.syncToBackend(widget.user.id);
+
+        print('Currency saved: ${_selectedCurrency!.code}');
+        ref.read(defaultCurrencyProvider.notifier).state =
+            _selectedCurrency!.code;
+        // Move to next step
+        setState(() {
+          _currentStep++;
+          _isLoading = false;
+        });
+        _pageController.animateToPage(
+          _currentStep,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        _analytics.logInitialConfigViewed(step: _currentStep);
+      } catch (e) {
+        print('Error saving currency: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to save currency: ${e.toString()}'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      return;
+    }
+
+    if (_currentStep == 1) {
+      if (_walletType == null || _walletNameController.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please enter wallet details to continue.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      try {
+        final walletBalance =
+            (double.tryParse(_initialBalanceController.text) ?? 0) *
+            100; // Convert to cents
+        final wallet = await _walletService.createWallet(
+          name: _walletNameController.text.trim(),
+          userId: widget.user.id,
+          walletType: _walletType!.name,
+          providerId: _walletProvider?.id,
+          currency: _selectedCurrency!,
+          balance: walletBalance.toInt(),
+        );
+        print(wallet);
+        setState(() {
+          _isLoading = false;
+          _currentStep++;
+          _pageController.animateToPage(
+            _currentStep,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+          _analytics.logInitialConfigViewed(step: _currentStep);
+        });
+        print('Wallet details valid, proceeding to next step.');
+        return;
+      } catch (e) {
+        print('Error creating wallet: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to create wallet: ${e.toString()}'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
     if (_currentStep < 2) {
@@ -171,11 +315,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
   void _navigateToMain() {
     _analytics.logOnboardingCompleted();
-    Navigator.pushReplacementNamed(
-      context,
-      '/main',
-      arguments: widget.user,
-    );
+    Navigator.pushReplacementNamed(context, '/main', arguments: widget.user);
   }
 
   void _previousStep() {
@@ -207,10 +347,14 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       // await _currencyService.setDefaultCurrency(_selectedCurrency!);
 
       // Step 2: Create first wallet
-      final walletBalance = (double.tryParse(_initialBalanceController.text) ?? 0) * 100; // Convert to cents
+      final walletBalance =
+          (double.tryParse(_initialBalanceController.text) ?? 0) *
+          100; // Convert to cents
       final wallet = await _walletService.createWallet(
         name: _walletNameController.text.trim(),
-        walletType: _walletType,
+        userId: widget.user.id,
+        walletType: _walletType!.name,
+        providerId: _walletProvider?.id,
         currency: _selectedCurrency!,
         balance: walletBalance.toInt(),
       );
@@ -226,7 +370,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       // Log analytics
       _analytics.logInitialConfigCompleted(
         currency: _selectedCurrency!,
-        walletType: _walletType,
+        walletType: _walletType!.name,
       );
 
       if (mounted) {
@@ -269,12 +413,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
                 onPressed: _previousStep,
               )
             : null,
-        actions: [
-          TextButton(
-            onPressed: _skipSetup,
-            child: const Text('Skip'),
-          ),
-        ],
+        actions: [TextButton(onPressed: _skipSetup, child: const Text('Skip'))],
       ),
       body: SafeArea(
         child: Form(
@@ -400,9 +539,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       child: Container(
         height: 2,
         margin: const EdgeInsets.only(bottom: 32),
-        color: isCompleted
-            ? Theme.of(context).primaryColor
-            : Colors.grey[300],
+        color: isCompleted ? Theme.of(context).primaryColor : Colors.grey[300],
       ),
     );
   }
@@ -411,7 +548,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     final colors = ref.watch(appColorsProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
     final filteredCurrencies = ref.watch(filteredCurrenciesProvider);
-    return    Scaffold(
+    return Scaffold(
       backgroundColor: colors.surface,
       appBar: AppBar(
         backgroundColor: colors.surface,
@@ -450,7 +587,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
         ),
         actions: [
           if (_selectedCurrency != null)
-            Text(_selectedCurrency!.code, style: TextStyle(fontSize: 24),),
+            Text(_selectedCurrency!.code, style: TextStyle(fontSize: 24)),
           SizedBox(width: 10),
           if (_selectedCurrency != null)
             Container(
@@ -463,7 +600,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
               child: ClipOval(
                 child: _selectedCurrency!.isCrypto
                     ? Transform.translate(
-                        offset: Platform.isIOS ? Offset(4, -1) : Offset(0, -5),
+                        offset: Platform.isIOS ? Offset(4, -1) : Offset(-1, -3),
                         child: Text(
                           _selectedCurrency!.countryISO2!,
                           style: TextStyle(fontSize: 25),
@@ -476,7 +613,9 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
                       ),
               ),
             ),
-          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+          SizedBox(width: 10),
+          IconButton(onPressed: _selectCustomCurrency, icon: Icon(Icons.add)),
+          SizedBox(width: 20),
         ],
       ),
       body: CurrencyList(
@@ -492,10 +631,9 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       ),
     );
 
-    
     // SingleChildScrollView(
     //   padding: const EdgeInsets.all(24.0),
-    //   child: 
+    //   child:
     //   Column(
     //     crossAxisAlignment: CrossAxisAlignment.start,
     //     children: [
@@ -535,13 +673,12 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     //     ],
     //   ),
 
-
     // );
-
-
   }
 
   Widget _buildWalletStep() {
+    // return AddWalletScreen(isInOnboarding: true);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -549,18 +686,12 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
         children: [
           const Text(
             'Create Your First Wallet',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'A wallet helps you track money in different accounts.',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
           const SizedBox(height: 24),
 
@@ -568,11 +699,12 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           TextFormField(
             controller: _walletNameController,
             decoration: InputDecoration(
+              isDense: true,
               labelText: 'Wallet Name',
               hintText: 'e.g., Main Wallet, Cash, Bank Account',
               prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             validator: (value) {
@@ -585,28 +717,37 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           const SizedBox(height: 16),
 
           // Wallet type
-          DropdownButtonFormField<String>(
-            value: _walletType,
-            decoration: InputDecoration(
-              labelText: 'Wallet Type',
-              prefixIcon: const Icon(Icons.category_outlined),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: 'cash', child: Text('Cash')),
-              DropdownMenuItem(value: 'bank', child: Text('Bank Account')),
-              DropdownMenuItem(value: 'credit', child: Text('Credit Card')),
-              DropdownMenuItem(value: 'crypto', child: Text('Crypto Wallet')),
-              DropdownMenuItem(value: 'other', child: Text('Other')),
-            ],
+          WalletTypeDropdown(
+            selectedType: _walletType,
             onChanged: (value) {
               setState(() {
-                _walletType = value!;
+                _walletType = value;
               });
             },
           ),
+
+          // DropdownButtonFormField<String>(
+          //   value: _walletType,
+          //   decoration: InputDecoration(
+          //     labelText: 'Wallet Type',
+          //     prefixIcon: const Icon(Icons.category_outlined),
+          //     border: OutlineInputBorder(
+          //       borderRadius: BorderRadius.circular(12),
+          //     ),
+          //   ),
+          //   items: const [
+          //     DropdownMenuItem(value: 'cash', child: Text('Cash')),
+          //     DropdownMenuItem(value: 'bank', child: Text('Bank Account')),
+          //     DropdownMenuItem(value: 'credit', child: Text('Credit Card')),
+          //     DropdownMenuItem(value: 'crypto', child: Text('Crypto Wallet')),
+          //     DropdownMenuItem(value: 'other', child: Text('Other')),
+          //   ],
+          //   onChanged: (value) {
+          //     setState(() {
+          //       _walletType = value!;
+          //     });
+          //   },
+          // ),
           const SizedBox(height: 16),
 
           // Initial balance
@@ -614,10 +755,18 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
             controller: _initialBalanceController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+              isDense: true,
               labelText: 'Initial Balance',
-              prefixIcon: const Icon(Icons.attach_money),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(
+                  top: 11.0,
+                  left: 12.0,
+                  right: 4.0,
+                ),
+                child: DefaultCurrencyDisplay(),
+              ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             validator: (value) {
@@ -630,6 +779,17 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
               return null;
             },
           ),
+          const SizedBox(height: 16),
+          if (_walletType != null && _walletType != WalletType.CASH)
+            WalletProviderDropdown(
+              onChanged: (provider) {
+                // Handle provider selection if needed
+                setState(() {
+                  _walletProvider = provider;
+                });
+              },
+              selectedWalletType: _walletType!,
+            ),
         ],
       ),
     );
@@ -643,18 +803,12 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
         children: [
           const Text(
             'Create Your First Project',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Projects help you organize expenses by different areas of your life.',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
           const SizedBox(height: 24),
 
@@ -693,6 +847,24 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class DefaultCurrencyDisplay extends ConsumerWidget {
+  const DefaultCurrencyDisplay({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currencyAsync = ref.watch(defaultCurrencyObjectProvider);
+
+    return currencyAsync.when(
+      data: (currency) {
+        if (currency == null) return const Text('?');
+        return Text('${currency.code} - ${currency.symbol}');
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (err, _) => Text('Error: $err'),
     );
   }
 }

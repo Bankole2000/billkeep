@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/database/database.dart';
-import 'package:billkeep/providers/category_provider.dart';
 
 class CategoryPicker extends ConsumerStatefulWidget {
   final String type; // 'EXPENSE' or 'INCOME'

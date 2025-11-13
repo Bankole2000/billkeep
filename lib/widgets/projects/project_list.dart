@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/screens/projects/project_details_screen.dart';
@@ -27,11 +28,18 @@ class ProjectList extends ConsumerWidget {
               child: ListTile(
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: Image.network(
-                    "https://avatars.githubusercontent.com/u/23138415?v=4",
+                  child: CachedNetworkImage(
+                    imageUrl: "https://avatars.githubusercontent.com/u/23138415?v=4",
                     height: 40,
                     width: 40,
                     fit: BoxFit.cover,
+                    httpHeaders: const {
+                      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    },
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
                 title: Text(project.name),

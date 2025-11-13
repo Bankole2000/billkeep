@@ -121,8 +121,9 @@ class _BudgetFormState extends ConsumerState<BudgetForm> {
                   _budgetType = value!;
                   if (_budgetType == 'ONE_TIME') {
                     _budgetFrequency = null;
-                  } else
+                  } else {
                     _budgetFrequency ??= 'MONTHLY';
+                  }
                 });
               },
             ),

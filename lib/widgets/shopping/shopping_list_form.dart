@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/providers/shopping_list_provider.dart';
-import 'package:billkeep/providers/expense_provider.dart';
 
 class ShoppingListForm extends ConsumerStatefulWidget {
   final String projectId;

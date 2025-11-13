@@ -2,6 +2,79 @@
 
 import 'package:flutter/material.dart';
 
+enum CurrencyType { FIAT, CRYPTO, OTHER }
+
+class CurrencyTypeInfo {
+  final CurrencyType type;
+  final String name;
+  final IconData icon;
+  final String description;
+  final List<String> examples;
+  final List<String> exampleNames;
+
+  const CurrencyTypeInfo({
+    required this.type,
+    required this.name,
+    required this.icon,
+    required this.description,
+    required this.examples,
+    required this.exampleNames,
+  });
+}
+
+class CurrencyTypes {
+  static const List<CurrencyTypeInfo> all = [
+    CurrencyTypeInfo(
+      type: CurrencyType.FIAT,
+      name: 'Fiat Currency',
+      icon: Icons.money,
+      description: 'Government-issued currency',
+      examples: ['USD', 'EUR', 'CNY', 'NGN', 'GBP', 'JPY'],
+      exampleNames: [
+        'US Dollars',
+        'Euros',
+        'Chinese Yuan',
+        'Naira',
+        'GBP',
+        'JPY',
+      ],
+    ),
+    CurrencyTypeInfo(
+      type: CurrencyType.CRYPTO,
+      name: 'Cryptocurrency',
+      icon: Icons.currency_bitcoin,
+      description: 'Digital or virtual currency',
+      examples: ['BTC', 'ETH', 'USDT'],
+      exampleNames: ['BitCoin', 'Etherium', 'USDT'],
+    ),
+    CurrencyTypeInfo(
+      type: CurrencyType.OTHER,
+      name: 'Other',
+      icon: Icons.more_horiz,
+      description: 'Custom or miscellaneous currency',
+      examples: ['VBK', 'G', 'M'],
+      exampleNames: ['VBucks', 'Gil', 'Mora'],
+    ),
+  ];
+
+  static CurrencyTypeInfo getInfo(CurrencyType currencyType) {
+    return all.firstWhere((info) => info.type == currencyType);
+  }
+
+  static CurrencyType stringToEnum(String currencyType) {
+    switch (currencyType) {
+      case 'FIAT':
+        return CurrencyType.FIAT;
+      case 'CRYPTO':
+        return CurrencyType.CRYPTO;
+      case 'OTHER':
+        return CurrencyType.OTHER;
+      default:
+        throw ArgumentError('Invalid currency type string: $currencyType');
+    }
+  }
+}
+
 enum WalletType {
   CASH,
   BANK_ACCOUNT,

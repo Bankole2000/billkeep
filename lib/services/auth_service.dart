@@ -16,13 +16,21 @@ class AuthService {
     try {
       final response = await _apiClient.dio.post(
         '/users/records',
-        data: {'email': email, 'name': username, 'password': password, 'passwordConfirm': password, 'verified': false, 'emailVisibility': true},
+        data: {
+          'email': email,
+          'name': username,
+          'password': password,
+          'passwordConfirm': password,
+          'verified': false,
+          'emailVisibility': true,
+        },
       );
 
       print(response);
       print(response.data);
       final signupResponse = SignupResponse.fromJson(response.data);
       print(signupResponse);
+      await login(email: email, password: password);
       // // Save token to secure storage
       // await ApiClient.saveToken(authResponse.token);
       return signupResponse;

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class AppImage extends StatelessWidget {
@@ -29,17 +30,16 @@ class AppImage extends StatelessWidget {
           : ImagePlaceholder(width: width, height: height);
     }
 
-    final image = Image.network(
-      imageUrl!,
+    final image = CachedNetworkImage(
+      imageUrl: imageUrl!,
       width: width,
       height: height,
-      fit: fit,
-      semanticLabel: semanticLabel,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(child: CircularProgressIndicator());
+      fit: fit ?? BoxFit.cover,
+      httpHeaders: const {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
       },
-      errorBuilder: (context, error, stackTrace) {
+      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) {
         debugPrint('Image load error: $error');
         return ImagePlaceholder(width: width, height: height);
       },

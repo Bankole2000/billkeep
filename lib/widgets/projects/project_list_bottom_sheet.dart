@@ -4,6 +4,7 @@ import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/utils/app_colors.dart';
 import 'package:billkeep/utils/page_transitions.dart';
 import 'package:billkeep/widgets/common/dynamic_avatar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/screens/projects/project_details_screen.dart';
@@ -51,11 +52,18 @@ class ProjectList extends ConsumerWidget {
                 ),
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: project.iconType == 'image' ? Image.network(
-                    project.imageUrl!,
+                  child: project.iconType == 'image' ? CachedNetworkImage(
+                    imageUrl: project.imageUrl!,
                     height: 40,
                     width: 40,
                     fit: BoxFit.cover,
+                    httpHeaders: const {
+                      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    },
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ) : DynamicAvatar(
                     circular: false,
 

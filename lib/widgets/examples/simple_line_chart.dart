@@ -130,7 +130,7 @@ class SimpleLineChartWidget extends StatelessWidget {
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((LineBarSpot touchedSpot) {
                         return LineTooltipItem(
-                          '${touchedSpot.y.toStringAsFixed(1)}',
+                          touchedSpot.y.toStringAsFixed(1),
                           const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -249,9 +249,9 @@ class MultiLineChartWidget extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
                 title!,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
           if (showLegend)
@@ -273,10 +273,7 @@ class MultiLineChartWidget extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        line.label,
-                        style: const TextStyle(fontSize: 12),
-                      ),
+                      Text(line.label, style: const TextStyle(fontSize: 12)),
                     ],
                   );
                 }).toList(),
@@ -346,9 +343,7 @@ class MultiLineChartWidget extends StatelessWidget {
                         barWidth: 3,
                         isStrokeCapRound: true,
                         dotData: FlDotData(show: line.showDots),
-                        belowBarData: BarAreaData(
-                          show: false,
-                        ),
+                        belowBarData: BarAreaData(show: false),
                       ),
                     )
                     .toList(),
