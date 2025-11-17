@@ -1,5 +1,8 @@
 import 'dart:io' show Platform;
+import 'package:billkeep/providers/auth_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/currencies/add_currency_screen.dart';
+import 'package:billkeep/utils/page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:country_flags/country_flags.dart';
@@ -141,7 +144,21 @@ class CurrencyListItem extends ConsumerWidget {
         '${currency.code} • ${currency.symbol}',
         style: TextStyle(fontSize: 12, color: colors.textMute),
       ),
-      trailing: Icon(Icons.chevron_right_rounded, color: colors.text),
+      trailing: IconButton(onPressed: (){
+        final userId = ref.read(currentUserIdProvider);
+        if (userId != null) {
+          Navigator.push(
+            context,
+            AppPageRoute.slideRight(
+              AddCurrencyScreen(currency: currency, userId: userId),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please log in to edit currencies')),
+          );
+        }
+      }, icon: Icon(Icons.chevron_right_rounded), color: colors.text),
       onTap: onTap,
     );
   }

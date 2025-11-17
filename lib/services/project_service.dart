@@ -1,24 +1,92 @@
 import '../models/project_model.dart';
+import '../providers/project_provider.dart';
+import '../utils/connectivity_helper.dart';
 import 'base_api_service.dart';
 
 class ProjectService extends BaseApiService {
+  final ProjectRepository _repository;
+
+  ProjectService(this._repository);
   /// Create a new project
+  ///
+  /// Local-first approach:
+  /// 1. Create in local DB first with temp ID
+  /// 2. Check connectivity and send to backend if online
+  /// 3. Realtime sync will update with canonical ID when backend confirms
   Future<Project> createProject({
     required String name,
     String? description,
     String? status,
+    String? walletId,
+    String? userId,
   }) async {
-    return executeRequest<Project>(
-      request: () => dio.post(
-        '/projects',
-        data: {
-          'name': name,
-          'description': description,
-          'status': status,
-        },
-      ),
-      parser: (data) => Project.fromJson(data),
+    // 1. Create in local database first (optimistic)
+    final tempId = await _repository.createProject(
+      name: name,
+      description: description,
+      iconType: 'MaterialIcons',
+      isArchived: false,
     );
+
+    // 2. Check connectivity and send to backend if online
+    final isOnline = await ConnectivityHelper.hasInternetConnection();
+
+    if (isOnline) {
+      try {
+        final apiProject = await executeRequest<Project>(
+          request: () => dio.post(
+            '/projects/records',
+            data: {
+              'name': name,
+              'description': description,
+              'defaultWallet': walletId,
+              'user': userId,
+              'status': status ?? 'ACTIVE',
+            },
+          ),
+          parser: (data) => Project.fromJson(data),
+        );
+
+        // Note: Realtime sync service will handle updating local DB with canonical ID
+        // But we return the API response immediately
+        return apiProject;
+      } catch (e) {
+        // If API fails, we still have local copy
+        print('API call failed, project saved locally: $e');
+
+        // Get the local project to return
+        final localProjects = await _repository.getUnsyncedProjects();
+        final localProject = localProjects.firstWhere(
+          (p) => p.id == tempId,
+          orElse: () => throw Exception('Failed to retrieve local project'),
+        );
+
+        return Project(
+          id: localProject.id,
+          name: localProject.name,
+          description: localProject.description,
+          status: status ?? 'ACTIVE',
+          createdAt: localProject.createdAt,
+          updatedAt: localProject.updatedAt,
+        );
+      }
+    } else {
+      // Offline: return local project
+      final localProjects = await _repository.getUnsyncedProjects();
+      final localProject = localProjects.firstWhere(
+        (p) => p.id == tempId,
+        orElse: () => throw Exception('Failed to retrieve local project'),
+      );
+
+      return Project(
+        id: localProject.id,
+        name: localProject.name,
+        description: localProject.description,
+        status: status ?? 'ACTIVE',
+        createdAt: localProject.createdAt,
+        updatedAt: localProject.updatedAt,
+      );
+    }
   }
 
   /// Get all projects

@@ -55,6 +55,7 @@ class _WalletProviderDropdownState
       );
       if (result != null) {
         setState(() {
+          widget.onChanged(result);
           _selectedWalletProvider = result;
         });
       }

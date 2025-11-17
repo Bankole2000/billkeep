@@ -1,22 +1,25 @@
+import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:billkeep/database/database.dart';
+import 'package:billkeep/models/expense_model.dart';
+import 'package:billkeep/services/api_client.dart';
 import 'package:billkeep/utils/exceptions.dart';
 import 'package:billkeep/utils/id_generator.dart';
-import 'package:billkeep/services/expense_service.dart';
 import 'base_sync_service.dart';
 
 /// Synchronization service for Expenses
 ///
 /// Handles bidirectional sync between local Drift database and remote API
+/// Makes DIRECT API calls (not through ExpenseService) to avoid double-writing
 class ExpenseSyncService extends BaseSyncService {
   final AppDatabase _database;
-  final ExpenseService _apiService;
+  final Dio _dio;
 
   ExpenseSyncService({
     required AppDatabase database,
-    ExpenseService? apiService,
-  }) : _database = database,
-       _apiService = apiService ?? ExpenseService();
+    Dio? dio,
+  })  : _database = database,
+        _dio = dio ?? ApiClient().dio;
 
   @override
   Future<void> syncEntity(String tempId) async {
@@ -42,38 +45,49 @@ class ExpenseSyncService extends BaseSyncService {
       return;
     }
 
-    // Send to API
+    // Send to API directly (not through ExpenseService to avoid double-writing)
     try {
-      final apiExpense = await _apiService.createExpense(
-        projectId: localExpense.projectId,
-        name: localExpense.name,
-        expectedAmount: localExpense.expectedAmount,
-        currency: localExpense.currency,
-        type: localExpense.type,
-        frequency: localExpense.frequency,
-        startDate: localExpense.startDate,
-        nextRenewalDate: localExpense.nextRenewalDate,
-        categoryId: localExpense.categoryId,
-        merchantId: localExpense.merchantId,
-        contactId: localExpense.contactId,
-        walletId: localExpense.walletId,
-        investmentId: localExpense.investmentId,
-        goalId: localExpense.goalId,
-        reminderId: localExpense.reminderId,
-        source: localExpense.source,
-        notes: localExpense.notes,
-        isActive: localExpense.isActive,
+      final response = await _dio.post(
+        '/expenses/records',
+        data: {
+          'projectId': localExpense.projectId,
+          'name': localExpense.name,
+          'expectedAmount': localExpense.expectedAmount,
+          'currency': localExpense.currency,
+          'type': localExpense.type,
+          'frequency': localExpense.frequency,
+          'startDate': localExpense.startDate.toIso8601String(),
+          'nextRenewalDate': localExpense.nextRenewalDate?.toIso8601String(),
+          'categoryId': localExpense.categoryId,
+          'merchantId': localExpense.merchantId,
+          'contactId': localExpense.contactId,
+          'walletId': localExpense.walletId,
+          'investmentId': localExpense.investmentId,
+          'goalId': localExpense.goalId,
+          'reminderId': localExpense.reminderId,
+          'source': localExpense.source,
+          'notes': localExpense.notes,
+          'isActive': localExpense.isActive,
+        },
       );
+
+      final apiExpense = ExpenseModel.fromJson(response.data);
 
       // Update local database with canonical ID
       await _updateExpenseWithCanonicalId(
         tempId: tempId,
         canonicalId: apiExpense.id,
       );
-    } on AppException catch (e) {
+    } on DioException catch (e) {
+      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
-        'Failed to sync expense: ${e.message}',
-        e.getUserMessage(),
+        'Failed to sync expense: $message',
+        'Unable to sync expense. Will retry later.',
+      );
+    } catch (e) {
+      throw SyncException(
+        'Failed to sync expense: ${e.toString()}',
+        'Unable to sync expense. Will retry later.',
       );
     }
   }
@@ -90,10 +104,25 @@ class ExpenseSyncService extends BaseSyncService {
   @override
   Future<void> pullFromServer({String? projectId}) async {
     try {
-      // Fetch expenses from API
-      final apiExpenses = await _apiService.getAllExpenses(
-        projectId: projectId,
+      // Fetch expenses from API directly
+      final queryParams = projectId != null ? {'projectId': projectId} : null;
+      final response = await _dio.get(
+        '/expenses/records',
+        queryParameters: queryParams,
       );
+
+      List<ExpenseModel> apiExpenses;
+      if (response.data is List) {
+        apiExpenses = (response.data as List)
+            .map((item) => ExpenseModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else if (response.data is Map && response.data['items'] != null) {
+        apiExpenses = (response.data['items'] as List)
+            .map((item) => ExpenseModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        apiExpenses = [];
+      }
 
       // For each API expense, update or insert in local database
       for (final apiExpense in apiExpenses) {
@@ -145,10 +174,16 @@ class ExpenseSyncService extends BaseSyncService {
               );
         }
       }
-    } on AppException catch (e) {
+    } on DioException catch (e) {
+      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
-        'Failed to pull expenses from server: ${e.message}',
-        e.getUserMessage(),
+        'Failed to pull expenses from server: $message',
+        'Unable to fetch expenses from server.',
+      );
+    } catch (e) {
+      throw SyncException(
+        'Failed to pull expenses from server: ${e.toString()}',
+        'Unable to fetch expenses from server.',
       );
     }
   }
@@ -220,11 +255,12 @@ class ExpenseSyncService extends BaseSyncService {
     // Delete from server if it's a canonical ID
     if (!IdGenerator.isTemporaryId(expenseId) && await isOnline()) {
       try {
-        await _apiService.deleteExpense(expenseId);
-      } on AppException catch (e) {
+        await _dio.delete('/expenses/records/$expenseId');
+      } on DioException catch (e) {
+        final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
         throw SyncException(
-          'Failed to delete expense from server: ${e.message}',
-          e.getUserMessage(),
+          'Failed to delete expense from server: $message',
+          'Unable to delete expense from server.',
         );
       }
     }

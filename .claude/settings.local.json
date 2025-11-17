@@ -15,7 +15,9 @@
       "Bash(cat:*)",
       "Bash(python3:*)",
       "Bash(flutter analyze:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(git checkout lib/services/expense_service.dart)",
+      "Bash(git add -A)"
     ],
     "deny": [],
     "ask": []

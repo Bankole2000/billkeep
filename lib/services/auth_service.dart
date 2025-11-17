@@ -27,9 +27,10 @@ class AuthService {
       );
 
       final signupResponse = SignupResponse.fromJson(response.data);
+
+      // Login after signup to get token and save user
       await login(email: email, password: password);
-      // // Save token to secure storage
-      // await ApiClient.saveToken(authResponse.token);
+
       return signupResponse;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -49,8 +50,9 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data);
 
-      // Save token to shared preferences
+      // Save token and user data to secure storage
       await ApiClient.saveToken(authResponse.token);
+      await ApiClient.saveUser(authResponse.user);
 
       return authResponse;
     } on DioException catch (e) {
@@ -67,8 +69,9 @@ class AuthService {
       // Continue with logout even if API call fails
       print('Logout API error: ${e.message}');
     } finally {
-      // Always clear the token
+      // Always clear the token and user data
       await ApiClient.clearToken();
+      await ApiClient.clearUser();
     }
   }
 

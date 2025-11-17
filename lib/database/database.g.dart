@@ -1127,6 +1127,15 @@ class $CurrenciesTable extends Currencies
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $CurrenciesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _codeMeta = const VerificationMeta('code');
   @override
   late final GeneratedColumn<String> code = GeneratedColumn<String>(
@@ -1207,8 +1216,27 @@ class $CurrenciesTable extends Currencies
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
+  @override
+  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
+    'temp_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
+    id,
     code,
     name,
     symbol,
@@ -1216,6 +1244,8 @@ class $CurrenciesTable extends Currencies
     countryISO2,
     isCrypto,
     isActive,
+    tempId,
+    userId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1229,6 +1259,11 @@ class $CurrenciesTable extends Currencies
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     if (data.containsKey('code')) {
       context.handle(
         _codeMeta,
@@ -1280,6 +1315,20 @@ class $CurrenciesTable extends Currencies
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('temp_id')) {
+      context.handle(
+        _tempIdMeta,
+        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tempIdMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     return context;
   }
 
@@ -1289,6 +1338,10 @@ class $CurrenciesTable extends Currencies
   Currency map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Currency(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
       code: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}code'],
@@ -1317,6 +1370,14 @@ class $CurrenciesTable extends Currencies
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      tempId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
     );
   }
 
@@ -1327,6 +1388,7 @@ class $CurrenciesTable extends Currencies
 }
 
 class Currency extends DataClass implements Insertable<Currency> {
+  final String id;
   final String code;
   final String name;
   final String symbol;
@@ -1334,7 +1396,10 @@ class Currency extends DataClass implements Insertable<Currency> {
   final String? countryISO2;
   final bool isCrypto;
   final bool isActive;
+  final String tempId;
+  final String? userId;
   const Currency({
+    required this.id,
     required this.code,
     required this.name,
     required this.symbol,
@@ -1342,10 +1407,13 @@ class Currency extends DataClass implements Insertable<Currency> {
     this.countryISO2,
     required this.isCrypto,
     required this.isActive,
+    required this.tempId,
+    this.userId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
     map['code'] = Variable<String>(code);
     map['name'] = Variable<String>(name);
     map['symbol'] = Variable<String>(symbol);
@@ -1355,11 +1423,16 @@ class Currency extends DataClass implements Insertable<Currency> {
     }
     map['is_crypto'] = Variable<bool>(isCrypto);
     map['is_active'] = Variable<bool>(isActive);
+    map['temp_id'] = Variable<String>(tempId);
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
     return map;
   }
 
   CurrenciesCompanion toCompanion(bool nullToAbsent) {
     return CurrenciesCompanion(
+      id: Value(id),
       code: Value(code),
       name: Value(name),
       symbol: Value(symbol),
@@ -1369,6 +1442,10 @@ class Currency extends DataClass implements Insertable<Currency> {
           : Value(countryISO2),
       isCrypto: Value(isCrypto),
       isActive: Value(isActive),
+      tempId: Value(tempId),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
     );
   }
 
@@ -1378,6 +1455,7 @@ class Currency extends DataClass implements Insertable<Currency> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Currency(
+      id: serializer.fromJson<String>(json['id']),
       code: serializer.fromJson<String>(json['code']),
       name: serializer.fromJson<String>(json['name']),
       symbol: serializer.fromJson<String>(json['symbol']),
@@ -1385,12 +1463,15 @@ class Currency extends DataClass implements Insertable<Currency> {
       countryISO2: serializer.fromJson<String?>(json['countryISO2']),
       isCrypto: serializer.fromJson<bool>(json['isCrypto']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      tempId: serializer.fromJson<String>(json['tempId']),
+      userId: serializer.fromJson<String?>(json['userId']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
       'code': serializer.toJson<String>(code),
       'name': serializer.toJson<String>(name),
       'symbol': serializer.toJson<String>(symbol),
@@ -1398,10 +1479,13 @@ class Currency extends DataClass implements Insertable<Currency> {
       'countryISO2': serializer.toJson<String?>(countryISO2),
       'isCrypto': serializer.toJson<bool>(isCrypto),
       'isActive': serializer.toJson<bool>(isActive),
+      'tempId': serializer.toJson<String>(tempId),
+      'userId': serializer.toJson<String?>(userId),
     };
   }
 
   Currency copyWith({
+    String? id,
     String? code,
     String? name,
     String? symbol,
@@ -1409,7 +1493,10 @@ class Currency extends DataClass implements Insertable<Currency> {
     Value<String?> countryISO2 = const Value.absent(),
     bool? isCrypto,
     bool? isActive,
+    String? tempId,
+    Value<String?> userId = const Value.absent(),
   }) => Currency(
+    id: id ?? this.id,
     code: code ?? this.code,
     name: name ?? this.name,
     symbol: symbol ?? this.symbol,
@@ -1417,9 +1504,12 @@ class Currency extends DataClass implements Insertable<Currency> {
     countryISO2: countryISO2.present ? countryISO2.value : this.countryISO2,
     isCrypto: isCrypto ?? this.isCrypto,
     isActive: isActive ?? this.isActive,
+    tempId: tempId ?? this.tempId,
+    userId: userId.present ? userId.value : this.userId,
   );
   Currency copyWithCompanion(CurrenciesCompanion data) {
     return Currency(
+      id: data.id.present ? data.id.value : this.id,
       code: data.code.present ? data.code.value : this.code,
       name: data.name.present ? data.name.value : this.name,
       symbol: data.symbol.present ? data.symbol.value : this.symbol,
@@ -1429,25 +1519,31 @@ class Currency extends DataClass implements Insertable<Currency> {
           : this.countryISO2,
       isCrypto: data.isCrypto.present ? data.isCrypto.value : this.isCrypto,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      userId: data.userId.present ? data.userId.value : this.userId,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('Currency(')
+          ..write('id: $id, ')
           ..write('code: $code, ')
           ..write('name: $name, ')
           ..write('symbol: $symbol, ')
           ..write('decimals: $decimals, ')
           ..write('countryISO2: $countryISO2, ')
           ..write('isCrypto: $isCrypto, ')
-          ..write('isActive: $isActive')
+          ..write('isActive: $isActive, ')
+          ..write('tempId: $tempId, ')
+          ..write('userId: $userId')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
+    id,
     code,
     name,
     symbol,
@@ -1455,21 +1551,27 @@ class Currency extends DataClass implements Insertable<Currency> {
     countryISO2,
     isCrypto,
     isActive,
+    tempId,
+    userId,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Currency &&
+          other.id == this.id &&
           other.code == this.code &&
           other.name == this.name &&
           other.symbol == this.symbol &&
           other.decimals == this.decimals &&
           other.countryISO2 == this.countryISO2 &&
           other.isCrypto == this.isCrypto &&
-          other.isActive == this.isActive);
+          other.isActive == this.isActive &&
+          other.tempId == this.tempId &&
+          other.userId == this.userId);
 }
 
 class CurrenciesCompanion extends UpdateCompanion<Currency> {
+  final Value<String> id;
   final Value<String> code;
   final Value<String> name;
   final Value<String> symbol;
@@ -1477,8 +1579,11 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
   final Value<String?> countryISO2;
   final Value<bool> isCrypto;
   final Value<bool> isActive;
+  final Value<String> tempId;
+  final Value<String?> userId;
   final Value<int> rowid;
   const CurrenciesCompanion({
+    this.id = const Value.absent(),
     this.code = const Value.absent(),
     this.name = const Value.absent(),
     this.symbol = const Value.absent(),
@@ -1486,9 +1591,12 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     this.countryISO2 = const Value.absent(),
     this.isCrypto = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.userId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CurrenciesCompanion.insert({
+    required String id,
     required String code,
     required String name,
     required String symbol,
@@ -1496,11 +1604,16 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     this.countryISO2 = const Value.absent(),
     this.isCrypto = const Value.absent(),
     this.isActive = const Value.absent(),
+    required String tempId,
+    this.userId = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : code = Value(code),
+  }) : id = Value(id),
+       code = Value(code),
        name = Value(name),
-       symbol = Value(symbol);
+       symbol = Value(symbol),
+       tempId = Value(tempId);
   static Insertable<Currency> custom({
+    Expression<String>? id,
     Expression<String>? code,
     Expression<String>? name,
     Expression<String>? symbol,
@@ -1508,9 +1621,12 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     Expression<String>? countryISO2,
     Expression<bool>? isCrypto,
     Expression<bool>? isActive,
+    Expression<String>? tempId,
+    Expression<String>? userId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (code != null) 'code': code,
       if (name != null) 'name': name,
       if (symbol != null) 'symbol': symbol,
@@ -1518,11 +1634,14 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
       if (countryISO2 != null) 'country_i_s_o2': countryISO2,
       if (isCrypto != null) 'is_crypto': isCrypto,
       if (isActive != null) 'is_active': isActive,
+      if (tempId != null) 'temp_id': tempId,
+      if (userId != null) 'user_id': userId,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   CurrenciesCompanion copyWith({
+    Value<String>? id,
     Value<String>? code,
     Value<String>? name,
     Value<String>? symbol,
@@ -1530,9 +1649,12 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     Value<String?>? countryISO2,
     Value<bool>? isCrypto,
     Value<bool>? isActive,
+    Value<String>? tempId,
+    Value<String?>? userId,
     Value<int>? rowid,
   }) {
     return CurrenciesCompanion(
+      id: id ?? this.id,
       code: code ?? this.code,
       name: name ?? this.name,
       symbol: symbol ?? this.symbol,
@@ -1540,6 +1662,8 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
       countryISO2: countryISO2 ?? this.countryISO2,
       isCrypto: isCrypto ?? this.isCrypto,
       isActive: isActive ?? this.isActive,
+      tempId: tempId ?? this.tempId,
+      userId: userId ?? this.userId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1547,6 +1671,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
     if (code.present) {
       map['code'] = Variable<String>(code.value);
     }
@@ -1568,6 +1695,12 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (tempId.present) {
+      map['temp_id'] = Variable<String>(tempId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1577,6 +1710,7 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
   @override
   String toString() {
     return (StringBuffer('CurrenciesCompanion(')
+          ..write('id: $id, ')
           ..write('code: $code, ')
           ..write('name: $name, ')
           ..write('symbol: $symbol, ')
@@ -1584,6 +1718,8 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
           ..write('countryISO2: $countryISO2, ')
           ..write('isCrypto: $isCrypto, ')
           ..write('isActive: $isActive, ')
+          ..write('tempId: $tempId, ')
+          ..write('userId: $userId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4238,7 +4374,7 @@ class $WalletProvidersTable extends WalletProviders
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('MaterialIcons'),
+    defaultValue: const Constant('image'),
   );
   static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
@@ -24170,6 +24306,7 @@ typedef $$ProjectMetadataTableProcessedTableManager =
     >;
 typedef $$CurrenciesTableCreateCompanionBuilder =
     CurrenciesCompanion Function({
+      required String id,
       required String code,
       required String name,
       required String symbol,
@@ -24177,10 +24314,13 @@ typedef $$CurrenciesTableCreateCompanionBuilder =
       Value<String?> countryISO2,
       Value<bool> isCrypto,
       Value<bool> isActive,
+      required String tempId,
+      Value<String?> userId,
       Value<int> rowid,
     });
 typedef $$CurrenciesTableUpdateCompanionBuilder =
     CurrenciesCompanion Function({
+      Value<String> id,
       Value<String> code,
       Value<String> name,
       Value<String> symbol,
@@ -24188,6 +24328,8 @@ typedef $$CurrenciesTableUpdateCompanionBuilder =
       Value<String?> countryISO2,
       Value<bool> isCrypto,
       Value<bool> isActive,
+      Value<String> tempId,
+      Value<String?> userId,
       Value<int> rowid,
     });
 
@@ -24321,6 +24463,11 @@ class $$CurrenciesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get code => $composableBuilder(
     column: $table.code,
     builder: (column) => ColumnFilters(column),
@@ -24353,6 +24500,16 @@ class $$CurrenciesTableFilterComposer
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24516,6 +24673,11 @@ class $$CurrenciesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get code => $composableBuilder(
     column: $table.code,
     builder: (column) => ColumnOrderings(column),
@@ -24550,6 +24712,16 @@ class $$CurrenciesTableOrderingComposer
     column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CurrenciesTableAnnotationComposer
@@ -24561,6 +24733,9 @@ class $$CurrenciesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
   GeneratedColumn<String> get code =>
       $composableBuilder(column: $table.code, builder: (column) => column);
 
@@ -24583,6 +24758,12 @@ class $$CurrenciesTableAnnotationComposer
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<String> get tempId =>
+      $composableBuilder(column: $table.tempId, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   Expression<T> walletsRefs<T extends Object>(
     Expression<T> Function($$WalletsTableAnnotationComposer a) f,
@@ -24770,6 +24951,7 @@ class $$CurrenciesTableTableManager
               $$CurrenciesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> id = const Value.absent(),
                 Value<String> code = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> symbol = const Value.absent(),
@@ -24777,8 +24959,11 @@ class $$CurrenciesTableTableManager
                 Value<String?> countryISO2 = const Value.absent(),
                 Value<bool> isCrypto = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<String> tempId = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CurrenciesCompanion(
+                id: id,
                 code: code,
                 name: name,
                 symbol: symbol,
@@ -24786,10 +24971,13 @@ class $$CurrenciesTableTableManager
                 countryISO2: countryISO2,
                 isCrypto: isCrypto,
                 isActive: isActive,
+                tempId: tempId,
+                userId: userId,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                required String id,
                 required String code,
                 required String name,
                 required String symbol,
@@ -24797,8 +24985,11 @@ class $$CurrenciesTableTableManager
                 Value<String?> countryISO2 = const Value.absent(),
                 Value<bool> isCrypto = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                required String tempId,
+                Value<String?> userId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CurrenciesCompanion.insert(
+                id: id,
                 code: code,
                 name: name,
                 symbol: symbol,
@@ -24806,6 +24997,8 @@ class $$CurrenciesTableTableManager
                 countryISO2: countryISO2,
                 isCrypto: isCrypto,
                 isActive: isActive,
+                tempId: tempId,
+                userId: userId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

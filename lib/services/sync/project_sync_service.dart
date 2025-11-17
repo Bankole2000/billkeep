@@ -1,22 +1,29 @@
+import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import '../../database/database.dart';
+import '../../models/project_model.dart' hide Project;
+import '../../providers/project_provider.dart';
+import '../../services/api_client.dart';
 import '../../utils/exceptions.dart';
 import '../../utils/id_generator.dart';
-import '../project_service.dart';
 import 'base_sync_service.dart';
 
 /// Synchronization service for Projects
 ///
 /// Handles bidirectional sync between local Drift database and remote API
+/// Makes DIRECT API calls (not through ProjectService) to avoid double-writing
 class ProjectSyncService extends BaseSyncService {
   final AppDatabase _database;
-  final ProjectService _apiService;
+  final ProjectRepository _repository;
+  final Dio _dio;
 
   ProjectSyncService({
     required AppDatabase database,
-    ProjectService? apiService,
-  }) : _database = database,
-       _apiService = apiService ?? ProjectService();
+    required ProjectRepository repository,
+    Dio? dio,
+  })  : _database = database,
+        _repository = repository,
+        _dio = dio ?? ApiClient().dio;
 
   @override
   Future<void> syncEntity(String tempId) async {
@@ -42,22 +49,35 @@ class ProjectSyncService extends BaseSyncService {
       return;
     }
 
-    // Send to API
+    // Send to API directly (not through ProjectService to avoid double-writing)
     try {
-      final apiProject = await _apiService.createProject(
-        name: localProject.name,
-        description: localProject.description,
+      final response = await _dio.post(
+        '/projects/records',
+        data: {
+          'name': localProject.name,
+          'description': localProject.description,
+          'status': 'ACTIVE',
+          // Add other fields as needed
+        },
       );
+
+      final apiProject = Project.fromJson(response.data);
 
       // Update local database with canonical ID
       await _updateProjectWithCanonicalId(
         tempId: tempId,
         canonicalId: apiProject.id,
       );
-    } on AppException catch (e) {
+    } on DioException catch (e) {
+      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
-        'Failed to sync project: ${e.message}',
-        e.getUserMessage(),
+        'Failed to sync project: $message',
+        'Unable to sync project. Will retry later.',
+      );
+    } catch (e) {
+      throw SyncException(
+        'Failed to sync project: ${e.toString()}',
+        'Unable to sync project. Will retry later.',
       );
     }
   }
@@ -74,8 +94,21 @@ class ProjectSyncService extends BaseSyncService {
   @override
   Future<void> pullFromServer() async {
     try {
-      // Fetch all projects from API
-      final apiProjects = await _apiService.getAllProjects();
+      // Fetch all projects from API directly
+      final response = await _dio.get('/projects/records');
+
+      List<Project> apiProjects;
+      if (response.data is List) {
+        apiProjects = (response.data as List)
+            .map((item) => Project.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else if (response.data is Map && response.data['items'] != null) {
+        apiProjects = (response.data['items'] as List)
+            .map((item) => Project.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        apiProjects = [];
+      }
 
       // For each API project, update or insert in local database
       for (final apiProject in apiProjects) {
@@ -91,7 +124,6 @@ class ProjectSyncService extends BaseSyncService {
             ProjectsCompanion(
               name: Value(apiProject.name),
               description: Value(apiProject.description),
-              // status: Value(apiProject.status),
               isSynced: const Value(true),
             ),
           );
@@ -104,15 +136,23 @@ class ProjectSyncService extends BaseSyncService {
                   id: Value(apiProject.id),
                   name: Value(apiProject.name),
                   description: Value(apiProject.description),
+                  iconType: const Value('MaterialIcons'),
+                  isArchived: const Value(false),
                   isSynced: const Value(true),
                 ),
               );
         }
       }
-    } on AppException catch (e) {
+    } on DioException catch (e) {
+      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
-        'Failed to pull projects from server: ${e.message}',
-        e.getUserMessage(),
+        'Failed to pull projects from server: $message',
+        'Unable to fetch projects from server.',
+      );
+    } catch (e) {
+      throw SyncException(
+        'Failed to pull projects from server: ${e.toString()}',
+        'Unable to fetch projects from server.',
       );
     }
   }
@@ -164,11 +204,12 @@ class ProjectSyncService extends BaseSyncService {
     // Delete from server if it's a canonical ID
     if (!IdGenerator.isTemporaryId(projectId) && await isOnline()) {
       try {
-        await _apiService.deleteProject(projectId);
-      } on AppException catch (e) {
+        await _dio.delete('/projects/records/$projectId');
+      } on DioException catch (e) {
+        final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
         throw SyncException(
-          'Failed to delete project from server: ${e.message}',
-          e.getUserMessage(),
+          'Failed to delete project from server: $message',
+          'Unable to delete project from server.',
         );
       }
     }
@@ -199,21 +240,24 @@ class ProjectSyncService extends BaseSyncService {
     // If online and has canonical ID, sync immediately
     if (!IdGenerator.isTemporaryId(projectId) && await isOnline()) {
       try {
-        await _apiService.updateProject(
-          id: projectId,
-          name: name,
-          description: description,
+        await _dio.patch(
+          '/projects/records/$projectId',
+          data: {
+            'name': name,
+            'description': description,
+          },
         );
 
         // Mark as synced
         await (_database.update(_database.projects)
               ..where((p) => p.id.equals(projectId)))
             .write(const ProjectsCompanion(isSynced: Value(true)));
-      } on AppException catch (e) {
+      } on DioException catch (e) {
+        final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
         // Failed to sync, but local update succeeded
         // Will be synced later
         throw SyncException(
-          'Updated locally but failed to sync: ${e.message}',
+          'Updated locally but failed to sync: $message',
           'Changes saved locally and will sync when connection is available',
         );
       }

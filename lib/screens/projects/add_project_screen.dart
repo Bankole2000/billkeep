@@ -1,27 +1,18 @@
 import 'dart:io';
-import 'package:billkeep/database/database.dart';
-import 'package:billkeep/providers/project_provider.dart';
-import 'package:billkeep/providers/ui_providers.dart';
-import 'package:billkeep/screens/projects/add_project_settings_screen.dart';
-import 'package:billkeep/utils/app_colors.dart';
-import 'package:billkeep/utils/image_helpers.dart';
-import 'package:billkeep/utils/validators.dart';
-import 'package:billkeep/widgets/common/color_picker_widget.dart';
-import 'package:billkeep/widgets/common/dynamic_avatar.dart';
-import 'package:billkeep/widgets/common/emoji_picker_widget.dart';
-import 'package:billkeep/widgets/common/icon_picker_widget.dart';
-import 'package:billkeep/widgets/common/sliding_segment_control_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
-import 'package:billkeep/utils/app_enums.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:billkeep/main.dart' as main;
-import 'package:billkeep/screens/camera/camera_screen.dart';
+import '../../database/database.dart';
+import '../../providers/project_provider.dart';
+import '../../providers/ui_providers.dart';
+import '../../screens/projects/add_project_settings_screen.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/app_enums.dart';
+import '../../utils/validators.dart';
+import '../../widgets/projects/form/project_details_section.dart';
+import '../../widgets/wallets/form/appearance_section.dart';
 
+/// Refactored add/edit project screen
 class AddProjectScreen extends ConsumerStatefulWidget {
   const AddProjectScreen({super.key, this.projectToEdit});
 
@@ -42,223 +33,167 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
   String? _selectedEmoji = '📂';
   String? projectId;
   File? _localImageFile;
-  final ImagePicker _picker = ImagePicker();
   bool? _isArchived = false;
-  bool? _isLoading = false;
+  bool _isLoading = false;
 
-  // late TextEditingController searchTextController;
   final _formKey = GlobalKey<FormState>();
-  final bool _isFocused = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeFromProject();
+  }
+
+  void _initializeFromProject() {
     if (widget.projectToEdit != null) {
-      projectId = widget.projectToEdit!.id;
-      if (widget.projectToEdit?.iconType == IconSelectionType.image.name ||
-          widget.projectToEdit?.iconType == 'localImage') {
+      final project = widget.projectToEdit!;
+      projectId = project.id;
+      _nameController.text = project.name;
+      _descriptionController.text = project.description ?? '';
+      _isArchived = project.isArchived;
+
+      // Initialize appearance
+      if (project.iconType == IconSelectionType.image.name ||
+          project.iconType == 'localImage') {
         _selectedSegment = IconSelectionType.image;
-        if (widget.projectToEdit?.localImagePath != null) {
-          _localImageFile = File(widget.projectToEdit!.localImagePath!);
+        if (project.localImagePath != null) {
+          _localImageFile = File(project.localImagePath!);
         }
         _imageUrlController.text =
-            widget.projectToEdit?.imageUrl ?? 'https://picsum.photos/200/300';
+            project.imageUrl ?? 'https://picsum.photos/200/300';
       } else {
-        _selectedSegment = stringToIconSelectionType(
-          widget.projectToEdit!.iconType,
+        _selectedSegment = stringToIconSelectionType(project.iconType);
+      }
+
+      if (project.iconCodePoint != null) {
+        _selectedIcon = IconData(
+          project.iconCodePoint!,
+          fontFamily: 'MaterialIcons',
         );
       }
-      _nameController.text = widget.projectToEdit!.name;
-      _descriptionController.text = widget.projectToEdit!.description!;
-      _selectedColor = widget.projectToEdit!.color != null
-          ? HexColor.fromHex('#${widget.projectToEdit!.color}')
-          : ref.read(appColorsProvider).textMute;
-      _selectedIcon = IconData(
-        widget.projectToEdit!.iconCodePoint!,
-        fontFamily: 'MaterialIcons',
-      );
-      _selectedEmoji = widget.projectToEdit!.iconEmoji ?? '📂';
-      _isArchived = widget.projectToEdit!.isArchived;
+      _selectedEmoji = project.iconEmoji ?? '📂';
+      _selectedColor = project.color != null
+          ? HexColor.fromHex('#${project.color}')
+          : null;
     } else {
       _imageUrlController.text = 'https://picsum.photos/200/300';
     }
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _selectedColor ??= ref.read(appColorsProvider).textMute;
+  }
+
+  @override
   void dispose() {
-    // searchTextController.dispose();
     _imageUrlController.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickImageFromGallery() async {
-    try {
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1800,
-        maxHeight: 1800,
-        imageQuality: 85,
-      );
+  Future<void> _saveProject() async {
+    if (!_formKey.currentState!.validate()) return;
 
-      if (image != null) {
-        setState(() {
-          _localImageFile = File(image.path);
-          _imageUrlController.text = image.path;
-        });
+    setState(() => _isLoading = true);
+
+    try {
+      final iconType = _determineIconType();
+
+      final resultId = projectId == null
+          ? await _createProject(iconType)
+          : await _updateProject(iconType);
+
+      if (mounted) {
+        _showSuccess('Project ${projectId == null ? 'created' : 'updated'}');
+        Navigator.pop(context, resultId);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error selecting image: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        _showError('Error: $e');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
       }
     }
   }
 
-  Future<void> _takePhoto() async {
-    // Check if cameras are available
-    if (main.cameras.isEmpty) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No camera available on this device'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-      return;
+  String _determineIconType() {
+    if (_selectedSegment == IconSelectionType.image) {
+      return Validators.isValidUrl(_imageUrlController.text)
+          ? IconSelectionType.image.name
+          : 'localImage';
     }
+    return _selectedSegment.name;
+  }
 
-    // Navigate to camera screen and wait for result
-    final XFile? photo = await Navigator.push<XFile>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CameraScreen(camera: main.cameras.first),
+  Future<String> _createProject(String iconType) async {
+    return await ref.read(projectRepositoryProvider).createProject(
+          name: _nameController.text.trim(),
+          description: _descriptionController.text.trim(),
+          iconType: iconType,
+          color: _selectedColor?.toHexString(),
+          emoji: _selectedEmoji,
+          localImagePath: iconType == 'localImage' && _localImageFile != null
+              ? _localImageFile?.path
+              : null,
+          imageUrl: iconType == IconSelectionType.image.name &&
+                  _imageUrlController.text.trim().isNotEmpty
+              ? _imageUrlController.text.trim()
+              : null,
+          isArchived: _isArchived,
+          iconCodePoint: _selectedIcon?.codePoint,
+        );
+  }
+
+  Future<String> _updateProject(String iconType) async {
+    return await ref.read(projectRepositoryProvider).updateProject(
+          projectId: projectId!,
+          name: _nameController.text.trim(),
+          description: _descriptionController.text.trim(),
+          iconType: iconType,
+          color: _selectedColor?.toHexString(),
+          emoji: _selectedEmoji,
+          localImagePath: iconType == 'localImage' && _localImageFile != null
+              ? _localImageFile?.path
+              : null,
+          imageUrl: iconType == IconSelectionType.image.name &&
+                  _imageUrlController.text.trim().isNotEmpty
+              ? _imageUrlController.text.trim()
+              : null,
+          isArchived: _isArchived,
+          iconCodePoint: _selectedIcon?.codePoint,
+        );
+  }
+
+  void _showError(String message) {
+    final colors = ref.read(appColorsProvider);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: colors.fire,
       ),
     );
-
-    if (photo != null) {
-      setState(() {
-        _localImageFile = File(photo.path);
-        _imageUrlController.text = photo.path;
-      });
-    }
   }
 
-  void _pasteUrl() async {
-    final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-    final pastedText = clipboardData?.text;
-    if (pastedText != null && Validators.isValidUrl(pastedText)) {
-      setState(() {
-        _imageUrlController.text = pastedText;
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Invalid Image url in Clipboard'),
-          backgroundColor: ref.read(appColorsProvider).fire,
-        ),
-      );
-    }
-  }
-
-  void _copyToClipboard(String text) async {
-    await Clipboard.setData(ClipboardData(text: _imageUrlController.text));
-  }
-
-  void _saveProject() async {
-    // TODO: check
-    if (_formKey.currentState!.validate()) {
-      if (mounted) {
-        setState(() => _isLoading = true);
-      }
-      var iconType =
-          _selectedSegment == IconSelectionType.image &&
-              Validators.isValidUrl(_imageUrlController.text)
-          ? IconSelectionType.image.name
-          : _selectedSegment == IconSelectionType.image &&
-                !Validators.isValidUrl(_imageUrlController.text)
-          ? 'localImage'
-          : _selectedSegment.name;
-      try {
-        final result = projectId == null
-            ? await ref
-                  .read(projectRepositoryProvider)
-                  .createProject(
-                    name: _nameController.text.trim(),
-                    description: _descriptionController.text.trim(),
-                    iconType: iconType,
-                    color: _selectedColor?.toHexString(),
-                    emoji: _selectedEmoji,
-                    localImagePath:
-                        iconType == 'localImage' && _localImageFile != null
-                        ? _localImageFile?.path
-                        : null,
-                    imageUrl:
-                        iconType == IconSelectionType.image.name &&
-                            _imageUrlController.text.trim().isNotEmpty
-                        ? _imageUrlController.text.trim()
-                        : null,
-                    isArchived: _isArchived,
-                    iconCodePoint: _selectedIcon?.codePoint,
-                  )
-            : await ref
-                  .read(projectRepositoryProvider)
-                  .updateProject(
-                    projectId: projectId!,
-                    name: _nameController.text.trim(),
-                    description: _descriptionController.text.trim(),
-                    iconType: iconType,
-                    color: _selectedColor?.toHexString(),
-                    emoji: _selectedEmoji,
-                    localImagePath:
-                        iconType == 'localImage' && _localImageFile != null
-                        ? _localImageFile?.path
-                        : null,
-                    imageUrl:
-                        iconType == IconSelectionType.image.name &&
-                            _imageUrlController.text.trim().isNotEmpty
-                        ? _imageUrlController.text.trim()
-                        : null,
-                    isArchived: _isArchived,
-                    iconCodePoint: _selectedIcon?.codePoint,
-                  );
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Success: Project ${projectId == null ? 'created' : 'updated'}',
-              ),
-              backgroundColor: ref.read(appColorsProvider).navy,
-            ),
-          );
-          Navigator.pop(context, result);
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: $e'),
-              backgroundColor: ref.read(appColorsProvider).fire,
-            ),
-          );
-        }
-      } finally {
-        if (mounted) {
-          setState(() => _isLoading = false);
-        }
-      }
-    }
+  void _showSuccess(String message) {
+    final colors = ref.read(appColorsProvider);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: colors.navy,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = ref.watch(appColorsProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
+
     return Scaffold(
       backgroundColor: colors.background,
       appBar: AppBar(
@@ -270,8 +205,8 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
           style: TextStyle(color: colors.text),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
-          SizedBox(width: 10),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz)),
+          const SizedBox(width: 10),
           IconButton(
             onPressed: () {
               Navigator.of(context).push<Currency>(
@@ -282,364 +217,59 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                 ),
               );
             },
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
         ],
       ),
       body: Form(
         key: _formKey,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height - ((100 as num)),
+          height: MediaQuery.of(context).size.height - 100,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  child: Material(
-                    // elevation: 5,
-                    elevation: _isFocused ? 4.0 : 0.0,
-                    child: ListTile(
-                      tileColor: colors.surface,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      contentPadding: EdgeInsets.only(
-                        top: 0,
-                        left: 10,
-                        right: 20,
-                      ),
-                      visualDensity: VisualDensity(vertical: 0.1),
-                      trailing: Padding(
-                        padding: EdgeInsets.only(top: 25),
-                        child: Icon(
-                          Icons.edit_sharp,
-                          size: 30,
-                          color: colors.textMute,
-                        ),
-                      ),
-                      title: Padding(
-                        padding: EdgeInsetsGeometry.only(top: 0, left: 10),
-                        child: Text(
-                          'Project Name',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(color: colors.text),
-                        ),
-                      ),
-                      subtitle: CupertinoTextFormFieldRow(
-                        // focusNode: _focusNode,
-                        controller: _nameController,
-                        style: TextStyle(fontSize: 36, color: colors.text),
-                        padding: EdgeInsets.all(0),
-                        placeholder: 'Required',
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a project name';
-                          }
-                          return null;
-                        },
-                      ),
-                      onTap: () {},
-                      minTileHeight: 10,
-                    ),
-                  ),
+                // Project details (name & description)
+                ProjectDetailsSection(
+                  nameController: _nameController,
+                  descriptionController: _descriptionController,
                 ),
-                Divider(height: 1),
-                SizedBox(height: 10),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  child: Material(
-                    // elevation: 5,
-                    elevation: _isFocused ? 4.0 : 0.0,
-                    child: ListTile(
-                      tileColor: colors.surface,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      contentPadding: EdgeInsets.only(
-                        top: 0,
-                        left: 10,
-                        right: 20,
-                      ),
-                      visualDensity: VisualDensity(vertical: 0.1),
-                      trailing: Padding(
-                        padding: EdgeInsets.only(top: 25),
-                        child: Icon(
-                          Icons.edit_note,
-                          size: 24,
-                          color: colors.textMute,
-                        ),
-                      ),
-                      title: Padding(
-                        padding: EdgeInsetsGeometry.only(top: 0, left: 8),
-                        child: Text('Description', textAlign: TextAlign.start),
-                      ),
-                      subtitle: CupertinoTextFormFieldRow(
-                        // focusNode: _focusNode,
-                        controller: _descriptionController,
-                        style: TextStyle(fontSize: 20),
-                        padding: EdgeInsets.all(0),
-                        placeholder: 'Optional',
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a project description';
-                          }
-                          return null;
-                        },
-                      ),
-                      onTap: () {},
-                      minTileHeight: 10,
-                    ),
-                  ),
-                ),
-                Divider(height: 1),
-                SizedBox(height: 10),
 
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  child: Material(
-                    // elevation: 5,
-                    elevation: _isFocused ? 4.0 : 0.0,
-                    child: ListTile(
-                      tileColor: colors.surface,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      contentPadding: EdgeInsets.only(
-                        top: 0,
-                        left: 10,
-                        right: 20,
-                      ),
-                      visualDensity: VisualDensity(vertical: 0.1),
-                      title: Padding(
-                        padding: EdgeInsetsGeometry.only(
-                          top: 0,
-                          left: 8,
-                          bottom: 10,
-                        ),
-                        child: Text(
-                          'Appearance',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(color: colors.text),
-                        ),
-                      ),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        // children: [],
-                        children: [
-                          SizedBox(width: 4),
-                          DynamicAvatar(
-                            emojiOffset: Platform.isIOS
-                                ? Offset(11, 6)
-                                : Offset(7, 5),
-                            icon: _selectedSegment == IconSelectionType.icon
-                                ? _selectedIcon
-                                : null,
-                            emoji: _selectedSegment == IconSelectionType.emoji
-                                ? _selectedEmoji
-                                : null,
-                            image: _selectedSegment == IconSelectionType.image
-                                ? (_localImageFile != null
-                                      ? FileImage(_localImageFile!)
-                                      : _imageUrlController.text
-                                            .trim()
-                                            .isNotEmpty
-                                      ? cachedImageProvider(_imageUrlController.text)
-                                      : null)
-                                : null,
-                            size: 50,
-                            color: _selectedColor,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: CustomSlidingSegmentedControl<IconSelectionType>(
-                              // isStretch: true,
-                              initialValue: _selectedSegment,
-                              children: {
-                                IconSelectionType
-                                    .icon: SlidingSegmentControlLabel(
-                                  isActive:
-                                      _selectedSegment ==
-                                      IconSelectionType.icon,
-                                  label: 'Icon',
-                                  icon:
-                                      iconSelectionTypeIcons[IconSelectionType
-                                          .icon]!,
-                                  activeColor: colors.fire,
-                                ),
-                                IconSelectionType
-                                    .emoji: SlidingSegmentControlLabel(
-                                  icon:
-                                      iconSelectionTypeIcons[IconSelectionType
-                                          .emoji]!,
-                                  label: 'Emoji',
-                                  isActive:
-                                      _selectedSegment ==
-                                      IconSelectionType.emoji,
-                                  activeColor: colors.wave,
-                                ),
-                                IconSelectionType
-                                    .image: SlidingSegmentControlLabel(
-                                  icon:
-                                      iconSelectionTypeIcons[IconSelectionType
-                                          .image]!,
-                                  label: 'Image',
-                                  isActive:
-                                      _selectedSegment ==
-                                      IconSelectionType.image,
-                                  activeColor: colors.water,
-                                ),
-                              },
-                              onValueChanged: (value) {
-                                setState(() {
-                                  _selectedSegment = value;
-                                });
-                              },
-                              innerPadding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              thumbDecoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          ColorSelectorButton(
-                            selectedColor: _selectedColor,
-                            onColorChanged: (color) {
-                              setState(() {
-                                _selectedColor = color;
-                              });
-                            },
-                            pickerType: ColorPickerType.block,
-                          ),
-                        ],
-                      ),
-                      onTap: () {},
-                      minTileHeight: 10,
-                    ),
-                  ),
+                Divider(height: 1, color: colors.textMute.withAlpha(50)),
+
+                // Appearance section (reused from wallets!)
+                AppearanceSection(
+                  useProviderAppearance: false, // Projects don't have providers
+                  selectedSegment: _selectedSegment,
+                  selectedIcon: _selectedIcon,
+                  selectedEmoji: _selectedEmoji,
+                  selectedColor: _selectedColor,
+                  imageUrlController: _imageUrlController,
+                  localImageFile: _localImageFile,
+                  onSegmentChanged: (segment) =>
+                      setState(() => _selectedSegment = segment),
+                  onIconSelected: (icon) =>
+                      setState(() => _selectedIcon = icon),
+                  onEmojiSelected: (emoji) =>
+                      setState(() => _selectedEmoji = emoji),
+                  onColorChanged: (color) =>
+                      setState(() => _selectedColor = color),
+                  onLocalImageChanged: (file) =>
+                      setState(() => _localImageFile = file),
                 ),
-                Divider(height: 1),
-                if (_selectedSegment == IconSelectionType.icon)
-                  IconPickerWidget(
-                    onIconSelected: (icon) {
-                      setState(() {
-                        _selectedIcon = icon;
-                      });
-                    },
-                  ),
-                if (_selectedSegment == IconSelectionType.emoji)
-                  EmojiPickerWidget(
-                    onEmojiSelected: (emoji) {
-                      setState(() {
-                        _selectedEmoji = emoji;
-                      });
-                    },
-                  ),
-                if (_selectedSegment == IconSelectionType.image)
-                  ListTile(
-                    // leading: AppImage(height: 50, width: 50),
-                    title: Row(
-                      children: [
-                        Expanded(
-                          child: CupertinoTextFormFieldRow(
-                            controller: _imageUrlController,
-                            // initialValue: _imageUrl,
-                            padding: EdgeInsets.all(0),
-                            prefix: Text(
-                              'Url: ',
-                              style: TextStyle(color: colors.textMute),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _copyToClipboard(_imageUrlController.text);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('ImageURL Copied to Clipboard'),
-                                backgroundColor: colors.navy,
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.copy),
-                        ),
-                      ],
-                    ),
-                    subtitle: Padding(
-                      padding: EdgeInsetsGeometry.only(top: 8, bottom: 16),
-                      child: Row(
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: _pickImageFromGallery,
-                            label: Text('Gallery'),
-                            icon: Icon(Icons.image),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: activeColor,
-                              foregroundColor: colors.textInverse,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          ElevatedButton.icon(
-                            onPressed: _takePhoto,
-                            label: Text('Camera'),
-                            icon: Icon(Icons.camera_alt),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: activeColor,
-                              foregroundColor: colors.textInverse,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          ElevatedButton.icon(
-                            onPressed: _pasteUrl,
-                            label: Text('Url'),
-                            icon: Icon(Icons.link),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: activeColor,
-                              foregroundColor: colors.textInverse,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                Divider(),
               ],
             ),
           ),
         ),
       ),
-      //  const ProjectForm(),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SizedBox(
           height: 56,
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: _saveProject,
+            onPressed: _isLoading ? null : _saveProject,
             style: ElevatedButton.styleFrom(
               backgroundColor: activeColor,
               foregroundColor: colors.textInverse,
@@ -647,10 +277,15 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: Text(
-              projectId == null ? 'SAVE' : 'UPDATE',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
+            child: _isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Text(
+                    'SAVE',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
           ),
         ),
       ),

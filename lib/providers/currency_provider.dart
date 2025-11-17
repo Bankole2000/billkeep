@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
 import '../database/database.dart';
+import '../utils/id_generator.dart';
+import '../services/currency_service.dart';
 import 'database_provider.dart';
 import 'user_preferences_provider.dart';
 
@@ -100,6 +102,12 @@ final currencyRepositoryProvider = Provider((ref) {
   return CurrencyRepository(database);
 });
 
+// Service provider
+final currencyServiceProvider = Provider((ref) {
+  final repository = ref.watch(currencyRepositoryProvider);
+  return CurrencyService(repository);
+});
+
 class CurrencyRepository {
   final AppDatabase _database;
 
@@ -114,22 +122,34 @@ class CurrencyRepository {
     String? countryISO2,
     bool isCrypto = false,
     bool isActive = true,
+    String? userId,
   }) async {
-    await _database
-        .into(_database.currencies)
-        .insert(
-          CurrenciesCompanion(
-            code: Value(code.toUpperCase()),
-            name: Value(name),
-            symbol: Value(symbol),
-            decimals: Value(decimals),
-            countryISO2: Value(countryISO2),
-            isCrypto: Value(isCrypto),
-            isActive: Value(isActive),
-          ),
-        );
+    final currencyCode = code.toUpperCase();
+    final tempId = IdGenerator.tempCurrency();
 
-    return code.toUpperCase();
+    try {   
+      await _database
+          .into(_database.currencies)
+          .insert(
+            CurrenciesCompanion(
+              id: Value(tempId),
+              tempId: Value(tempId),
+              code: Value(currencyCode),
+              name: Value(name),
+              symbol: Value(symbol),
+              decimals: Value(decimals),
+              countryISO2: Value(countryISO2 ?? '🪙'),
+              isCrypto: Value(isCrypto),
+              isActive: Value(isActive),
+              userId: Value(userId),
+            ),
+          );
+    } catch (e) {
+      print('Error creating currency: $e');
+      rethrow;
+    }
+  
+    return tempId;
   }
 
   /// Update an existing currency
@@ -219,6 +239,13 @@ class CurrencyRepository {
   Future<Currency?> getCurrency(String currencyCode) async {
     return await (_database.select(_database.currencies)
           ..where((c) => c.code.equals(currencyCode.toUpperCase())))
+        .getSingleOrNull();
+  }
+
+    /// Get currency by tempId
+  Future<Currency?> getCurrencyByTempId(String tempId) async {
+    return await (_database.select(_database.currencies)
+          ..where((c) => c.tempId.equals(tempId)))
         .getSingleOrNull();
   }
 

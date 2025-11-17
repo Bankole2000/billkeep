@@ -1,4 +1,5 @@
 import 'package:billkeep/utils/currency_country_mapping.dart';
+import 'package:billkeep/utils/id_generator.dart';
 import 'package:drift/drift.dart';
 import 'package:billkeep/database/database.dart';
 
@@ -1339,11 +1340,15 @@ class DefaultCurrencies {
 
     // insert fiat currencies first
     for (final currency in fiatCurrencies.values) {
+      final currencyCode = currency['code'] as String;
+      final tempId = IdGenerator.tempCurrency();
       await database
           .into(database.currencies)
           .insert(
             CurrenciesCompanion(
-              code: Value(currency['code'] as String),
+              id: Value(currencyCode),
+              tempId: Value(tempId),
+              code: Value(currencyCode),
               name: Value(currency['name'] as String),
               symbol: Value(currency['symbol'] as String),
               decimals: Value(currency['decimal_digits'] as int),
@@ -1357,11 +1362,15 @@ class DefaultCurrencies {
     // Insert all default currencies
     for (final currency in currencies) {
       if (currency['isCrypto'] == true) {
+        final currencyCode = currency['code'] as String;
+        final tempId = IdGenerator.tempCurrency();
         await database
             .into(database.currencies)
             .insert(
               CurrenciesCompanion(
-                code: Value(currency['code'] as String),
+                id: Value(currencyCode),
+                tempId: Value(tempId),
+                code: Value(currencyCode),
                 name: Value(currency['name'] as String),
                 symbol: Value(currency['symbol'] as String),
                 decimals: Value(currency['decimals'] as int),

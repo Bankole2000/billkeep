@@ -73,7 +73,7 @@ class Expenses extends Table {
   IntColumn get expectedAmount => integer()(); // Expected amount per cycle
   TextColumn get currency => text().references(
     Currencies,
-    #code,
+    #id,
   )(); // Currency should come from Wallet
   TextColumn get type =>
       text()(); // 'ONE_TIME' or 'RECURRING' or 'INSTALLMENTS'
@@ -125,7 +125,7 @@ class Payments extends Table {
       text().nullable()(); // NEW - link to investment
   TextColumn get debtId => text().nullable()(); // NEW - link to debt
   IntColumn get actualAmount => integer()(); // What was actually paid
-  TextColumn get currency => text().references(Currencies, #code)();
+  TextColumn get currency => text().references(Currencies, #id)();
   DateTimeColumn get paymentDate => dateTime()();
   TextColumn get source => text().withDefault(
     const Constant('MANUAL'),
@@ -151,7 +151,7 @@ class Income extends Table {
   TextColumn get description => text()();
   IntColumn get expectedAmount =>
       integer()(); // Expected amount per cycle (in cents)
-  TextColumn get currency => text().references(Currencies, #code)();
+  TextColumn get currency => text().references(Currencies, #id)();
   TextColumn get type => text()(); // 'ONE_TIME' or 'RECURRING'
   TextColumn get frequency => text().nullable()(); // 'MONTHLY' or 'YEARLY'
   DateTimeColumn get startDate => dateTime()(); // When income starts
@@ -457,7 +457,7 @@ class Wallets extends Table {
       text()(); // 'cash', 'bank', 'crypto', 'credit', 'other'
   TextColumn get currency => text().references(
     Currencies,
-    #code,
+    #id,
   )(); // Primary currency (USD, EUR, BTC, etc.)
   IntColumn get balance => integer()(); // storage in cents
 
@@ -565,7 +565,7 @@ class Budgets extends Table {
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   TextColumn get projectId => text().references(Projects, #id)();
   TextColumn get categoryId => text().nullable().references(Categories, #id)();
-  TextColumn get currency => text().references(Currencies, #code)();
+  TextColumn get currency => text().references(Currencies, #id)();
 
   IntColumn get limitAmount => integer()(); // The budget limit
   IntColumn get spentAmount =>
@@ -592,6 +592,7 @@ class Budgets extends Table {
 }
 
 class Currencies extends Table {
+  TextColumn get id => text()();
   TextColumn get code => text()(); // USD, EUR, BTC, ETH, etc.
   TextColumn get name => text()(); // US Dollar, Euro, Bitcoin, etc.
   TextColumn get symbol => text()(); // $, €, ₿, Ξ, etc.
@@ -600,9 +601,11 @@ class Currencies extends Table {
   TextColumn get countryISO2 => text().nullable()();
   BoolColumn get isCrypto => boolean().withDefault(const Constant(false))();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  TextColumn get tempId => text()();
+  TextColumn get userId => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => {code};
+  Set<Column> get primaryKey => {id};
 }
 
 class Goals extends Table {
@@ -709,7 +712,7 @@ class Investments extends Table {
       dateTime().nullable()(); // When actually closed
 
   // Currency and amounts
-  TextColumn get currencyCode => text().references(Currencies, #code)();
+  TextColumn get currency => text().references(Currencies, #id)();
   IntColumn get investedAmount => integer()(); // Principal investment amount
   IntColumn get currentValue => integer().withDefault(
     const Constant(0),
@@ -795,7 +798,7 @@ class InvestmentTypes extends Table {
 //   TextColumn get transactionType =>
 //       text().map(const _InvestmentTransactionTypeConverter())();
 //   IntColumn get amount => integer()();
-//   TextColumn get currencyCode => text().references(Currencies, #code)();
+//   TextColumn get currencyCode => text().references(Currencies, #id)();
 
 //   DateTimeColumn get transactionDate => dateTime()();
 //   DateTimeColumn get dueDate =>
@@ -825,7 +828,7 @@ class InvestmentTypes extends Table {
 
 //   DateTimeColumn get dueDate => dateTime()();
 //   IntColumn get amount => integer()();
-//   TextColumn get currencyCode => text().references(Currencies, #code)();
+//   TextColumn get currencyCode => text().references(Currencies, #id)();
 //   TextColumn get scheduleType =>
 //       text().map(const _InvestmentScheduleTypeConverter())();
 
@@ -850,7 +853,7 @@ class InvestmentTypes extends Table {
 //   TextColumn get contactId => text().nullable()();
 
 //   // Currency and amounts
-//   TextColumn get currencyCode => text().references(Currencies, #code)();
+//   TextColumn get currencyCode => text().references(Currencies, #id)();
 //   IntColumn get borrowedAmount => integer()(); // Original loan amount
 //   IntColumn get outstandingBalance =>
 //       integer().withDefault(const Constant(0))();
@@ -919,7 +922,7 @@ class InvestmentTypes extends Table {
 //   TextColumn get transactionType =>
 //       text().map(const _DebtTransactionTypeConverter())();
 //   IntColumn get amount => integer()();
-//   TextColumn get currencyCode => text().references(Currencies, #code)();
+//   TextColumn get currencyCode => text().references(Currencies, #id)();
 
 //   DateTimeColumn get transactionDate => dateTime()();
 //   DateTimeColumn get dueDate =>
@@ -949,7 +952,7 @@ class InvestmentTypes extends Table {
 //   IntColumn get principalAmount => integer()();
 //   IntColumn get interestAmount => integer().withDefault(const Constant(0))();
 //   IntColumn get totalAmount => integer()(); // principal + interest
-//   TextColumn get currencyCode => text().references(Currencies, #code)();
+//   TextColumn get currencyCode => text().references(Currencies, #id)();
 
 //   BoolColumn get isPaid => boolean().withDefault(const Constant(false))();
 //   IntColumn get transactionId => integer().nullable().references(

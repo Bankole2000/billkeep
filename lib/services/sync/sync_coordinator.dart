@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import '../../database/database.dart';
+import '../../providers/project_provider.dart';
+import '../../services/api_client.dart';
 import 'project_sync_service.dart';
 import 'expense_sync_service.dart';
 import 'base_sync_service.dart';
@@ -9,11 +12,23 @@ import 'base_sync_service.dart';
 /// a single entry point for sync operations throughout the app
 class SyncCoordinator {
   final AppDatabase _database;
+  final ProjectRepository _projectRepository;
+  final Dio _dio;
   late final ProjectSyncService projectSync;
   late final ExpenseSyncService expenseSync;
 
-  SyncCoordinator(this._database) {
-    projectSync = ProjectSyncService(database: _database);
+  SyncCoordinator({
+    required AppDatabase database,
+    required ProjectRepository projectRepository,
+    Dio? dio,
+  })  : _database = database,
+        _projectRepository = projectRepository,
+        _dio = dio ?? ApiClient().dio {
+    projectSync = ProjectSyncService(
+      database: _database,
+      repository: _projectRepository,
+      dio: _dio,
+    );
     expenseSync = ExpenseSyncService(database: _database);
   }
 

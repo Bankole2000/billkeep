@@ -1,4 +1,5 @@
 import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/currency_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/utils/app_enums.dart';
 import 'package:billkeep/utils/wallet_types.dart';
@@ -8,9 +9,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddCurrencyScreen extends ConsumerStatefulWidget {
-  const AddCurrencyScreen({super.key, this.currency});
+  const AddCurrencyScreen({super.key, this.currency, required this.userId});
 
   final Currency? currency;
+  final String userId;
 
   @override
   ConsumerState<AddCurrencyScreen> createState() => _AddCurrencyScreenState();
@@ -23,19 +25,91 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
   final _formKey = GlobalKey<FormState>();
   double _decimals = 2.0;
   final bool _isFocused = false;
-  var enteredName = '';
-  var enteredDescription = '';
-  var enteredWebsite = '';
-  var imageUrl = '';
+  bool _isSaving = false;
+
+  // Text editing controllers
+  final _codeController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _symbolController = TextEditingController();
+  final _countryISO2Controller = TextEditingController();
 
   @override
   void initState() {
+    if(widget.currency != null){
+      currencyId = widget.currency?.id;
+      _codeController.text = widget.currency?.code ?? '';
+      _nameController.text = widget.currency?.name ?? '';
+      _symbolController.text = widget.currency?.symbol ?? '';
+      _countryISO2Controller.text = widget.currency?.countryISO2 ?? '';
+      _decimals = widget.currency?.decimals.toDouble() ?? 2.0;
+      _selectedCurrencyType = widget.currency?.isCrypto == true
+          ? CurrencyType.CRYPTO
+          : CurrencyType.FIAT;
+    }
     super.initState();
   }
 
   @override
   void dispose() {
+    _codeController.dispose();
+    _nameController.dispose();
+    _symbolController.dispose();
+    _countryISO2Controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveCurrency() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (_selectedCurrencyType == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a currency type')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      final repository = ref.read(currencyRepositoryProvider);
+      final isCrypto = _selectedCurrencyType == CurrencyType.CRYPTO;
+
+      await repository.createCurrency(
+        code: _codeController.text,
+        name: _nameController.text,
+        symbol: _symbolController.text,
+        decimals: _decimals.round(),
+        countryISO2: _countryISO2Controller.text.isEmpty
+            ? null
+            : _countryISO2Controller.text,
+        isCrypto: isCrypto,
+        isActive: true,
+        userId: widget.userId,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Currency created successfully')),
+        );
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error creating currency: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
   }
 
   @override
@@ -115,13 +189,21 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
                         ),
                       ),
                       subtitle: CupertinoTextFormFieldRow(
-                        // focusNode: _focusNode,
-                        initialValue: enteredName,
+                        controller: _codeController,
                         style: TextStyle(fontSize: 36),
                         padding: EdgeInsets.all(0),
                         placeholder: _selectedCurrencyType != null
                             ? 'e.g. ${CurrencyTypes.getInfo(_selectedCurrencyType!).examples.join(', ')}'
                             : 'Required',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a currency code';
+                          }
+                          if (value.length < 2 || value.length > 10) {
+                            return 'Code must be 2-10 characters';
+                          }
+                          return null;
+                        },
                       ),
                       onTap: () {},
                       minTileHeight: 10,
@@ -162,13 +244,18 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
                         ),
                       ),
                       subtitle: CupertinoTextFormFieldRow(
-                        // focusNode: _focusNode,
-                        initialValue: enteredDescription,
+                        controller: _nameController,
                         style: TextStyle(fontSize: 20),
                         padding: EdgeInsets.all(0),
                         placeholder: _selectedCurrencyType != null
                             ? 'e.g. ${CurrencyTypes.getInfo(_selectedCurrencyType!).exampleNames.join(', ')}'
                             : 'Required',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a currency name';
+                          }
+                          return null;
+                        },
                       ),
                       onTap: () {},
                       minTileHeight: 10,
@@ -206,11 +293,56 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
                         child: Text('Symbol', textAlign: TextAlign.start),
                       ),
                       subtitle: CupertinoTextFormFieldRow(
-                        // focusNode: _focusNode,
-                        initialValue: enteredWebsite,
+                        controller: _symbolController,
                         style: TextStyle(fontSize: 20),
                         padding: EdgeInsets.all(0),
-                        placeholder: 'Optional',
+                        placeholder: 'e.g. \$, €, ₿',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a currency symbol';
+                          }
+                          return null;
+                        },
+                      ),
+                      onTap: () {},
+                      minTileHeight: 10,
+                    ),
+                  ),
+                ),
+                Divider(height: 1),
+                SizedBox(height: 20),
+
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  child: Material(
+                    elevation: _isFocused ? 4.0 : 0.0,
+                    child: ListTile(
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      contentPadding: EdgeInsets.only(
+                        top: 0,
+                        left: 10,
+                        right: 20,
+                      ),
+                      visualDensity: VisualDensity(vertical: 0.1),
+                      trailing: Padding(
+                        padding: EdgeInsets.only(top: 25),
+                        child: Icon(
+                          Icons.flag,
+                          size: 24,
+                          color: colors.textMute,
+                        ),
+                      ),
+                      title: Padding(
+                        padding: EdgeInsetsGeometry.only(top: 0, left: 8),
+                        child: Text('Country Code (ISO2)', textAlign: TextAlign.start),
+                      ),
+                      subtitle: CupertinoTextFormFieldRow(
+                        controller: _countryISO2Controller,
+                        style: TextStyle(fontSize: 20),
+                        padding: EdgeInsets.all(0),
+                        placeholder: 'e.g. US, GB, or leave empty for 🪙',
                       ),
                       onTap: () {},
                       minTileHeight: 10,
@@ -260,7 +392,7 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
           height: 56,
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: _isSaving ? null : _saveCurrency,
             style: ElevatedButton.styleFrom(
               backgroundColor: activeColor,
               foregroundColor: colors.textInverse,
@@ -268,10 +400,19 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: const Text(
-              'SAVE',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
+            child: _isSaving
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : const Text(
+                    'SAVE',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
           ),
         ),
       ),

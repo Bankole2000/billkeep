@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config/app_config.dart';
+import '../models/user_model.dart';
 
 /// Singleton API client for making HTTP requests
 ///
@@ -11,6 +13,7 @@ class ApiClient {
   late final Dio dio;
 
   static const String tokenKey = 'auth_token';
+  static const String userKey = 'user_data';
 
   factory ApiClient() {
     return _instance;
@@ -82,5 +85,29 @@ class ApiClient {
   static Future<bool> isAuthenticated() async {
     final token = await getToken();
     return token != null && token.isNotEmpty;
+  }
+
+  // Save user data to secure storage
+  static Future<void> saveUser(User user) async {
+    await _secureStorage.write(key: userKey, value: jsonEncode(user.toJson()));
+  }
+
+  // Get user data from secure storage
+  static Future<User?> getUser() async {
+    final userData = await _secureStorage.read(key: userKey);
+    if (userData != null && userData.isNotEmpty) {
+      try {
+        return User.fromJson(jsonDecode(userData));
+      } catch (e) {
+        // If there's an error parsing the user data, return null
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // Clear user data from secure storage
+  static Future<void> clearUser() async {
+    await _secureStorage.delete(key: userKey);
   }
 }

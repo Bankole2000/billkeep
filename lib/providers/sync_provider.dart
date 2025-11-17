@@ -1,11 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/sync/sync_coordinator.dart';
 import 'database_provider.dart';
+import 'project_provider.dart';
 
 /// Provider for the sync coordinator
 final syncCoordinatorProvider = Provider<SyncCoordinator>((ref) {
   final database = ref.watch(databaseProvider);
-  return SyncCoordinator(database);
+  final projectRepository = ref.watch(projectRepositoryProvider);
+
+  return SyncCoordinator(
+    database: database,
+    projectRepository: projectRepository,
+  );
 });
 
 /// Provider to track unsynced changes count

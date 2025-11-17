@@ -75,4 +75,12 @@ extension HexColor on Color {
     buffer.write(hexString.replaceFirst('#', ''));
     return Color(int.parse(buffer.toString(), radix: 16));
   }
+
+  String toHexString() {
+    final int argb = (a.toInt() << 24) |
+                     (r.toInt() << 16) |
+                     (g.toInt() << 8) |
+                     b.toInt();
+    return argb.toRadixString(16).substring(2).toUpperCase();
+  }
 }
