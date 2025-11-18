@@ -1,3 +1,4 @@
+import 'package:billkeep/database/database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/user_preferences_service.dart';
 
@@ -6,8 +7,11 @@ final userPreferencesServiceProvider = Provider<UserPreferencesService>((ref) {
   return UserPreferencesService();
 });
 
+// State provider for default currency object
+final defaultCurrencyProvider = StateProvider<Currency?>((ref) => null);
+
 // State provider for default currency code
-final defaultCurrencyProvider = StateProvider<String>((ref) => 'USD');
+final defaultCurrencyCodeProvider = StateProvider<String>((ref) => 'USD');
 
 // State provider for theme mode
 final themeModeProvider = StateProvider<String>((ref) => 'system');
@@ -69,7 +73,7 @@ final loadPreferencesProvider = FutureProvider<void>((ref) async {
   final defaultMerchant = await prefsService.getDefaultMerchant();
 
   // Update the state providers with loaded values
-  ref.read(defaultCurrencyProvider.notifier).state = defaultCurrency;
+  ref.read(defaultCurrencyCodeProvider.notifier).state = defaultCurrency;
   ref.read(themeModeProvider.notifier).state = themeMode;
   ref.read(languageProvider.notifier).state = language;
   ref.read(notificationsEnabledProvider.notifier).state = notificationsEnabled;
@@ -93,7 +97,7 @@ class UserPreferencesNotifier extends StateNotifier<Map<String, dynamic>> {
   UserPreferencesNotifier(this._prefsService) : super({});
 
   // Update default currency and save to SharedPreferences
-  Future<void> setDefaultCurrency(String currency) async {
+  Future<void> setDefaultCurrency(Currency currency) async {
     await _prefsService.setDefaultCurrency(currency);
     state = {...state, 'defaultCurrency': currency};
   }

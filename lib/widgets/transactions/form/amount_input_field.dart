@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../database/database.dart';
-import '../../../providers/ui_providers.dart';
-import '../../../utils/app_enums.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/utils/app_enums.dart';
 
 /// Amount input field for transaction forms
 class AmountInputField extends ConsumerWidget {

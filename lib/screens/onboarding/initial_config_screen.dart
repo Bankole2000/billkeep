@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/utils/id_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/database/database.dart';
@@ -45,7 +47,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   final _walletNameController = TextEditingController();
   WalletType? _walletType = WalletType.CASH;
   WalletProvider? _walletProvider;
-  final _initialBalanceController = TextEditingController(text: '0');
+  final _initialBalanceController = TextEditingController(text: '0.00');
   WalletModel? _createdWallet;
 
   // Step 3: First project
@@ -60,6 +62,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     super.initState();
     _initializeDefaultValues();
     _suggestCurrency();
+    print(_selectedCurrency);
     _analytics.logInitialConfigViewed(step: _currentStep);
   }
 
@@ -80,7 +83,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     super.dispose();
   }
 
-  void _suggestCurrency() {
+  void _suggestCurrency() async {
     try {
       final locale = Platform.localeName;
       final parts = locale.split('_');
@@ -91,10 +94,16 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           (entry) => entry.value == countryCode,
           orElse: () => const MapEntry('USD', 'US'),
         );
-
+        print('Mapped currency code: ${currencyMap.key}');
         final currencyAsync = ref.watch(currencyProvider(currencyMap.key));
+        print('Suggested currency code: ${currencyMap.key}');
         currencyAsync.when(
-          data: (currency) => setState(() => _selectedCurrency = currency),
+          data: (currency) {
+            print(currency);
+            setState((){
+              _selectedCurrency = currency;
+            });
+          },
           error: (_, __) => _setDefaultCurrency(),
           loading: _setDefaultCurrency,
         );
@@ -108,7 +117,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
   void _setDefaultCurrency() {
     setState(() {
-      _selectedCurrency = null;
+      _selectedCurrency = Currency(id: 'USD', code: 'USD', name: 'US dollars', symbol: '\$', decimals: 2, isCrypto: false, isActive: true, tempId: IdGenerator.tempCurrency(), countryISO2: 'US');
     });
   }
 
@@ -144,10 +153,11 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     if (_selectedCurrency == null) {
       throw Exception('Please select a currency to continue.');
     }
-
-    await _preferencesService.setDefaultCurrency(_selectedCurrency!.code);
+    print(_selectedCurrency);
+    await _preferencesService.setDefaultCurrency(_selectedCurrency!);
     await _preferencesService.syncToBackend(widget.user.id);
-    ref.read(defaultCurrencyProvider.notifier).state = _selectedCurrency!.code;
+    ref.read(defaultCurrencyProvider.notifier).state = _selectedCurrency!;
+    ref.read(defaultCurrencyCodeProvider.notifier).state = _selectedCurrency!.code;
   }
 
   Future<void> _handleWalletStep() async {
@@ -157,10 +167,13 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
     final walletBalance =
         (double.tryParse(_initialBalanceController.text) ?? 0) * 100;
+    print(walletBalance);
+    print(_initialBalanceController.text);
 
     // Get wallet service from provider
     final walletService = ref.read(walletServiceProvider);
-
+    print(_selectedCurrency);
+    print(widget.user.id);
     _createdWallet = await walletService.createWallet(
       name: _walletNameController.text.trim(),
       userId: widget.user.id,
@@ -210,14 +223,16 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
     // Get project service from provider
     final projectService = ref.read(projectServiceProvider);
-
+    final defaultWallet = ref.watch(walletsProvider).value?.firstWhere(
+          (w) => w.id == _selectedDefaultWalletId || w.tempId == _selectedDefaultWalletId,
+        );
     // Create first project
     final project = await projectService.createProject(
       name: _projectNameController.text.trim(),
       description: _projectDescriptionController.text.trim().isEmpty
           ? null
           : _projectDescriptionController.text.trim(),
-      walletId: _selectedDefaultWalletId,
+      defaultWallet: defaultWallet?.id,
       userId: widget.user.id,
     );
 
@@ -320,8 +335,10 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
                   children: [
                     CurrencyStep(
                       selectedCurrency: _selectedCurrency,
-                      onCurrencySelected: (currency) =>
-                          setState(() => _selectedCurrency = currency),
+                      onCurrencySelected: (currency) { 
+                        print(currency);
+                        setState(() => _selectedCurrency = currency);
+                      },
                     ),
                     WalletStep(
                       walletNameController: _walletNameController,
@@ -345,6 +362,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
                       createdWallet: _createdWallet,
                       selectedWalletId: _selectedDefaultWalletId,
                       onWalletChanged: (String? walletId) {
+                        print(walletId);
                         setState(() {
                           _selectedDefaultWalletId = walletId;
                         });

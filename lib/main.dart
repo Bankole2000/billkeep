@@ -1,4 +1,5 @@
 import 'package:billkeep/models/user_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:billkeep/utils/default_merchants.dart';
 import 'package:billkeep/utils/default_wallet_providers.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ void main() async {
 
   // Initialize cameras
   try {
+    await dotenv.load();
     cameras = await availableCameras();
   } on CameraException catch (e) {
     print('Error initializing cameras: $e');

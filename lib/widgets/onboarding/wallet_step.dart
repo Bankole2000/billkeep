@@ -2,6 +2,9 @@ import 'dart:io' show Platform;
 
 import 'package:billkeep/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:flutter_multi_formatter/formatters/money_input_enums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/user_preferences_provider.dart';
@@ -77,6 +80,12 @@ class WalletStep extends ConsumerWidget {
           // Initial balance
           TextFormField(
             controller: initialBalanceController,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+              CurrencyInputFormatter(
+                thousandSeparator: ThousandSeparator.Comma,
+              )
+            ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               isDense: true,
@@ -106,11 +115,11 @@ class WalletStep extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // Wallet provider (if not cash)
-          if (walletType != null && walletType != WalletType.CASH)
-            WalletProviderDropdown(
-              onChanged: onWalletProviderChanged,
-              selectedWalletType: walletType!,
-            ),
+          // if (walletType != null && walletType != WalletType.CASH)
+          WalletProviderDropdown(
+            onChanged: onWalletProviderChanged,
+            selectedWalletType: walletType!,
+          ),
         ],
       ),
     );

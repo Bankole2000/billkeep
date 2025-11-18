@@ -13,6 +13,12 @@ class Projects extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get description => text().nullable()();
+  TextColumn get status =>
+      text().withDefault(const Constant('ACTIVE'))(); // ACTIVE, ARCHIVED
+  TextColumn get defaultWallet => text().nullable().references(
+        Wallets,
+        #id,
+      )(); // Default wallet for this project
 
   IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
   TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
@@ -24,6 +30,7 @@ class Projects extends Table {
   // For local images (store file path, not binary data)
   TextColumn get localImagePath => text().nullable()();
   TextColumn get color => text().nullable()();
+  TextColumn get userId => text()();
   BoolColumn get isSynced =>
       boolean().withDefault(const Constant(false))(); // NEW
   TextColumn get tempId => text().nullable()(); // Store original temp ID
@@ -55,6 +62,7 @@ class Reminders extends Table {
       text()(); // e.g., '15_min_before', '1_day_before'
 
   TextColumn get tempId => text().nullable()();
+  TextColumn get userId => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
@@ -79,6 +87,7 @@ class Expenses extends Table {
       text()(); // 'ONE_TIME' or 'RECURRING' or 'INSTALLMENTS'
   TextColumn get frequency => text().nullable()(); // 'MONTHLY' or 'YEARLY'
   DateTimeColumn get startDate => dateTime()();
+  TextColumn get userId => text()();
   DateTimeColumn get nextRenewalDate => dateTime().nullable()();
   TextColumn get categoryId =>
       text().nullable().references(Categories, #id)(); // Link to category
@@ -124,6 +133,7 @@ class Payments extends Table {
   TextColumn get investmentId =>
       text().nullable()(); // NEW - link to investment
   TextColumn get debtId => text().nullable()(); // NEW - link to debt
+  TextColumn get userId => text()();
   IntColumn get actualAmount => integer()(); // What was actually paid
   TextColumn get currency => text().references(Currencies, #id)();
   DateTimeColumn get paymentDate => dateTime()();
@@ -155,6 +165,7 @@ class Income extends Table {
   TextColumn get type => text()(); // 'ONE_TIME' or 'RECURRING'
   TextColumn get frequency => text().nullable()(); // 'MONTHLY' or 'YEARLY'
   DateTimeColumn get startDate => dateTime()(); // When income starts
+  TextColumn get userId => text()();
   DateTimeColumn get nextExpectedDate =>
       dateTime().nullable()(); // Next expected payment
   TextColumn get categoryId =>
@@ -199,6 +210,7 @@ class TodoItems extends Table {
   TextColumn get description => text().nullable()();
   BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
   DateTimeColumn get completedAt => dateTime().nullable()();
+  TextColumn get userId => text()();
 
   // Financial attachment (direct)
   IntColumn get directExpenseAmount => integer().nullable()();
@@ -234,6 +246,7 @@ class ShoppingLists extends Table {
   )();
   TextColumn get name => text()();
   TextColumn get description => text().nullable()();
+  TextColumn get userId => text()();
   TextColumn get linkedExpenseId => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   TextColumn get tempId => text().nullable()();
@@ -253,6 +266,7 @@ class ShoppingListItems extends Table {
   IntColumn get estimatedAmount => integer().nullable()(); // In cents
   IntColumn get actualAmount => integer().nullable()(); // In cents
   TextColumn get currency => text().withDefault(const Constant('USD'))();
+  TextColumn get userId => text()();
   IntColumn get quantity => integer().withDefault(const Constant(1))();
   BoolColumn get isPurchased => boolean().withDefault(const Constant(false))();
   DateTimeColumn get purchasedAt => dateTime().nullable()();
@@ -278,6 +292,7 @@ class MessageRules extends Table {
   TextColumn get sender => text()(); // Bank shortcode or email
   TextColumn get pattern => text()(); // Regex pattern to match
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  TextColumn get userId => text().nullable()();
 
   // Parsing rules
   TextColumn get amountPattern => text()(); // Regex to extract amount
@@ -363,6 +378,7 @@ class Merchants extends Table {
 
   // For remote images
   TextColumn get imageUrl => text().nullable()();
+  TextColumn get userId => text().nullable()();
 
   // For local images (store file path, not binary data)
   TextColumn get localImagePath => text().nullable()();
@@ -406,6 +422,7 @@ class Tags extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get tempId => text().nullable()();
+  TextColumn get userId => text().nullable()();
 
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -419,6 +436,7 @@ class Contacts extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get tempId => text().nullable()();
+  TextColumn get userId => text()();
 
   IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
   TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
@@ -482,6 +500,7 @@ class Wallets extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get tempId => text().nullable()();
+  TextColumn get userId => text()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
@@ -532,6 +551,7 @@ class WalletProviders extends Table {
   TextColumn get name => text()();
   TextColumn get description => text().nullable()();
   TextColumn get tempId => text().nullable()();
+  TextColumn get userId => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
@@ -566,6 +586,7 @@ class Budgets extends Table {
   TextColumn get projectId => text().references(Projects, #id)();
   TextColumn get categoryId => text().nullable().references(Categories, #id)();
   TextColumn get currency => text().references(Currencies, #id)();
+  TextColumn get userId => text()();
 
   IntColumn get limitAmount => integer()(); // The budget limit
   IntColumn get spentAmount =>
@@ -615,6 +636,7 @@ class Goals extends Table {
   IntColumn get targetAmount => integer()(); // Target amount to reach
   TextColumn get contactId => text().nullable().references(Contacts, #id)();
   TextColumn get categoryId => text().nullable().references(Categories, #id)();
+  TextColumn get userId => text()();
 
   IntColumn get currentAmount =>
       integer().withDefault(const Constant(0))(); // Current progress
@@ -713,6 +735,7 @@ class Investments extends Table {
 
   // Currency and amounts
   TextColumn get currency => text().references(Currencies, #id)();
+  TextColumn get userId => text()();
   IntColumn get investedAmount => integer()(); // Principal investment amount
   IntColumn get currentValue => integer().withDefault(
     const Constant(0),

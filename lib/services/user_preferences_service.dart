@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:billkeep/database/database.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_client.dart';
@@ -53,9 +54,9 @@ class UserPreferencesService {
   }
 
   /// Set default currency
-  Future<void> setDefaultCurrency(String currency) async {
+  Future<void> setDefaultCurrency(Currency currency) async {
     await _ensureInitialized();
-    await _prefs!.setString(_currencyKey, currency);
+    await _prefs!.setString(_currencyKey, jsonEncode(currency.toJson()));
   }
 
   /// Get language

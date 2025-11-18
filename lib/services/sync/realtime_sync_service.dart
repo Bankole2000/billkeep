@@ -1,9 +1,7 @@
-import '../../providers/project_provider.dart';
-import '../../providers/wallet_provider.dart';
-import '../../models/wallet_model.dart';
-import '../../models/project_model.dart';
-import '../pocketbase_realtime_service.dart';
-import '../logging_service.dart';
+import 'package:billkeep/providers/project_provider.dart';
+import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/services/pocketbase_realtime_service.dart';
+import 'package:billkeep/services/logging_service.dart';
 
 /// Realtime Sync Service
 ///

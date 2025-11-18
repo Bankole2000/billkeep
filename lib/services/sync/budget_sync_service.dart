@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import '../../database/database.dart';
-import '../../providers/budget_provider.dart';
-import '../../services/api_client.dart';
-import '../../utils/exceptions.dart';
-import '../../utils/id_generator.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/budget_provider.dart';
+import 'package:billkeep/services/api_client.dart';
+import 'package:billkeep/utils/exceptions.dart';
+import 'package:billkeep/utils/id_generator.dart';
 import 'base_sync_service.dart';
 
 /// Synchronization service for Budgets

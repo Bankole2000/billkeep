@@ -89,7 +89,7 @@ final currencyProvider = StreamProviderFamily<Currency?, String>((
 
 // Stream provider for the default currency based on user preferences
 final defaultCurrencyObjectProvider = StreamProvider<Currency?>((ref) {
-  final defaultCurrencyCode = ref.watch(defaultCurrencyProvider);
+  final defaultCurrencyCode = ref.watch(defaultCurrencyCodeProvider);
   final database = ref.watch(databaseProvider);
   return (database.select(
     database.currencies,

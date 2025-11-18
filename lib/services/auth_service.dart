@@ -1,11 +1,19 @@
+import 'package:billkeep/config/app_config.dart';
 import 'package:dio/dio.dart';
 import 'package:billkeep/models/user_model.dart';
+import 'package:pocketbase/pocketbase.dart';
 import 'api_client.dart';
 
 class AuthService {
   final ApiClient _apiClient;
+  final pb = PocketBase(AppConfig.pocketbaseUrl);
 
-  AuthService() : _apiClient = ApiClient();
+  AuthService() : _apiClient = ApiClient() {
+    pb.collection('users').subscribe('*', (e) {
+      print('Realtime update for users: ${e.record.toString()}');
+      // Handle realtime updates if needed
+    });
+  }
 
   /// Sign up a new user with email, username, and password
   Future<SignupResponse> signup({

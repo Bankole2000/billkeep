@@ -1,12 +1,21 @@
-import '../models/project_model.dart';
-import '../providers/project_provider.dart';
-import '../utils/connectivity_helper.dart';
+import 'package:billkeep/config/app_config.dart';
+import 'package:pocketbase/pocketbase.dart';
+
+import 'package:billkeep/models/project_model.dart';
+import 'package:billkeep/providers/project_provider.dart';
+import 'package:billkeep/utils/connectivity_helper.dart';
 import 'base_api_service.dart';
 
 class ProjectService extends BaseApiService {
   final ProjectRepository _repository;
+  final pb = PocketBase(AppConfig.pocketbaseUrl);
 
-  ProjectService(this._repository);
+  ProjectService(this._repository){
+      pb.collection('projects').subscribe('*', (e) {
+      print('Realtime update for projects: ${e.record.toString()}');
+      // Handle realtime updates if needed
+    });
+  }
   /// Create a new project
   ///
   /// Local-first approach:
@@ -15,16 +24,30 @@ class ProjectService extends BaseApiService {
   /// 3. Realtime sync will update with canonical ID when backend confirms
   Future<Project> createProject({
     required String name,
+    required String userId,
+    String? defaultWallet,
     String? description,
+    String? emoji = '📂',
+    String? imageUrl,
+    String? localImagePath,
+    String? color,
+    String? iconType = 'emoji',
+    int? iconCodePoint,
+    bool? isArchived,
     String? status,
-    String? walletId,
-    String? userId,
   }) async {
     // 1. Create in local database first (optimistic)
     final tempId = await _repository.createProject(
       name: name,
+      userId: userId,
       description: description,
-      iconType: 'MaterialIcons',
+      defaultWallet: defaultWallet,
+      iconType: iconType!,
+      emoji: emoji,
+      imageUrl: imageUrl,
+      localImagePath: localImagePath,
+      iconCodePoint: iconCodePoint,
+      color: color,
       isArchived: false,
     );
 
@@ -39,7 +62,7 @@ class ProjectService extends BaseApiService {
             data: {
               'name': name,
               'description': description,
-              'defaultWallet': walletId,
+              'defaultWallet': defaultWallet,
               'user': userId,
               'status': status ?? 'ACTIVE',
             },

@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 /// Application configuration and environment settings
 ///
 /// This class centralizes all configuration values and supports
@@ -8,6 +10,8 @@ class AppConfig {
 
   /// Current environment
   static const Environment environment = Environment.development;
+
+  static String pocketbaseUrl = dotenv.env['POCKETBASE_URL'] ?? 'http://localhost:8090';
 
   /// API Configuration
   static const String apiBaseUrl = String.fromEnvironment(

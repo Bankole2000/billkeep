@@ -1,13 +1,68 @@
 import 'package:billkeep/database/database.dart';
-import '../models/wallet_model.dart';
-import '../providers/wallet_provider.dart';
-import '../utils/connectivity_helper.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:billkeep/models/wallet_model.dart';
+import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/utils/connectivity_helper.dart';
 import 'base_api_service.dart';
 
 class WalletService extends BaseApiService {
   final WalletRepository _repository;
 
-  WalletService(this._repository);
+  WalletService(this._repository) {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for wallets collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('wallets', _handleWalletUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleWalletUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Wallet ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncWalletFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            _repository.deleteWallet(event.record!.id);
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling wallet update: $e');
+    }
+  }
+
+  /// Sync wallet from backend to local DB
+  Future<void> _syncWalletFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      final tempId = record.getStringValue('tempId');
+
+      print('📥 Syncing wallet: tempId=$tempId → canonicalId=$canonicalId');
+
+      // Find local wallet by tempId
+      final localWallet = await _repository.getWalletByTempId(tempId);
+
+      if (localWallet != null && localWallet.id != canonicalId) {
+        // Update with canonical ID from server
+        await _repository.updateWalletId(
+          oldId: localWallet.id,
+          newId: canonicalId,
+        );
+        print('✅ Wallet synced successfully');
+      }
+    } catch (e) {
+      print('⚠️ Error syncing wallet: $e');
+    }
+  }
   /// Create a new wallet
   ///
   /// Local-first approach:
@@ -29,11 +84,14 @@ class WalletService extends BaseApiService {
     String? iconType,
     String? color,
   }) async {
+    print(balance);
+    print(userId);
     // 1. Create in local database first (optimistic)
     final tempId = await _repository.createWallet(
       name: name,
+      userId: userId,
       walletType: walletType,
-      currency: currency.code,
+      currency: currency.id,
       balance: balance.toString(),
       providerId: providerId,
       imageUrl: imageUrl,
@@ -67,6 +125,8 @@ class WalletService extends BaseApiService {
               'iconType': iconType,
               'color': color,
               'user': userId,
+              'isSynced': true,
+              'tempId': tempId,
             },
           ),
           parser: (data) => WalletModel.fromJson(data),

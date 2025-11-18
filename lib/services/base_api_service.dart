@@ -1,14 +1,33 @@
 import 'package:dio/dio.dart';
+import 'package:pocketbase/pocketbase.dart';
 import 'api_client.dart';
+import '../config/app_config.dart';
 import '../utils/exceptions.dart';
 
 /// Base service class providing common API functionality and error handling
 /// All API service classes should extend this to avoid code duplication
+///
+/// Now includes PocketBase realtime subscription management:
+/// - Prevents duplicate subscriptions
+/// - Proper cleanup on dispose
+/// - Easy to use in child services
 abstract class BaseApiService {
   final ApiClient _apiClient = ApiClient();
+  late final PocketBase _pb;
+
+  /// Track active subscriptions to prevent duplicates and enable cleanup
+  final Map<String, UnsubscribeFunc> _subscriptions = {};
+  bool _isDisposed = false;
+
+  BaseApiService() {
+    _pb = PocketBase(AppConfig.pocketbaseUrl);
+  }
 
   /// Get the Dio instance for making requests
   Dio get dio => _apiClient.dio;
+
+  /// Get the PocketBase instance for realtime subscriptions
+  PocketBase get pb => _pb;
 
   /// Execute a request and parse the response
   ///
@@ -139,4 +158,94 @@ abstract class BaseApiService {
       );
     }
   }
+
+  // ========================================
+  // REALTIME SUBSCRIPTION MANAGEMENT
+  // ========================================
+
+  /// Subscribe to a PocketBase collection
+  ///
+  /// Automatically prevents duplicate subscriptions
+  /// Returns Future<bool> - true if subscribed, false if already subscribed
+  ///
+  /// Usage in child service:
+  /// ```dart
+  /// subscribeToCollection('wallets', _handleWalletUpdate);
+  /// ```
+  Future<bool> subscribeToCollection(
+    String collectionName,
+    void Function(RecordSubscriptionEvent) onEvent, {
+    String? recordId,
+  }) async {
+    if (_isDisposed) {
+      print('⚠️ Cannot subscribe - service is disposed');
+      return false;
+    }
+
+    final subscriptionKey = recordId != null
+        ? '$collectionName:$recordId'
+        : collectionName;
+
+    // Check if already subscribed
+    if (_subscriptions.containsKey(subscriptionKey)) {
+      print('ℹ️ Already subscribed to $subscriptionKey');
+      return false;
+    }
+
+    try {
+      // Subscribe and store the unsubscribe function
+      final unsubscribe = await (recordId != null
+          ? _pb.collection(collectionName).subscribe(recordId, onEvent)
+          : _pb.collection(collectionName).subscribe('*', onEvent));
+
+      _subscriptions[subscriptionKey] = unsubscribe;
+      print('✅ Subscribed to $subscriptionKey');
+      return true;
+    } catch (e) {
+      print('❌ Failed to subscribe to $subscriptionKey: $e');
+      return false;
+    }
+  }
+
+  /// Unsubscribe from a specific collection
+  void unsubscribeFromCollection(String collectionName, {String? recordId}) {
+    final subscriptionKey = recordId != null
+        ? '$collectionName:$recordId'
+        : collectionName;
+
+    final unsubscribe = _subscriptions.remove(subscriptionKey);
+    if (unsubscribe != null) {
+      unsubscribe();
+      print('🔌 Unsubscribed from $subscriptionKey');
+    }
+  }
+
+  /// Check if currently subscribed to a collection
+  bool isSubscribedTo(String collectionName, {String? recordId}) {
+    final subscriptionKey = recordId != null
+        ? '$collectionName:$recordId'
+        : collectionName;
+    return _subscriptions.containsKey(subscriptionKey);
+  }
+
+  /// Get count of active subscriptions
+  int get activeSubscriptions => _subscriptions.length;
+
+  /// Dispose of all subscriptions and cleanup
+  ///
+  /// IMPORTANT: Call this in provider's onDispose
+  void dispose() {
+    if (_isDisposed) return;
+
+    print('🗑️ Disposing service with ${_subscriptions.length} subscriptions');
+
+    for (final unsubscribe in _subscriptions.values) {
+      unsubscribe();
+    }
+    _subscriptions.clear();
+    _isDisposed = true;
+  }
+
+  /// Check if service is disposed
+  bool get isDisposed => _isDisposed;
 }

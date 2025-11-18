@@ -1,21 +1,22 @@
 import 'dart:io';
+import 'package:billkeep/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/bank_provider.dart';
-import '../../providers/currency_provider.dart';
-import '../../providers/ui_providers.dart';
-import '../../providers/wallet_provider.dart';
-import '../../utils/app_colors.dart';
-import '../../utils/app_enums.dart';
-import '../../utils/currency_helper.dart';
-import '../../utils/validators.dart';
-import '../../utils/wallet_types.dart';
-import '../../widgets/wallets/form/currency_balance_section.dart';
-import '../../widgets/wallets/form/wallet_name_section.dart';
-import '../../widgets/wallets/form/wallet_provider_section.dart';
-import '../../widgets/wallets/form/appearance_section.dart';
-import '../../widgets/wallets/select_wallet_type_bottomsheet.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/bank_provider.dart';
+import 'package:billkeep/providers/currency_provider.dart';
+import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/utils/app_colors.dart';
+import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/currency_helper.dart';
+import 'package:billkeep/utils/validators.dart';
+import 'package:billkeep/utils/wallet_types.dart';
+import 'package:billkeep/widgets/wallets/form/currency_balance_section.dart';
+import 'package:billkeep/widgets/wallets/form/wallet_name_section.dart';
+import 'package:billkeep/widgets/wallets/form/wallet_provider_section.dart';
+import 'package:billkeep/widgets/wallets/form/appearance_section.dart';
+import 'package:billkeep/widgets/wallets/select_wallet_type_bottomsheet.dart';
 
 /// Refactored wallet form screen with extracted sections
 class AddWalletScreen extends ConsumerStatefulWidget {
@@ -211,8 +212,13 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
   }
 
   Future<dynamic> _createWallet(String iconType) async {
+    final userId = ref.read(currentUserIdProvider);
+    if(userId == null) {
+      throw Exception('User not logged in');
+    }
     return await ref.read(walletRepositoryProvider).createWallet(
           name: _nameController.text.trim(),
+          userId: userId!,
           walletType: _selectedWalletType!.name,
           currency: _selectedCurrency!.code,
           balance: _amountController.text.replaceAll(',', ''),

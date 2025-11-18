@@ -1,4 +1,4 @@
-import '../../utils/exceptions.dart';
+import 'package:billkeep/utils/exceptions.dart';
 
 /// Base class for synchronization services
 ///

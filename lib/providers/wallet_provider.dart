@@ -1,4 +1,5 @@
 import 'package:billkeep/utils/currency_helper.dart';
+import 'package:pocketbase/pocketbase.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;
@@ -230,6 +231,7 @@ class WalletRepository {
     required String walletType,
     required String currency,
     required String balance,
+    required String userId,
     String? providerId,
     String? imageUrl,
     String? localImagePath,
@@ -240,7 +242,7 @@ class WalletRepository {
     bool isGlobal = true,
   }) async {
     final tempId = IdGenerator.tempWallet();
-
+    print(currency);
     try {
       await _database
           .into(_database.wallets)
@@ -261,6 +263,7 @@ class WalletRepository {
               color: drift.Value(color),
               isGlobal: drift.Value(isGlobal),
               isSynced: const drift.Value(false),
+              userId: drift.Value(userId),
             ),
           );
     } catch (e) {

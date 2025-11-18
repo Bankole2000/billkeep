@@ -359,7 +359,7 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('2', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text('0', style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(
                         'Decimals',
                         style: TextStyle(fontWeight: FontWeight.normal),
@@ -370,9 +370,9 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
                 ),
                 Slider(
                   value: _decimals,
-                  min: 2,
+                  min: 0,
                   max: 8,
-                  divisions: 6, // Creates 7 positions (2,3,4,5,6,7,8)
+                  divisions: 8, // Creates 7 positions (2,3,4,5,6,7,8)
                   label: _decimals.round().toString(),
                   onChanged: (double value) {
                     setState(() {

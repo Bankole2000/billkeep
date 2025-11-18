@@ -1,16 +1,18 @@
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/utils/app_enums.dart';
 import 'package:billkeep/widgets/common/emoji_picker_widget.dart';
 import 'package:billkeep/widgets/common/icon_picker_widget.dart';
 import 'package:billkeep/widgets/common/sliding_segment_control_label.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Icon selection section with emoji/icon/image segments
-class IconSelectionSection extends StatelessWidget {
+class IconSelectionSection extends ConsumerWidget {
   final IconSelectionType selectedSegment;
   final ValueChanged<IconSelectionType> onSegmentChanged;
   final IconData? selectedIcon;
-  final ValueChanged<IconData>? onIconSelected;
+  final dynamic Function(IconData?)? onIconSelected;
   final String? selectedEmoji;
   final ValueChanged<String>? onEmojiSelected;
   final Widget? imagePreview;
@@ -27,7 +29,8 @@ class IconSelectionSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(appColorsProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,16 +52,22 @@ class IconSelectionSection extends StatelessWidget {
             initialValue: selectedSegment,
             children: {
               IconSelectionType.emoji: SlidingSegmentControlLabel(
+                activeColor: colors.earth,
                 label: 'Emoji',
                 icon: Icons.emoji_emotions,
+                isActive: selectedSegment == IconSelectionType.emoji,
               ),
               IconSelectionType.icon: SlidingSegmentControlLabel(
+                activeColor: colors.navy,
                 label: 'Icon',
                 icon: Icons.ac_unit,
+                isActive: selectedSegment == IconSelectionType.icon,
               ),
               IconSelectionType.image: SlidingSegmentControlLabel(
+                activeColor: colors.electric,
                 label: 'Image',
                 icon: Icons.image,
+                isActive: selectedSegment == IconSelectionType.image,
               ),
             },
             decoration: BoxDecoration(
@@ -80,12 +89,12 @@ class IconSelectionSection extends StatelessWidget {
         // Icon content based on selected segment
         if (selectedSegment == IconSelectionType.emoji && onEmojiSelected != null)
           EmojiPickerWidget(
-            selectedEmoji: selectedEmoji ?? '🏦',
+            // selectedEmoji: selectedEmoji ?? '🏦',
             onEmojiSelected: onEmojiSelected!,
           )
         else if (selectedSegment == IconSelectionType.icon && onIconSelected != null)
           IconPickerWidget(
-            selectedIcon: selectedIcon ?? Icons.account_balance,
+            preSelectedIcon: selectedIcon ?? Icons.account_balance,
             onIconSelected: onIconSelected!,
           )
         else if (selectedSegment == IconSelectionType.image && imagePreview != null)

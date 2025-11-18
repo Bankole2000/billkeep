@@ -59,6 +59,9 @@ class ProjectRepository {
 
   Future<String> createProject({
     required String name,
+    required String userId,
+    bool? isSynced = false,
+    String? defaultWallet,
     String? description,
     String? emoji,
     String? imageUrl,
@@ -66,7 +69,7 @@ class ProjectRepository {
     String? color,
     required String iconType,
     int? iconCodePoint,
-    bool? isArchived,
+    bool? isArchived = false,
   }) async {
     final tempId = IdGenerator.tempProject();
 
@@ -75,9 +78,11 @@ class ProjectRepository {
         ProjectsCompanion(
           id: drift.Value(tempId),
           tempId: drift.Value(tempId),
+          userId: drift.Value(userId),
           name: drift.Value(name),
+          defaultWallet: drift.Value(defaultWallet),
           description: drift.Value(description),
-          isSynced: const drift.Value(false),
+          isSynced: drift.Value(isSynced!),
           iconType: drift.Value(iconType),
           iconEmoji: drift.Value(emoji),
           imageUrl: drift.Value(imageUrl),

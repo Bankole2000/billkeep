@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:billkeep/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -131,6 +132,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
   }
 
   Future<String> _createProject(String iconType) async {
+    final userId = ref.read(currentUserIdProvider);
     return await ref.read(projectRepositoryProvider).createProject(
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
@@ -146,6 +148,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
               : null,
           isArchived: _isArchived,
           iconCodePoint: _selectedIcon?.codePoint,
+          userId: userId!,
         );
   }
 

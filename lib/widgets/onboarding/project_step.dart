@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../models/wallet_model.dart';
-import '../../providers/wallet_provider.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/models/wallet_model.dart';
+import 'package:billkeep/providers/wallet_provider.dart';
 
 /// Project creation step in onboarding
 class ProjectStep extends ConsumerWidget {
@@ -64,7 +64,7 @@ class ProjectStep extends ConsumerWidget {
           // Project description
           TextFormField(
             controller: projectDescriptionController,
-            maxLines: 3,
+            maxLines: 1,
             decoration: InputDecoration(
               labelText: 'Description (Optional)',
               hintText: 'What will you use this project for?',
@@ -79,11 +79,14 @@ class ProjectStep extends ConsumerWidget {
           // Default Wallet Selection
           walletsAsync.when(
             data: (wallets) {
+              if(wallets.isEmpty) {
+                return const Text('No wallets available. Please create a wallet first.');
+              }
               return DropdownButtonFormField<String>(
-                value: selectedWalletId,
+                initialValue: wallets[0].id,
                 decoration: InputDecoration(
                   labelText: 'Default Wallet',
-                  hintText: 'Select default wallet for this project',
+                  hintText: 'Select default wallet',
                   prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -104,31 +107,8 @@ class ProjectStep extends ConsumerWidget {
                 },
               );
             },
-            loading: () => DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Default Wallet',
-                hintText: 'Loading wallets...',
-                prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              items: const [],
-              onChanged: null,
-            ),
-            error: (error, stack) => DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Default Wallet',
-                hintText: 'Error loading wallets',
-                prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                errorText: 'Failed to load wallets',
-              ),
-              items: const [],
-              onChanged: null,
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Text('Error loading wallets: $error'),
           ),
         ],
       ),

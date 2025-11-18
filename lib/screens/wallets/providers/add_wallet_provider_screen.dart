@@ -33,8 +33,8 @@ class _AddWalletProviderScreenState
     extends ConsumerState<AddWalletProviderScreen> {
   late TextEditingController searchTextController;
   final TextEditingController _imageUrlController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  // final TextEditingController _nameController = TextEditingController();
+  // final TextEditingController _descriptionController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   IconSelectionType _selectedSegment = IconSelectionType.emoji;
   String? walletProviderId;

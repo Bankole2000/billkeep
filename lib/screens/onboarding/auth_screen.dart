@@ -1,6 +1,8 @@
+import 'package:billkeep/config/app_config.dart';
 import 'package:billkeep/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketbase/pocketbase.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:billkeep/services/auth_service.dart';
 import 'package:billkeep/services/analytics_service.dart';
@@ -21,6 +23,7 @@ class AuthScreen extends ConsumerStatefulWidget {
 
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
+  final pb = PocketBase(AppConfig.pocketbaseUrl);
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -36,8 +39,32 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    // pb.collection('users').subscribe('*', (e) {
+    //   print('Realtime update for users: ${e.record.toString()}');
+    //   // Handle realtime updates if needed
+    // });
+    // _setupRealtimeSubscription();
     _analytics.logAuthScreenViewed(isSignup: !_isLogin);
   }
+
+  // void _setupRealtimeSubscription() {
+  //   print('Setting up realtime subscription for users collection');
+  //   pb.collection('users').subscribe('*', (e) {
+  //     // setState(() {
+  //     //   if (e.action == 'create') {
+  //     //     users.add(e.record!);
+  //     //   } else if (e.action == 'update') {
+  //     //     final index = users.indexWhere((user) => user.id == e.record!.id);
+  //     //     if (index != -1) {
+  //     //       users[index] = e.record!;
+  //     //     }
+  //     //   } else if (e.action == 'delete') {
+  //     //     users.removeWhere((user) => user.id == e.record!.id);
+  //     //   }
+  //     // });
+  //     print('Realtime event: ${e.action} - ${e.record?.data}');
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -118,7 +145,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     _analytics.logSignupSuccess(method: 'email');
 
     ref.read(currentUserProvider.notifier).setUser(response.user);
-    print(response.user);
+
     if (mounted) {
       Navigator.pushReplacementNamed(
         context,

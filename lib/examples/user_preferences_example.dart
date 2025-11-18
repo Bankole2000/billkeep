@@ -44,11 +44,11 @@ class UserPreferencesExample extends ConsumerWidget {
                 icon: const Icon(Icons.edit),
                 onPressed: () {
                   // Change default currency
-                  ref.read(defaultCurrencyProvider.notifier).state = 'EUR';
+                  // ref.read(defaultCurrencyProvider.notifier).state = 'EUR';
 
                   // Also save to SharedPreferences
-                  ref.read(userPreferencesServiceProvider)
-                    .setDefaultCurrency('EUR');
+                  // ref.read(userPreferencesServiceProvider)
+                  //   .setDefaultCurrency('EUR');
                 },
               ),
             ),
