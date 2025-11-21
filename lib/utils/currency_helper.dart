@@ -1,8 +1,10 @@
+import 'dart:math';
+
 class CurrencyHelper {
   // Convert dollars to cents (for storage)
-  static int dollarsToCents(String dollars) {
+  static int dollarsToCents(String dollars, [int decimalPlaces = 2]) {
     final value = double.tryParse(dollars) ?? 0;
-    return (value * 100).round();
+    return (value * pow(10, decimalPlaces)).round();
   }
 
   // Convert cents to dollars (for display)
@@ -16,9 +18,9 @@ class CurrencyHelper {
   }
 
   // Parse user input and convert to cents
-  static int parseInput(String input) {
+  static int parseInput(String input, [int decimalPlaces = 2]) {
     // Remove any currency symbols or commas
     final cleaned = input.replaceAll(RegExp(r'[^\d.]'), '');
-    return dollarsToCents(cleaned);
+    return dollarsToCents(cleaned, decimalPlaces);
   }
 }

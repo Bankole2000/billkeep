@@ -1,0 +1,17 @@
+{
+  "collectionId": "pbc_3292755704",
+  "collectionName": "categories",
+  "id": "test",
+  "name": "test",
+  "iconCodePoint": 123,
+  "iconEmoji": "test",
+  "iconType": "test",
+  "color": "test",
+  "categoryGroup": "RELATION_RECORD_ID",
+  "isSynced": true,
+  "tempId": "test",
+  "metadata": "JSON",
+  "user": "RELATION_RECORD_ID",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

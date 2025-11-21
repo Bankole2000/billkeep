@@ -1,7 +1,53 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/merchant_model.dart';
 import 'base_api_service.dart';
 
 class MerchantService extends BaseApiService {
+  MerchantService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for merchants collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('merchants', _handleMerchantUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleMerchantUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Merchant ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncMerchantFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle merchant deletion in local DB if needed
+            print('🗑️ Merchant deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling merchant update: $e');
+    }
+  }
+
+  /// Sync merchant from backend to local DB
+  Future<void> _syncMerchantFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing merchant: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing merchant: $e');
+    }
+  }
+
   /// Create a new merchant
   Future<MerchantModel> createMerchant({
     required String name,

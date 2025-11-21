@@ -1,17 +1,21 @@
+import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WelcomeCarouselScreen extends StatefulWidget {
+class WelcomeCarouselScreen extends ConsumerStatefulWidget {
   const WelcomeCarouselScreen({super.key});
 
   @override
-  State<WelcomeCarouselScreen> createState() => _WelcomeCarouselScreenState();
+  ConsumerState<WelcomeCarouselScreen> createState() => _WelcomeCarouselScreenState();
 }
 
-class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
+class _WelcomeCarouselScreenState extends ConsumerState<WelcomeCarouselScreen> {
+  late final AppColorScheme colors;
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingSlide> _slides = [
+  late final List<OnboardingSlide> _slides = [
     OnboardingSlide(
       title: 'Welcome to BillKeep',
       description: 'Your all-in-one financial management companion',
@@ -22,7 +26,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
         'Monitor your financial health',
       ],
       icon: Icons.account_balance_wallet,
-      color: Colors.blue,
+      color: colors.navy!,
     ),
     OnboardingSlide(
       title: 'Smart Organization',
@@ -34,11 +38,11 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
         'Track recurring payments',
       ],
       icon: Icons.folder_special,
-      color: Colors.green,
+      color: colors.wave!,
     ),
     OnboardingSlide(
       title: 'Insights & Reports',
-      description: 'Understand your spending patterns',
+      description: 'Understand your spending and earning patterns',
       features: [
         'Visual charts and graphs',
         'Expense analytics',
@@ -46,10 +50,10 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
         'Financial forecasting',
       ],
       icon: Icons.bar_chart,
-      color: Colors.orange,
+      color: colors.earth!,
     ),
     OnboardingSlide(
-      title: 'Multi-Currency Support',
+      title: 'Multi-Currency',
       description: 'Manage finances across different currencies',
       features: [
         'Support for crypto and fiat',
@@ -58,7 +62,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
         'Global financial management',
       ],
       icon: Icons.currency_exchange,
-      color: Colors.purple,
+      color: colors.electric!,
     ),
   ];
 
@@ -72,6 +76,13 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
     setState(() {
       _currentPage = page;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    colors = ref.read(appColorsProvider);
   }
 
   void _navigateToAuth() {
@@ -129,7 +140,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
                 child: ElevatedButton(
                   onPressed: _navigateToAuth,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: colors.text,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

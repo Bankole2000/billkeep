@@ -1,4 +1,6 @@
 import 'package:billkeep/database/database.dart';
+import 'package:billkeep/services/api_client.dart';
+import 'package:billkeep/utils/currency_helper.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:billkeep/models/wallet_model.dart';
 import 'package:billkeep/providers/wallet_provider.dart';
@@ -18,15 +20,23 @@ class WalletService extends BaseApiService {
   }
 
   /// Handle realtime updates from PocketBase
-  void _handleWalletUpdate(RecordSubscriptionEvent event) {
+  void _handleWalletUpdate(RecordSubscriptionEvent event) async {
     print('🔄 Wallet ${event.action}: ${event.record?.id}');
-
+    final user = await ApiClient.getUser();
+    if(event.record?.user == null) {
+      print('Event data is not for a user');
+      return;
+    }
+    if(event.record?.user != user?.id) {
+      print('Event is not for this user');
+      return;
+    }
     try {
       switch (event.action) {
         case 'create':
         case 'update':
           if (event.record != null) {
-            _syncWalletFromBackend(event.record!);
+            _syncWalletFromBackend(event.record!, event.action);
           }
           break;
         case 'delete':
@@ -41,23 +51,28 @@ class WalletService extends BaseApiService {
   }
 
   /// Sync wallet from backend to local DB
-  Future<void> _syncWalletFromBackend(RecordModel record) async {
+  Future<void> _syncWalletFromBackend(RecordModel record, String action) async {
     try {
       final canonicalId = record.id;
       final tempId = record.getStringValue('tempId');
 
       print('📥 Syncing wallet: tempId=$tempId → canonicalId=$canonicalId');
-
+      // TODO: handle realtime event
       // Find local wallet by tempId
-      final localWallet = await _repository.getWalletByTempId(tempId);
-
-      if (localWallet != null && localWallet.id != canonicalId) {
-        // Update with canonical ID from server
-        await _repository.updateWalletId(
-          oldId: localWallet.id,
-          newId: canonicalId,
-        );
-        print('✅ Wallet synced successfully');
+      final localWallet = await _repository.getWalletByTempId(tempId: tempId);
+      if(action == 'create'){
+        if (localWallet != null && localWallet.id != canonicalId) {
+          // Update with canonical ID from server
+          await _repository.updateWalletWithCanonicalId(
+            tempId: tempId,
+            canonicalId: canonicalId,
+          );
+          print('✅ Wallet synced successfully');
+        }
+        if(localWallet == null){
+          final newWallet = WalletModel.fromJson(record as Map<String, dynamic>);
+          await _repository.createWallet(newWallet);
+        }
       }
     } catch (e) {
       print('⚠️ Error syncing wallet: $e');
@@ -69,129 +84,129 @@ class WalletService extends BaseApiService {
   /// 1. Create in local DB first with temp ID
   /// 2. Check connectivity and send to backend if online
   /// 3. Realtime sync will update with canonical ID when backend confirms
-  Future<WalletModel> createWallet({
-    required String name,
-    required String userId,
-    required String walletType,
-    required Currency currency,
-    required int balance,
-    String? imageUrl,
-    String? providerId,
-    String? localImagePath,
-    bool? isGlobal,
-    int? iconCodePoint,
-    String? iconEmoji,
-    String? iconType,
-    String? color,
-  }) async {
-    print(balance);
-    print(userId);
-    // 1. Create in local database first (optimistic)
-    final tempId = await _repository.createWallet(
-      name: name,
-      userId: userId,
-      walletType: walletType,
-      currency: currency.id,
-      balance: balance.toString(),
-      providerId: providerId,
-      imageUrl: imageUrl,
-      localImagePath: localImagePath,
-      isGlobal: isGlobal ?? true,
-      iconCodePoint: iconCodePoint,
-      iconEmoji: iconEmoji,
-      iconType: iconType,
-      color: color,
-    );
+  // Future<WalletModel> createWallet({
+  //   required String name,
+  //   required String userId,
+  //   required String walletType,
+  //   required Currency currency,
+  //   required String balance,
+  //   String? imageUrl,
+  //   String? providerId,
+  //   String? localImagePath,
+  //   bool? isGlobal,
+  //   int? iconCodePoint,
+  //   String? iconEmoji,
+  //   String? iconType,
+  //   String? color,
+  // }) async {
+  //   final parsedBalance = CurrencyHelper.parseInput(balance, currency.decimals);
+  //   // 1. Create in local database first (optimistic)
+  //   final newWallet = WalletModel(name: name, walletType: walletType, currency: currency, balance: balance)
+  //   final tempId = await _repository.createWallet(
+  //     name: name,
+  //     userId: userId,
+  //     walletType: walletType,
+  //     currency: currency.id,
+  //     balance: parsedBalance,
+  //     providerId: providerId,
+  //     imageUrl: imageUrl,
+  //     localImagePath: localImagePath,
+  //     isGlobal: isGlobal ?? true,
+  //     iconCodePoint: iconCodePoint,
+  //     iconEmoji: iconEmoji,
+  //     iconType: iconType,
+  //     color: color,
+  //   );
 
-    // 2. Check connectivity and send to backend if online
-    final isOnline = await ConnectivityHelper.hasInternetConnection();
+  //   // 2. Check connectivity and send to backend if online
+  //   final isOnline = await ConnectivityHelper.hasInternetConnection();
 
-    if (isOnline) {
-      try {
-        final apiWallet = await executeRequest<WalletModel>(
-          request: () => dio.post(
-            '/wallets/records',
-            data: {
-              'name': name,
-              'walletType': walletType,
-              'currency': currency.code,
-              'balance': balance,
-              'imageUrl': imageUrl,
-              'providerId': providerId,
-              'localImagePath': localImagePath,
-              'isGlobal': isGlobal,
-              'iconCodePoint': iconCodePoint,
-              'iconEmoji': iconEmoji,
-              'iconType': iconType,
-              'color': color,
-              'user': userId,
-              'isSynced': true,
-              'tempId': tempId,
-            },
-          ),
-          parser: (data) => WalletModel.fromJson(data),
-        );
+  //   if (isOnline) {
+  //     try {
+  //       final apiWallet = await executeRequest<WalletModel>(
+  //         request: () => dio.post(
+  //           '/wallets/records',
+  //           data: {
+  //             'name': name,
+  //             'walletType': walletType,
+  //             'currency': currency.code,
+  //             'balance': parsedBalance,
+  //             'imageUrl': imageUrl,
+  //             'providerId': providerId,
+  //             'localImagePath': localImagePath,
+  //             'isGlobal': isGlobal,
+  //             'iconCodePoint': iconCodePoint,
+  //             'iconEmoji': iconEmoji,
+  //             'iconType': iconType,
+  //             'color': color,
+  //             'user': userId,
+  //             'isSynced': true,
+  //             'tempId': tempId,
+  //           },
+  //         ),
+  //         parser: (data) => WalletModel.fromJson(data),
+  //       );
 
-        // Note: Realtime sync service will handle updating local DB with canonical ID
-        // But we return the API response immediately
-        return apiWallet;
-      } catch (e) {
-        // If API fails, we still have local copy
-        // Mark it for later sync
-        print('API call failed, wallet saved locally: $e');
+  //       // Note: Realtime sync service will handle updating local DB with canonical ID
+  //       // But we return the API response immediately
+  //       return apiWallet;
+  //     } catch (e) {
+  //       // If API fails, we still have local copy
+  //       // Mark it for later sync
+  //       print('API call failed, wallet saved locally: $e');
 
-        // Get the local wallet to return
-        final localWallet = await _repository.getWallet(tempId);
-        if (localWallet != null) {
-          return WalletModel(
-            id: localWallet.id,
-            name: localWallet.name,
-            walletType: localWallet.walletType,
-            currency: localWallet.currency,
-            balance: localWallet.balance,
-            imageUrl: localWallet.imageUrl,
-            providerId: localWallet.providerId,
-            localImagePath: localWallet.localImagePath,
-            isGlobal: localWallet.isGlobal,
-            iconCodePoint: localWallet.iconCodePoint,
-            iconEmoji: localWallet.iconEmoji,
-            iconType: localWallet.iconType,
-            color: localWallet.color,
-            tempId: localWallet.tempId,
-            isSynced: localWallet.isSynced,
-            createdAt: localWallet.createdAt,
-            updatedAt: localWallet.updatedAt,
-          );
-        }
-        rethrow;
-      }
-    } else {
-      // Offline: return local wallet
-      final localWallet = await _repository.getWallet(tempId);
-      if (localWallet != null) {
-        return WalletModel(
-          id: localWallet.id,
-          name: localWallet.name,
-          walletType: localWallet.walletType,
-          currency: localWallet.currency,
-          balance: localWallet.balance,
-          imageUrl: localWallet.imageUrl,
-          providerId: localWallet.providerId,
-          localImagePath: localWallet.localImagePath,
-          isGlobal: localWallet.isGlobal,
-          iconCodePoint: localWallet.iconCodePoint,
-          iconEmoji: localWallet.iconEmoji,
-          iconType: localWallet.iconType,
-          color: localWallet.color,
-          tempId: localWallet.tempId,
-          isSynced: localWallet.isSynced,
-          createdAt: localWallet.createdAt,
-          updatedAt: localWallet.updatedAt,
-        );
-      }
-      throw Exception('Failed to create wallet locally');
-    }
-  }
+  //       // Get the local wallet to return
+  //       final localWallet = await _repository.getWallet(tempId);
+  //       if (localWallet != null) {
+  //         return WalletModel(
+  //           id: localWallet.id,
+  //           name: localWallet.name,
+  //           walletType: localWallet.walletType,
+  //           currency: localWallet.currency,
+  //           balance: localWallet.balance,
+  //           imageUrl: localWallet.imageUrl,
+  //           providerId: localWallet.providerId,
+  //           localImagePath: localWallet.localImagePath,
+  //           isGlobal: localWallet.isGlobal,
+  //           iconCodePoint: localWallet.iconCodePoint,
+  //           iconEmoji: localWallet.iconEmoji,
+  //           iconType: localWallet.iconType,
+  //           color: localWallet.color,
+  //           tempId: localWallet.tempId,
+  //           isSynced: localWallet.isSynced,
+  //           createdAt: localWallet.createdAt,
+  //           updatedAt: localWallet.updatedAt,
+  //         );
+  //       }
+  //       rethrow;
+  //     }
+  //   } else {
+  //     // Offline: return local wallet
+  //     final localWallet = await _repository.getWallet(tempId);
+  //     if (localWallet != null) {
+  //       return WalletModel(
+  //         id: localWallet.id,
+  //         name: localWallet.name,
+  //         walletType: localWallet.walletType,
+  //         currency: localWallet.currency,
+  //         balance: localWallet.balance,
+  //         imageUrl: localWallet.imageUrl,
+  //         providerId: localWallet.providerId,
+  //         localImagePath: localWallet.localImagePath,
+  //         isGlobal: localWallet.isGlobal,
+  //         iconCodePoint: localWallet.iconCodePoint,
+  //         iconEmoji: localWallet.iconEmoji,
+  //         iconType: localWallet.iconType,
+  //         color: localWallet.color,
+  //         tempId: localWallet.tempId,
+  //         isSynced: localWallet.isSynced,
+  //         createdAt: localWallet.createdAt,
+  //         updatedAt: localWallet.updatedAt,
+  //       );
+  //     }
+  //     throw Exception('Failed to create wallet locally');
+  //   }
+  // }
 
   /// Get all wallets
   Future<List<WalletModel>> getAllWallets({
@@ -269,4 +284,8 @@ class WalletService extends BaseApiService {
       request: () => dio.delete('/wallets/$id'),
     );
   }
+}
+
+extension on RecordModel? {
+  String? get user => null;
 }

@@ -1,0 +1,18 @@
+{
+  "collectionId": "pbc_1174419157",
+  "collectionName": "todoItems",
+  "id": "test",
+  "title": "test",
+  "description": "test",
+  "project": "RELATION_RECORD_ID",
+  "isCompleted": true,
+  "expense": "RELATION_RECORD_ID",
+  "isSynced": true,
+  "tempId": "test",
+  "user": "RELATION_RECORD_ID",
+  "parentTodo": "RELATION_RECORD_ID",
+  "metadata": "JSON",
+  "payment": "RELATION_RECORD_ID",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

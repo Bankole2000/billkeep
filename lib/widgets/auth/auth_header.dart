@@ -1,9 +1,11 @@
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Header widget for authentication screens
 ///
 /// Displays the app logo, name, and a contextual subtitle
-class AuthHeader extends StatelessWidget {
+class AuthHeader extends ConsumerWidget {
   final bool isLogin;
 
   const AuthHeader({
@@ -12,7 +14,8 @@ class AuthHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.read(appColorsProvider);
     return Column(
       children: [
         const SizedBox(height: 40),
@@ -21,7 +24,7 @@ class AuthHeader extends StatelessWidget {
         Icon(
           Icons.account_balance_wallet,
           size: 80,
-          color: Theme.of(context).primaryColor,
+          color: colors.text,
         ),
         const SizedBox(height: 16),
 
@@ -31,7 +34,7 @@ class AuthHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor,
+            color: colors.text,
           ),
           textAlign: TextAlign.center,
         ),

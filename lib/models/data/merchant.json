@@ -1,0 +1,20 @@
+{
+  "collectionId": "pbc_2824622168",
+  "collectionName": "merchants",
+  "id": "test",
+  "name": "test",
+  "tempId": "test",
+  "description": "test",
+  "website": "https://example.com",
+  "imageUrl": "https://example.com",
+  "localImagePath": "test",
+  "iconCodePoint": true,
+  "iconEmoji": "test",
+  "iconType": "test",
+  "color": "test",
+  "isSynced": true,
+  "user": "RELATION_RECORD_ID",
+  "metadata": "JSON",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

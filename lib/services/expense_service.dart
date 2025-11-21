@@ -1,7 +1,52 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/expense_model.dart';
 import 'base_api_service.dart';
 
 class ExpenseService extends BaseApiService {
+  ExpenseService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for expenses collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('expenses', _handleExpenseUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleExpenseUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Expense ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncExpenseFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle expense deletion in local DB if needed
+            print('🗑️ Expense deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling expense update: $e');
+    }
+  }
+
+  /// Sync expense from backend to local DB
+  Future<void> _syncExpenseFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing expense: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing expense: $e');
+    }
+  }
 
   /// Create a new expense
   Future<ExpenseModel> createExpense({

@@ -3,6 +3,529 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailVisibilityMeta = const VerificationMeta(
+    'emailVisibility',
+  );
+  @override
+  late final GeneratedColumn<bool> emailVisibility = GeneratedColumn<bool>(
+    'email_visibility',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("email_visibility" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _verifiedMeta = const VerificationMeta(
+    'verified',
+  );
+  @override
+  late final GeneratedColumn<bool> verified = GeneratedColumn<bool>(
+    'verified',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("verified" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _avatarMeta = const VerificationMeta('avatar');
+  @override
+  late final GeneratedColumn<String> avatar = GeneratedColumn<String>(
+    'avatar',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    email,
+    emailVisibility,
+    verified,
+    name,
+    avatar,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<User> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    }
+    if (data.containsKey('email_visibility')) {
+      context.handle(
+        _emailVisibilityMeta,
+        emailVisibility.isAcceptableOrUnknown(
+          data['email_visibility']!,
+          _emailVisibilityMeta,
+        ),
+      );
+    }
+    if (data.containsKey('verified')) {
+      context.handle(
+        _verifiedMeta,
+        verified.isAcceptableOrUnknown(data['verified']!, _verifiedMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('avatar')) {
+      context.handle(
+        _avatarMeta,
+        avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      emailVisibility: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}email_visibility'],
+      ),
+      verified: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}verified'],
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      avatar: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
+class User extends DataClass implements Insertable<User> {
+  final String id;
+  final String? email;
+  final bool? emailVisibility;
+  final bool? verified;
+  final String? name;
+  final String? avatar;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  const User({
+    required this.id,
+    this.email,
+    this.emailVisibility,
+    this.verified,
+    this.name,
+    this.avatar,
+    this.createdAt,
+    this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    if (!nullToAbsent || emailVisibility != null) {
+      map['email_visibility'] = Variable<bool>(emailVisibility);
+    }
+    if (!nullToAbsent || verified != null) {
+      map['verified'] = Variable<bool>(verified);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || avatar != null) {
+      map['avatar'] = Variable<String>(avatar);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      email: email == null && nullToAbsent
+          ? const Value.absent()
+          : Value(email),
+      emailVisibility: emailVisibility == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailVisibility),
+      verified: verified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(verified),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      avatar: avatar == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatar),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+    );
+  }
+
+  factory User.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return User(
+      id: serializer.fromJson<String>(json['id']),
+      email: serializer.fromJson<String?>(json['email']),
+      emailVisibility: serializer.fromJson<bool?>(json['emailVisibility']),
+      verified: serializer.fromJson<bool?>(json['verified']),
+      name: serializer.fromJson<String?>(json['name']),
+      avatar: serializer.fromJson<String?>(json['avatar']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'email': serializer.toJson<String?>(email),
+      'emailVisibility': serializer.toJson<bool?>(emailVisibility),
+      'verified': serializer.toJson<bool?>(verified),
+      'name': serializer.toJson<String?>(name),
+      'avatar': serializer.toJson<String?>(avatar),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+    };
+  }
+
+  User copyWith({
+    String? id,
+    Value<String?> email = const Value.absent(),
+    Value<bool?> emailVisibility = const Value.absent(),
+    Value<bool?> verified = const Value.absent(),
+    Value<String?> name = const Value.absent(),
+    Value<String?> avatar = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+  }) => User(
+    id: id ?? this.id,
+    email: email.present ? email.value : this.email,
+    emailVisibility: emailVisibility.present
+        ? emailVisibility.value
+        : this.emailVisibility,
+    verified: verified.present ? verified.value : this.verified,
+    name: name.present ? name.value : this.name,
+    avatar: avatar.present ? avatar.value : this.avatar,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+  );
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
+      id: data.id.present ? data.id.value : this.id,
+      email: data.email.present ? data.email.value : this.email,
+      emailVisibility: data.emailVisibility.present
+          ? data.emailVisibility.value
+          : this.emailVisibility,
+      verified: data.verified.present ? data.verified.value : this.verified,
+      name: data.name.present ? data.name.value : this.name,
+      avatar: data.avatar.present ? data.avatar.value : this.avatar,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('id: $id, ')
+          ..write('email: $email, ')
+          ..write('emailVisibility: $emailVisibility, ')
+          ..write('verified: $verified, ')
+          ..write('name: $name, ')
+          ..write('avatar: $avatar, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    email,
+    emailVisibility,
+    verified,
+    name,
+    avatar,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.id == this.id &&
+          other.email == this.email &&
+          other.emailVisibility == this.emailVisibility &&
+          other.verified == this.verified &&
+          other.name == this.name &&
+          other.avatar == this.avatar &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  final Value<String> id;
+  final Value<String?> email;
+  final Value<bool?> emailVisibility;
+  final Value<bool?> verified;
+  final Value<String?> name;
+  final Value<String?> avatar;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<int> rowid;
+  const UsersCompanion({
+    this.id = const Value.absent(),
+    this.email = const Value.absent(),
+    this.emailVisibility = const Value.absent(),
+    this.verified = const Value.absent(),
+    this.name = const Value.absent(),
+    this.avatar = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    required String id,
+    this.email = const Value.absent(),
+    this.emailVisibility = const Value.absent(),
+    this.verified = const Value.absent(),
+    this.name = const Value.absent(),
+    this.avatar = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
+  static Insertable<User> custom({
+    Expression<String>? id,
+    Expression<String>? email,
+    Expression<bool>? emailVisibility,
+    Expression<bool>? verified,
+    Expression<String>? name,
+    Expression<String>? avatar,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (email != null) 'email': email,
+      if (emailVisibility != null) 'email_visibility': emailVisibility,
+      if (verified != null) 'verified': verified,
+      if (name != null) 'name': name,
+      if (avatar != null) 'avatar': avatar,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UsersCompanion copyWith({
+    Value<String>? id,
+    Value<String?>? email,
+    Value<bool?>? emailVisibility,
+    Value<bool?>? verified,
+    Value<String?>? name,
+    Value<String?>? avatar,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      emailVisibility: emailVisibility ?? this.emailVisibility,
+      verified: verified ?? this.verified,
+      name: name ?? this.name,
+      avatar: avatar ?? this.avatar,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (emailVisibility.present) {
+      map['email_visibility'] = Variable<bool>(emailVisibility.value);
+    }
+    if (verified.present) {
+      map['verified'] = Variable<bool>(verified.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (avatar.present) {
+      map['avatar'] = Variable<String>(avatar.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('email: $email, ')
+          ..write('emailVisibility: $emailVisibility, ')
+          ..write('verified: $verified, ')
+          ..write('name: $name, ')
+          ..write('avatar: $avatar, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $CurrenciesTable extends Currencies
     with TableInfo<$CurrenciesTable, Currency> {
   @override
@@ -116,6 +639,42 @@ class $CurrenciesTable extends Currencies
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _createdMeta = const VerificationMeta(
+    'created',
+  );
+  @override
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+    'created',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedMeta = const VerificationMeta(
+    'updated',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+    'updated',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -128,6 +687,9 @@ class $CurrenciesTable extends Currencies
     isActive,
     tempId,
     userId,
+    isSynced,
+    created,
+    updated,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -211,6 +773,24 @@ class $CurrenciesTable extends Currencies
         userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
       );
     }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('created')) {
+      context.handle(
+        _createdMeta,
+        created.isAcceptableOrUnknown(data['created']!, _createdMeta),
+      );
+    }
+    if (data.containsKey('updated')) {
+      context.handle(
+        _updatedMeta,
+        updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta),
+      );
+    }
     return context;
   }
 
@@ -260,6 +840,18 @@ class $CurrenciesTable extends Currencies
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      ),
+      created: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created'],
+      ),
+      updated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated'],
+      ),
     );
   }
 
@@ -280,6 +872,9 @@ class Currency extends DataClass implements Insertable<Currency> {
   final bool isActive;
   final String tempId;
   final String? userId;
+  final bool? isSynced;
+  final DateTime? created;
+  final DateTime? updated;
   const Currency({
     required this.id,
     required this.code,
@@ -291,6 +886,9 @@ class Currency extends DataClass implements Insertable<Currency> {
     required this.isActive,
     required this.tempId,
     this.userId,
+    this.isSynced,
+    this.created,
+    this.updated,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -308,6 +906,15 @@ class Currency extends DataClass implements Insertable<Currency> {
     map['temp_id'] = Variable<String>(tempId);
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || isSynced != null) {
+      map['is_synced'] = Variable<bool>(isSynced);
+    }
+    if (!nullToAbsent || created != null) {
+      map['created'] = Variable<DateTime>(created);
+    }
+    if (!nullToAbsent || updated != null) {
+      map['updated'] = Variable<DateTime>(updated);
     }
     return map;
   }
@@ -328,6 +935,15 @@ class Currency extends DataClass implements Insertable<Currency> {
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
+      isSynced: isSynced == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isSynced),
+      created: created == null && nullToAbsent
+          ? const Value.absent()
+          : Value(created),
+      updated: updated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updated),
     );
   }
 
@@ -347,6 +963,9 @@ class Currency extends DataClass implements Insertable<Currency> {
       isActive: serializer.fromJson<bool>(json['isActive']),
       tempId: serializer.fromJson<String>(json['tempId']),
       userId: serializer.fromJson<String?>(json['userId']),
+      isSynced: serializer.fromJson<bool?>(json['isSynced']),
+      created: serializer.fromJson<DateTime?>(json['created']),
+      updated: serializer.fromJson<DateTime?>(json['updated']),
     );
   }
   @override
@@ -363,6 +982,9 @@ class Currency extends DataClass implements Insertable<Currency> {
       'isActive': serializer.toJson<bool>(isActive),
       'tempId': serializer.toJson<String>(tempId),
       'userId': serializer.toJson<String?>(userId),
+      'isSynced': serializer.toJson<bool?>(isSynced),
+      'created': serializer.toJson<DateTime?>(created),
+      'updated': serializer.toJson<DateTime?>(updated),
     };
   }
 
@@ -377,6 +999,9 @@ class Currency extends DataClass implements Insertable<Currency> {
     bool? isActive,
     String? tempId,
     Value<String?> userId = const Value.absent(),
+    Value<bool?> isSynced = const Value.absent(),
+    Value<DateTime?> created = const Value.absent(),
+    Value<DateTime?> updated = const Value.absent(),
   }) => Currency(
     id: id ?? this.id,
     code: code ?? this.code,
@@ -388,6 +1013,9 @@ class Currency extends DataClass implements Insertable<Currency> {
     isActive: isActive ?? this.isActive,
     tempId: tempId ?? this.tempId,
     userId: userId.present ? userId.value : this.userId,
+    isSynced: isSynced.present ? isSynced.value : this.isSynced,
+    created: created.present ? created.value : this.created,
+    updated: updated.present ? updated.value : this.updated,
   );
   Currency copyWithCompanion(CurrenciesCompanion data) {
     return Currency(
@@ -403,6 +1031,9 @@ class Currency extends DataClass implements Insertable<Currency> {
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
       userId: data.userId.present ? data.userId.value : this.userId,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      created: data.created.present ? data.created.value : this.created,
+      updated: data.updated.present ? data.updated.value : this.updated,
     );
   }
 
@@ -418,7 +1049,10 @@ class Currency extends DataClass implements Insertable<Currency> {
           ..write('isCrypto: $isCrypto, ')
           ..write('isActive: $isActive, ')
           ..write('tempId: $tempId, ')
-          ..write('userId: $userId')
+          ..write('userId: $userId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
           ..write(')'))
         .toString();
   }
@@ -435,6 +1069,9 @@ class Currency extends DataClass implements Insertable<Currency> {
     isActive,
     tempId,
     userId,
+    isSynced,
+    created,
+    updated,
   );
   @override
   bool operator ==(Object other) =>
@@ -449,7 +1086,10 @@ class Currency extends DataClass implements Insertable<Currency> {
           other.isCrypto == this.isCrypto &&
           other.isActive == this.isActive &&
           other.tempId == this.tempId &&
-          other.userId == this.userId);
+          other.userId == this.userId &&
+          other.isSynced == this.isSynced &&
+          other.created == this.created &&
+          other.updated == this.updated);
 }
 
 class CurrenciesCompanion extends UpdateCompanion<Currency> {
@@ -463,6 +1103,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
   final Value<bool> isActive;
   final Value<String> tempId;
   final Value<String?> userId;
+  final Value<bool?> isSynced;
+  final Value<DateTime?> created;
+  final Value<DateTime?> updated;
   final Value<int> rowid;
   const CurrenciesCompanion({
     this.id = const Value.absent(),
@@ -475,6 +1118,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     this.isActive = const Value.absent(),
     this.tempId = const Value.absent(),
     this.userId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CurrenciesCompanion.insert({
@@ -488,6 +1134,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     this.isActive = const Value.absent(),
     required String tempId,
     this.userId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        code = Value(code),
@@ -505,6 +1154,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     Expression<bool>? isActive,
     Expression<String>? tempId,
     Expression<String>? userId,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -518,6 +1170,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
       if (isActive != null) 'is_active': isActive,
       if (tempId != null) 'temp_id': tempId,
       if (userId != null) 'user_id': userId,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -533,6 +1188,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     Value<bool>? isActive,
     Value<String>? tempId,
     Value<String?>? userId,
+    Value<bool?>? isSynced,
+    Value<DateTime?>? created,
+    Value<DateTime?>? updated,
     Value<int>? rowid,
   }) {
     return CurrenciesCompanion(
@@ -546,6 +1204,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
       isActive: isActive ?? this.isActive,
       tempId: tempId ?? this.tempId,
       userId: userId ?? this.userId,
+      isSynced: isSynced ?? this.isSynced,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -583,6 +1244,15 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -602,6 +1272,9 @@ class CurrenciesCompanion extends UpdateCompanion<Currency> {
           ..write('isActive: $isActive, ')
           ..write('tempId: $tempId, ')
           ..write('userId: $userId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1904,6 +2577,17 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
   );
@@ -1960,6 +2644,7 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
     name,
     tempId,
     userId,
+    projectId,
     isSynced,
     createdAt,
     updatedAt,
@@ -2081,6 +2766,12 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    }
     if (data.containsKey('is_synced')) {
       context.handle(
         _isSyncedMeta,
@@ -2168,6 +2859,10 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      ),
       isSynced: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
@@ -2205,6 +2900,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
   final String name;
   final String? tempId;
   final String userId;
+  final String? projectId;
   final bool isSynced;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -2224,6 +2920,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     required this.name,
     this.tempId,
     required this.userId,
+    this.projectId,
     required this.isSynced,
     required this.createdAt,
     required this.updatedAt,
@@ -2260,6 +2957,9 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       map['temp_id'] = Variable<String>(tempId);
     }
     map['user_id'] = Variable<String>(userId);
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String>(projectId);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -2297,6 +2997,9 @@ class Wallet extends DataClass implements Insertable<Wallet> {
           ? const Value.absent()
           : Value(tempId),
       userId: Value(userId),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
       isSynced: Value(isSynced),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
@@ -2324,6 +3027,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       name: serializer.fromJson<String>(json['name']),
       tempId: serializer.fromJson<String?>(json['tempId']),
       userId: serializer.fromJson<String>(json['userId']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -2348,6 +3052,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       'name': serializer.toJson<String>(name),
       'tempId': serializer.toJson<String?>(tempId),
       'userId': serializer.toJson<String>(userId),
+      'projectId': serializer.toJson<String?>(projectId),
       'isSynced': serializer.toJson<bool>(isSynced),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -2370,6 +3075,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     String? name,
     Value<String?> tempId = const Value.absent(),
     String? userId,
+    Value<String?> projectId = const Value.absent(),
     bool? isSynced,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -2393,6 +3099,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     name: name ?? this.name,
     tempId: tempId.present ? tempId.value : this.tempId,
     userId: userId ?? this.userId,
+    projectId: projectId.present ? projectId.value : this.projectId,
     isSynced: isSynced ?? this.isSynced,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -2422,6 +3129,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       name: data.name.present ? data.name.value : this.name,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
       userId: data.userId.present ? data.userId.value : this.userId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -2446,6 +3154,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
           ..write('name: $name, ')
           ..write('tempId: $tempId, ')
           ..write('userId: $userId, ')
+          ..write('projectId: $projectId, ')
           ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
@@ -2470,6 +3179,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     name,
     tempId,
     userId,
+    projectId,
     isSynced,
     createdAt,
     updatedAt,
@@ -2493,6 +3203,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
           other.name == this.name &&
           other.tempId == this.tempId &&
           other.userId == this.userId &&
+          other.projectId == this.projectId &&
           other.isSynced == this.isSynced &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
@@ -2514,6 +3225,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
   final Value<String> name;
   final Value<String?> tempId;
   final Value<String> userId;
+  final Value<String?> projectId;
   final Value<bool> isSynced;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
@@ -2534,6 +3246,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     this.name = const Value.absent(),
     this.tempId = const Value.absent(),
     this.userId = const Value.absent(),
+    this.projectId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -2555,6 +3268,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     required String name,
     this.tempId = const Value.absent(),
     required String userId,
+    this.projectId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -2581,6 +3295,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     Expression<String>? name,
     Expression<String>? tempId,
     Expression<String>? userId,
+    Expression<String>? projectId,
     Expression<bool>? isSynced,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -2602,6 +3317,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
       if (name != null) 'name': name,
       if (tempId != null) 'temp_id': tempId,
       if (userId != null) 'user_id': userId,
+      if (projectId != null) 'project_id': projectId,
       if (isSynced != null) 'is_synced': isSynced,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -2625,6 +3341,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     Value<String>? name,
     Value<String?>? tempId,
     Value<String>? userId,
+    Value<String?>? projectId,
     Value<bool>? isSynced,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
@@ -2646,6 +3363,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
       name: name ?? this.name,
       tempId: tempId ?? this.tempId,
       userId: userId ?? this.userId,
+      projectId: projectId ?? this.projectId,
       isSynced: isSynced ?? this.isSynced,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -2701,6 +3419,9 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -2734,6 +3455,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
           ..write('name: $name, ')
           ..write('tempId: $tempId, ')
           ..write('userId: $userId, ')
+          ..write('projectId: $projectId, ')
           ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -3717,16 +4439,109 @@ class $ProjectMetadataTable extends ProjectMetadata
   $ProjectMetadataTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
+  @override
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
+      'CHECK ("boolean_value" IN (0, 1))',
     ),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _projectIdMeta = const VerificationMeta(
     'projectId',
@@ -3735,30 +4550,51 @@ class $ProjectMetadataTable extends ProjectMetadata
   late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
     'project_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES projects (id)',
+    ),
   );
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-    'key',
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
     aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
   @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
     aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, projectId, key, value];
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    projectId,
+    createdAt,
+    updatedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3773,30 +4609,92 @@ class $ProjectMetadataTable extends ProjectMetadata
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
     }
     if (data.containsKey('project_id')) {
       context.handle(
         _projectIdMeta,
         projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_projectIdMeta);
     }
-    if (data.containsKey('key')) {
+    if (data.containsKey('created_at')) {
       context.handle(
-        _keyMeta,
-        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_keyMeta);
     }
-    if (data.containsKey('value')) {
+    if (data.containsKey('updated_at')) {
       context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
     }
     return context;
   }
@@ -3804,29 +4702,61 @@ class $ProjectMetadataTable extends ProjectMetadata
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {projectId, key},
-  ];
-  @override
   ProjectMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ProjectMetadataData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
       projectId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}project_id'],
-      )!,
-      key: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}key'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
     );
   }
 
@@ -3838,32 +4768,112 @@ class $ProjectMetadataTable extends ProjectMetadata
 
 class ProjectMetadataData extends DataClass
     implements Insertable<ProjectMetadataData> {
-  final int id;
-  final String projectId;
-  final String key;
-  final String value;
+  final String id;
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? projectId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const ProjectMetadataData({
     required this.id,
-    required this.projectId,
-    required this.key,
-    required this.value,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.projectId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['project_id'] = Variable<String>(projectId);
-    map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String>(projectId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
   ProjectMetadataCompanion toCompanion(bool nullToAbsent) {
     return ProjectMetadataCompanion(
       id: Value(id),
-      projectId: Value(projectId),
-      key: Value(key),
-      value: Value(value),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -3873,40 +4883,97 @@ class ProjectMetadataData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ProjectMetadataData(
-      id: serializer.fromJson<int>(json['id']),
-      projectId: serializer.fromJson<String>(json['projectId']),
-      key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'projectId': serializer.toJson<String>(projectId),
-      'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'projectId': serializer.toJson<String?>(projectId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
   ProjectMetadataData copyWith({
-    int? id,
-    String? projectId,
-    String? key,
-    String? value,
+    String? id,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> projectId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => ProjectMetadataData(
     id: id ?? this.id,
-    projectId: projectId ?? this.projectId,
-    key: key ?? this.key,
-    value: value ?? this.value,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    projectId: projectId.present ? projectId.value : this.projectId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   ProjectMetadataData copyWithCompanion(ProjectMetadataCompanion data) {
     return ProjectMetadataData(
       id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
       projectId: data.projectId.present ? data.projectId.value : this.projectId,
-      key: data.key.present ? data.key.value : this.key,
-      value: data.value.present ? data.value.value : this.value,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -3914,69 +4981,169 @@ class ProjectMetadataData extends DataClass
   String toString() {
     return (StringBuffer('ProjectMetadataData(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('projectId: $projectId, ')
-          ..write('key: $key, ')
-          ..write('value: $value')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, projectId, key, value);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    projectId,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ProjectMetadataData &&
           other.id == this.id &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
           other.projectId == this.projectId &&
-          other.key == this.key &&
-          other.value == this.value);
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
-  final Value<int> id;
-  final Value<String> projectId;
-  final Value<String> key;
-  final Value<String> value;
+  final Value<String> id;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> projectId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<int> rowid;
   const ProjectMetadataCompanion({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
     this.projectId = const Value.absent(),
-    this.key = const Value.absent(),
-    this.value = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ProjectMetadataCompanion.insert({
-    this.id = const Value.absent(),
-    required String projectId,
-    required String key,
-    required String value,
-  }) : projectId = Value(projectId),
-       key = Value(key),
-       value = Value(value);
+    required String id,
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
   static Insertable<ProjectMetadataData> custom({
-    Expression<int>? id,
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
     Expression<String>? projectId,
-    Expression<String>? key,
-    Expression<String>? value,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
       if (projectId != null) 'project_id': projectId,
-      if (key != null) 'key': key,
-      if (value != null) 'value': value,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   ProjectMetadataCompanion copyWith({
-    Value<int>? id,
-    Value<String>? projectId,
-    Value<String>? key,
-    Value<String>? value,
+    Value<String>? id,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? projectId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<int>? rowid,
   }) {
     return ProjectMetadataCompanion(
       id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
       projectId: projectId ?? this.projectId,
-      key: key ?? this.key,
-      value: value ?? this.value,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -3984,16 +5151,46 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
+    }
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
     }
     if (projectId.present) {
       map['project_id'] = Variable<String>(projectId.value);
     }
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -4002,9 +5199,19 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
   String toString() {
     return (StringBuffer('ProjectMetadataCompanion(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('projectId: $projectId, ')
-          ..write('key: $key, ')
-          ..write('value: $value')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4058,6 +5265,15 @@ class $CategoryGroupsTable extends CategoryGroups
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -4088,6 +5304,7 @@ class $CategoryGroupsTable extends CategoryGroups
     name,
     tempId,
     isSynced,
+    userId,
     createdAt,
     updatedAt,
   ];
@@ -4128,6 +5345,12 @@ class $CategoryGroupsTable extends CategoryGroups
         isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -4165,6 +5388,10 @@ class $CategoryGroupsTable extends CategoryGroups
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
       )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -4187,6 +5414,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
   final String name;
   final String? tempId;
   final bool isSynced;
+  final String? userId;
   final DateTime createdAt;
   final DateTime updatedAt;
   const CategoryGroup({
@@ -4194,6 +5422,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
     required this.name,
     this.tempId,
     required this.isSynced,
+    this.userId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -4206,6 +5435,9 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
       map['temp_id'] = Variable<String>(tempId);
     }
     map['is_synced'] = Variable<bool>(isSynced);
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -4219,6 +5451,9 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
           ? const Value.absent()
           : Value(tempId),
       isSynced: Value(isSynced),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -4234,6 +5469,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
       name: serializer.fromJson<String>(json['name']),
       tempId: serializer.fromJson<String?>(json['tempId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
+      userId: serializer.fromJson<String?>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -4246,6 +5482,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
       'name': serializer.toJson<String>(name),
       'tempId': serializer.toJson<String?>(tempId),
       'isSynced': serializer.toJson<bool>(isSynced),
+      'userId': serializer.toJson<String?>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -4256,6 +5493,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
     String? name,
     Value<String?> tempId = const Value.absent(),
     bool? isSynced,
+    Value<String?> userId = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => CategoryGroup(
@@ -4263,6 +5501,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
     name: name ?? this.name,
     tempId: tempId.present ? tempId.value : this.tempId,
     isSynced: isSynced ?? this.isSynced,
+    userId: userId.present ? userId.value : this.userId,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -4272,6 +5511,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
       name: data.name.present ? data.name.value : this.name,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      userId: data.userId.present ? data.userId.value : this.userId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -4284,6 +5524,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
           ..write('name: $name, ')
           ..write('tempId: $tempId, ')
           ..write('isSynced: $isSynced, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -4292,7 +5533,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
 
   @override
   int get hashCode =>
-      Object.hash(id, name, tempId, isSynced, createdAt, updatedAt);
+      Object.hash(id, name, tempId, isSynced, userId, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4301,6 +5542,7 @@ class CategoryGroup extends DataClass implements Insertable<CategoryGroup> {
           other.name == this.name &&
           other.tempId == this.tempId &&
           other.isSynced == this.isSynced &&
+          other.userId == this.userId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -4310,6 +5552,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
   final Value<String> name;
   final Value<String?> tempId;
   final Value<bool> isSynced;
+  final Value<String?> userId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -4318,6 +5561,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
     this.name = const Value.absent(),
     this.tempId = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -4327,6 +5571,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
     required String name,
     this.tempId = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -4337,6 +5582,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
     Expression<String>? name,
     Expression<String>? tempId,
     Expression<bool>? isSynced,
+    Expression<String>? userId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -4346,6 +5592,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
       if (name != null) 'name': name,
       if (tempId != null) 'temp_id': tempId,
       if (isSynced != null) 'is_synced': isSynced,
+      if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -4357,6 +5604,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
     Value<String>? name,
     Value<String?>? tempId,
     Value<bool>? isSynced,
+    Value<String?>? userId,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -4366,6 +5614,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
       name: name ?? this.name,
       tempId: tempId ?? this.tempId,
       isSynced: isSynced ?? this.isSynced,
+      userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -4387,6 +5636,9 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -4406,6 +5658,7 @@ class CategoryGroupsCompanion extends UpdateCompanion<CategoryGroup> {
           ..write('name: $name, ')
           ..write('tempId: $tempId, ')
           ..write('isSynced: $isSynced, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -4533,6 +5786,15 @@ class $CategoriesTable extends Categories
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -4569,6 +5831,7 @@ class $CategoriesTable extends Categories
     categoryGroupId,
     isSynced,
     tempId,
+    userId,
     createdAt,
     updatedAt,
   ];
@@ -4653,6 +5916,12 @@ class $CategoriesTable extends Categories
         tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
       );
     }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -4714,6 +5983,10 @@ class $CategoriesTable extends Categories
         DriftSqlType.string,
         data['${effectivePrefix}temp_id'],
       ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -4742,6 +6015,7 @@ class Category extends DataClass implements Insertable<Category> {
   final String categoryGroupId;
   final bool isSynced;
   final String? tempId;
+  final String? userId;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Category({
@@ -4755,6 +6029,7 @@ class Category extends DataClass implements Insertable<Category> {
     required this.categoryGroupId,
     required this.isSynced,
     this.tempId,
+    this.userId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -4778,6 +6053,9 @@ class Category extends DataClass implements Insertable<Category> {
     map['is_synced'] = Variable<bool>(isSynced);
     if (!nullToAbsent || tempId != null) {
       map['temp_id'] = Variable<String>(tempId);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -4804,6 +6082,9 @@ class Category extends DataClass implements Insertable<Category> {
       tempId: tempId == null && nullToAbsent
           ? const Value.absent()
           : Value(tempId),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -4825,6 +6106,7 @@ class Category extends DataClass implements Insertable<Category> {
       categoryGroupId: serializer.fromJson<String>(json['categoryGroupId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       tempId: serializer.fromJson<String?>(json['tempId']),
+      userId: serializer.fromJson<String?>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -4843,6 +6125,7 @@ class Category extends DataClass implements Insertable<Category> {
       'categoryGroupId': serializer.toJson<String>(categoryGroupId),
       'isSynced': serializer.toJson<bool>(isSynced),
       'tempId': serializer.toJson<String?>(tempId),
+      'userId': serializer.toJson<String?>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -4859,6 +6142,7 @@ class Category extends DataClass implements Insertable<Category> {
     String? categoryGroupId,
     bool? isSynced,
     Value<String?> tempId = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Category(
@@ -4874,6 +6158,7 @@ class Category extends DataClass implements Insertable<Category> {
     categoryGroupId: categoryGroupId ?? this.categoryGroupId,
     isSynced: isSynced ?? this.isSynced,
     tempId: tempId.present ? tempId.value : this.tempId,
+    userId: userId.present ? userId.value : this.userId,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -4893,6 +6178,7 @@ class Category extends DataClass implements Insertable<Category> {
           : this.categoryGroupId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      userId: data.userId.present ? data.userId.value : this.userId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -4911,6 +6197,7 @@ class Category extends DataClass implements Insertable<Category> {
           ..write('categoryGroupId: $categoryGroupId, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -4929,6 +6216,7 @@ class Category extends DataClass implements Insertable<Category> {
     categoryGroupId,
     isSynced,
     tempId,
+    userId,
     createdAt,
     updatedAt,
   );
@@ -4946,6 +6234,7 @@ class Category extends DataClass implements Insertable<Category> {
           other.categoryGroupId == this.categoryGroupId &&
           other.isSynced == this.isSynced &&
           other.tempId == this.tempId &&
+          other.userId == this.userId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -4961,6 +6250,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   final Value<String> categoryGroupId;
   final Value<bool> isSynced;
   final Value<String?> tempId;
+  final Value<String?> userId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -4975,6 +6265,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     this.categoryGroupId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
+    this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -4990,6 +6281,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     required String categoryGroupId,
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
+    this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -5007,6 +6299,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     Expression<String>? categoryGroupId,
     Expression<bool>? isSynced,
     Expression<String>? tempId,
+    Expression<String>? userId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -5022,6 +6315,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
       if (categoryGroupId != null) 'category_group_id': categoryGroupId,
       if (isSynced != null) 'is_synced': isSynced,
       if (tempId != null) 'temp_id': tempId,
+      if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -5039,6 +6333,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     Value<String>? categoryGroupId,
     Value<bool>? isSynced,
     Value<String?>? tempId,
+    Value<String?>? userId,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -5054,6 +6349,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
       categoryGroupId: categoryGroupId ?? this.categoryGroupId,
       isSynced: isSynced ?? this.isSynced,
       tempId: tempId ?? this.tempId,
+      userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -5093,6 +6389,9 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     if (tempId.present) {
       map['temp_id'] = Variable<String>(tempId.value);
     }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -5118,6 +6417,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
           ..write('categoryGroupId: $categoryGroupId, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -6122,6 +7422,28 @@ class $ContactsTable extends Contacts with TableInfo<$ContactsTable, Contact> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localImagePathMeta = const VerificationMeta(
+    'localImagePath',
+  );
+  @override
+  late final GeneratedColumn<String> localImagePath = GeneratedColumn<String>(
+    'local_image_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
   );
@@ -6171,6 +7493,8 @@ class $ContactsTable extends Contacts with TableInfo<$ContactsTable, Contact> {
     iconEmoji,
     iconType,
     color,
+    imageUrl,
+    localImagePath,
     isSynced,
     createdAt,
     updatedAt,
@@ -6241,6 +7565,21 @@ class $ContactsTable extends Contacts with TableInfo<$ContactsTable, Contact> {
         color.isAcceptableOrUnknown(data['color']!, _colorMeta),
       );
     }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('local_image_path')) {
+      context.handle(
+        _localImagePathMeta,
+        localImagePath.isAcceptableOrUnknown(
+          data['local_image_path']!,
+          _localImagePathMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_synced')) {
       context.handle(
         _isSyncedMeta,
@@ -6300,6 +7639,14 @@ class $ContactsTable extends Contacts with TableInfo<$ContactsTable, Contact> {
         DriftSqlType.string,
         data['${effectivePrefix}color'],
       ),
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      localImagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_image_path'],
+      ),
       isSynced: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
@@ -6330,6 +7677,8 @@ class Contact extends DataClass implements Insertable<Contact> {
   final String? iconEmoji;
   final String iconType;
   final String? color;
+  final String? imageUrl;
+  final String? localImagePath;
   final bool isSynced;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -6342,6 +7691,8 @@ class Contact extends DataClass implements Insertable<Contact> {
     this.iconEmoji,
     required this.iconType,
     this.color,
+    this.imageUrl,
+    this.localImagePath,
     required this.isSynced,
     required this.createdAt,
     required this.updatedAt,
@@ -6364,6 +7715,12 @@ class Contact extends DataClass implements Insertable<Contact> {
     map['icon_type'] = Variable<String>(iconType);
     if (!nullToAbsent || color != null) {
       map['color'] = Variable<String>(color);
+    }
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || localImagePath != null) {
+      map['local_image_path'] = Variable<String>(localImagePath);
     }
     map['is_synced'] = Variable<bool>(isSynced);
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -6389,6 +7746,12 @@ class Contact extends DataClass implements Insertable<Contact> {
       color: color == null && nullToAbsent
           ? const Value.absent()
           : Value(color),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      localImagePath: localImagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localImagePath),
       isSynced: Value(isSynced),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
@@ -6409,6 +7772,8 @@ class Contact extends DataClass implements Insertable<Contact> {
       iconEmoji: serializer.fromJson<String?>(json['iconEmoji']),
       iconType: serializer.fromJson<String>(json['iconType']),
       color: serializer.fromJson<String?>(json['color']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      localImagePath: serializer.fromJson<String?>(json['localImagePath']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -6426,6 +7791,8 @@ class Contact extends DataClass implements Insertable<Contact> {
       'iconEmoji': serializer.toJson<String?>(iconEmoji),
       'iconType': serializer.toJson<String>(iconType),
       'color': serializer.toJson<String?>(color),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'localImagePath': serializer.toJson<String?>(localImagePath),
       'isSynced': serializer.toJson<bool>(isSynced),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -6441,6 +7808,8 @@ class Contact extends DataClass implements Insertable<Contact> {
     Value<String?> iconEmoji = const Value.absent(),
     String? iconType,
     Value<String?> color = const Value.absent(),
+    Value<String?> imageUrl = const Value.absent(),
+    Value<String?> localImagePath = const Value.absent(),
     bool? isSynced,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -6455,6 +7824,10 @@ class Contact extends DataClass implements Insertable<Contact> {
     iconEmoji: iconEmoji.present ? iconEmoji.value : this.iconEmoji,
     iconType: iconType ?? this.iconType,
     color: color.present ? color.value : this.color,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    localImagePath: localImagePath.present
+        ? localImagePath.value
+        : this.localImagePath,
     isSynced: isSynced ?? this.isSynced,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -6471,6 +7844,10 @@ class Contact extends DataClass implements Insertable<Contact> {
       iconEmoji: data.iconEmoji.present ? data.iconEmoji.value : this.iconEmoji,
       iconType: data.iconType.present ? data.iconType.value : this.iconType,
       color: data.color.present ? data.color.value : this.color,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      localImagePath: data.localImagePath.present
+          ? data.localImagePath.value
+          : this.localImagePath,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -6488,6 +7865,8 @@ class Contact extends DataClass implements Insertable<Contact> {
           ..write('iconEmoji: $iconEmoji, ')
           ..write('iconType: $iconType, ')
           ..write('color: $color, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath, ')
           ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
@@ -6505,6 +7884,8 @@ class Contact extends DataClass implements Insertable<Contact> {
     iconEmoji,
     iconType,
     color,
+    imageUrl,
+    localImagePath,
     isSynced,
     createdAt,
     updatedAt,
@@ -6521,6 +7902,8 @@ class Contact extends DataClass implements Insertable<Contact> {
           other.iconEmoji == this.iconEmoji &&
           other.iconType == this.iconType &&
           other.color == this.color &&
+          other.imageUrl == this.imageUrl &&
+          other.localImagePath == this.localImagePath &&
           other.isSynced == this.isSynced &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
@@ -6535,6 +7918,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
   final Value<String?> iconEmoji;
   final Value<String> iconType;
   final Value<String?> color;
+  final Value<String?> imageUrl;
+  final Value<String?> localImagePath;
   final Value<bool> isSynced;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
@@ -6548,6 +7933,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
     this.iconEmoji = const Value.absent(),
     this.iconType = const Value.absent(),
     this.color = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -6562,6 +7949,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
     this.iconEmoji = const Value.absent(),
     this.iconType = const Value.absent(),
     this.color = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -6578,6 +7967,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
     Expression<String>? iconEmoji,
     Expression<String>? iconType,
     Expression<String>? color,
+    Expression<String>? imageUrl,
+    Expression<String>? localImagePath,
     Expression<bool>? isSynced,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -6592,6 +7983,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
       if (iconEmoji != null) 'icon_emoji': iconEmoji,
       if (iconType != null) 'icon_type': iconType,
       if (color != null) 'color': color,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (localImagePath != null) 'local_image_path': localImagePath,
       if (isSynced != null) 'is_synced': isSynced,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -6608,6 +8001,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
     Value<String?>? iconEmoji,
     Value<String>? iconType,
     Value<String?>? color,
+    Value<String?>? imageUrl,
+    Value<String?>? localImagePath,
     Value<bool>? isSynced,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
@@ -6622,6 +8017,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
       iconEmoji: iconEmoji ?? this.iconEmoji,
       iconType: iconType ?? this.iconType,
       color: color ?? this.color,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
       isSynced: isSynced ?? this.isSynced,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -6656,6 +8053,12 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
     if (color.present) {
       map['color'] = Variable<String>(color.value);
     }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (localImagePath.present) {
+      map['local_image_path'] = Variable<String>(localImagePath.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -6682,6 +8085,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
           ..write('iconEmoji: $iconEmoji, ')
           ..write('iconType: $iconType, ')
           ..write('color: $color, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath, ')
           ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -7086,17 +8491,16 @@ class $InvestmentsTable extends Investments
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _returnCalculationTypeMeta =
+      const VerificationMeta('returnCalculationType');
   @override
-  late final GeneratedColumnWithTypeConverter<ReturnCalculationType, String>
-  returnCalculationType =
+  late final GeneratedColumn<String> returnCalculationType =
       GeneratedColumn<String>(
         'return_calculation_type',
         aliasedName,
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<ReturnCalculationType>(
-        $InvestmentsTable.$converterreturnCalculationType,
       );
   static const VerificationMeta _interestRateMeta = const VerificationMeta(
     'interestRate',
@@ -7325,6 +8729,17 @@ class $InvestmentsTable extends Investments
         ),
       );
     }
+    if (data.containsKey('return_calculation_type')) {
+      context.handle(
+        _returnCalculationTypeMeta,
+        returnCalculationType.isAcceptableOrUnknown(
+          data['return_calculation_type']!,
+          _returnCalculationTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_returnCalculationTypeMeta);
+    }
     if (data.containsKey('interest_rate')) {
       context.handle(
         _interestRateMeta,
@@ -7435,13 +8850,10 @@ class $InvestmentsTable extends Investments
         DriftSqlType.int,
         data['${effectivePrefix}current_value'],
       )!,
-      returnCalculationType: $InvestmentsTable.$converterreturnCalculationType
-          .fromSql(
-            attachedDatabase.typeMapping.read(
-              DriftSqlType.string,
-              data['${effectivePrefix}return_calculation_type'],
-            )!,
-          ),
+      returnCalculationType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}return_calculation_type'],
+      )!,
       interestRate: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}interest_rate'],
@@ -7481,9 +8893,6 @@ class $InvestmentsTable extends Investments
   $InvestmentsTable createAlias(String alias) {
     return $InvestmentsTable(attachedDatabase, alias);
   }
-
-  static TypeConverter<ReturnCalculationType, String>
-  $converterreturnCalculationType = const _ReturnCalculationTypeConverter();
 }
 
 class Investment extends DataClass implements Insertable<Investment> {
@@ -7498,7 +8907,7 @@ class Investment extends DataClass implements Insertable<Investment> {
   final String userId;
   final int investedAmount;
   final int currentValue;
-  final ReturnCalculationType returnCalculationType;
+  final String returnCalculationType;
   final int? interestRate;
   final int? fixedReturnAmount;
   final String? returnFrequency;
@@ -7549,13 +8958,7 @@ class Investment extends DataClass implements Insertable<Investment> {
     map['user_id'] = Variable<String>(userId);
     map['invested_amount'] = Variable<int>(investedAmount);
     map['current_value'] = Variable<int>(currentValue);
-    {
-      map['return_calculation_type'] = Variable<String>(
-        $InvestmentsTable.$converterreturnCalculationType.toSql(
-          returnCalculationType,
-        ),
-      );
-    }
+    map['return_calculation_type'] = Variable<String>(returnCalculationType);
     if (!nullToAbsent || interestRate != null) {
       map['interest_rate'] = Variable<int>(interestRate);
     }
@@ -7635,7 +9038,7 @@ class Investment extends DataClass implements Insertable<Investment> {
       userId: serializer.fromJson<String>(json['userId']),
       investedAmount: serializer.fromJson<int>(json['investedAmount']),
       currentValue: serializer.fromJson<int>(json['currentValue']),
-      returnCalculationType: serializer.fromJson<ReturnCalculationType>(
+      returnCalculationType: serializer.fromJson<String>(
         json['returnCalculationType'],
       ),
       interestRate: serializer.fromJson<int?>(json['interestRate']),
@@ -7663,9 +9066,7 @@ class Investment extends DataClass implements Insertable<Investment> {
       'userId': serializer.toJson<String>(userId),
       'investedAmount': serializer.toJson<int>(investedAmount),
       'currentValue': serializer.toJson<int>(currentValue),
-      'returnCalculationType': serializer.toJson<ReturnCalculationType>(
-        returnCalculationType,
-      ),
+      'returnCalculationType': serializer.toJson<String>(returnCalculationType),
       'interestRate': serializer.toJson<int?>(interestRate),
       'fixedReturnAmount': serializer.toJson<int?>(fixedReturnAmount),
       'returnFrequency': serializer.toJson<String?>(returnFrequency),
@@ -7689,7 +9090,7 @@ class Investment extends DataClass implements Insertable<Investment> {
     String? userId,
     int? investedAmount,
     int? currentValue,
-    ReturnCalculationType? returnCalculationType,
+    String? returnCalculationType,
     Value<int?> interestRate = const Value.absent(),
     Value<int?> fixedReturnAmount = const Value.absent(),
     Value<String?> returnFrequency = const Value.absent(),
@@ -7859,7 +9260,7 @@ class InvestmentsCompanion extends UpdateCompanion<Investment> {
   final Value<String> userId;
   final Value<int> investedAmount;
   final Value<int> currentValue;
-  final Value<ReturnCalculationType> returnCalculationType;
+  final Value<String> returnCalculationType;
   final Value<int?> interestRate;
   final Value<int?> fixedReturnAmount;
   final Value<String?> returnFrequency;
@@ -7904,7 +9305,7 @@ class InvestmentsCompanion extends UpdateCompanion<Investment> {
     required String userId,
     required int investedAmount,
     this.currentValue = const Value.absent(),
-    required ReturnCalculationType returnCalculationType,
+    required String returnCalculationType,
     this.interestRate = const Value.absent(),
     this.fixedReturnAmount = const Value.absent(),
     this.returnFrequency = const Value.absent(),
@@ -7983,7 +9384,7 @@ class InvestmentsCompanion extends UpdateCompanion<Investment> {
     Value<String>? userId,
     Value<int>? investedAmount,
     Value<int>? currentValue,
-    Value<ReturnCalculationType>? returnCalculationType,
+    Value<String>? returnCalculationType,
     Value<int?>? interestRate,
     Value<int?>? fixedReturnAmount,
     Value<String?>? returnFrequency,
@@ -8058,9 +9459,7 @@ class InvestmentsCompanion extends UpdateCompanion<Investment> {
     }
     if (returnCalculationType.present) {
       map['return_calculation_type'] = Variable<String>(
-        $InvestmentsTable.$converterreturnCalculationType.toSql(
-          returnCalculationType.value,
-        ),
+        returnCalculationType.value,
       );
     }
     if (interestRate.present) {
@@ -8145,15 +9544,15 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
-  late final GeneratedColumnWithTypeConverter<GoalType, String> type =
-      GeneratedColumn<String>(
-        'type',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      ).withConverter<GoalType>($GoalsTable.$convertertype);
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _targetAmountMeta = const VerificationMeta(
     'targetAmount',
   );
@@ -8343,6 +9742,65 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _currencyIdMeta = const VerificationMeta(
+    'currencyId',
+  );
+  @override
+  late final GeneratedColumn<String> currencyId = GeneratedColumn<String>(
+    'currency_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES currencies (id)',
+    ),
+  );
+  static const VerificationMeta _goalDateMeta = const VerificationMeta(
+    'goalDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> goalDate = GeneratedColumn<DateTime>(
+    'goal_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _completionDateMeta = const VerificationMeta(
+    'completionDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completionDate =
+      GeneratedColumn<DateTime>(
+        'completion_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localImagePathMeta = const VerificationMeta(
+    'localImagePath',
+  );
+  @override
+  late final GeneratedColumn<String> localImagePath = GeneratedColumn<String>(
+    'local_image_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -8364,6 +9822,11 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     color,
     isSynced,
     tempId,
+    currencyId,
+    goalDate,
+    completionDate,
+    imageUrl,
+    localImagePath,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8389,6 +9852,14 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_typeMeta);
     }
     if (data.containsKey('target_amount')) {
       context.handle(
@@ -8505,6 +9976,42 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
       );
     }
+    if (data.containsKey('currency_id')) {
+      context.handle(
+        _currencyIdMeta,
+        currencyId.isAcceptableOrUnknown(data['currency_id']!, _currencyIdMeta),
+      );
+    }
+    if (data.containsKey('goal_date')) {
+      context.handle(
+        _goalDateMeta,
+        goalDate.isAcceptableOrUnknown(data['goal_date']!, _goalDateMeta),
+      );
+    }
+    if (data.containsKey('completion_date')) {
+      context.handle(
+        _completionDateMeta,
+        completionDate.isAcceptableOrUnknown(
+          data['completion_date']!,
+          _completionDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('local_image_path')) {
+      context.handle(
+        _localImagePathMeta,
+        localImagePath.isAcceptableOrUnknown(
+          data['local_image_path']!,
+          _localImagePathMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -8522,12 +10029,10 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      type: $GoalsTable.$convertertype.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}type'],
-        )!,
-      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
       targetAmount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}target_amount'],
@@ -8592,6 +10097,26 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
         DriftSqlType.string,
         data['${effectivePrefix}temp_id'],
       ),
+      currencyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_id'],
+      ),
+      goalDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}goal_date'],
+      ),
+      completionDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completion_date'],
+      ),
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      localImagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_image_path'],
+      ),
     );
   }
 
@@ -8599,15 +10124,12 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
   $GoalsTable createAlias(String alias) {
     return $GoalsTable(attachedDatabase, alias);
   }
-
-  static JsonTypeConverter2<GoalType, String, String> $convertertype =
-      const EnumNameConverter<GoalType>(GoalType.values);
 }
 
 class Goal extends DataClass implements Insertable<Goal> {
   final String id;
   final String name;
-  final GoalType type;
+  final String type;
   final int targetAmount;
   final String? contactId;
   final String? categoryId;
@@ -8624,6 +10146,11 @@ class Goal extends DataClass implements Insertable<Goal> {
   final String? color;
   final bool isSynced;
   final String? tempId;
+  final String? currencyId;
+  final DateTime? goalDate;
+  final DateTime? completionDate;
+  final String? imageUrl;
+  final String? localImagePath;
   const Goal({
     required this.id,
     required this.name,
@@ -8644,15 +10171,18 @@ class Goal extends DataClass implements Insertable<Goal> {
     this.color,
     required this.isSynced,
     this.tempId,
+    this.currencyId,
+    this.goalDate,
+    this.completionDate,
+    this.imageUrl,
+    this.localImagePath,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
-    {
-      map['type'] = Variable<String>($GoalsTable.$convertertype.toSql(type));
-    }
+    map['type'] = Variable<String>(type);
     map['target_amount'] = Variable<int>(targetAmount);
     if (!nullToAbsent || contactId != null) {
       map['contact_id'] = Variable<String>(contactId);
@@ -8684,6 +10214,21 @@ class Goal extends DataClass implements Insertable<Goal> {
     map['is_synced'] = Variable<bool>(isSynced);
     if (!nullToAbsent || tempId != null) {
       map['temp_id'] = Variable<String>(tempId);
+    }
+    if (!nullToAbsent || currencyId != null) {
+      map['currency_id'] = Variable<String>(currencyId);
+    }
+    if (!nullToAbsent || goalDate != null) {
+      map['goal_date'] = Variable<DateTime>(goalDate);
+    }
+    if (!nullToAbsent || completionDate != null) {
+      map['completion_date'] = Variable<DateTime>(completionDate);
+    }
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || localImagePath != null) {
+      map['local_image_path'] = Variable<String>(localImagePath);
     }
     return map;
   }
@@ -8725,6 +10270,21 @@ class Goal extends DataClass implements Insertable<Goal> {
       tempId: tempId == null && nullToAbsent
           ? const Value.absent()
           : Value(tempId),
+      currencyId: currencyId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currencyId),
+      goalDate: goalDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(goalDate),
+      completionDate: completionDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completionDate),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      localImagePath: localImagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localImagePath),
     );
   }
 
@@ -8736,9 +10296,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     return Goal(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      type: $GoalsTable.$convertertype.fromJson(
-        serializer.fromJson<String>(json['type']),
-      ),
+      type: serializer.fromJson<String>(json['type']),
       targetAmount: serializer.fromJson<int>(json['targetAmount']),
       contactId: serializer.fromJson<String?>(json['contactId']),
       categoryId: serializer.fromJson<String?>(json['categoryId']),
@@ -8755,6 +10313,11 @@ class Goal extends DataClass implements Insertable<Goal> {
       color: serializer.fromJson<String?>(json['color']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       tempId: serializer.fromJson<String?>(json['tempId']),
+      currencyId: serializer.fromJson<String?>(json['currencyId']),
+      goalDate: serializer.fromJson<DateTime?>(json['goalDate']),
+      completionDate: serializer.fromJson<DateTime?>(json['completionDate']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      localImagePath: serializer.fromJson<String?>(json['localImagePath']),
     );
   }
   @override
@@ -8763,9 +10326,7 @@ class Goal extends DataClass implements Insertable<Goal> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
-      'type': serializer.toJson<String>(
-        $GoalsTable.$convertertype.toJson(type),
-      ),
+      'type': serializer.toJson<String>(type),
       'targetAmount': serializer.toJson<int>(targetAmount),
       'contactId': serializer.toJson<String?>(contactId),
       'categoryId': serializer.toJson<String?>(categoryId),
@@ -8782,13 +10343,18 @@ class Goal extends DataClass implements Insertable<Goal> {
       'color': serializer.toJson<String?>(color),
       'isSynced': serializer.toJson<bool>(isSynced),
       'tempId': serializer.toJson<String?>(tempId),
+      'currencyId': serializer.toJson<String?>(currencyId),
+      'goalDate': serializer.toJson<DateTime?>(goalDate),
+      'completionDate': serializer.toJson<DateTime?>(completionDate),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'localImagePath': serializer.toJson<String?>(localImagePath),
     };
   }
 
   Goal copyWith({
     String? id,
     String? name,
-    GoalType? type,
+    String? type,
     int? targetAmount,
     Value<String?> contactId = const Value.absent(),
     Value<String?> categoryId = const Value.absent(),
@@ -8805,6 +10371,11 @@ class Goal extends DataClass implements Insertable<Goal> {
     Value<String?> color = const Value.absent(),
     bool? isSynced,
     Value<String?> tempId = const Value.absent(),
+    Value<String?> currencyId = const Value.absent(),
+    Value<DateTime?> goalDate = const Value.absent(),
+    Value<DateTime?> completionDate = const Value.absent(),
+    Value<String?> imageUrl = const Value.absent(),
+    Value<String?> localImagePath = const Value.absent(),
   }) => Goal(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -8827,6 +10398,15 @@ class Goal extends DataClass implements Insertable<Goal> {
     color: color.present ? color.value : this.color,
     isSynced: isSynced ?? this.isSynced,
     tempId: tempId.present ? tempId.value : this.tempId,
+    currencyId: currencyId.present ? currencyId.value : this.currencyId,
+    goalDate: goalDate.present ? goalDate.value : this.goalDate,
+    completionDate: completionDate.present
+        ? completionDate.value
+        : this.completionDate,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    localImagePath: localImagePath.present
+        ? localImagePath.value
+        : this.localImagePath,
   );
   Goal copyWithCompanion(GoalsCompanion data) {
     return Goal(
@@ -8863,6 +10443,17 @@ class Goal extends DataClass implements Insertable<Goal> {
       color: data.color.present ? data.color.value : this.color,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      currencyId: data.currencyId.present
+          ? data.currencyId.value
+          : this.currencyId,
+      goalDate: data.goalDate.present ? data.goalDate.value : this.goalDate,
+      completionDate: data.completionDate.present
+          ? data.completionDate.value
+          : this.completionDate,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      localImagePath: data.localImagePath.present
+          ? data.localImagePath.value
+          : this.localImagePath,
     );
   }
 
@@ -8887,13 +10478,18 @@ class Goal extends DataClass implements Insertable<Goal> {
           ..write('iconType: $iconType, ')
           ..write('color: $color, ')
           ..write('isSynced: $isSynced, ')
-          ..write('tempId: $tempId')
+          ..write('tempId: $tempId, ')
+          ..write('currencyId: $currencyId, ')
+          ..write('goalDate: $goalDate, ')
+          ..write('completionDate: $completionDate, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     name,
     type,
@@ -8913,7 +10509,12 @@ class Goal extends DataClass implements Insertable<Goal> {
     color,
     isSynced,
     tempId,
-  );
+    currencyId,
+    goalDate,
+    completionDate,
+    imageUrl,
+    localImagePath,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8936,13 +10537,18 @@ class Goal extends DataClass implements Insertable<Goal> {
           other.iconType == this.iconType &&
           other.color == this.color &&
           other.isSynced == this.isSynced &&
-          other.tempId == this.tempId);
+          other.tempId == this.tempId &&
+          other.currencyId == this.currencyId &&
+          other.goalDate == this.goalDate &&
+          other.completionDate == this.completionDate &&
+          other.imageUrl == this.imageUrl &&
+          other.localImagePath == this.localImagePath);
 }
 
 class GoalsCompanion extends UpdateCompanion<Goal> {
   final Value<String> id;
   final Value<String> name;
-  final Value<GoalType> type;
+  final Value<String> type;
   final Value<int> targetAmount;
   final Value<String?> contactId;
   final Value<String?> categoryId;
@@ -8959,6 +10565,11 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
   final Value<String?> color;
   final Value<bool> isSynced;
   final Value<String?> tempId;
+  final Value<String?> currencyId;
+  final Value<DateTime?> goalDate;
+  final Value<DateTime?> completionDate;
+  final Value<String?> imageUrl;
+  final Value<String?> localImagePath;
   final Value<int> rowid;
   const GoalsCompanion({
     this.id = const Value.absent(),
@@ -8980,12 +10591,17 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.color = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
+    this.currencyId = const Value.absent(),
+    this.goalDate = const Value.absent(),
+    this.completionDate = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   GoalsCompanion.insert({
     required String id,
     required String name,
-    required GoalType type,
+    required String type,
     required int targetAmount,
     this.contactId = const Value.absent(),
     this.categoryId = const Value.absent(),
@@ -9002,6 +10618,11 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     this.color = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
+    this.currencyId = const Value.absent(),
+    this.goalDate = const Value.absent(),
+    this.completionDate = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.localImagePath = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -9028,6 +10649,11 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Expression<String>? color,
     Expression<bool>? isSynced,
     Expression<String>? tempId,
+    Expression<String>? currencyId,
+    Expression<DateTime>? goalDate,
+    Expression<DateTime>? completionDate,
+    Expression<String>? imageUrl,
+    Expression<String>? localImagePath,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -9050,6 +10676,11 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       if (color != null) 'color': color,
       if (isSynced != null) 'is_synced': isSynced,
       if (tempId != null) 'temp_id': tempId,
+      if (currencyId != null) 'currency_id': currencyId,
+      if (goalDate != null) 'goal_date': goalDate,
+      if (completionDate != null) 'completion_date': completionDate,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (localImagePath != null) 'local_image_path': localImagePath,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -9057,7 +10688,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
   GoalsCompanion copyWith({
     Value<String>? id,
     Value<String>? name,
-    Value<GoalType>? type,
+    Value<String>? type,
     Value<int>? targetAmount,
     Value<String?>? contactId,
     Value<String?>? categoryId,
@@ -9074,6 +10705,11 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     Value<String?>? color,
     Value<bool>? isSynced,
     Value<String?>? tempId,
+    Value<String?>? currencyId,
+    Value<DateTime?>? goalDate,
+    Value<DateTime?>? completionDate,
+    Value<String?>? imageUrl,
+    Value<String?>? localImagePath,
     Value<int>? rowid,
   }) {
     return GoalsCompanion(
@@ -9096,6 +10732,11 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       color: color ?? this.color,
       isSynced: isSynced ?? this.isSynced,
       tempId: tempId ?? this.tempId,
+      currencyId: currencyId ?? this.currencyId,
+      goalDate: goalDate ?? this.goalDate,
+      completionDate: completionDate ?? this.completionDate,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -9110,9 +10751,7 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
       map['name'] = Variable<String>(name.value);
     }
     if (type.present) {
-      map['type'] = Variable<String>(
-        $GoalsTable.$convertertype.toSql(type.value),
-      );
+      map['type'] = Variable<String>(type.value);
     }
     if (targetAmount.present) {
       map['target_amount'] = Variable<int>(targetAmount.value);
@@ -9162,6 +10801,21 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
     if (tempId.present) {
       map['temp_id'] = Variable<String>(tempId.value);
     }
+    if (currencyId.present) {
+      map['currency_id'] = Variable<String>(currencyId.value);
+    }
+    if (goalDate.present) {
+      map['goal_date'] = Variable<DateTime>(goalDate.value);
+    }
+    if (completionDate.present) {
+      map['completion_date'] = Variable<DateTime>(completionDate.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (localImagePath.present) {
+      map['local_image_path'] = Variable<String>(localImagePath.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -9190,6 +10844,1232 @@ class GoalsCompanion extends UpdateCompanion<Goal> {
           ..write('color: $color, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
+          ..write('currencyId: $currencyId, ')
+          ..write('goalDate: $goalDate, ')
+          ..write('completionDate: $completionDate, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('localImagePath: $localImagePath, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BudgetsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _underLimitGoalMeta = const VerificationMeta(
+    'underLimitGoal',
+  );
+  @override
+  late final GeneratedColumn<int> underLimitGoal = GeneratedColumn<int>(
+    'under_limit_goal',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES projects (id)',
+    ),
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
+    'category_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id)',
+    ),
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta(
+    'currency',
+  );
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES currencies (id)',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _limitAmountMeta = const VerificationMeta(
+    'limitAmount',
+  );
+  @override
+  late final GeneratedColumn<int> limitAmount = GeneratedColumn<int>(
+    'limit_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _spentAmountMeta = const VerificationMeta(
+    'spentAmount',
+  );
+  @override
+  late final GeneratedColumn<int> spentAmount = GeneratedColumn<int>(
+    'spent_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _overBudgetAllowanceMeta =
+      const VerificationMeta('overBudgetAllowance');
+  @override
+  late final GeneratedColumn<int> overBudgetAllowance = GeneratedColumn<int>(
+    'over_budget_allowance',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _iconCodePointMeta = const VerificationMeta(
+    'iconCodePoint',
+  );
+  @override
+  late final GeneratedColumn<int> iconCodePoint = GeneratedColumn<int>(
+    'icon_code_point',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iconEmojiMeta = const VerificationMeta(
+    'iconEmoji',
+  );
+  @override
+  late final GeneratedColumn<String> iconEmoji = GeneratedColumn<String>(
+    'icon_emoji',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iconTypeMeta = const VerificationMeta(
+    'iconType',
+  );
+  @override
+  late final GeneratedColumn<String> iconType = GeneratedColumn<String>(
+    'icon_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('MaterialIcons'),
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
+  @override
+  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
+    'temp_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    underLimitGoal,
+    startDate,
+    endDate,
+    isActive,
+    projectId,
+    categoryId,
+    currency,
+    userId,
+    limitAmount,
+    spentAmount,
+    overBudgetAllowance,
+    iconCodePoint,
+    iconEmoji,
+    iconType,
+    color,
+    id,
+    name,
+    description,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'budgets';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Budget> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('under_limit_goal')) {
+      context.handle(
+        _underLimitGoalMeta,
+        underLimitGoal.isAcceptableOrUnknown(
+          data['under_limit_goal']!,
+          _underLimitGoalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    }
+    if (data.containsKey('currency')) {
+      context.handle(
+        _currencyMeta,
+        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('limit_amount')) {
+      context.handle(
+        _limitAmountMeta,
+        limitAmount.isAcceptableOrUnknown(
+          data['limit_amount']!,
+          _limitAmountMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_limitAmountMeta);
+    }
+    if (data.containsKey('spent_amount')) {
+      context.handle(
+        _spentAmountMeta,
+        spentAmount.isAcceptableOrUnknown(
+          data['spent_amount']!,
+          _spentAmountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('over_budget_allowance')) {
+      context.handle(
+        _overBudgetAllowanceMeta,
+        overBudgetAllowance.isAcceptableOrUnknown(
+          data['over_budget_allowance']!,
+          _overBudgetAllowanceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('icon_code_point')) {
+      context.handle(
+        _iconCodePointMeta,
+        iconCodePoint.isAcceptableOrUnknown(
+          data['icon_code_point']!,
+          _iconCodePointMeta,
+        ),
+      );
+    }
+    if (data.containsKey('icon_emoji')) {
+      context.handle(
+        _iconEmojiMeta,
+        iconEmoji.isAcceptableOrUnknown(data['icon_emoji']!, _iconEmojiMeta),
+      );
+    }
+    if (data.containsKey('icon_type')) {
+      context.handle(
+        _iconTypeMeta,
+        iconType.isAcceptableOrUnknown(data['icon_type']!, _iconTypeMeta),
+      );
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('temp_id')) {
+      context.handle(
+        _tempIdMeta,
+        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Budget map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Budget(
+      underLimitGoal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}under_limit_goal'],
+      ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category_id'],
+      ),
+      currency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      limitAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}limit_amount'],
+      )!,
+      spentAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}spent_amount'],
+      )!,
+      overBudgetAllowance: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}over_budget_allowance'],
+      )!,
+      iconCodePoint: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}icon_code_point'],
+      ),
+      iconEmoji: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_emoji'],
+      ),
+      iconType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_type'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      ),
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      tempId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_id'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $BudgetsTable createAlias(String alias) {
+    return $BudgetsTable(attachedDatabase, alias);
+  }
+}
+
+class Budget extends DataClass implements Insertable<Budget> {
+  final int? underLimitGoal;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isActive;
+  final String projectId;
+  final String? categoryId;
+  final String currency;
+  final String userId;
+  final int limitAmount;
+  final int spentAmount;
+  final int overBudgetAllowance;
+  final int? iconCodePoint;
+  final String? iconEmoji;
+  final String iconType;
+  final String? color;
+  final String id;
+  final String name;
+  final String? description;
+  final String? tempId;
+  final bool isSynced;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Budget({
+    this.underLimitGoal,
+    required this.startDate,
+    required this.endDate,
+    required this.isActive,
+    required this.projectId,
+    this.categoryId,
+    required this.currency,
+    required this.userId,
+    required this.limitAmount,
+    required this.spentAmount,
+    required this.overBudgetAllowance,
+    this.iconCodePoint,
+    this.iconEmoji,
+    required this.iconType,
+    this.color,
+    required this.id,
+    required this.name,
+    this.description,
+    this.tempId,
+    required this.isSynced,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || underLimitGoal != null) {
+      map['under_limit_goal'] = Variable<int>(underLimitGoal);
+    }
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    map['is_active'] = Variable<bool>(isActive);
+    map['project_id'] = Variable<String>(projectId);
+    if (!nullToAbsent || categoryId != null) {
+      map['category_id'] = Variable<String>(categoryId);
+    }
+    map['currency'] = Variable<String>(currency);
+    map['user_id'] = Variable<String>(userId);
+    map['limit_amount'] = Variable<int>(limitAmount);
+    map['spent_amount'] = Variable<int>(spentAmount);
+    map['over_budget_allowance'] = Variable<int>(overBudgetAllowance);
+    if (!nullToAbsent || iconCodePoint != null) {
+      map['icon_code_point'] = Variable<int>(iconCodePoint);
+    }
+    if (!nullToAbsent || iconEmoji != null) {
+      map['icon_emoji'] = Variable<String>(iconEmoji);
+    }
+    map['icon_type'] = Variable<String>(iconType);
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<String>(color);
+    }
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || tempId != null) {
+      map['temp_id'] = Variable<String>(tempId);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  BudgetsCompanion toCompanion(bool nullToAbsent) {
+    return BudgetsCompanion(
+      underLimitGoal: underLimitGoal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(underLimitGoal),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+      isActive: Value(isActive),
+      projectId: Value(projectId),
+      categoryId: categoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryId),
+      currency: Value(currency),
+      userId: Value(userId),
+      limitAmount: Value(limitAmount),
+      spentAmount: Value(spentAmount),
+      overBudgetAllowance: Value(overBudgetAllowance),
+      iconCodePoint: iconCodePoint == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconCodePoint),
+      iconEmoji: iconEmoji == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconEmoji),
+      iconType: Value(iconType),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
+      id: Value(id),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      tempId: tempId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tempId),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Budget.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Budget(
+      underLimitGoal: serializer.fromJson<int?>(json['underLimitGoal']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      categoryId: serializer.fromJson<String?>(json['categoryId']),
+      currency: serializer.fromJson<String>(json['currency']),
+      userId: serializer.fromJson<String>(json['userId']),
+      limitAmount: serializer.fromJson<int>(json['limitAmount']),
+      spentAmount: serializer.fromJson<int>(json['spentAmount']),
+      overBudgetAllowance: serializer.fromJson<int>(
+        json['overBudgetAllowance'],
+      ),
+      iconCodePoint: serializer.fromJson<int?>(json['iconCodePoint']),
+      iconEmoji: serializer.fromJson<String?>(json['iconEmoji']),
+      iconType: serializer.fromJson<String>(json['iconType']),
+      color: serializer.fromJson<String?>(json['color']),
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      tempId: serializer.fromJson<String?>(json['tempId']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'underLimitGoal': serializer.toJson<int?>(underLimitGoal),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+      'isActive': serializer.toJson<bool>(isActive),
+      'projectId': serializer.toJson<String>(projectId),
+      'categoryId': serializer.toJson<String?>(categoryId),
+      'currency': serializer.toJson<String>(currency),
+      'userId': serializer.toJson<String>(userId),
+      'limitAmount': serializer.toJson<int>(limitAmount),
+      'spentAmount': serializer.toJson<int>(spentAmount),
+      'overBudgetAllowance': serializer.toJson<int>(overBudgetAllowance),
+      'iconCodePoint': serializer.toJson<int?>(iconCodePoint),
+      'iconEmoji': serializer.toJson<String?>(iconEmoji),
+      'iconType': serializer.toJson<String>(iconType),
+      'color': serializer.toJson<String?>(color),
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'tempId': serializer.toJson<String?>(tempId),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Budget copyWith({
+    Value<int?> underLimitGoal = const Value.absent(),
+    DateTime? startDate,
+    DateTime? endDate,
+    bool? isActive,
+    String? projectId,
+    Value<String?> categoryId = const Value.absent(),
+    String? currency,
+    String? userId,
+    int? limitAmount,
+    int? spentAmount,
+    int? overBudgetAllowance,
+    Value<int?> iconCodePoint = const Value.absent(),
+    Value<String?> iconEmoji = const Value.absent(),
+    String? iconType,
+    Value<String?> color = const Value.absent(),
+    String? id,
+    String? name,
+    Value<String?> description = const Value.absent(),
+    Value<String?> tempId = const Value.absent(),
+    bool? isSynced,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Budget(
+    underLimitGoal: underLimitGoal.present
+        ? underLimitGoal.value
+        : this.underLimitGoal,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    isActive: isActive ?? this.isActive,
+    projectId: projectId ?? this.projectId,
+    categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    currency: currency ?? this.currency,
+    userId: userId ?? this.userId,
+    limitAmount: limitAmount ?? this.limitAmount,
+    spentAmount: spentAmount ?? this.spentAmount,
+    overBudgetAllowance: overBudgetAllowance ?? this.overBudgetAllowance,
+    iconCodePoint: iconCodePoint.present
+        ? iconCodePoint.value
+        : this.iconCodePoint,
+    iconEmoji: iconEmoji.present ? iconEmoji.value : this.iconEmoji,
+    iconType: iconType ?? this.iconType,
+    color: color.present ? color.value : this.color,
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    tempId: tempId.present ? tempId.value : this.tempId,
+    isSynced: isSynced ?? this.isSynced,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Budget copyWithCompanion(BudgetsCompanion data) {
+    return Budget(
+      underLimitGoal: data.underLimitGoal.present
+          ? data.underLimitGoal.value
+          : this.underLimitGoal,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      limitAmount: data.limitAmount.present
+          ? data.limitAmount.value
+          : this.limitAmount,
+      spentAmount: data.spentAmount.present
+          ? data.spentAmount.value
+          : this.spentAmount,
+      overBudgetAllowance: data.overBudgetAllowance.present
+          ? data.overBudgetAllowance.value
+          : this.overBudgetAllowance,
+      iconCodePoint: data.iconCodePoint.present
+          ? data.iconCodePoint.value
+          : this.iconCodePoint,
+      iconEmoji: data.iconEmoji.present ? data.iconEmoji.value : this.iconEmoji,
+      iconType: data.iconType.present ? data.iconType.value : this.iconType,
+      color: data.color.present ? data.color.value : this.color,
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Budget(')
+          ..write('underLimitGoal: $underLimitGoal, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('isActive: $isActive, ')
+          ..write('projectId: $projectId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('currency: $currency, ')
+          ..write('userId: $userId, ')
+          ..write('limitAmount: $limitAmount, ')
+          ..write('spentAmount: $spentAmount, ')
+          ..write('overBudgetAllowance: $overBudgetAllowance, ')
+          ..write('iconCodePoint: $iconCodePoint, ')
+          ..write('iconEmoji: $iconEmoji, ')
+          ..write('iconType: $iconType, ')
+          ..write('color: $color, ')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    underLimitGoal,
+    startDate,
+    endDate,
+    isActive,
+    projectId,
+    categoryId,
+    currency,
+    userId,
+    limitAmount,
+    spentAmount,
+    overBudgetAllowance,
+    iconCodePoint,
+    iconEmoji,
+    iconType,
+    color,
+    id,
+    name,
+    description,
+    tempId,
+    isSynced,
+    createdAt,
+    updatedAt,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Budget &&
+          other.underLimitGoal == this.underLimitGoal &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.isActive == this.isActive &&
+          other.projectId == this.projectId &&
+          other.categoryId == this.categoryId &&
+          other.currency == this.currency &&
+          other.userId == this.userId &&
+          other.limitAmount == this.limitAmount &&
+          other.spentAmount == this.spentAmount &&
+          other.overBudgetAllowance == this.overBudgetAllowance &&
+          other.iconCodePoint == this.iconCodePoint &&
+          other.iconEmoji == this.iconEmoji &&
+          other.iconType == this.iconType &&
+          other.color == this.color &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.tempId == this.tempId &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class BudgetsCompanion extends UpdateCompanion<Budget> {
+  final Value<int?> underLimitGoal;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  final Value<bool> isActive;
+  final Value<String> projectId;
+  final Value<String?> categoryId;
+  final Value<String> currency;
+  final Value<String> userId;
+  final Value<int> limitAmount;
+  final Value<int> spentAmount;
+  final Value<int> overBudgetAllowance;
+  final Value<int?> iconCodePoint;
+  final Value<String?> iconEmoji;
+  final Value<String> iconType;
+  final Value<String?> color;
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<String?> tempId;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const BudgetsCompanion({
+    this.underLimitGoal = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.limitAmount = const Value.absent(),
+    this.spentAmount = const Value.absent(),
+    this.overBudgetAllowance = const Value.absent(),
+    this.iconCodePoint = const Value.absent(),
+    this.iconEmoji = const Value.absent(),
+    this.iconType = const Value.absent(),
+    this.color = const Value.absent(),
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BudgetsCompanion.insert({
+    this.underLimitGoal = const Value.absent(),
+    required DateTime startDate,
+    required DateTime endDate,
+    this.isActive = const Value.absent(),
+    required String projectId,
+    this.categoryId = const Value.absent(),
+    required String currency,
+    required String userId,
+    required int limitAmount,
+    this.spentAmount = const Value.absent(),
+    this.overBudgetAllowance = const Value.absent(),
+    this.iconCodePoint = const Value.absent(),
+    this.iconEmoji = const Value.absent(),
+    this.iconType = const Value.absent(),
+    this.color = const Value.absent(),
+    required String id,
+    required String name,
+    this.description = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : startDate = Value(startDate),
+       endDate = Value(endDate),
+       projectId = Value(projectId),
+       currency = Value(currency),
+       userId = Value(userId),
+       limitAmount = Value(limitAmount),
+       id = Value(id),
+       name = Value(name);
+  static Insertable<Budget> custom({
+    Expression<int>? underLimitGoal,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<bool>? isActive,
+    Expression<String>? projectId,
+    Expression<String>? categoryId,
+    Expression<String>? currency,
+    Expression<String>? userId,
+    Expression<int>? limitAmount,
+    Expression<int>? spentAmount,
+    Expression<int>? overBudgetAllowance,
+    Expression<int>? iconCodePoint,
+    Expression<String>? iconEmoji,
+    Expression<String>? iconType,
+    Expression<String>? color,
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? tempId,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (underLimitGoal != null) 'under_limit_goal': underLimitGoal,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (isActive != null) 'is_active': isActive,
+      if (projectId != null) 'project_id': projectId,
+      if (categoryId != null) 'category_id': categoryId,
+      if (currency != null) 'currency': currency,
+      if (userId != null) 'user_id': userId,
+      if (limitAmount != null) 'limit_amount': limitAmount,
+      if (spentAmount != null) 'spent_amount': spentAmount,
+      if (overBudgetAllowance != null)
+        'over_budget_allowance': overBudgetAllowance,
+      if (iconCodePoint != null) 'icon_code_point': iconCodePoint,
+      if (iconEmoji != null) 'icon_emoji': iconEmoji,
+      if (iconType != null) 'icon_type': iconType,
+      if (color != null) 'color': color,
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (tempId != null) 'temp_id': tempId,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BudgetsCompanion copyWith({
+    Value<int?>? underLimitGoal,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+    Value<bool>? isActive,
+    Value<String>? projectId,
+    Value<String?>? categoryId,
+    Value<String>? currency,
+    Value<String>? userId,
+    Value<int>? limitAmount,
+    Value<int>? spentAmount,
+    Value<int>? overBudgetAllowance,
+    Value<int?>? iconCodePoint,
+    Value<String?>? iconEmoji,
+    Value<String>? iconType,
+    Value<String?>? color,
+    Value<String>? id,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<String?>? tempId,
+    Value<bool>? isSynced,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return BudgetsCompanion(
+      underLimitGoal: underLimitGoal ?? this.underLimitGoal,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      isActive: isActive ?? this.isActive,
+      projectId: projectId ?? this.projectId,
+      categoryId: categoryId ?? this.categoryId,
+      currency: currency ?? this.currency,
+      userId: userId ?? this.userId,
+      limitAmount: limitAmount ?? this.limitAmount,
+      spentAmount: spentAmount ?? this.spentAmount,
+      overBudgetAllowance: overBudgetAllowance ?? this.overBudgetAllowance,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (underLimitGoal.present) {
+      map['under_limit_goal'] = Variable<int>(underLimitGoal.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (limitAmount.present) {
+      map['limit_amount'] = Variable<int>(limitAmount.value);
+    }
+    if (spentAmount.present) {
+      map['spent_amount'] = Variable<int>(spentAmount.value);
+    }
+    if (overBudgetAllowance.present) {
+      map['over_budget_allowance'] = Variable<int>(overBudgetAllowance.value);
+    }
+    if (iconCodePoint.present) {
+      map['icon_code_point'] = Variable<int>(iconCodePoint.value);
+    }
+    if (iconEmoji.present) {
+      map['icon_emoji'] = Variable<String>(iconEmoji.value);
+    }
+    if (iconType.present) {
+      map['icon_type'] = Variable<String>(iconType.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (tempId.present) {
+      map['temp_id'] = Variable<String>(tempId.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BudgetsCompanion(')
+          ..write('underLimitGoal: $underLimitGoal, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('isActive: $isActive, ')
+          ..write('projectId: $projectId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('currency: $currency, ')
+          ..write('userId: $userId, ')
+          ..write('limitAmount: $limitAmount, ')
+          ..write('spentAmount: $spentAmount, ')
+          ..write('overBudgetAllowance: $overBudgetAllowance, ')
+          ..write('iconCodePoint: $iconCodePoint, ')
+          ..write('iconEmoji: $iconEmoji, ')
+          ..write('iconType: $iconType, ')
+          ..write('color: $color, ')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('tempId: $tempId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -9956,6 +12836,20 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
       'REFERENCES goals (id)',
     ),
   );
+  static const VerificationMeta _budgetIdMeta = const VerificationMeta(
+    'budgetId',
+  );
+  @override
+  late final GeneratedColumn<String> budgetId = GeneratedColumn<String>(
+    'budget_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES budgets (id)',
+    ),
+  );
   static const VerificationMeta _reminderIdMeta = const VerificationMeta(
     'reminderId',
   );
@@ -10070,6 +12964,7 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
     walletId,
     investmentId,
     goalId,
+    budgetId,
     reminderId,
     source,
     notes,
@@ -10209,6 +13104,12 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
         goalId.isAcceptableOrUnknown(data['goal_id']!, _goalIdMeta),
       );
     }
+    if (data.containsKey('budget_id')) {
+      context.handle(
+        _budgetIdMeta,
+        budgetId.isAcceptableOrUnknown(data['budget_id']!, _budgetIdMeta),
+      );
+    }
     if (data.containsKey('reminder_id')) {
       context.handle(
         _reminderIdMeta,
@@ -10330,6 +13231,10 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
         DriftSqlType.string,
         data['${effectivePrefix}goal_id'],
       ),
+      budgetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}budget_id'],
+      ),
       reminderId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}reminder_id'],
@@ -10388,6 +13293,7 @@ class Expense extends DataClass implements Insertable<Expense> {
   final String? walletId;
   final String? investmentId;
   final String? goalId;
+  final String? budgetId;
   final String? reminderId;
   final String source;
   final String? notes;
@@ -10413,6 +13319,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     this.walletId,
     this.investmentId,
     this.goalId,
+    this.budgetId,
     this.reminderId,
     required this.source,
     this.notes,
@@ -10456,6 +13363,9 @@ class Expense extends DataClass implements Insertable<Expense> {
     }
     if (!nullToAbsent || goalId != null) {
       map['goal_id'] = Variable<String>(goalId);
+    }
+    if (!nullToAbsent || budgetId != null) {
+      map['budget_id'] = Variable<String>(budgetId);
     }
     if (!nullToAbsent || reminderId != null) {
       map['reminder_id'] = Variable<String>(reminderId);
@@ -10508,6 +13418,9 @@ class Expense extends DataClass implements Insertable<Expense> {
       goalId: goalId == null && nullToAbsent
           ? const Value.absent()
           : Value(goalId),
+      budgetId: budgetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(budgetId),
       reminderId: reminderId == null && nullToAbsent
           ? const Value.absent()
           : Value(reminderId),
@@ -10547,6 +13460,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       walletId: serializer.fromJson<String?>(json['walletId']),
       investmentId: serializer.fromJson<String?>(json['investmentId']),
       goalId: serializer.fromJson<String?>(json['goalId']),
+      budgetId: serializer.fromJson<String?>(json['budgetId']),
       reminderId: serializer.fromJson<String?>(json['reminderId']),
       source: serializer.fromJson<String>(json['source']),
       notes: serializer.fromJson<String?>(json['notes']),
@@ -10577,6 +13491,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       'walletId': serializer.toJson<String?>(walletId),
       'investmentId': serializer.toJson<String?>(investmentId),
       'goalId': serializer.toJson<String?>(goalId),
+      'budgetId': serializer.toJson<String?>(budgetId),
       'reminderId': serializer.toJson<String?>(reminderId),
       'source': serializer.toJson<String>(source),
       'notes': serializer.toJson<String?>(notes),
@@ -10605,6 +13520,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     Value<String?> walletId = const Value.absent(),
     Value<String?> investmentId = const Value.absent(),
     Value<String?> goalId = const Value.absent(),
+    Value<String?> budgetId = const Value.absent(),
     Value<String?> reminderId = const Value.absent(),
     String? source,
     Value<String?> notes = const Value.absent(),
@@ -10632,6 +13548,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     walletId: walletId.present ? walletId.value : this.walletId,
     investmentId: investmentId.present ? investmentId.value : this.investmentId,
     goalId: goalId.present ? goalId.value : this.goalId,
+    budgetId: budgetId.present ? budgetId.value : this.budgetId,
     reminderId: reminderId.present ? reminderId.value : this.reminderId,
     source: source ?? this.source,
     notes: notes.present ? notes.value : this.notes,
@@ -10669,6 +13586,7 @@ class Expense extends DataClass implements Insertable<Expense> {
           ? data.investmentId.value
           : this.investmentId,
       goalId: data.goalId.present ? data.goalId.value : this.goalId,
+      budgetId: data.budgetId.present ? data.budgetId.value : this.budgetId,
       reminderId: data.reminderId.present
           ? data.reminderId.value
           : this.reminderId,
@@ -10701,6 +13619,7 @@ class Expense extends DataClass implements Insertable<Expense> {
           ..write('walletId: $walletId, ')
           ..write('investmentId: $investmentId, ')
           ..write('goalId: $goalId, ')
+          ..write('budgetId: $budgetId, ')
           ..write('reminderId: $reminderId, ')
           ..write('source: $source, ')
           ..write('notes: $notes, ')
@@ -10731,6 +13650,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     walletId,
     investmentId,
     goalId,
+    budgetId,
     reminderId,
     source,
     notes,
@@ -10760,6 +13680,7 @@ class Expense extends DataClass implements Insertable<Expense> {
           other.walletId == this.walletId &&
           other.investmentId == this.investmentId &&
           other.goalId == this.goalId &&
+          other.budgetId == this.budgetId &&
           other.reminderId == this.reminderId &&
           other.source == this.source &&
           other.notes == this.notes &&
@@ -10787,6 +13708,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
   final Value<String?> walletId;
   final Value<String?> investmentId;
   final Value<String?> goalId;
+  final Value<String?> budgetId;
   final Value<String?> reminderId;
   final Value<String> source;
   final Value<String?> notes;
@@ -10813,6 +13735,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     this.walletId = const Value.absent(),
     this.investmentId = const Value.absent(),
     this.goalId = const Value.absent(),
+    this.budgetId = const Value.absent(),
     this.reminderId = const Value.absent(),
     this.source = const Value.absent(),
     this.notes = const Value.absent(),
@@ -10840,6 +13763,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     this.walletId = const Value.absent(),
     this.investmentId = const Value.absent(),
     this.goalId = const Value.absent(),
+    this.budgetId = const Value.absent(),
     this.reminderId = const Value.absent(),
     this.source = const Value.absent(),
     this.notes = const Value.absent(),
@@ -10874,6 +13798,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     Expression<String>? walletId,
     Expression<String>? investmentId,
     Expression<String>? goalId,
+    Expression<String>? budgetId,
     Expression<String>? reminderId,
     Expression<String>? source,
     Expression<String>? notes,
@@ -10901,6 +13826,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
       if (walletId != null) 'wallet_id': walletId,
       if (investmentId != null) 'investment_id': investmentId,
       if (goalId != null) 'goal_id': goalId,
+      if (budgetId != null) 'budget_id': budgetId,
       if (reminderId != null) 'reminder_id': reminderId,
       if (source != null) 'source': source,
       if (notes != null) 'notes': notes,
@@ -10930,6 +13856,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     Value<String?>? walletId,
     Value<String?>? investmentId,
     Value<String?>? goalId,
+    Value<String?>? budgetId,
     Value<String?>? reminderId,
     Value<String>? source,
     Value<String?>? notes,
@@ -10957,6 +13884,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
       walletId: walletId ?? this.walletId,
       investmentId: investmentId ?? this.investmentId,
       goalId: goalId ?? this.goalId,
+      budgetId: budgetId ?? this.budgetId,
       reminderId: reminderId ?? this.reminderId,
       source: source ?? this.source,
       notes: notes ?? this.notes,
@@ -11020,6 +13948,9 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     if (goalId.present) {
       map['goal_id'] = Variable<String>(goalId.value);
     }
+    if (budgetId.present) {
+      map['budget_id'] = Variable<String>(budgetId.value);
+    }
     if (reminderId.present) {
       map['reminder_id'] = Variable<String>(reminderId.value);
     }
@@ -11069,6 +14000,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
           ..write('walletId: $walletId, ')
           ..write('investmentId: $investmentId, ')
           ..write('goalId: $goalId, ')
+          ..write('budgetId: $budgetId, ')
           ..write('reminderId: $reminderId, ')
           ..write('source: $source, ')
           ..write('notes: $notes, ')
@@ -13808,6 +16740,34 @@ class $TodoItemsTable extends TodoItems
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _expenseIdMeta = const VerificationMeta(
+    'expenseId',
+  );
+  @override
+  late final GeneratedColumn<String> expenseId = GeneratedColumn<String>(
+    'expense_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES expenses (id)',
+    ),
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES payments (id)',
+    ),
+  );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
   );
@@ -13874,6 +16834,8 @@ class $TodoItemsTable extends TodoItems
     createdPaymentId,
     linkedShoppingListId,
     parentTodoId,
+    expenseId,
+    paymentId,
     isSynced,
     tempId,
     createdAt,
@@ -14028,6 +16990,18 @@ class $TodoItemsTable extends TodoItems
         ),
       );
     }
+    if (data.containsKey('expense_id')) {
+      context.handle(
+        _expenseIdMeta,
+        expenseId.isAcceptableOrUnknown(data['expense_id']!, _expenseIdMeta),
+      );
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    }
     if (data.containsKey('is_synced')) {
       context.handle(
         _isSyncedMeta,
@@ -14125,6 +17099,14 @@ class $TodoItemsTable extends TodoItems
         DriftSqlType.string,
         data['${effectivePrefix}parent_todo_id'],
       ),
+      expenseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}expense_id'],
+      ),
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      ),
       isSynced: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
@@ -14167,6 +17149,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
   final String? createdPaymentId;
   final String? linkedShoppingListId;
   final String? parentTodoId;
+  final String? expenseId;
+  final String? paymentId;
   final bool isSynced;
   final String? tempId;
   final DateTime createdAt;
@@ -14188,6 +17172,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     this.createdPaymentId,
     this.linkedShoppingListId,
     this.parentTodoId,
+    this.expenseId,
+    this.paymentId,
     required this.isSynced,
     this.tempId,
     required this.createdAt,
@@ -14238,6 +17224,12 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     if (!nullToAbsent || parentTodoId != null) {
       map['parent_todo_id'] = Variable<String>(parentTodoId);
     }
+    if (!nullToAbsent || expenseId != null) {
+      map['expense_id'] = Variable<String>(expenseId);
+    }
+    if (!nullToAbsent || paymentId != null) {
+      map['payment_id'] = Variable<String>(paymentId);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     if (!nullToAbsent || tempId != null) {
       map['temp_id'] = Variable<String>(tempId);
@@ -14287,6 +17279,12 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       parentTodoId: parentTodoId == null && nullToAbsent
           ? const Value.absent()
           : Value(parentTodoId),
+      expenseId: expenseId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expenseId),
+      paymentId: paymentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(paymentId),
       isSynced: Value(isSynced),
       tempId: tempId == null && nullToAbsent
           ? const Value.absent()
@@ -14330,6 +17328,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
         json['linkedShoppingListId'],
       ),
       parentTodoId: serializer.fromJson<String?>(json['parentTodoId']),
+      expenseId: serializer.fromJson<String?>(json['expenseId']),
+      paymentId: serializer.fromJson<String?>(json['paymentId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       tempId: serializer.fromJson<String?>(json['tempId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -14362,6 +17362,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       'createdPaymentId': serializer.toJson<String?>(createdPaymentId),
       'linkedShoppingListId': serializer.toJson<String?>(linkedShoppingListId),
       'parentTodoId': serializer.toJson<String?>(parentTodoId),
+      'expenseId': serializer.toJson<String?>(expenseId),
+      'paymentId': serializer.toJson<String?>(paymentId),
       'isSynced': serializer.toJson<bool>(isSynced),
       'tempId': serializer.toJson<String?>(tempId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -14386,6 +17388,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     Value<String?> createdPaymentId = const Value.absent(),
     Value<String?> linkedShoppingListId = const Value.absent(),
     Value<String?> parentTodoId = const Value.absent(),
+    Value<String?> expenseId = const Value.absent(),
+    Value<String?> paymentId = const Value.absent(),
     bool? isSynced,
     Value<String?> tempId = const Value.absent(),
     DateTime? createdAt,
@@ -14423,6 +17427,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
         ? linkedShoppingListId.value
         : this.linkedShoppingListId,
     parentTodoId: parentTodoId.present ? parentTodoId.value : this.parentTodoId,
+    expenseId: expenseId.present ? expenseId.value : this.expenseId,
+    paymentId: paymentId.present ? paymentId.value : this.paymentId,
     isSynced: isSynced ?? this.isSynced,
     tempId: tempId.present ? tempId.value : this.tempId,
     createdAt: createdAt ?? this.createdAt,
@@ -14470,6 +17476,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       parentTodoId: data.parentTodoId.present
           ? data.parentTodoId.value
           : this.parentTodoId,
+      expenseId: data.expenseId.present ? data.expenseId.value : this.expenseId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -14496,6 +17504,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           ..write('createdPaymentId: $createdPaymentId, ')
           ..write('linkedShoppingListId: $linkedShoppingListId, ')
           ..write('parentTodoId: $parentTodoId, ')
+          ..write('expenseId: $expenseId, ')
+          ..write('paymentId: $paymentId, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
           ..write('createdAt: $createdAt, ')
@@ -14505,7 +17515,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     projectId,
     title,
@@ -14522,11 +17532,13 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     createdPaymentId,
     linkedShoppingListId,
     parentTodoId,
+    expenseId,
+    paymentId,
     isSynced,
     tempId,
     createdAt,
     updatedAt,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -14547,6 +17559,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           other.createdPaymentId == this.createdPaymentId &&
           other.linkedShoppingListId == this.linkedShoppingListId &&
           other.parentTodoId == this.parentTodoId &&
+          other.expenseId == this.expenseId &&
+          other.paymentId == this.paymentId &&
           other.isSynced == this.isSynced &&
           other.tempId == this.tempId &&
           other.createdAt == this.createdAt &&
@@ -14570,6 +17584,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
   final Value<String?> createdPaymentId;
   final Value<String?> linkedShoppingListId;
   final Value<String?> parentTodoId;
+  final Value<String?> expenseId;
+  final Value<String?> paymentId;
   final Value<bool> isSynced;
   final Value<String?> tempId;
   final Value<DateTime> createdAt;
@@ -14592,6 +17608,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     this.createdPaymentId = const Value.absent(),
     this.linkedShoppingListId = const Value.absent(),
     this.parentTodoId = const Value.absent(),
+    this.expenseId = const Value.absent(),
+    this.paymentId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -14615,6 +17633,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     this.createdPaymentId = const Value.absent(),
     this.linkedShoppingListId = const Value.absent(),
     this.parentTodoId = const Value.absent(),
+    this.expenseId = const Value.absent(),
+    this.paymentId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -14641,6 +17661,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     Expression<String>? createdPaymentId,
     Expression<String>? linkedShoppingListId,
     Expression<String>? parentTodoId,
+    Expression<String>? expenseId,
+    Expression<String>? paymentId,
     Expression<bool>? isSynced,
     Expression<String>? tempId,
     Expression<DateTime>? createdAt,
@@ -14669,6 +17691,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
       if (linkedShoppingListId != null)
         'linked_shopping_list_id': linkedShoppingListId,
       if (parentTodoId != null) 'parent_todo_id': parentTodoId,
+      if (expenseId != null) 'expense_id': expenseId,
+      if (paymentId != null) 'payment_id': paymentId,
       if (isSynced != null) 'is_synced': isSynced,
       if (tempId != null) 'temp_id': tempId,
       if (createdAt != null) 'created_at': createdAt,
@@ -14694,6 +17718,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     Value<String?>? createdPaymentId,
     Value<String?>? linkedShoppingListId,
     Value<String?>? parentTodoId,
+    Value<String?>? expenseId,
+    Value<String?>? paymentId,
     Value<bool>? isSynced,
     Value<String?>? tempId,
     Value<DateTime>? createdAt,
@@ -14720,6 +17746,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
       createdPaymentId: createdPaymentId ?? this.createdPaymentId,
       linkedShoppingListId: linkedShoppingListId ?? this.linkedShoppingListId,
       parentTodoId: parentTodoId ?? this.parentTodoId,
+      expenseId: expenseId ?? this.expenseId,
+      paymentId: paymentId ?? this.paymentId,
       isSynced: isSynced ?? this.isSynced,
       tempId: tempId ?? this.tempId,
       createdAt: createdAt ?? this.createdAt,
@@ -14787,6 +17815,12 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     if (parentTodoId.present) {
       map['parent_todo_id'] = Variable<String>(parentTodoId.value);
     }
+    if (expenseId.present) {
+      map['expense_id'] = Variable<String>(expenseId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -14824,6 +17858,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
           ..write('createdPaymentId: $createdPaymentId, ')
           ..write('linkedShoppingListId: $linkedShoppingListId, ')
           ..write('parentTodoId: $parentTodoId, ')
+          ..write('expenseId: $expenseId, ')
+          ..write('paymentId: $paymentId, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
           ..write('createdAt: $createdAt, ')
@@ -14901,6 +17937,20 @@ class $ShoppingListsTable extends ShoppingLists
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _expenseIdMeta = const VerificationMeta(
+    'expenseId',
+  );
+  @override
+  late final GeneratedColumn<String> expenseId = GeneratedColumn<String>(
+    'expense_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES expenses (id)',
+    ),
+  );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
   );
@@ -14957,6 +18007,7 @@ class $ShoppingListsTable extends ShoppingLists
     description,
     userId,
     linkedExpenseId,
+    expenseId,
     isSynced,
     tempId,
     createdAt,
@@ -15021,6 +18072,12 @@ class $ShoppingListsTable extends ShoppingLists
         ),
       );
     }
+    if (data.containsKey('expense_id')) {
+      context.handle(
+        _expenseIdMeta,
+        expenseId.isAcceptableOrUnknown(data['expense_id']!, _expenseIdMeta),
+      );
+    }
     if (data.containsKey('is_synced')) {
       context.handle(
         _isSyncedMeta,
@@ -15078,6 +18135,10 @@ class $ShoppingListsTable extends ShoppingLists
         DriftSqlType.string,
         data['${effectivePrefix}linked_expense_id'],
       ),
+      expenseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}expense_id'],
+      ),
       isSynced: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
@@ -15110,6 +18171,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
   final String? description;
   final String userId;
   final String? linkedExpenseId;
+  final String? expenseId;
   final bool isSynced;
   final String? tempId;
   final DateTime createdAt;
@@ -15121,6 +18183,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
     this.description,
     required this.userId,
     this.linkedExpenseId,
+    this.expenseId,
     required this.isSynced,
     this.tempId,
     required this.createdAt,
@@ -15138,6 +18201,9 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
     map['user_id'] = Variable<String>(userId);
     if (!nullToAbsent || linkedExpenseId != null) {
       map['linked_expense_id'] = Variable<String>(linkedExpenseId);
+    }
+    if (!nullToAbsent || expenseId != null) {
+      map['expense_id'] = Variable<String>(expenseId);
     }
     map['is_synced'] = Variable<bool>(isSynced);
     if (!nullToAbsent || tempId != null) {
@@ -15160,6 +18226,9 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
       linkedExpenseId: linkedExpenseId == null && nullToAbsent
           ? const Value.absent()
           : Value(linkedExpenseId),
+      expenseId: expenseId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expenseId),
       isSynced: Value(isSynced),
       tempId: tempId == null && nullToAbsent
           ? const Value.absent()
@@ -15181,6 +18250,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
       description: serializer.fromJson<String?>(json['description']),
       userId: serializer.fromJson<String>(json['userId']),
       linkedExpenseId: serializer.fromJson<String?>(json['linkedExpenseId']),
+      expenseId: serializer.fromJson<String?>(json['expenseId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       tempId: serializer.fromJson<String?>(json['tempId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -15197,6 +18267,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
       'description': serializer.toJson<String?>(description),
       'userId': serializer.toJson<String>(userId),
       'linkedExpenseId': serializer.toJson<String?>(linkedExpenseId),
+      'expenseId': serializer.toJson<String?>(expenseId),
       'isSynced': serializer.toJson<bool>(isSynced),
       'tempId': serializer.toJson<String?>(tempId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -15211,6 +18282,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
     Value<String?> description = const Value.absent(),
     String? userId,
     Value<String?> linkedExpenseId = const Value.absent(),
+    Value<String?> expenseId = const Value.absent(),
     bool? isSynced,
     Value<String?> tempId = const Value.absent(),
     DateTime? createdAt,
@@ -15224,6 +18296,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
     linkedExpenseId: linkedExpenseId.present
         ? linkedExpenseId.value
         : this.linkedExpenseId,
+    expenseId: expenseId.present ? expenseId.value : this.expenseId,
     isSynced: isSynced ?? this.isSynced,
     tempId: tempId.present ? tempId.value : this.tempId,
     createdAt: createdAt ?? this.createdAt,
@@ -15241,6 +18314,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
       linkedExpenseId: data.linkedExpenseId.present
           ? data.linkedExpenseId.value
           : this.linkedExpenseId,
+      expenseId: data.expenseId.present ? data.expenseId.value : this.expenseId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       tempId: data.tempId.present ? data.tempId.value : this.tempId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -15257,6 +18331,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
           ..write('description: $description, ')
           ..write('userId: $userId, ')
           ..write('linkedExpenseId: $linkedExpenseId, ')
+          ..write('expenseId: $expenseId, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
           ..write('createdAt: $createdAt, ')
@@ -15273,6 +18348,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
     description,
     userId,
     linkedExpenseId,
+    expenseId,
     isSynced,
     tempId,
     createdAt,
@@ -15288,6 +18364,7 @@ class ShoppingList extends DataClass implements Insertable<ShoppingList> {
           other.description == this.description &&
           other.userId == this.userId &&
           other.linkedExpenseId == this.linkedExpenseId &&
+          other.expenseId == this.expenseId &&
           other.isSynced == this.isSynced &&
           other.tempId == this.tempId &&
           other.createdAt == this.createdAt &&
@@ -15301,6 +18378,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
   final Value<String?> description;
   final Value<String> userId;
   final Value<String?> linkedExpenseId;
+  final Value<String?> expenseId;
   final Value<bool> isSynced;
   final Value<String?> tempId;
   final Value<DateTime> createdAt;
@@ -15313,6 +18391,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
     this.description = const Value.absent(),
     this.userId = const Value.absent(),
     this.linkedExpenseId = const Value.absent(),
+    this.expenseId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -15326,6 +18405,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
     this.description = const Value.absent(),
     required String userId,
     this.linkedExpenseId = const Value.absent(),
+    this.expenseId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.tempId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -15342,6 +18422,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
     Expression<String>? description,
     Expression<String>? userId,
     Expression<String>? linkedExpenseId,
+    Expression<String>? expenseId,
     Expression<bool>? isSynced,
     Expression<String>? tempId,
     Expression<DateTime>? createdAt,
@@ -15355,6 +18436,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
       if (description != null) 'description': description,
       if (userId != null) 'user_id': userId,
       if (linkedExpenseId != null) 'linked_expense_id': linkedExpenseId,
+      if (expenseId != null) 'expense_id': expenseId,
       if (isSynced != null) 'is_synced': isSynced,
       if (tempId != null) 'temp_id': tempId,
       if (createdAt != null) 'created_at': createdAt,
@@ -15370,6 +18452,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
     Value<String?>? description,
     Value<String>? userId,
     Value<String?>? linkedExpenseId,
+    Value<String?>? expenseId,
     Value<bool>? isSynced,
     Value<String?>? tempId,
     Value<DateTime>? createdAt,
@@ -15383,6 +18466,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
       description: description ?? this.description,
       userId: userId ?? this.userId,
       linkedExpenseId: linkedExpenseId ?? this.linkedExpenseId,
+      expenseId: expenseId ?? this.expenseId,
       isSynced: isSynced ?? this.isSynced,
       tempId: tempId ?? this.tempId,
       createdAt: createdAt ?? this.createdAt,
@@ -15412,6 +18496,9 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
     if (linkedExpenseId.present) {
       map['linked_expense_id'] = Variable<String>(linkedExpenseId.value);
     }
+    if (expenseId.present) {
+      map['expense_id'] = Variable<String>(expenseId.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -15439,6 +18526,7 @@ class ShoppingListsCompanion extends UpdateCompanion<ShoppingList> {
           ..write('description: $description, ')
           ..write('userId: $userId, ')
           ..write('linkedExpenseId: $linkedExpenseId, ')
+          ..write('expenseId: $expenseId, ')
           ..write('isSynced: $isSynced, ')
           ..write('tempId: $tempId, ')
           ..write('createdAt: $createdAt, ')
@@ -15485,6 +18573,17 @@ class $ShoppingListItemsTable extends ShoppingListItems
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _estimatedAmountMeta = const VerificationMeta(
     'estimatedAmount',
@@ -15540,6 +18639,20 @@ class $ShoppingListItemsTable extends ShoppingListItems
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES payments (id)',
+    ),
   );
   static const VerificationMeta _isPurchasedMeta = const VerificationMeta(
     'isPurchased',
@@ -15640,11 +18753,13 @@ class $ShoppingListItemsTable extends ShoppingListItems
     id,
     shoppingListId,
     name,
+    description,
     estimatedAmount,
     actualAmount,
     currency,
     userId,
     quantity,
+    paymentId,
     isPurchased,
     purchasedAt,
     notes,
@@ -15690,6 +18805,15 @@ class $ShoppingListItemsTable extends ShoppingListItems
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
     if (data.containsKey('estimated_amount')) {
       context.handle(
         _estimatedAmountMeta,
@@ -15726,6 +18850,12 @@ class $ShoppingListItemsTable extends ShoppingListItems
       context.handle(
         _quantityMeta,
         quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta),
+      );
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
       );
     }
     if (data.containsKey('is_purchased')) {
@@ -15806,6 +18936,10 @@ class $ShoppingListItemsTable extends ShoppingListItems
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
       estimatedAmount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}estimated_amount'],
@@ -15826,6 +18960,10 @@ class $ShoppingListItemsTable extends ShoppingListItems
         DriftSqlType.int,
         data['${effectivePrefix}quantity'],
       )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      ),
       isPurchased: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_purchased'],
@@ -15872,11 +19010,13 @@ class ShoppingListItem extends DataClass
   final String id;
   final String shoppingListId;
   final String name;
+  final String? description;
   final int? estimatedAmount;
   final int? actualAmount;
   final String currency;
   final String userId;
   final int quantity;
+  final String? paymentId;
   final bool isPurchased;
   final DateTime? purchasedAt;
   final String? notes;
@@ -15889,11 +19029,13 @@ class ShoppingListItem extends DataClass
     required this.id,
     required this.shoppingListId,
     required this.name,
+    this.description,
     this.estimatedAmount,
     this.actualAmount,
     required this.currency,
     required this.userId,
     required this.quantity,
+    this.paymentId,
     required this.isPurchased,
     this.purchasedAt,
     this.notes,
@@ -15909,6 +19051,9 @@ class ShoppingListItem extends DataClass
     map['id'] = Variable<String>(id);
     map['shopping_list_id'] = Variable<String>(shoppingListId);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
     if (!nullToAbsent || estimatedAmount != null) {
       map['estimated_amount'] = Variable<int>(estimatedAmount);
     }
@@ -15918,6 +19063,9 @@ class ShoppingListItem extends DataClass
     map['currency'] = Variable<String>(currency);
     map['user_id'] = Variable<String>(userId);
     map['quantity'] = Variable<int>(quantity);
+    if (!nullToAbsent || paymentId != null) {
+      map['payment_id'] = Variable<String>(paymentId);
+    }
     map['is_purchased'] = Variable<bool>(isPurchased);
     if (!nullToAbsent || purchasedAt != null) {
       map['purchased_at'] = Variable<DateTime>(purchasedAt);
@@ -15942,6 +19090,9 @@ class ShoppingListItem extends DataClass
       id: Value(id),
       shoppingListId: Value(shoppingListId),
       name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
       estimatedAmount: estimatedAmount == null && nullToAbsent
           ? const Value.absent()
           : Value(estimatedAmount),
@@ -15951,6 +19102,9 @@ class ShoppingListItem extends DataClass
       currency: Value(currency),
       userId: Value(userId),
       quantity: Value(quantity),
+      paymentId: paymentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(paymentId),
       isPurchased: Value(isPurchased),
       purchasedAt: purchasedAt == null && nullToAbsent
           ? const Value.absent()
@@ -15979,11 +19133,13 @@ class ShoppingListItem extends DataClass
       id: serializer.fromJson<String>(json['id']),
       shoppingListId: serializer.fromJson<String>(json['shoppingListId']),
       name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
       estimatedAmount: serializer.fromJson<int?>(json['estimatedAmount']),
       actualAmount: serializer.fromJson<int?>(json['actualAmount']),
       currency: serializer.fromJson<String>(json['currency']),
       userId: serializer.fromJson<String>(json['userId']),
       quantity: serializer.fromJson<int>(json['quantity']),
+      paymentId: serializer.fromJson<String?>(json['paymentId']),
       isPurchased: serializer.fromJson<bool>(json['isPurchased']),
       purchasedAt: serializer.fromJson<DateTime?>(json['purchasedAt']),
       notes: serializer.fromJson<String?>(json['notes']),
@@ -16001,11 +19157,13 @@ class ShoppingListItem extends DataClass
       'id': serializer.toJson<String>(id),
       'shoppingListId': serializer.toJson<String>(shoppingListId),
       'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
       'estimatedAmount': serializer.toJson<int?>(estimatedAmount),
       'actualAmount': serializer.toJson<int?>(actualAmount),
       'currency': serializer.toJson<String>(currency),
       'userId': serializer.toJson<String>(userId),
       'quantity': serializer.toJson<int>(quantity),
+      'paymentId': serializer.toJson<String?>(paymentId),
       'isPurchased': serializer.toJson<bool>(isPurchased),
       'purchasedAt': serializer.toJson<DateTime?>(purchasedAt),
       'notes': serializer.toJson<String?>(notes),
@@ -16021,11 +19179,13 @@ class ShoppingListItem extends DataClass
     String? id,
     String? shoppingListId,
     String? name,
+    Value<String?> description = const Value.absent(),
     Value<int?> estimatedAmount = const Value.absent(),
     Value<int?> actualAmount = const Value.absent(),
     String? currency,
     String? userId,
     int? quantity,
+    Value<String?> paymentId = const Value.absent(),
     bool? isPurchased,
     Value<DateTime?> purchasedAt = const Value.absent(),
     Value<String?> notes = const Value.absent(),
@@ -16038,6 +19198,7 @@ class ShoppingListItem extends DataClass
     id: id ?? this.id,
     shoppingListId: shoppingListId ?? this.shoppingListId,
     name: name ?? this.name,
+    description: description.present ? description.value : this.description,
     estimatedAmount: estimatedAmount.present
         ? estimatedAmount.value
         : this.estimatedAmount,
@@ -16045,6 +19206,7 @@ class ShoppingListItem extends DataClass
     currency: currency ?? this.currency,
     userId: userId ?? this.userId,
     quantity: quantity ?? this.quantity,
+    paymentId: paymentId.present ? paymentId.value : this.paymentId,
     isPurchased: isPurchased ?? this.isPurchased,
     purchasedAt: purchasedAt.present ? purchasedAt.value : this.purchasedAt,
     notes: notes.present ? notes.value : this.notes,
@@ -16063,6 +19225,9 @@ class ShoppingListItem extends DataClass
           ? data.shoppingListId.value
           : this.shoppingListId,
       name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
       estimatedAmount: data.estimatedAmount.present
           ? data.estimatedAmount.value
           : this.estimatedAmount,
@@ -16072,6 +19237,7 @@ class ShoppingListItem extends DataClass
       currency: data.currency.present ? data.currency.value : this.currency,
       userId: data.userId.present ? data.userId.value : this.userId,
       quantity: data.quantity.present ? data.quantity.value : this.quantity,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
       isPurchased: data.isPurchased.present
           ? data.isPurchased.value
           : this.isPurchased,
@@ -16095,11 +19261,13 @@ class ShoppingListItem extends DataClass
           ..write('id: $id, ')
           ..write('shoppingListId: $shoppingListId, ')
           ..write('name: $name, ')
+          ..write('description: $description, ')
           ..write('estimatedAmount: $estimatedAmount, ')
           ..write('actualAmount: $actualAmount, ')
           ..write('currency: $currency, ')
           ..write('userId: $userId, ')
           ..write('quantity: $quantity, ')
+          ..write('paymentId: $paymentId, ')
           ..write('isPurchased: $isPurchased, ')
           ..write('purchasedAt: $purchasedAt, ')
           ..write('notes: $notes, ')
@@ -16117,11 +19285,13 @@ class ShoppingListItem extends DataClass
     id,
     shoppingListId,
     name,
+    description,
     estimatedAmount,
     actualAmount,
     currency,
     userId,
     quantity,
+    paymentId,
     isPurchased,
     purchasedAt,
     notes,
@@ -16138,11 +19308,13 @@ class ShoppingListItem extends DataClass
           other.id == this.id &&
           other.shoppingListId == this.shoppingListId &&
           other.name == this.name &&
+          other.description == this.description &&
           other.estimatedAmount == this.estimatedAmount &&
           other.actualAmount == this.actualAmount &&
           other.currency == this.currency &&
           other.userId == this.userId &&
           other.quantity == this.quantity &&
+          other.paymentId == this.paymentId &&
           other.isPurchased == this.isPurchased &&
           other.purchasedAt == this.purchasedAt &&
           other.notes == this.notes &&
@@ -16157,11 +19329,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
   final Value<String> id;
   final Value<String> shoppingListId;
   final Value<String> name;
+  final Value<String?> description;
   final Value<int?> estimatedAmount;
   final Value<int?> actualAmount;
   final Value<String> currency;
   final Value<String> userId;
   final Value<int> quantity;
+  final Value<String?> paymentId;
   final Value<bool> isPurchased;
   final Value<DateTime?> purchasedAt;
   final Value<String?> notes;
@@ -16175,11 +19349,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
     this.id = const Value.absent(),
     this.shoppingListId = const Value.absent(),
     this.name = const Value.absent(),
+    this.description = const Value.absent(),
     this.estimatedAmount = const Value.absent(),
     this.actualAmount = const Value.absent(),
     this.currency = const Value.absent(),
     this.userId = const Value.absent(),
     this.quantity = const Value.absent(),
+    this.paymentId = const Value.absent(),
     this.isPurchased = const Value.absent(),
     this.purchasedAt = const Value.absent(),
     this.notes = const Value.absent(),
@@ -16194,11 +19370,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
     required String id,
     required String shoppingListId,
     required String name,
+    this.description = const Value.absent(),
     this.estimatedAmount = const Value.absent(),
     this.actualAmount = const Value.absent(),
     this.currency = const Value.absent(),
     required String userId,
     this.quantity = const Value.absent(),
+    this.paymentId = const Value.absent(),
     this.isPurchased = const Value.absent(),
     this.purchasedAt = const Value.absent(),
     this.notes = const Value.absent(),
@@ -16216,11 +19394,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
     Expression<String>? id,
     Expression<String>? shoppingListId,
     Expression<String>? name,
+    Expression<String>? description,
     Expression<int>? estimatedAmount,
     Expression<int>? actualAmount,
     Expression<String>? currency,
     Expression<String>? userId,
     Expression<int>? quantity,
+    Expression<String>? paymentId,
     Expression<bool>? isPurchased,
     Expression<DateTime>? purchasedAt,
     Expression<String>? notes,
@@ -16235,11 +19415,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
       if (id != null) 'id': id,
       if (shoppingListId != null) 'shopping_list_id': shoppingListId,
       if (name != null) 'name': name,
+      if (description != null) 'description': description,
       if (estimatedAmount != null) 'estimated_amount': estimatedAmount,
       if (actualAmount != null) 'actual_amount': actualAmount,
       if (currency != null) 'currency': currency,
       if (userId != null) 'user_id': userId,
       if (quantity != null) 'quantity': quantity,
+      if (paymentId != null) 'payment_id': paymentId,
       if (isPurchased != null) 'is_purchased': isPurchased,
       if (purchasedAt != null) 'purchased_at': purchasedAt,
       if (notes != null) 'notes': notes,
@@ -16256,11 +19438,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
     Value<String>? id,
     Value<String>? shoppingListId,
     Value<String>? name,
+    Value<String?>? description,
     Value<int?>? estimatedAmount,
     Value<int?>? actualAmount,
     Value<String>? currency,
     Value<String>? userId,
     Value<int>? quantity,
+    Value<String?>? paymentId,
     Value<bool>? isPurchased,
     Value<DateTime?>? purchasedAt,
     Value<String?>? notes,
@@ -16275,11 +19459,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
       id: id ?? this.id,
       shoppingListId: shoppingListId ?? this.shoppingListId,
       name: name ?? this.name,
+      description: description ?? this.description,
       estimatedAmount: estimatedAmount ?? this.estimatedAmount,
       actualAmount: actualAmount ?? this.actualAmount,
       currency: currency ?? this.currency,
       userId: userId ?? this.userId,
       quantity: quantity ?? this.quantity,
+      paymentId: paymentId ?? this.paymentId,
       isPurchased: isPurchased ?? this.isPurchased,
       purchasedAt: purchasedAt ?? this.purchasedAt,
       notes: notes ?? this.notes,
@@ -16304,6 +19490,9 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
     if (estimatedAmount.present) {
       map['estimated_amount'] = Variable<int>(estimatedAmount.value);
     }
@@ -16318,6 +19507,9 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
     }
     if (quantity.present) {
       map['quantity'] = Variable<int>(quantity.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
     }
     if (isPurchased.present) {
       map['is_purchased'] = Variable<bool>(isPurchased.value);
@@ -16355,11 +19547,13 @@ class ShoppingListItemsCompanion extends UpdateCompanion<ShoppingListItem> {
           ..write('id: $id, ')
           ..write('shoppingListId: $shoppingListId, ')
           ..write('name: $name, ')
+          ..write('description: $description, ')
           ..write('estimatedAmount: $estimatedAmount, ')
           ..write('actualAmount: $actualAmount, ')
           ..write('currency: $currency, ')
           ..write('userId: $userId, ')
           ..write('quantity: $quantity, ')
+          ..write('paymentId: $paymentId, ')
           ..write('isPurchased: $isPurchased, ')
           ..write('purchasedAt: $purchasedAt, ')
           ..write('notes: $notes, ')
@@ -18313,6 +21507,103 @@ class $MerchantMetadataTable extends MerchantMetadata
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
+  @override
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("boolean_value" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _merchantIdMeta = const VerificationMeta(
     'merchantId',
   );
@@ -18320,51 +21611,12 @@ class $MerchantMetadataTable extends MerchantMetadata
   late final GeneratedColumn<String> merchantId = GeneratedColumn<String>(
     'merchant_id',
     aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
-  @override
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-    'key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
-  @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
-  @override
-  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
-    'temp_id',
-    aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-  );
-  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
-    'isSynced',
-  );
-  @override
-  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
-    'is_synced',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_synced" IN (0, 1))',
+      'REFERENCES merchants (id)',
     ),
-    defaultValue: const Constant(false),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -18373,10 +21625,9 @@ class $MerchantMetadataTable extends MerchantMetadata
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -18385,19 +21636,23 @@ class $MerchantMetadataTable extends MerchantMetadata
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
     merchantId,
-    key,
-    value,
-    tempId,
-    isSynced,
     createdAt,
     updatedAt,
   ];
@@ -18418,40 +21673,76 @@ class $MerchantMetadataTable extends MerchantMetadata
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     if (data.containsKey('merchant_id')) {
       context.handle(
         _merchantIdMeta,
         merchantId.isAcceptableOrUnknown(data['merchant_id']!, _merchantIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_merchantIdMeta);
-    }
-    if (data.containsKey('key')) {
-      context.handle(
-        _keyMeta,
-        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_keyMeta);
-    }
-    if (data.containsKey('value')) {
-      context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
-    }
-    if (data.containsKey('temp_id')) {
-      context.handle(
-        _tempIdMeta,
-        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
-      );
-    }
-    if (data.containsKey('is_synced')) {
-      context.handle(
-        _isSyncedMeta,
-        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
     if (data.containsKey('created_at')) {
@@ -18472,10 +21763,6 @@ class $MerchantMetadataTable extends MerchantMetadata
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {merchantId, key},
-  ];
-  @override
   MerchantMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MerchantMetadataData(
@@ -18483,34 +21770,54 @@ class $MerchantMetadataTable extends MerchantMetadata
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
       merchantId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}merchant_id'],
-      )!,
-      key: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}key'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
-      tempId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}temp_id'],
       ),
-      isSynced: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_synced'],
-      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      )!,
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      )!,
+      ),
     );
   }
 
@@ -18523,51 +21830,111 @@ class $MerchantMetadataTable extends MerchantMetadata
 class MerchantMetadataData extends DataClass
     implements Insertable<MerchantMetadataData> {
   final String id;
-  final String merchantId;
-  final String key;
-  final String value;
-  final String? tempId;
-  final bool isSynced;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? merchantId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const MerchantMetadataData({
     required this.id,
-    required this.merchantId,
-    required this.key,
-    required this.value,
-    this.tempId,
-    required this.isSynced,
-    required this.createdAt,
-    required this.updatedAt,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.merchantId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['merchant_id'] = Variable<String>(merchantId);
-    map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
-    if (!nullToAbsent || tempId != null) {
-      map['temp_id'] = Variable<String>(tempId);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
     }
-    map['is_synced'] = Variable<bool>(isSynced);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || merchantId != null) {
+      map['merchant_id'] = Variable<String>(merchantId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
   MerchantMetadataCompanion toCompanion(bool nullToAbsent) {
     return MerchantMetadataCompanion(
       id: Value(id),
-      merchantId: Value(merchantId),
-      key: Value(key),
-      value: Value(value),
-      tempId: tempId == null && nullToAbsent
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
           ? const Value.absent()
-          : Value(tempId),
-      isSynced: Value(isSynced),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      merchantId: merchantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(merchantId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -18578,13 +21945,18 @@ class MerchantMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MerchantMetadataData(
       id: serializer.fromJson<String>(json['id']),
-      merchantId: serializer.fromJson<String>(json['merchantId']),
-      key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
-      tempId: serializer.fromJson<String?>(json['tempId']),
-      isSynced: serializer.fromJson<bool>(json['isSynced']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      merchantId: serializer.fromJson<String?>(json['merchantId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
@@ -18592,45 +21964,77 @@ class MerchantMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'merchantId': serializer.toJson<String>(merchantId),
-      'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
-      'tempId': serializer.toJson<String?>(tempId),
-      'isSynced': serializer.toJson<bool>(isSynced),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'merchantId': serializer.toJson<String?>(merchantId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
   MerchantMetadataData copyWith({
     String? id,
-    String? merchantId,
-    String? key,
-    String? value,
-    Value<String?> tempId = const Value.absent(),
-    bool? isSynced,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> merchantId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => MerchantMetadataData(
     id: id ?? this.id,
-    merchantId: merchantId ?? this.merchantId,
-    key: key ?? this.key,
-    value: value ?? this.value,
-    tempId: tempId.present ? tempId.value : this.tempId,
-    isSynced: isSynced ?? this.isSynced,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    merchantId: merchantId.present ? merchantId.value : this.merchantId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   MerchantMetadataData copyWithCompanion(MerchantMetadataCompanion data) {
     return MerchantMetadataData(
       id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
       merchantId: data.merchantId.present
           ? data.merchantId.value
           : this.merchantId,
-      key: data.key.present ? data.key.value : this.key,
-      value: data.value.present ? data.value.value : this.value,
-      tempId: data.tempId.present ? data.tempId.value : this.tempId,
-      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -18640,11 +22044,16 @@ class MerchantMetadataData extends DataClass
   String toString() {
     return (StringBuffer('MerchantMetadataData(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('merchantId: $merchantId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('tempId: $tempId, ')
-          ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -18654,11 +22063,16 @@ class MerchantMetadataData extends DataClass
   @override
   int get hashCode => Object.hash(
     id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
     merchantId,
-    key,
-    value,
-    tempId,
-    isSynced,
     createdAt,
     updatedAt,
   );
@@ -18667,68 +22081,95 @@ class MerchantMetadataData extends DataClass
       identical(this, other) ||
       (other is MerchantMetadataData &&
           other.id == this.id &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
           other.merchantId == this.merchantId &&
-          other.key == this.key &&
-          other.value == this.value &&
-          other.tempId == this.tempId &&
-          other.isSynced == this.isSynced &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
 class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
   final Value<String> id;
-  final Value<String> merchantId;
-  final Value<String> key;
-  final Value<String> value;
-  final Value<String?> tempId;
-  final Value<bool> isSynced;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> merchantId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
   final Value<int> rowid;
   const MerchantMetadataCompanion({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
     this.merchantId = const Value.absent(),
-    this.key = const Value.absent(),
-    this.value = const Value.absent(),
-    this.tempId = const Value.absent(),
-    this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MerchantMetadataCompanion.insert({
     required String id,
-    required String merchantId,
-    required String key,
-    required String value,
-    this.tempId = const Value.absent(),
-    this.isSynced = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.merchantId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       merchantId = Value(merchantId),
-       key = Value(key),
-       value = Value(value);
+  }) : id = Value(id);
   static Insertable<MerchantMetadataData> custom({
     Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
     Expression<String>? merchantId,
-    Expression<String>? key,
-    Expression<String>? value,
-    Expression<String>? tempId,
-    Expression<bool>? isSynced,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
       if (merchantId != null) 'merchant_id': merchantId,
-      if (key != null) 'key': key,
-      if (value != null) 'value': value,
-      if (tempId != null) 'temp_id': tempId,
-      if (isSynced != null) 'is_synced': isSynced,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -18737,22 +22178,32 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
 
   MerchantMetadataCompanion copyWith({
     Value<String>? id,
-    Value<String>? merchantId,
-    Value<String>? key,
-    Value<String>? value,
-    Value<String?>? tempId,
-    Value<bool>? isSynced,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? merchantId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
     Value<int>? rowid,
   }) {
     return MerchantMetadataCompanion(
       id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
       merchantId: merchantId ?? this.merchantId,
-      key: key ?? this.key,
-      value: value ?? this.value,
-      tempId: tempId ?? this.tempId,
-      isSynced: isSynced ?? this.isSynced,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -18765,20 +22216,35 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
+    }
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (merchantId.present) {
       map['merchant_id'] = Variable<String>(merchantId.value);
-    }
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
-    }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
-    }
-    if (tempId.present) {
-      map['temp_id'] = Variable<String>(tempId.value);
-    }
-    if (isSynced.present) {
-      map['is_synced'] = Variable<bool>(isSynced.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -18796,11 +22262,16 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
   String toString() {
     return (StringBuffer('MerchantMetadataCompanion(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('merchantId: $merchantId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('tempId: $tempId, ')
-          ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -19273,6 +22744,103 @@ class $ContactInfoTable extends ContactInfo
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
+  @override
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("boolean_value" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _contactIdMeta = const VerificationMeta(
     'contactId',
   );
@@ -19280,52 +22848,12 @@ class $ContactInfoTable extends ContactInfo
   late final GeneratedColumn<String> contactId = GeneratedColumn<String>(
     'contact_id',
     aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    $customConstraints: 'NOT NULL REFERENCES contacts(id) ON DELETE CASCADE',
-  );
-  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
-  @override
-  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
-    'temp_id',
-    aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-  );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
-  @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
-  @override
-  late final GeneratedColumn<String> type = GeneratedColumn<String>(
-    'type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
-    'isSynced',
-  );
-  @override
-  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
-    'is_synced',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_synced" IN (0, 1))',
+      'REFERENCES contacts (id)',
     ),
-    defaultValue: const Constant(false),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -19334,10 +22862,9 @@ class $ContactInfoTable extends ContactInfo
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -19346,19 +22873,23 @@ class $ContactInfoTable extends ContactInfo
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    contactId,
-    tempId,
-    value,
+    name,
     type,
-    isSynced,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    contactId,
     createdAt,
     updatedAt,
   ];
@@ -19379,40 +22910,76 @@ class $ContactInfoTable extends ContactInfo
     } else if (isInserting) {
       context.missing(_idMeta);
     }
-    if (data.containsKey('contact_id')) {
+    if (data.containsKey('name')) {
       context.handle(
-        _contactIdMeta,
-        contactId.isAcceptableOrUnknown(data['contact_id']!, _contactIdMeta),
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
-    } else if (isInserting) {
-      context.missing(_contactIdMeta);
-    }
-    if (data.containsKey('temp_id')) {
-      context.handle(
-        _tempIdMeta,
-        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
-      );
-    }
-    if (data.containsKey('value')) {
-      context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
     }
     if (data.containsKey('type')) {
       context.handle(
         _typeMeta,
         type.isAcceptableOrUnknown(data['type']!, _typeMeta),
       );
-    } else if (isInserting) {
-      context.missing(_typeMeta);
     }
-    if (data.containsKey('is_synced')) {
+    if (data.containsKey('string_value')) {
       context.handle(
-        _isSyncedMeta,
-        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
+    if (data.containsKey('contact_id')) {
+      context.handle(
+        _contactIdMeta,
+        contactId.isAcceptableOrUnknown(data['contact_id']!, _contactIdMeta),
       );
     }
     if (data.containsKey('created_at')) {
@@ -19440,34 +23007,54 @@ class $ContactInfoTable extends ContactInfo
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
-      contactId: attachedDatabase.typeMapping.read(
+      name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}contact_id'],
-      )!,
-      tempId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}temp_id'],
+        data['${effectivePrefix}name'],
       ),
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
       type: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}type'],
-      )!,
-      isSynced: attachedDatabase.typeMapping.read(
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
-        data['${effectivePrefix}is_synced'],
-      )!,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
+      contactId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}contact_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      )!,
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      )!,
+      ),
     );
   }
 
@@ -19479,51 +23066,111 @@ class $ContactInfoTable extends ContactInfo
 
 class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
   final String id;
-  final String contactId;
-  final String? tempId;
-  final String value;
-  final String type;
-  final bool isSynced;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? contactId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const ContactInfoData({
     required this.id,
-    required this.contactId,
-    this.tempId,
-    required this.value,
-    required this.type,
-    required this.isSynced,
-    required this.createdAt,
-    required this.updatedAt,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.contactId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['contact_id'] = Variable<String>(contactId);
-    if (!nullToAbsent || tempId != null) {
-      map['temp_id'] = Variable<String>(tempId);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
     }
-    map['value'] = Variable<String>(value);
-    map['type'] = Variable<String>(type);
-    map['is_synced'] = Variable<bool>(isSynced);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || contactId != null) {
+      map['contact_id'] = Variable<String>(contactId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
   ContactInfoCompanion toCompanion(bool nullToAbsent) {
     return ContactInfoCompanion(
       id: Value(id),
-      contactId: Value(contactId),
-      tempId: tempId == null && nullToAbsent
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
           ? const Value.absent()
-          : Value(tempId),
-      value: Value(value),
-      type: Value(type),
-      isSynced: Value(isSynced),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      contactId: contactId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contactId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -19534,13 +23181,18 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactInfoData(
       id: serializer.fromJson<String>(json['id']),
-      contactId: serializer.fromJson<String>(json['contactId']),
-      tempId: serializer.fromJson<String?>(json['tempId']),
-      value: serializer.fromJson<String>(json['value']),
-      type: serializer.fromJson<String>(json['type']),
-      isSynced: serializer.fromJson<bool>(json['isSynced']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      contactId: serializer.fromJson<String?>(json['contactId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
@@ -19548,43 +23200,75 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'contactId': serializer.toJson<String>(contactId),
-      'tempId': serializer.toJson<String?>(tempId),
-      'value': serializer.toJson<String>(value),
-      'type': serializer.toJson<String>(type),
-      'isSynced': serializer.toJson<bool>(isSynced),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'contactId': serializer.toJson<String?>(contactId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
   ContactInfoData copyWith({
     String? id,
-    String? contactId,
-    Value<String?> tempId = const Value.absent(),
-    String? value,
-    String? type,
-    bool? isSynced,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> contactId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => ContactInfoData(
     id: id ?? this.id,
-    contactId: contactId ?? this.contactId,
-    tempId: tempId.present ? tempId.value : this.tempId,
-    value: value ?? this.value,
-    type: type ?? this.type,
-    isSynced: isSynced ?? this.isSynced,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    contactId: contactId.present ? contactId.value : this.contactId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   ContactInfoData copyWithCompanion(ContactInfoCompanion data) {
     return ContactInfoData(
       id: data.id.present ? data.id.value : this.id,
-      contactId: data.contactId.present ? data.contactId.value : this.contactId,
-      tempId: data.tempId.present ? data.tempId.value : this.tempId,
-      value: data.value.present ? data.value.value : this.value,
+      name: data.name.present ? data.name.value : this.name,
       type: data.type.present ? data.type.value : this.type,
-      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      contactId: data.contactId.present ? data.contactId.value : this.contactId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -19594,11 +23278,16 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
   String toString() {
     return (StringBuffer('ContactInfoData(')
           ..write('id: $id, ')
-          ..write('contactId: $contactId, ')
-          ..write('tempId: $tempId, ')
-          ..write('value: $value, ')
+          ..write('name: $name, ')
           ..write('type: $type, ')
-          ..write('isSynced: $isSynced, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
+          ..write('contactId: $contactId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -19608,11 +23297,16 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
   @override
   int get hashCode => Object.hash(
     id,
-    contactId,
-    tempId,
-    value,
+    name,
     type,
-    isSynced,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    contactId,
     createdAt,
     updatedAt,
   );
@@ -19621,68 +23315,95 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
       identical(this, other) ||
       (other is ContactInfoData &&
           other.id == this.id &&
-          other.contactId == this.contactId &&
-          other.tempId == this.tempId &&
-          other.value == this.value &&
+          other.name == this.name &&
           other.type == this.type &&
-          other.isSynced == this.isSynced &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
+          other.contactId == this.contactId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
 class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
   final Value<String> id;
-  final Value<String> contactId;
-  final Value<String?> tempId;
-  final Value<String> value;
-  final Value<String> type;
-  final Value<bool> isSynced;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> contactId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
   final Value<int> rowid;
   const ContactInfoCompanion({
     this.id = const Value.absent(),
-    this.contactId = const Value.absent(),
-    this.tempId = const Value.absent(),
-    this.value = const Value.absent(),
+    this.name = const Value.absent(),
     this.type = const Value.absent(),
-    this.isSynced = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.contactId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ContactInfoCompanion.insert({
     required String id,
-    required String contactId,
-    this.tempId = const Value.absent(),
-    required String value,
-    required String type,
-    this.isSynced = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.contactId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       contactId = Value(contactId),
-       value = Value(value),
-       type = Value(type);
+  }) : id = Value(id);
   static Insertable<ContactInfoData> custom({
     Expression<String>? id,
-    Expression<String>? contactId,
-    Expression<String>? tempId,
-    Expression<String>? value,
+    Expression<String>? name,
     Expression<String>? type,
-    Expression<bool>? isSynced,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
+    Expression<String>? contactId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (contactId != null) 'contact_id': contactId,
-      if (tempId != null) 'temp_id': tempId,
-      if (value != null) 'value': value,
+      if (name != null) 'name': name,
       if (type != null) 'type': type,
-      if (isSynced != null) 'is_synced': isSynced,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
+      if (contactId != null) 'contact_id': contactId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -19691,22 +23412,32 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
 
   ContactInfoCompanion copyWith({
     Value<String>? id,
-    Value<String>? contactId,
-    Value<String?>? tempId,
-    Value<String>? value,
-    Value<String>? type,
-    Value<bool>? isSynced,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? contactId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
     Value<int>? rowid,
   }) {
     return ContactInfoCompanion(
       id: id ?? this.id,
-      contactId: contactId ?? this.contactId,
-      tempId: tempId ?? this.tempId,
-      value: value ?? this.value,
+      name: name ?? this.name,
       type: type ?? this.type,
-      isSynced: isSynced ?? this.isSynced,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
+      contactId: contactId ?? this.contactId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -19719,20 +23450,35 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (contactId.present) {
-      map['contact_id'] = Variable<String>(contactId.value);
-    }
-    if (tempId.present) {
-      map['temp_id'] = Variable<String>(tempId.value);
-    }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
     }
     if (type.present) {
       map['type'] = Variable<String>(type.value);
     }
-    if (isSynced.present) {
-      map['is_synced'] = Variable<bool>(isSynced.value);
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
+    }
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (contactId.present) {
+      map['contact_id'] = Variable<String>(contactId.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -19750,11 +23496,16 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
   String toString() {
     return (StringBuffer('ContactInfoCompanion(')
           ..write('id: $id, ')
-          ..write('contactId: $contactId, ')
-          ..write('tempId: $tempId, ')
-          ..write('value: $value, ')
+          ..write('name: $name, ')
           ..write('type: $type, ')
-          ..write('isSynced: $isSynced, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
+          ..write('contactId: $contactId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -19778,6 +23529,103 @@ class $WalletMetadataTable extends WalletMetadata
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
+  @override
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("boolean_value" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _walletIdMeta = const VerificationMeta(
     'walletId',
   );
@@ -19785,42 +23633,12 @@ class $WalletMetadataTable extends WalletMetadata
   late final GeneratedColumn<String> walletId = GeneratedColumn<String>(
     'wallet_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
-  @override
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-    'key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
-  @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
-    'isSynced',
-  );
-  @override
-  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
-    'is_synced',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_synced" IN (0, 1))',
+      'REFERENCES wallets (id)',
     ),
-    defaultValue: const Constant(false),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -19829,10 +23647,9 @@ class $WalletMetadataTable extends WalletMetadata
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -19841,18 +23658,23 @@ class $WalletMetadataTable extends WalletMetadata
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
     walletId,
-    key,
-    value,
-    isSynced,
     createdAt,
     updatedAt,
   ];
@@ -19873,34 +23695,76 @@ class $WalletMetadataTable extends WalletMetadata
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     if (data.containsKey('wallet_id')) {
       context.handle(
         _walletIdMeta,
         walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_walletIdMeta);
-    }
-    if (data.containsKey('key')) {
-      context.handle(
-        _keyMeta,
-        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_keyMeta);
-    }
-    if (data.containsKey('value')) {
-      context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
-    }
-    if (data.containsKey('is_synced')) {
-      context.handle(
-        _isSyncedMeta,
-        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
     if (data.containsKey('created_at')) {
@@ -19921,10 +23785,6 @@ class $WalletMetadataTable extends WalletMetadata
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {walletId, key},
-  ];
-  @override
   WalletMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WalletMetadataData(
@@ -19932,30 +23792,54 @@ class $WalletMetadataTable extends WalletMetadata
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
       walletId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}wallet_id'],
-      )!,
-      key: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}key'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
-      isSynced: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_synced'],
-      )!,
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      )!,
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      )!,
+      ),
     );
   }
 
@@ -19968,43 +23852,111 @@ class $WalletMetadataTable extends WalletMetadata
 class WalletMetadataData extends DataClass
     implements Insertable<WalletMetadataData> {
   final String id;
-  final String walletId;
-  final String key;
-  final String value;
-  final bool isSynced;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? walletId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const WalletMetadataData({
     required this.id,
-    required this.walletId,
-    required this.key,
-    required this.value,
-    required this.isSynced,
-    required this.createdAt,
-    required this.updatedAt,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.walletId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['wallet_id'] = Variable<String>(walletId);
-    map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
-    map['is_synced'] = Variable<bool>(isSynced);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || walletId != null) {
+      map['wallet_id'] = Variable<String>(walletId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
   WalletMetadataCompanion toCompanion(bool nullToAbsent) {
     return WalletMetadataCompanion(
       id: Value(id),
-      walletId: Value(walletId),
-      key: Value(key),
-      value: Value(value),
-      isSynced: Value(isSynced),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      walletId: walletId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(walletId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -20015,12 +23967,18 @@ class WalletMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WalletMetadataData(
       id: serializer.fromJson<String>(json['id']),
-      walletId: serializer.fromJson<String>(json['walletId']),
-      key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
-      isSynced: serializer.fromJson<bool>(json['isSynced']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      walletId: serializer.fromJson<String?>(json['walletId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
@@ -20028,39 +23986,75 @@ class WalletMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'walletId': serializer.toJson<String>(walletId),
-      'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
-      'isSynced': serializer.toJson<bool>(isSynced),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'walletId': serializer.toJson<String?>(walletId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
   WalletMetadataData copyWith({
     String? id,
-    String? walletId,
-    String? key,
-    String? value,
-    bool? isSynced,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> walletId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => WalletMetadataData(
     id: id ?? this.id,
-    walletId: walletId ?? this.walletId,
-    key: key ?? this.key,
-    value: value ?? this.value,
-    isSynced: isSynced ?? this.isSynced,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    walletId: walletId.present ? walletId.value : this.walletId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   WalletMetadataData copyWithCompanion(WalletMetadataCompanion data) {
     return WalletMetadataData(
       id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
       walletId: data.walletId.present ? data.walletId.value : this.walletId,
-      key: data.key.present ? data.key.value : this.key,
-      value: data.value.present ? data.value.value : this.value,
-      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -20070,10 +24064,16 @@ class WalletMetadataData extends DataClass
   String toString() {
     return (StringBuffer('WalletMetadataData(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('walletId: $walletId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -20081,69 +24081,115 @@ class WalletMetadataData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, walletId, key, value, isSynced, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    walletId,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is WalletMetadataData &&
           other.id == this.id &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
           other.walletId == this.walletId &&
-          other.key == this.key &&
-          other.value == this.value &&
-          other.isSynced == this.isSynced &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
 class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
   final Value<String> id;
-  final Value<String> walletId;
-  final Value<String> key;
-  final Value<String> value;
-  final Value<bool> isSynced;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> walletId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
   final Value<int> rowid;
   const WalletMetadataCompanion({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
     this.walletId = const Value.absent(),
-    this.key = const Value.absent(),
-    this.value = const Value.absent(),
-    this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WalletMetadataCompanion.insert({
     required String id,
-    required String walletId,
-    required String key,
-    required String value,
-    this.isSynced = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.walletId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       walletId = Value(walletId),
-       key = Value(key),
-       value = Value(value);
+  }) : id = Value(id);
   static Insertable<WalletMetadataData> custom({
     Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
     Expression<String>? walletId,
-    Expression<String>? key,
-    Expression<String>? value,
-    Expression<bool>? isSynced,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
       if (walletId != null) 'wallet_id': walletId,
-      if (key != null) 'key': key,
-      if (value != null) 'value': value,
-      if (isSynced != null) 'is_synced': isSynced,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -20152,20 +24198,32 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
 
   WalletMetadataCompanion copyWith({
     Value<String>? id,
-    Value<String>? walletId,
-    Value<String>? key,
-    Value<String>? value,
-    Value<bool>? isSynced,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? walletId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
     Value<int>? rowid,
   }) {
     return WalletMetadataCompanion(
       id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
       walletId: walletId ?? this.walletId,
-      key: key ?? this.key,
-      value: value ?? this.value,
-      isSynced: isSynced ?? this.isSynced,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -20178,17 +24236,35 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
+    }
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (walletId.present) {
       map['wallet_id'] = Variable<String>(walletId.value);
-    }
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
-    }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
-    }
-    if (isSynced.present) {
-      map['is_synced'] = Variable<bool>(isSynced.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -20206,10 +24282,16 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
   String toString() {
     return (StringBuffer('WalletMetadataCompanion(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('walletId: $walletId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -20218,187 +24300,12 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
   }
 }
 
-class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
+class $BudgetMetadataTable extends BudgetMetadata
+    with TableInfo<$BudgetMetadataTable, BudgetMetadataData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $BudgetsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _underLimitGoalMeta = const VerificationMeta(
-    'underLimitGoal',
-  );
-  @override
-  late final GeneratedColumn<int> underLimitGoal = GeneratedColumn<int>(
-    'under_limit_goal',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _startDateMeta = const VerificationMeta(
-    'startDate',
-  );
-  @override
-  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
-    'start_date',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _endDateMeta = const VerificationMeta(
-    'endDate',
-  );
-  @override
-  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
-    'end_date',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isActiveMeta = const VerificationMeta(
-    'isActive',
-  );
-  @override
-  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
-    'is_active',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_active" IN (0, 1))',
-    ),
-    defaultValue: const Constant(true),
-  );
-  static const VerificationMeta _projectIdMeta = const VerificationMeta(
-    'projectId',
-  );
-  @override
-  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
-    'project_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES projects (id)',
-    ),
-  );
-  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
-    'categoryId',
-  );
-  @override
-  late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
-    'category_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES categories (id)',
-    ),
-  );
-  static const VerificationMeta _currencyMeta = const VerificationMeta(
-    'currency',
-  );
-  @override
-  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
-    'currency',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES currencies (id)',
-    ),
-  );
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  @override
-  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-    'user_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _limitAmountMeta = const VerificationMeta(
-    'limitAmount',
-  );
-  @override
-  late final GeneratedColumn<int> limitAmount = GeneratedColumn<int>(
-    'limit_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _spentAmountMeta = const VerificationMeta(
-    'spentAmount',
-  );
-  @override
-  late final GeneratedColumn<int> spentAmount = GeneratedColumn<int>(
-    'spent_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _overBudgetAllowanceMeta =
-      const VerificationMeta('overBudgetAllowance');
-  @override
-  late final GeneratedColumn<int> overBudgetAllowance = GeneratedColumn<int>(
-    'over_budget_allowance',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _iconCodePointMeta = const VerificationMeta(
-    'iconCodePoint',
-  );
-  @override
-  late final GeneratedColumn<int> iconCodePoint = GeneratedColumn<int>(
-    'icon_code_point',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _iconEmojiMeta = const VerificationMeta(
-    'iconEmoji',
-  );
-  @override
-  late final GeneratedColumn<String> iconEmoji = GeneratedColumn<String>(
-    'icon_emoji',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _iconTypeMeta = const VerificationMeta(
-    'iconType',
-  );
-  @override
-  late final GeneratedColumn<String> iconType = GeneratedColumn<String>(
-    'icon_type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('MaterialIcons'),
-  );
-  static const VerificationMeta _colorMeta = const VerificationMeta('color');
-  @override
-  late final GeneratedColumn<String> color = GeneratedColumn<String>(
-    'color',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  $BudgetMetadataTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -20413,44 +24320,111 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
     'name',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
-  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
   @override
-  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
-    'temp_id',
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
-    'isSynced',
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
   );
   @override
-  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
-    'is_synced',
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
     aliasedName,
-    false,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_synced" IN (0, 1))',
+      'CHECK ("boolean_value" IN (0, 1))',
     ),
-    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _budgetIdMeta = const VerificationMeta(
+    'budgetId',
+  );
+  @override
+  late final GeneratedColumn<String> budgetId = GeneratedColumn<String>(
+    'budget_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES budgets (id)',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -20459,10 +24433,9 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -20471,33 +24444,23 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
-    underLimitGoal,
-    startDate,
-    endDate,
-    isActive,
-    projectId,
-    categoryId,
-    currency,
-    userId,
-    limitAmount,
-    spentAmount,
-    overBudgetAllowance,
-    iconCodePoint,
-    iconEmoji,
-    iconType,
-    color,
     id,
     name,
-    description,
-    tempId,
-    isSynced,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    budgetId,
     createdAt,
     updatedAt,
   ];
@@ -20505,131 +24468,14 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'budgets';
+  static const String $name = 'budget_metadata';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Budget> instance, {
+    Insertable<BudgetMetadataData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('under_limit_goal')) {
-      context.handle(
-        _underLimitGoalMeta,
-        underLimitGoal.isAcceptableOrUnknown(
-          data['under_limit_goal']!,
-          _underLimitGoalMeta,
-        ),
-      );
-    }
-    if (data.containsKey('start_date')) {
-      context.handle(
-        _startDateMeta,
-        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_startDateMeta);
-    }
-    if (data.containsKey('end_date')) {
-      context.handle(
-        _endDateMeta,
-        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_endDateMeta);
-    }
-    if (data.containsKey('is_active')) {
-      context.handle(
-        _isActiveMeta,
-        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
-      );
-    }
-    if (data.containsKey('project_id')) {
-      context.handle(
-        _projectIdMeta,
-        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_projectIdMeta);
-    }
-    if (data.containsKey('category_id')) {
-      context.handle(
-        _categoryIdMeta,
-        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
-      );
-    }
-    if (data.containsKey('currency')) {
-      context.handle(
-        _currencyMeta,
-        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_currencyMeta);
-    }
-    if (data.containsKey('user_id')) {
-      context.handle(
-        _userIdMeta,
-        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userIdMeta);
-    }
-    if (data.containsKey('limit_amount')) {
-      context.handle(
-        _limitAmountMeta,
-        limitAmount.isAcceptableOrUnknown(
-          data['limit_amount']!,
-          _limitAmountMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_limitAmountMeta);
-    }
-    if (data.containsKey('spent_amount')) {
-      context.handle(
-        _spentAmountMeta,
-        spentAmount.isAcceptableOrUnknown(
-          data['spent_amount']!,
-          _spentAmountMeta,
-        ),
-      );
-    }
-    if (data.containsKey('over_budget_allowance')) {
-      context.handle(
-        _overBudgetAllowanceMeta,
-        overBudgetAllowance.isAcceptableOrUnknown(
-          data['over_budget_allowance']!,
-          _overBudgetAllowanceMeta,
-        ),
-      );
-    }
-    if (data.containsKey('icon_code_point')) {
-      context.handle(
-        _iconCodePointMeta,
-        iconCodePoint.isAcceptableOrUnknown(
-          data['icon_code_point']!,
-          _iconCodePointMeta,
-        ),
-      );
-    }
-    if (data.containsKey('icon_emoji')) {
-      context.handle(
-        _iconEmojiMeta,
-        iconEmoji.isAcceptableOrUnknown(data['icon_emoji']!, _iconEmojiMeta),
-      );
-    }
-    if (data.containsKey('icon_type')) {
-      context.handle(
-        _iconTypeMeta,
-        iconType.isAcceptableOrUnknown(data['icon_type']!, _iconTypeMeta),
-      );
-    }
-    if (data.containsKey('color')) {
-      context.handle(
-        _colorMeta,
-        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
-      );
-    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
@@ -20640,28 +24486,71 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
         _nameMeta,
         name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
     }
-    if (data.containsKey('description')) {
+    if (data.containsKey('type')) {
       context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
         ),
       );
     }
-    if (data.containsKey('temp_id')) {
+    if (data.containsKey('number_value')) {
       context.handle(
-        _tempIdMeta,
-        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
       );
     }
-    if (data.containsKey('is_synced')) {
+    if (data.containsKey('boolean_value')) {
       context.handle(
-        _isSyncedMeta,
-        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
+    if (data.containsKey('budget_id')) {
+      context.handle(
+        _budgetIdMeta,
+        budgetId.isAcceptableOrUnknown(data['budget_id']!, _budgetIdMeta),
       );
     }
     if (data.containsKey('created_at')) {
@@ -20682,69 +24571,9 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Budget map(Map<String, dynamic> data, {String? tablePrefix}) {
+  BudgetMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Budget(
-      underLimitGoal: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}under_limit_goal'],
-      ),
-      startDate: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}start_date'],
-      )!,
-      endDate: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}end_date'],
-      )!,
-      isActive: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_active'],
-      )!,
-      projectId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}project_id'],
-      )!,
-      categoryId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}category_id'],
-      ),
-      currency: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}currency'],
-      )!,
-      userId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_id'],
-      )!,
-      limitAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}limit_amount'],
-      )!,
-      spentAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}spent_amount'],
-      )!,
-      overBudgetAllowance: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}over_budget_allowance'],
-      )!,
-      iconCodePoint: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}icon_code_point'],
-      ),
-      iconEmoji: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}icon_emoji'],
-      ),
-      iconType: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}icon_type'],
-      )!,
-      color: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}color'],
-      ),
+    return BudgetMetadataData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -20752,314 +24581,266 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
-      )!,
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
       ),
-      tempId: attachedDatabase.typeMapping.read(
+      type: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}temp_id'],
+        data['${effectivePrefix}type'],
       ),
-      isSynced: attachedDatabase.typeMapping.read(
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
-        data['${effectivePrefix}is_synced'],
-      )!,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
+      budgetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}budget_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      )!,
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      )!,
+      ),
     );
   }
 
   @override
-  $BudgetsTable createAlias(String alias) {
-    return $BudgetsTable(attachedDatabase, alias);
+  $BudgetMetadataTable createAlias(String alias) {
+    return $BudgetMetadataTable(attachedDatabase, alias);
   }
 }
 
-class Budget extends DataClass implements Insertable<Budget> {
-  final int? underLimitGoal;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool isActive;
-  final String projectId;
-  final String? categoryId;
-  final String currency;
-  final String userId;
-  final int limitAmount;
-  final int spentAmount;
-  final int overBudgetAllowance;
-  final int? iconCodePoint;
-  final String? iconEmoji;
-  final String iconType;
-  final String? color;
+class BudgetMetadataData extends DataClass
+    implements Insertable<BudgetMetadataData> {
   final String id;
-  final String name;
-  final String? description;
-  final String? tempId;
-  final bool isSynced;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  const Budget({
-    this.underLimitGoal,
-    required this.startDate,
-    required this.endDate,
-    required this.isActive,
-    required this.projectId,
-    this.categoryId,
-    required this.currency,
-    required this.userId,
-    required this.limitAmount,
-    required this.spentAmount,
-    required this.overBudgetAllowance,
-    this.iconCodePoint,
-    this.iconEmoji,
-    required this.iconType,
-    this.color,
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? budgetId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  const BudgetMetadataData({
     required this.id,
-    required this.name,
-    this.description,
-    this.tempId,
-    required this.isSynced,
-    required this.createdAt,
-    required this.updatedAt,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.budgetId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || underLimitGoal != null) {
-      map['under_limit_goal'] = Variable<int>(underLimitGoal);
-    }
-    map['start_date'] = Variable<DateTime>(startDate);
-    map['end_date'] = Variable<DateTime>(endDate);
-    map['is_active'] = Variable<bool>(isActive);
-    map['project_id'] = Variable<String>(projectId);
-    if (!nullToAbsent || categoryId != null) {
-      map['category_id'] = Variable<String>(categoryId);
-    }
-    map['currency'] = Variable<String>(currency);
-    map['user_id'] = Variable<String>(userId);
-    map['limit_amount'] = Variable<int>(limitAmount);
-    map['spent_amount'] = Variable<int>(spentAmount);
-    map['over_budget_allowance'] = Variable<int>(overBudgetAllowance);
-    if (!nullToAbsent || iconCodePoint != null) {
-      map['icon_code_point'] = Variable<int>(iconCodePoint);
-    }
-    if (!nullToAbsent || iconEmoji != null) {
-      map['icon_emoji'] = Variable<String>(iconEmoji);
-    }
-    map['icon_type'] = Variable<String>(iconType);
-    if (!nullToAbsent || color != null) {
-      map['color'] = Variable<String>(color);
-    }
     map['id'] = Variable<String>(id);
-    map['name'] = Variable<String>(name);
-    if (!nullToAbsent || description != null) {
-      map['description'] = Variable<String>(description);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
     }
-    if (!nullToAbsent || tempId != null) {
-      map['temp_id'] = Variable<String>(tempId);
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
     }
-    map['is_synced'] = Variable<bool>(isSynced);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || budgetId != null) {
+      map['budget_id'] = Variable<String>(budgetId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
-  BudgetsCompanion toCompanion(bool nullToAbsent) {
-    return BudgetsCompanion(
-      underLimitGoal: underLimitGoal == null && nullToAbsent
-          ? const Value.absent()
-          : Value(underLimitGoal),
-      startDate: Value(startDate),
-      endDate: Value(endDate),
-      isActive: Value(isActive),
-      projectId: Value(projectId),
-      categoryId: categoryId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(categoryId),
-      currency: Value(currency),
-      userId: Value(userId),
-      limitAmount: Value(limitAmount),
-      spentAmount: Value(spentAmount),
-      overBudgetAllowance: Value(overBudgetAllowance),
-      iconCodePoint: iconCodePoint == null && nullToAbsent
-          ? const Value.absent()
-          : Value(iconCodePoint),
-      iconEmoji: iconEmoji == null && nullToAbsent
-          ? const Value.absent()
-          : Value(iconEmoji),
-      iconType: Value(iconType),
-      color: color == null && nullToAbsent
-          ? const Value.absent()
-          : Value(color),
+  BudgetMetadataCompanion toCompanion(bool nullToAbsent) {
+    return BudgetMetadataCompanion(
       id: Value(id),
-      name: Value(name),
-      description: description == null && nullToAbsent
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
           ? const Value.absent()
-          : Value(description),
-      tempId: tempId == null && nullToAbsent
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
           ? const Value.absent()
-          : Value(tempId),
-      isSynced: Value(isSynced),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      budgetId: budgetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(budgetId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
-  factory Budget.fromJson(
+  factory BudgetMetadataData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Budget(
-      underLimitGoal: serializer.fromJson<int?>(json['underLimitGoal']),
-      startDate: serializer.fromJson<DateTime>(json['startDate']),
-      endDate: serializer.fromJson<DateTime>(json['endDate']),
-      isActive: serializer.fromJson<bool>(json['isActive']),
-      projectId: serializer.fromJson<String>(json['projectId']),
-      categoryId: serializer.fromJson<String?>(json['categoryId']),
-      currency: serializer.fromJson<String>(json['currency']),
-      userId: serializer.fromJson<String>(json['userId']),
-      limitAmount: serializer.fromJson<int>(json['limitAmount']),
-      spentAmount: serializer.fromJson<int>(json['spentAmount']),
-      overBudgetAllowance: serializer.fromJson<int>(
-        json['overBudgetAllowance'],
-      ),
-      iconCodePoint: serializer.fromJson<int?>(json['iconCodePoint']),
-      iconEmoji: serializer.fromJson<String?>(json['iconEmoji']),
-      iconType: serializer.fromJson<String>(json['iconType']),
-      color: serializer.fromJson<String?>(json['color']),
+    return BudgetMetadataData(
       id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String?>(json['description']),
-      tempId: serializer.fromJson<String?>(json['tempId']),
-      isSynced: serializer.fromJson<bool>(json['isSynced']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      budgetId: serializer.fromJson<String?>(json['budgetId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'underLimitGoal': serializer.toJson<int?>(underLimitGoal),
-      'startDate': serializer.toJson<DateTime>(startDate),
-      'endDate': serializer.toJson<DateTime>(endDate),
-      'isActive': serializer.toJson<bool>(isActive),
-      'projectId': serializer.toJson<String>(projectId),
-      'categoryId': serializer.toJson<String?>(categoryId),
-      'currency': serializer.toJson<String>(currency),
-      'userId': serializer.toJson<String>(userId),
-      'limitAmount': serializer.toJson<int>(limitAmount),
-      'spentAmount': serializer.toJson<int>(spentAmount),
-      'overBudgetAllowance': serializer.toJson<int>(overBudgetAllowance),
-      'iconCodePoint': serializer.toJson<int?>(iconCodePoint),
-      'iconEmoji': serializer.toJson<String?>(iconEmoji),
-      'iconType': serializer.toJson<String>(iconType),
-      'color': serializer.toJson<String?>(color),
       'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String?>(description),
-      'tempId': serializer.toJson<String?>(tempId),
-      'isSynced': serializer.toJson<bool>(isSynced),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'budgetId': serializer.toJson<String?>(budgetId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
-  Budget copyWith({
-    Value<int?> underLimitGoal = const Value.absent(),
-    DateTime? startDate,
-    DateTime? endDate,
-    bool? isActive,
-    String? projectId,
-    Value<String?> categoryId = const Value.absent(),
-    String? currency,
-    String? userId,
-    int? limitAmount,
-    int? spentAmount,
-    int? overBudgetAllowance,
-    Value<int?> iconCodePoint = const Value.absent(),
-    Value<String?> iconEmoji = const Value.absent(),
-    String? iconType,
-    Value<String?> color = const Value.absent(),
+  BudgetMetadataData copyWith({
     String? id,
-    String? name,
-    Value<String?> description = const Value.absent(),
-    Value<String?> tempId = const Value.absent(),
-    bool? isSynced,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) => Budget(
-    underLimitGoal: underLimitGoal.present
-        ? underLimitGoal.value
-        : this.underLimitGoal,
-    startDate: startDate ?? this.startDate,
-    endDate: endDate ?? this.endDate,
-    isActive: isActive ?? this.isActive,
-    projectId: projectId ?? this.projectId,
-    categoryId: categoryId.present ? categoryId.value : this.categoryId,
-    currency: currency ?? this.currency,
-    userId: userId ?? this.userId,
-    limitAmount: limitAmount ?? this.limitAmount,
-    spentAmount: spentAmount ?? this.spentAmount,
-    overBudgetAllowance: overBudgetAllowance ?? this.overBudgetAllowance,
-    iconCodePoint: iconCodePoint.present
-        ? iconCodePoint.value
-        : this.iconCodePoint,
-    iconEmoji: iconEmoji.present ? iconEmoji.value : this.iconEmoji,
-    iconType: iconType ?? this.iconType,
-    color: color.present ? color.value : this.color,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> budgetId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+  }) => BudgetMetadataData(
     id: id ?? this.id,
-    name: name ?? this.name,
-    description: description.present ? description.value : this.description,
-    tempId: tempId.present ? tempId.value : this.tempId,
-    isSynced: isSynced ?? this.isSynced,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    budgetId: budgetId.present ? budgetId.value : this.budgetId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
-  Budget copyWithCompanion(BudgetsCompanion data) {
-    return Budget(
-      underLimitGoal: data.underLimitGoal.present
-          ? data.underLimitGoal.value
-          : this.underLimitGoal,
-      startDate: data.startDate.present ? data.startDate.value : this.startDate,
-      endDate: data.endDate.present ? data.endDate.value : this.endDate,
-      isActive: data.isActive.present ? data.isActive.value : this.isActive,
-      projectId: data.projectId.present ? data.projectId.value : this.projectId,
-      categoryId: data.categoryId.present
-          ? data.categoryId.value
-          : this.categoryId,
-      currency: data.currency.present ? data.currency.value : this.currency,
-      userId: data.userId.present ? data.userId.value : this.userId,
-      limitAmount: data.limitAmount.present
-          ? data.limitAmount.value
-          : this.limitAmount,
-      spentAmount: data.spentAmount.present
-          ? data.spentAmount.value
-          : this.spentAmount,
-      overBudgetAllowance: data.overBudgetAllowance.present
-          ? data.overBudgetAllowance.value
-          : this.overBudgetAllowance,
-      iconCodePoint: data.iconCodePoint.present
-          ? data.iconCodePoint.value
-          : this.iconCodePoint,
-      iconEmoji: data.iconEmoji.present ? data.iconEmoji.value : this.iconEmoji,
-      iconType: data.iconType.present ? data.iconType.value : this.iconType,
-      color: data.color.present ? data.color.value : this.color,
+  BudgetMetadataData copyWithCompanion(BudgetMetadataCompanion data) {
+    return BudgetMetadataData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      tempId: data.tempId.present ? data.tempId.value : this.tempId,
-      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      budgetId: data.budgetId.present ? data.budgetId.value : this.budgetId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -21067,27 +24848,18 @@ class Budget extends DataClass implements Insertable<Budget> {
 
   @override
   String toString() {
-    return (StringBuffer('Budget(')
-          ..write('underLimitGoal: $underLimitGoal, ')
-          ..write('startDate: $startDate, ')
-          ..write('endDate: $endDate, ')
-          ..write('isActive: $isActive, ')
-          ..write('projectId: $projectId, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('currency: $currency, ')
-          ..write('userId: $userId, ')
-          ..write('limitAmount: $limitAmount, ')
-          ..write('spentAmount: $spentAmount, ')
-          ..write('overBudgetAllowance: $overBudgetAllowance, ')
-          ..write('iconCodePoint: $iconCodePoint, ')
-          ..write('iconEmoji: $iconEmoji, ')
-          ..write('iconType: $iconType, ')
-          ..write('color: $color, ')
+    return (StringBuffer('BudgetMetadataData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('tempId: $tempId, ')
-          ..write('isSynced: $isSynced, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
+          ..write('budgetId: $budgetId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -21095,238 +24867,149 @@ class Budget extends DataClass implements Insertable<Budget> {
   }
 
   @override
-  int get hashCode => Object.hashAll([
-    underLimitGoal,
-    startDate,
-    endDate,
-    isActive,
-    projectId,
-    categoryId,
-    currency,
-    userId,
-    limitAmount,
-    spentAmount,
-    overBudgetAllowance,
-    iconCodePoint,
-    iconEmoji,
-    iconType,
-    color,
+  int get hashCode => Object.hash(
     id,
     name,
-    description,
-    tempId,
-    isSynced,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    budgetId,
     createdAt,
     updatedAt,
-  ]);
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Budget &&
-          other.underLimitGoal == this.underLimitGoal &&
-          other.startDate == this.startDate &&
-          other.endDate == this.endDate &&
-          other.isActive == this.isActive &&
-          other.projectId == this.projectId &&
-          other.categoryId == this.categoryId &&
-          other.currency == this.currency &&
-          other.userId == this.userId &&
-          other.limitAmount == this.limitAmount &&
-          other.spentAmount == this.spentAmount &&
-          other.overBudgetAllowance == this.overBudgetAllowance &&
-          other.iconCodePoint == this.iconCodePoint &&
-          other.iconEmoji == this.iconEmoji &&
-          other.iconType == this.iconType &&
-          other.color == this.color &&
+      (other is BudgetMetadataData &&
           other.id == this.id &&
           other.name == this.name &&
-          other.description == this.description &&
-          other.tempId == this.tempId &&
-          other.isSynced == this.isSynced &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
+          other.budgetId == this.budgetId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
-class BudgetsCompanion extends UpdateCompanion<Budget> {
-  final Value<int?> underLimitGoal;
-  final Value<DateTime> startDate;
-  final Value<DateTime> endDate;
-  final Value<bool> isActive;
-  final Value<String> projectId;
-  final Value<String?> categoryId;
-  final Value<String> currency;
-  final Value<String> userId;
-  final Value<int> limitAmount;
-  final Value<int> spentAmount;
-  final Value<int> overBudgetAllowance;
-  final Value<int?> iconCodePoint;
-  final Value<String?> iconEmoji;
-  final Value<String> iconType;
-  final Value<String?> color;
+class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
   final Value<String> id;
-  final Value<String> name;
-  final Value<String?> description;
-  final Value<String?> tempId;
-  final Value<bool> isSynced;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> budgetId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
   final Value<int> rowid;
-  const BudgetsCompanion({
-    this.underLimitGoal = const Value.absent(),
-    this.startDate = const Value.absent(),
-    this.endDate = const Value.absent(),
-    this.isActive = const Value.absent(),
-    this.projectId = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.currency = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.limitAmount = const Value.absent(),
-    this.spentAmount = const Value.absent(),
-    this.overBudgetAllowance = const Value.absent(),
-    this.iconCodePoint = const Value.absent(),
-    this.iconEmoji = const Value.absent(),
-    this.iconType = const Value.absent(),
-    this.color = const Value.absent(),
+  const BudgetMetadataCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.description = const Value.absent(),
-    this.tempId = const Value.absent(),
-    this.isSynced = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.budgetId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  BudgetsCompanion.insert({
-    this.underLimitGoal = const Value.absent(),
-    required DateTime startDate,
-    required DateTime endDate,
-    this.isActive = const Value.absent(),
-    required String projectId,
-    this.categoryId = const Value.absent(),
-    required String currency,
-    required String userId,
-    required int limitAmount,
-    this.spentAmount = const Value.absent(),
-    this.overBudgetAllowance = const Value.absent(),
-    this.iconCodePoint = const Value.absent(),
-    this.iconEmoji = const Value.absent(),
-    this.iconType = const Value.absent(),
-    this.color = const Value.absent(),
+  BudgetMetadataCompanion.insert({
     required String id,
-    required String name,
-    this.description = const Value.absent(),
-    this.tempId = const Value.absent(),
-    this.isSynced = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.budgetId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : startDate = Value(startDate),
-       endDate = Value(endDate),
-       projectId = Value(projectId),
-       currency = Value(currency),
-       userId = Value(userId),
-       limitAmount = Value(limitAmount),
-       id = Value(id),
-       name = Value(name);
-  static Insertable<Budget> custom({
-    Expression<int>? underLimitGoal,
-    Expression<DateTime>? startDate,
-    Expression<DateTime>? endDate,
-    Expression<bool>? isActive,
-    Expression<String>? projectId,
-    Expression<String>? categoryId,
-    Expression<String>? currency,
-    Expression<String>? userId,
-    Expression<int>? limitAmount,
-    Expression<int>? spentAmount,
-    Expression<int>? overBudgetAllowance,
-    Expression<int>? iconCodePoint,
-    Expression<String>? iconEmoji,
-    Expression<String>? iconType,
-    Expression<String>? color,
+  }) : id = Value(id);
+  static Insertable<BudgetMetadataData> custom({
     Expression<String>? id,
     Expression<String>? name,
-    Expression<String>? description,
-    Expression<String>? tempId,
-    Expression<bool>? isSynced,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
+    Expression<String>? budgetId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (underLimitGoal != null) 'under_limit_goal': underLimitGoal,
-      if (startDate != null) 'start_date': startDate,
-      if (endDate != null) 'end_date': endDate,
-      if (isActive != null) 'is_active': isActive,
-      if (projectId != null) 'project_id': projectId,
-      if (categoryId != null) 'category_id': categoryId,
-      if (currency != null) 'currency': currency,
-      if (userId != null) 'user_id': userId,
-      if (limitAmount != null) 'limit_amount': limitAmount,
-      if (spentAmount != null) 'spent_amount': spentAmount,
-      if (overBudgetAllowance != null)
-        'over_budget_allowance': overBudgetAllowance,
-      if (iconCodePoint != null) 'icon_code_point': iconCodePoint,
-      if (iconEmoji != null) 'icon_emoji': iconEmoji,
-      if (iconType != null) 'icon_type': iconType,
-      if (color != null) 'color': color,
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (tempId != null) 'temp_id': tempId,
-      if (isSynced != null) 'is_synced': isSynced,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
+      if (budgetId != null) 'budget_id': budgetId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  BudgetsCompanion copyWith({
-    Value<int?>? underLimitGoal,
-    Value<DateTime>? startDate,
-    Value<DateTime>? endDate,
-    Value<bool>? isActive,
-    Value<String>? projectId,
-    Value<String?>? categoryId,
-    Value<String>? currency,
-    Value<String>? userId,
-    Value<int>? limitAmount,
-    Value<int>? spentAmount,
-    Value<int>? overBudgetAllowance,
-    Value<int?>? iconCodePoint,
-    Value<String?>? iconEmoji,
-    Value<String>? iconType,
-    Value<String?>? color,
+  BudgetMetadataCompanion copyWith({
     Value<String>? id,
-    Value<String>? name,
-    Value<String?>? description,
-    Value<String?>? tempId,
-    Value<bool>? isSynced,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? budgetId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
     Value<int>? rowid,
   }) {
-    return BudgetsCompanion(
-      underLimitGoal: underLimitGoal ?? this.underLimitGoal,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      isActive: isActive ?? this.isActive,
-      projectId: projectId ?? this.projectId,
-      categoryId: categoryId ?? this.categoryId,
-      currency: currency ?? this.currency,
-      userId: userId ?? this.userId,
-      limitAmount: limitAmount ?? this.limitAmount,
-      spentAmount: spentAmount ?? this.spentAmount,
-      overBudgetAllowance: overBudgetAllowance ?? this.overBudgetAllowance,
-      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
-      iconEmoji: iconEmoji ?? this.iconEmoji,
-      iconType: iconType ?? this.iconType,
-      color: color ?? this.color,
+    return BudgetMetadataCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      description: description ?? this.description,
-      tempId: tempId ?? this.tempId,
-      isSynced: isSynced ?? this.isSynced,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
+      budgetId: budgetId ?? this.budgetId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -21336,65 +25019,38 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (underLimitGoal.present) {
-      map['under_limit_goal'] = Variable<int>(underLimitGoal.value);
-    }
-    if (startDate.present) {
-      map['start_date'] = Variable<DateTime>(startDate.value);
-    }
-    if (endDate.present) {
-      map['end_date'] = Variable<DateTime>(endDate.value);
-    }
-    if (isActive.present) {
-      map['is_active'] = Variable<bool>(isActive.value);
-    }
-    if (projectId.present) {
-      map['project_id'] = Variable<String>(projectId.value);
-    }
-    if (categoryId.present) {
-      map['category_id'] = Variable<String>(categoryId.value);
-    }
-    if (currency.present) {
-      map['currency'] = Variable<String>(currency.value);
-    }
-    if (userId.present) {
-      map['user_id'] = Variable<String>(userId.value);
-    }
-    if (limitAmount.present) {
-      map['limit_amount'] = Variable<int>(limitAmount.value);
-    }
-    if (spentAmount.present) {
-      map['spent_amount'] = Variable<int>(spentAmount.value);
-    }
-    if (overBudgetAllowance.present) {
-      map['over_budget_allowance'] = Variable<int>(overBudgetAllowance.value);
-    }
-    if (iconCodePoint.present) {
-      map['icon_code_point'] = Variable<int>(iconCodePoint.value);
-    }
-    if (iconEmoji.present) {
-      map['icon_emoji'] = Variable<String>(iconEmoji.value);
-    }
-    if (iconType.present) {
-      map['icon_type'] = Variable<String>(iconType.value);
-    }
-    if (color.present) {
-      map['color'] = Variable<String>(color.value);
-    }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
     }
-    if (tempId.present) {
-      map['temp_id'] = Variable<String>(tempId.value);
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
     }
-    if (isSynced.present) {
-      map['is_synced'] = Variable<bool>(isSynced.value);
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (budgetId.present) {
+      map['budget_id'] = Variable<String>(budgetId.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -21410,27 +25066,18 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
 
   @override
   String toString() {
-    return (StringBuffer('BudgetsCompanion(')
-          ..write('underLimitGoal: $underLimitGoal, ')
-          ..write('startDate: $startDate, ')
-          ..write('endDate: $endDate, ')
-          ..write('isActive: $isActive, ')
-          ..write('projectId: $projectId, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('currency: $currency, ')
-          ..write('userId: $userId, ')
-          ..write('limitAmount: $limitAmount, ')
-          ..write('spentAmount: $spentAmount, ')
-          ..write('overBudgetAllowance: $overBudgetAllowance, ')
-          ..write('iconCodePoint: $iconCodePoint, ')
-          ..write('iconEmoji: $iconEmoji, ')
-          ..write('iconType: $iconType, ')
-          ..write('color: $color, ')
+    return (StringBuffer('BudgetMetadataCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('tempId: $tempId, ')
-          ..write('isSynced: $isSynced, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
+          ..write('budgetId: $budgetId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -21454,47 +25101,114 @@ class $GoalMetadataTable extends GoalMetadata
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
+  @override
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("boolean_value" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _goalIdMeta = const VerificationMeta('goalId');
   @override
   late final GeneratedColumn<String> goalId = GeneratedColumn<String>(
     'goal_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
-  @override
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-    'key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
-  @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
-    'isSynced',
-  );
-  @override
-  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
-    'is_synced',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_synced" IN (0, 1))',
+      'REFERENCES goals (id)',
     ),
-    defaultValue: const Constant(false),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -21503,10 +25217,9 @@ class $GoalMetadataTable extends GoalMetadata
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -21515,18 +25228,23 @@ class $GoalMetadataTable extends GoalMetadata
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
     goalId,
-    key,
-    value,
-    isSynced,
     createdAt,
     updatedAt,
   ];
@@ -21547,34 +25265,76 @@ class $GoalMetadataTable extends GoalMetadata
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     if (data.containsKey('goal_id')) {
       context.handle(
         _goalIdMeta,
         goalId.isAcceptableOrUnknown(data['goal_id']!, _goalIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_goalIdMeta);
-    }
-    if (data.containsKey('key')) {
-      context.handle(
-        _keyMeta,
-        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_keyMeta);
-    }
-    if (data.containsKey('value')) {
-      context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
-    }
-    if (data.containsKey('is_synced')) {
-      context.handle(
-        _isSyncedMeta,
-        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
     if (data.containsKey('created_at')) {
@@ -21595,10 +25355,6 @@ class $GoalMetadataTable extends GoalMetadata
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {goalId, key},
-  ];
-  @override
   GoalMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return GoalMetadataData(
@@ -21606,30 +25362,54 @@ class $GoalMetadataTable extends GoalMetadata
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
       goalId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}goal_id'],
-      )!,
-      key: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}key'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
-      isSynced: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_synced'],
-      )!,
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      )!,
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      )!,
+      ),
     );
   }
 
@@ -21642,43 +25422,111 @@ class $GoalMetadataTable extends GoalMetadata
 class GoalMetadataData extends DataClass
     implements Insertable<GoalMetadataData> {
   final String id;
-  final String goalId;
-  final String key;
-  final String value;
-  final bool isSynced;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? goalId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const GoalMetadataData({
     required this.id,
-    required this.goalId,
-    required this.key,
-    required this.value,
-    required this.isSynced,
-    required this.createdAt,
-    required this.updatedAt,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.goalId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['goal_id'] = Variable<String>(goalId);
-    map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
-    map['is_synced'] = Variable<bool>(isSynced);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || goalId != null) {
+      map['goal_id'] = Variable<String>(goalId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
   GoalMetadataCompanion toCompanion(bool nullToAbsent) {
     return GoalMetadataCompanion(
       id: Value(id),
-      goalId: Value(goalId),
-      key: Value(key),
-      value: Value(value),
-      isSynced: Value(isSynced),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      goalId: goalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(goalId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -21689,12 +25537,18 @@ class GoalMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return GoalMetadataData(
       id: serializer.fromJson<String>(json['id']),
-      goalId: serializer.fromJson<String>(json['goalId']),
-      key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
-      isSynced: serializer.fromJson<bool>(json['isSynced']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      goalId: serializer.fromJson<String?>(json['goalId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
@@ -21702,39 +25556,75 @@ class GoalMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'goalId': serializer.toJson<String>(goalId),
-      'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
-      'isSynced': serializer.toJson<bool>(isSynced),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'goalId': serializer.toJson<String?>(goalId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
   GoalMetadataData copyWith({
     String? id,
-    String? goalId,
-    String? key,
-    String? value,
-    bool? isSynced,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> goalId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => GoalMetadataData(
     id: id ?? this.id,
-    goalId: goalId ?? this.goalId,
-    key: key ?? this.key,
-    value: value ?? this.value,
-    isSynced: isSynced ?? this.isSynced,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    goalId: goalId.present ? goalId.value : this.goalId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   GoalMetadataData copyWithCompanion(GoalMetadataCompanion data) {
     return GoalMetadataData(
       id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
       goalId: data.goalId.present ? data.goalId.value : this.goalId,
-      key: data.key.present ? data.key.value : this.key,
-      value: data.value.present ? data.value.value : this.value,
-      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -21744,10 +25634,16 @@ class GoalMetadataData extends DataClass
   String toString() {
     return (StringBuffer('GoalMetadataData(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -21755,69 +25651,115 @@ class GoalMetadataData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, goalId, key, value, isSynced, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    goalId,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is GoalMetadataData &&
           other.id == this.id &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
           other.goalId == this.goalId &&
-          other.key == this.key &&
-          other.value == this.value &&
-          other.isSynced == this.isSynced &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
 class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
   final Value<String> id;
-  final Value<String> goalId;
-  final Value<String> key;
-  final Value<String> value;
-  final Value<bool> isSynced;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> goalId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
   final Value<int> rowid;
   const GoalMetadataCompanion({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
     this.goalId = const Value.absent(),
-    this.key = const Value.absent(),
-    this.value = const Value.absent(),
-    this.isSynced = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   GoalMetadataCompanion.insert({
     required String id,
-    required String goalId,
-    required String key,
-    required String value,
-    this.isSynced = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.goalId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       goalId = Value(goalId),
-       key = Value(key),
-       value = Value(value);
+  }) : id = Value(id);
   static Insertable<GoalMetadataData> custom({
     Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
     Expression<String>? goalId,
-    Expression<String>? key,
-    Expression<String>? value,
-    Expression<bool>? isSynced,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
       if (goalId != null) 'goal_id': goalId,
-      if (key != null) 'key': key,
-      if (value != null) 'value': value,
-      if (isSynced != null) 'is_synced': isSynced,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -21826,20 +25768,32 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
 
   GoalMetadataCompanion copyWith({
     Value<String>? id,
-    Value<String>? goalId,
-    Value<String>? key,
-    Value<String>? value,
-    Value<bool>? isSynced,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? goalId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
     Value<int>? rowid,
   }) {
     return GoalMetadataCompanion(
       id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
       goalId: goalId ?? this.goalId,
-      key: key ?? this.key,
-      value: value ?? this.value,
-      isSynced: isSynced ?? this.isSynced,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -21852,17 +25806,35 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
+    }
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (goalId.present) {
       map['goal_id'] = Variable<String>(goalId.value);
-    }
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
-    }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
-    }
-    if (isSynced.present) {
-      map['is_synced'] = Variable<bool>(isSynced.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -21880,10 +25852,16 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
   String toString() {
     return (StringBuffer('GoalMetadataCompanion(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('isSynced: $isSynced, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -21965,6 +25943,28 @@ class $GoalContributionTable extends GoalContribution
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _createdMeta = const VerificationMeta(
+    'created',
+  );
+  @override
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+    'created',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedMeta = const VerificationMeta(
+    'updated',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+    'updated',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -21973,6 +25973,8 @@ class $GoalContributionTable extends GoalContribution
     allocatedAmount,
     allocatedAt,
     notes,
+    created,
+    updated,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -22033,6 +26035,18 @@ class $GoalContributionTable extends GoalContribution
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
+    if (data.containsKey('created')) {
+      context.handle(
+        _createdMeta,
+        created.isAcceptableOrUnknown(data['created']!, _createdMeta),
+      );
+    }
+    if (data.containsKey('updated')) {
+      context.handle(
+        _updatedMeta,
+        updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta),
+      );
+    }
     return context;
   }
 
@@ -22070,6 +26084,14 @@ class $GoalContributionTable extends GoalContribution
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
+      created: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created'],
+      ),
+      updated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated'],
+      ),
     );
   }
 
@@ -22087,6 +26109,8 @@ class GoalContributionData extends DataClass
   final int allocatedAmount;
   final DateTime allocatedAt;
   final String? notes;
+  final DateTime? created;
+  final DateTime? updated;
   const GoalContributionData({
     required this.id,
     required this.paymentId,
@@ -22094,6 +26118,8 @@ class GoalContributionData extends DataClass
     required this.allocatedAmount,
     required this.allocatedAt,
     this.notes,
+    this.created,
+    this.updated,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -22105,6 +26131,12 @@ class GoalContributionData extends DataClass
     map['allocated_at'] = Variable<DateTime>(allocatedAt);
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || created != null) {
+      map['created'] = Variable<DateTime>(created);
+    }
+    if (!nullToAbsent || updated != null) {
+      map['updated'] = Variable<DateTime>(updated);
     }
     return map;
   }
@@ -22119,6 +26151,12 @@ class GoalContributionData extends DataClass
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
+      created: created == null && nullToAbsent
+          ? const Value.absent()
+          : Value(created),
+      updated: updated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updated),
     );
   }
 
@@ -22134,6 +26172,8 @@ class GoalContributionData extends DataClass
       allocatedAmount: serializer.fromJson<int>(json['allocatedAmount']),
       allocatedAt: serializer.fromJson<DateTime>(json['allocatedAt']),
       notes: serializer.fromJson<String?>(json['notes']),
+      created: serializer.fromJson<DateTime?>(json['created']),
+      updated: serializer.fromJson<DateTime?>(json['updated']),
     );
   }
   @override
@@ -22146,6 +26186,8 @@ class GoalContributionData extends DataClass
       'allocatedAmount': serializer.toJson<int>(allocatedAmount),
       'allocatedAt': serializer.toJson<DateTime>(allocatedAt),
       'notes': serializer.toJson<String?>(notes),
+      'created': serializer.toJson<DateTime?>(created),
+      'updated': serializer.toJson<DateTime?>(updated),
     };
   }
 
@@ -22156,6 +26198,8 @@ class GoalContributionData extends DataClass
     int? allocatedAmount,
     DateTime? allocatedAt,
     Value<String?> notes = const Value.absent(),
+    Value<DateTime?> created = const Value.absent(),
+    Value<DateTime?> updated = const Value.absent(),
   }) => GoalContributionData(
     id: id ?? this.id,
     paymentId: paymentId ?? this.paymentId,
@@ -22163,6 +26207,8 @@ class GoalContributionData extends DataClass
     allocatedAmount: allocatedAmount ?? this.allocatedAmount,
     allocatedAt: allocatedAt ?? this.allocatedAt,
     notes: notes.present ? notes.value : this.notes,
+    created: created.present ? created.value : this.created,
+    updated: updated.present ? updated.value : this.updated,
   );
   GoalContributionData copyWithCompanion(GoalContributionCompanion data) {
     return GoalContributionData(
@@ -22176,6 +26222,8 @@ class GoalContributionData extends DataClass
           ? data.allocatedAt.value
           : this.allocatedAt,
       notes: data.notes.present ? data.notes.value : this.notes,
+      created: data.created.present ? data.created.value : this.created,
+      updated: data.updated.present ? data.updated.value : this.updated,
     );
   }
 
@@ -22187,14 +26235,24 @@ class GoalContributionData extends DataClass
           ..write('goalId: $goalId, ')
           ..write('allocatedAmount: $allocatedAmount, ')
           ..write('allocatedAt: $allocatedAt, ')
-          ..write('notes: $notes')
+          ..write('notes: $notes, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, paymentId, goalId, allocatedAmount, allocatedAt, notes);
+  int get hashCode => Object.hash(
+    id,
+    paymentId,
+    goalId,
+    allocatedAmount,
+    allocatedAt,
+    notes,
+    created,
+    updated,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -22204,7 +26262,9 @@ class GoalContributionData extends DataClass
           other.goalId == this.goalId &&
           other.allocatedAmount == this.allocatedAmount &&
           other.allocatedAt == this.allocatedAt &&
-          other.notes == this.notes);
+          other.notes == this.notes &&
+          other.created == this.created &&
+          other.updated == this.updated);
 }
 
 class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
@@ -22214,6 +26274,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
   final Value<int> allocatedAmount;
   final Value<DateTime> allocatedAt;
   final Value<String?> notes;
+  final Value<DateTime?> created;
+  final Value<DateTime?> updated;
   final Value<int> rowid;
   const GoalContributionCompanion({
     this.id = const Value.absent(),
@@ -22222,6 +26284,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
     this.allocatedAmount = const Value.absent(),
     this.allocatedAt = const Value.absent(),
     this.notes = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   GoalContributionCompanion.insert({
@@ -22231,6 +26295,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
     required int allocatedAmount,
     this.allocatedAt = const Value.absent(),
     this.notes = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        paymentId = Value(paymentId),
@@ -22243,6 +26309,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
     Expression<int>? allocatedAmount,
     Expression<DateTime>? allocatedAt,
     Expression<String>? notes,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -22252,6 +26320,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
       if (allocatedAmount != null) 'allocated_amount': allocatedAmount,
       if (allocatedAt != null) 'allocated_at': allocatedAt,
       if (notes != null) 'notes': notes,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -22263,6 +26333,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
     Value<int>? allocatedAmount,
     Value<DateTime>? allocatedAt,
     Value<String?>? notes,
+    Value<DateTime?>? created,
+    Value<DateTime?>? updated,
     Value<int>? rowid,
   }) {
     return GoalContributionCompanion(
@@ -22272,6 +26344,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
       allocatedAmount: allocatedAmount ?? this.allocatedAmount,
       allocatedAt: allocatedAt ?? this.allocatedAt,
       notes: notes ?? this.notes,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -22297,6 +26371,12 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -22312,6 +26392,8 @@ class GoalContributionCompanion extends UpdateCompanion<GoalContributionData> {
           ..write('allocatedAmount: $allocatedAmount, ')
           ..write('allocatedAt: $allocatedAt, ')
           ..write('notes: $notes, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -22333,6 +26415,103 @@ class $InvestmentMetadataTable extends InvestmentMetadata
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
+  @override
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("boolean_value" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _investmentIdMeta = const VerificationMeta(
     'investmentId',
   );
@@ -22340,30 +26519,51 @@ class $InvestmentMetadataTable extends InvestmentMetadata
   late final GeneratedColumn<String> investmentId = GeneratedColumn<String>(
     'investment_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES investments (id)',
+    ),
   );
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-    'key',
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
     aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
   @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
     aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, investmentId, key, value];
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    investmentId,
+    createdAt,
+    updatedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -22381,6 +26581,72 @@ class $InvestmentMetadataTable extends InvestmentMetadata
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     if (data.containsKey('investment_id')) {
       context.handle(
         _investmentIdMeta,
@@ -22389,34 +26655,24 @@ class $InvestmentMetadataTable extends InvestmentMetadata
           _investmentIdMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_investmentIdMeta);
     }
-    if (data.containsKey('key')) {
+    if (data.containsKey('created_at')) {
       context.handle(
-        _keyMeta,
-        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_keyMeta);
     }
-    if (data.containsKey('value')) {
+    if (data.containsKey('updated_at')) {
       context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
     }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {investmentId, key},
-  ];
   @override
   InvestmentMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -22425,18 +26681,54 @@ class $InvestmentMetadataTable extends InvestmentMetadata
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
       investmentId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}investment_id'],
-      )!,
-      key: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}key'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
     );
   }
 
@@ -22449,31 +26741,111 @@ class $InvestmentMetadataTable extends InvestmentMetadata
 class InvestmentMetadataData extends DataClass
     implements Insertable<InvestmentMetadataData> {
   final String id;
-  final String investmentId;
-  final String key;
-  final String value;
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? investmentId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const InvestmentMetadataData({
     required this.id,
-    required this.investmentId,
-    required this.key,
-    required this.value,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.investmentId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['investment_id'] = Variable<String>(investmentId);
-    map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || investmentId != null) {
+      map['investment_id'] = Variable<String>(investmentId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
   InvestmentMetadataCompanion toCompanion(bool nullToAbsent) {
     return InvestmentMetadataCompanion(
       id: Value(id),
-      investmentId: Value(investmentId),
-      key: Value(key),
-      value: Value(value),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      investmentId: investmentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(investmentId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -22484,9 +26856,18 @@ class InvestmentMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return InvestmentMetadataData(
       id: serializer.fromJson<String>(json['id']),
-      investmentId: serializer.fromJson<String>(json['investmentId']),
-      key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      investmentId: serializer.fromJson<String?>(json['investmentId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
@@ -22494,31 +26875,79 @@ class InvestmentMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'investmentId': serializer.toJson<String>(investmentId),
-      'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'investmentId': serializer.toJson<String?>(investmentId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
   InvestmentMetadataData copyWith({
     String? id,
-    String? investmentId,
-    String? key,
-    String? value,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> investmentId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => InvestmentMetadataData(
     id: id ?? this.id,
-    investmentId: investmentId ?? this.investmentId,
-    key: key ?? this.key,
-    value: value ?? this.value,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    investmentId: investmentId.present ? investmentId.value : this.investmentId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   InvestmentMetadataData copyWithCompanion(InvestmentMetadataCompanion data) {
     return InvestmentMetadataData(
       id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
       investmentId: data.investmentId.present
           ? data.investmentId.value
           : this.investmentId,
-      key: data.key.present ? data.key.value : this.key,
-      value: data.value.present ? data.value.value : this.value,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -22526,77 +26955,169 @@ class InvestmentMetadataData extends DataClass
   String toString() {
     return (StringBuffer('InvestmentMetadataData(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('investmentId: $investmentId, ')
-          ..write('key: $key, ')
-          ..write('value: $value')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, investmentId, key, value);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    investmentId,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is InvestmentMetadataData &&
           other.id == this.id &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
           other.investmentId == this.investmentId &&
-          other.key == this.key &&
-          other.value == this.value);
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class InvestmentMetadataCompanion
     extends UpdateCompanion<InvestmentMetadataData> {
   final Value<String> id;
-  final Value<String> investmentId;
-  final Value<String> key;
-  final Value<String> value;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> investmentId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
   final Value<int> rowid;
   const InvestmentMetadataCompanion({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
     this.investmentId = const Value.absent(),
-    this.key = const Value.absent(),
-    this.value = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   InvestmentMetadataCompanion.insert({
     required String id,
-    required String investmentId,
-    required String key,
-    required String value,
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.investmentId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       investmentId = Value(investmentId),
-       key = Value(key),
-       value = Value(value);
+  }) : id = Value(id);
   static Insertable<InvestmentMetadataData> custom({
     Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
     Expression<String>? investmentId,
-    Expression<String>? key,
-    Expression<String>? value,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
       if (investmentId != null) 'investment_id': investmentId,
-      if (key != null) 'key': key,
-      if (value != null) 'value': value,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   InvestmentMetadataCompanion copyWith({
     Value<String>? id,
-    Value<String>? investmentId,
-    Value<String>? key,
-    Value<String>? value,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? investmentId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
     Value<int>? rowid,
   }) {
     return InvestmentMetadataCompanion(
       id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
       investmentId: investmentId ?? this.investmentId,
-      key: key ?? this.key,
-      value: value ?? this.value,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -22607,14 +27128,41 @@ class InvestmentMetadataCompanion
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
+    }
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (investmentId.present) {
       map['investment_id'] = Variable<String>(investmentId.value);
     }
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -22626,9 +27174,18 @@ class InvestmentMetadataCompanion
   String toString() {
     return (StringBuffer('InvestmentMetadataCompanion(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
           ..write('investmentId: $investmentId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -22710,6 +27267,37 @@ class $InvestmentPaymentsTable extends InvestmentPayments
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdMeta = const VerificationMeta(
+    'created',
+  );
+  @override
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+    'created',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedMeta = const VerificationMeta(
+    'updated',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+    'updated',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -22718,6 +27306,9 @@ class $InvestmentPaymentsTable extends InvestmentPayments
     allocatedAmount,
     allocatedAt,
     notes,
+    userId,
+    created,
+    updated,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -22781,6 +27372,24 @@ class $InvestmentPaymentsTable extends InvestmentPayments
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
+    if (data.containsKey('created')) {
+      context.handle(
+        _createdMeta,
+        created.isAcceptableOrUnknown(data['created']!, _createdMeta),
+      );
+    }
+    if (data.containsKey('updated')) {
+      context.handle(
+        _updatedMeta,
+        updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta),
+      );
+    }
     return context;
   }
 
@@ -22814,6 +27423,18 @@ class $InvestmentPaymentsTable extends InvestmentPayments
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
+      created: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created'],
+      ),
+      updated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated'],
+      ),
     );
   }
 
@@ -22831,6 +27452,9 @@ class InvestmentPayment extends DataClass
   final int allocatedAmount;
   final DateTime allocatedAt;
   final String? notes;
+  final String? userId;
+  final DateTime? created;
+  final DateTime? updated;
   const InvestmentPayment({
     required this.id,
     required this.paymentId,
@@ -22838,6 +27462,9 @@ class InvestmentPayment extends DataClass
     required this.allocatedAmount,
     required this.allocatedAt,
     this.notes,
+    this.userId,
+    this.created,
+    this.updated,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -22849,6 +27476,15 @@ class InvestmentPayment extends DataClass
     map['allocated_at'] = Variable<DateTime>(allocatedAt);
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || created != null) {
+      map['created'] = Variable<DateTime>(created);
+    }
+    if (!nullToAbsent || updated != null) {
+      map['updated'] = Variable<DateTime>(updated);
     }
     return map;
   }
@@ -22863,6 +27499,15 @@ class InvestmentPayment extends DataClass
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      created: created == null && nullToAbsent
+          ? const Value.absent()
+          : Value(created),
+      updated: updated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updated),
     );
   }
 
@@ -22878,6 +27523,9 @@ class InvestmentPayment extends DataClass
       allocatedAmount: serializer.fromJson<int>(json['allocatedAmount']),
       allocatedAt: serializer.fromJson<DateTime>(json['allocatedAt']),
       notes: serializer.fromJson<String?>(json['notes']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      created: serializer.fromJson<DateTime?>(json['created']),
+      updated: serializer.fromJson<DateTime?>(json['updated']),
     );
   }
   @override
@@ -22890,6 +27538,9 @@ class InvestmentPayment extends DataClass
       'allocatedAmount': serializer.toJson<int>(allocatedAmount),
       'allocatedAt': serializer.toJson<DateTime>(allocatedAt),
       'notes': serializer.toJson<String?>(notes),
+      'userId': serializer.toJson<String?>(userId),
+      'created': serializer.toJson<DateTime?>(created),
+      'updated': serializer.toJson<DateTime?>(updated),
     };
   }
 
@@ -22900,6 +27551,9 @@ class InvestmentPayment extends DataClass
     int? allocatedAmount,
     DateTime? allocatedAt,
     Value<String?> notes = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<DateTime?> created = const Value.absent(),
+    Value<DateTime?> updated = const Value.absent(),
   }) => InvestmentPayment(
     id: id ?? this.id,
     paymentId: paymentId ?? this.paymentId,
@@ -22907,6 +27561,9 @@ class InvestmentPayment extends DataClass
     allocatedAmount: allocatedAmount ?? this.allocatedAmount,
     allocatedAt: allocatedAt ?? this.allocatedAt,
     notes: notes.present ? notes.value : this.notes,
+    userId: userId.present ? userId.value : this.userId,
+    created: created.present ? created.value : this.created,
+    updated: updated.present ? updated.value : this.updated,
   );
   InvestmentPayment copyWithCompanion(InvestmentPaymentsCompanion data) {
     return InvestmentPayment(
@@ -22922,6 +27579,9 @@ class InvestmentPayment extends DataClass
           ? data.allocatedAt.value
           : this.allocatedAt,
       notes: data.notes.present ? data.notes.value : this.notes,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      created: data.created.present ? data.created.value : this.created,
+      updated: data.updated.present ? data.updated.value : this.updated,
     );
   }
 
@@ -22933,7 +27593,10 @@ class InvestmentPayment extends DataClass
           ..write('investmentId: $investmentId, ')
           ..write('allocatedAmount: $allocatedAmount, ')
           ..write('allocatedAt: $allocatedAt, ')
-          ..write('notes: $notes')
+          ..write('notes: $notes, ')
+          ..write('userId: $userId, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
           ..write(')'))
         .toString();
   }
@@ -22946,6 +27609,9 @@ class InvestmentPayment extends DataClass
     allocatedAmount,
     allocatedAt,
     notes,
+    userId,
+    created,
+    updated,
   );
   @override
   bool operator ==(Object other) =>
@@ -22956,7 +27622,10 @@ class InvestmentPayment extends DataClass
           other.investmentId == this.investmentId &&
           other.allocatedAmount == this.allocatedAmount &&
           other.allocatedAt == this.allocatedAt &&
-          other.notes == this.notes);
+          other.notes == this.notes &&
+          other.userId == this.userId &&
+          other.created == this.created &&
+          other.updated == this.updated);
 }
 
 class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
@@ -22966,6 +27635,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
   final Value<int> allocatedAmount;
   final Value<DateTime> allocatedAt;
   final Value<String?> notes;
+  final Value<String?> userId;
+  final Value<DateTime?> created;
+  final Value<DateTime?> updated;
   final Value<int> rowid;
   const InvestmentPaymentsCompanion({
     this.id = const Value.absent(),
@@ -22974,6 +27646,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
     this.allocatedAmount = const Value.absent(),
     this.allocatedAt = const Value.absent(),
     this.notes = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   InvestmentPaymentsCompanion.insert({
@@ -22983,6 +27658,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
     required int allocatedAmount,
     this.allocatedAt = const Value.absent(),
     this.notes = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        paymentId = Value(paymentId),
@@ -22995,6 +27673,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
     Expression<int>? allocatedAmount,
     Expression<DateTime>? allocatedAt,
     Expression<String>? notes,
+    Expression<String>? userId,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -23004,6 +27685,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
       if (allocatedAmount != null) 'allocated_amount': allocatedAmount,
       if (allocatedAt != null) 'allocated_at': allocatedAt,
       if (notes != null) 'notes': notes,
+      if (userId != null) 'user_id': userId,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -23015,6 +27699,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
     Value<int>? allocatedAmount,
     Value<DateTime>? allocatedAt,
     Value<String?>? notes,
+    Value<String?>? userId,
+    Value<DateTime?>? created,
+    Value<DateTime?>? updated,
     Value<int>? rowid,
   }) {
     return InvestmentPaymentsCompanion(
@@ -23024,6 +27711,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
       allocatedAmount: allocatedAmount ?? this.allocatedAmount,
       allocatedAt: allocatedAt ?? this.allocatedAt,
       notes: notes ?? this.notes,
+      userId: userId ?? this.userId,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -23049,6 +27739,15 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -23064,6 +27763,9 @@ class InvestmentPaymentsCompanion extends UpdateCompanion<InvestmentPayment> {
           ..write('allocatedAmount: $allocatedAmount, ')
           ..write('allocatedAt: $allocatedAt, ')
           ..write('notes: $notes, ')
+          ..write('userId: $userId, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -23487,69 +28189,123 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
   $WalletProviderMetadataTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _providerIdMeta = const VerificationMeta(
-    'providerId',
-  );
-  @override
-  late final GeneratedColumn<String> providerId = GeneratedColumn<String>(
-    'provider_id',
-    aliasedName,
-    false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-    'key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
-  @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
-  @override
-  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
-    'temp_id',
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
-    'isSynced',
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
   );
   @override
-  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
-    'is_synced',
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
     aliasedName,
-    false,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_synced" IN (0, 1))',
+      'CHECK ("boolean_value" IN (0, 1))',
     ),
-    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _urlValueMeta = const VerificationMeta(
+    'urlValue',
+  );
+  @override
+  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
+    'url_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailValueMeta = const VerificationMeta(
+    'emailValue',
+  );
+  @override
+  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
+    'email_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _walletProviderIdMeta = const VerificationMeta(
+    'walletProviderId',
+  );
+  @override
+  late final GeneratedColumn<String> walletProviderId = GeneratedColumn<String>(
+    'wallet_provider_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_providers (id)',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -23558,10 +28314,9 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -23570,19 +28325,23 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    providerId,
-    key,
-    value,
-    tempId,
-    isSynced,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    walletProviderId,
     createdAt,
     updatedAt,
   ];
@@ -23600,41 +28359,82 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('provider_id')) {
-      context.handle(
-        _providerIdMeta,
-        providerId.isAcceptableOrUnknown(data['provider_id']!, _providerIdMeta),
-      );
     } else if (isInserting) {
-      context.missing(_providerIdMeta);
+      context.missing(_idMeta);
     }
-    if (data.containsKey('key')) {
+    if (data.containsKey('name')) {
       context.handle(
-        _keyMeta,
-        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_keyMeta);
-    }
-    if (data.containsKey('value')) {
-      context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
-    }
-    if (data.containsKey('temp_id')) {
-      context.handle(
-        _tempIdMeta,
-        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
     }
-    if (data.containsKey('is_synced')) {
+    if (data.containsKey('type')) {
       context.handle(
-        _isSyncedMeta,
-        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url_value')) {
+      context.handle(
+        _urlValueMeta,
+        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
+      );
+    }
+    if (data.containsKey('email_value')) {
+      context.handle(
+        _emailValueMeta,
+        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
+    if (data.containsKey('wallet_provider_id')) {
+      context.handle(
+        _walletProviderIdMeta,
+        walletProviderId.isAcceptableOrUnknown(
+          data['wallet_provider_id']!,
+          _walletProviderIdMeta,
+        ),
       );
     }
     if (data.containsKey('created_at')) {
@@ -23655,10 +28455,6 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {providerId, key},
-  ];
-  @override
   WalletProviderMetadataData map(
     Map<String, dynamic> data, {
     String? tablePrefix,
@@ -23666,37 +28462,57 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WalletProviderMetadataData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
-      providerId: attachedDatabase.typeMapping.read(
+      name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}provider_id'],
-      )!,
-      key: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}key'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
-      tempId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}temp_id'],
+        data['${effectivePrefix}name'],
       ),
-      isSynced: attachedDatabase.typeMapping.read(
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
-        data['${effectivePrefix}is_synced'],
-      )!,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      urlValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_value'],
+      ),
+      emailValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
+      walletProviderId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wallet_provider_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      )!,
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      )!,
+      ),
     );
   }
 
@@ -23708,52 +28524,112 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
 
 class WalletProviderMetadataData extends DataClass
     implements Insertable<WalletProviderMetadataData> {
-  final int id;
-  final String providerId;
-  final String key;
-  final String value;
-  final String? tempId;
-  final bool isSynced;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String id;
+  final String? name;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? urlValue;
+  final String? emailValue;
+  final String? userId;
+  final String? walletProviderId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const WalletProviderMetadataData({
     required this.id,
-    required this.providerId,
-    required this.key,
-    required this.value,
-    this.tempId,
-    required this.isSynced,
-    required this.createdAt,
-    required this.updatedAt,
+    this.name,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.urlValue,
+    this.emailValue,
+    this.userId,
+    this.walletProviderId,
+    this.createdAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['provider_id'] = Variable<String>(providerId);
-    map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
-    if (!nullToAbsent || tempId != null) {
-      map['temp_id'] = Variable<String>(tempId);
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
     }
-    map['is_synced'] = Variable<bool>(isSynced);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || urlValue != null) {
+      map['url_value'] = Variable<String>(urlValue);
+    }
+    if (!nullToAbsent || emailValue != null) {
+      map['email_value'] = Variable<String>(emailValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || walletProviderId != null) {
+      map['wallet_provider_id'] = Variable<String>(walletProviderId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
   WalletProviderMetadataCompanion toCompanion(bool nullToAbsent) {
     return WalletProviderMetadataCompanion(
       id: Value(id),
-      providerId: Value(providerId),
-      key: Value(key),
-      value: Value(value),
-      tempId: tempId == null && nullToAbsent
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
           ? const Value.absent()
-          : Value(tempId),
-      isSynced: Value(isSynced),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      urlValue: urlValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlValue),
+      emailValue: emailValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      walletProviderId: walletProviderId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(walletProviderId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -23763,62 +28639,101 @@ class WalletProviderMetadataData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WalletProviderMetadataData(
-      id: serializer.fromJson<int>(json['id']),
-      providerId: serializer.fromJson<String>(json['providerId']),
-      key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
-      tempId: serializer.fromJson<String?>(json['tempId']),
-      isSynced: serializer.fromJson<bool>(json['isSynced']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String?>(json['name']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      urlValue: serializer.fromJson<String?>(json['urlValue']),
+      emailValue: serializer.fromJson<String?>(json['emailValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      walletProviderId: serializer.fromJson<String?>(json['walletProviderId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'providerId': serializer.toJson<String>(providerId),
-      'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
-      'tempId': serializer.toJson<String?>(tempId),
-      'isSynced': serializer.toJson<bool>(isSynced),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String?>(name),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'urlValue': serializer.toJson<String?>(urlValue),
+      'emailValue': serializer.toJson<String?>(emailValue),
+      'userId': serializer.toJson<String?>(userId),
+      'walletProviderId': serializer.toJson<String?>(walletProviderId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
   WalletProviderMetadataData copyWith({
-    int? id,
-    String? providerId,
-    String? key,
-    String? value,
-    Value<String?> tempId = const Value.absent(),
-    bool? isSynced,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    String? id,
+    Value<String?> name = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> urlValue = const Value.absent(),
+    Value<String?> emailValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> walletProviderId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => WalletProviderMetadataData(
     id: id ?? this.id,
-    providerId: providerId ?? this.providerId,
-    key: key ?? this.key,
-    value: value ?? this.value,
-    tempId: tempId.present ? tempId.value : this.tempId,
-    isSynced: isSynced ?? this.isSynced,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    name: name.present ? name.value : this.name,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    urlValue: urlValue.present ? urlValue.value : this.urlValue,
+    emailValue: emailValue.present ? emailValue.value : this.emailValue,
+    userId: userId.present ? userId.value : this.userId,
+    walletProviderId: walletProviderId.present
+        ? walletProviderId.value
+        : this.walletProviderId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   WalletProviderMetadataData copyWithCompanion(
     WalletProviderMetadataCompanion data,
   ) {
     return WalletProviderMetadataData(
       id: data.id.present ? data.id.value : this.id,
-      providerId: data.providerId.present
-          ? data.providerId.value
-          : this.providerId,
-      key: data.key.present ? data.key.value : this.key,
-      value: data.value.present ? data.value.value : this.value,
-      tempId: data.tempId.present ? data.tempId.value : this.tempId,
-      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
+      emailValue: data.emailValue.present
+          ? data.emailValue.value
+          : this.emailValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      walletProviderId: data.walletProviderId.present
+          ? data.walletProviderId.value
+          : this.walletProviderId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -23828,11 +28743,16 @@ class WalletProviderMetadataData extends DataClass
   String toString() {
     return (StringBuffer('WalletProviderMetadataData(')
           ..write('id: $id, ')
-          ..write('providerId: $providerId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('tempId: $tempId, ')
-          ..write('isSynced: $isSynced, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
+          ..write('walletProviderId: $walletProviderId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -23842,11 +28762,16 @@ class WalletProviderMetadataData extends DataClass
   @override
   int get hashCode => Object.hash(
     id,
-    providerId,
-    key,
-    value,
-    tempId,
-    isSynced,
+    name,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    urlValue,
+    emailValue,
+    userId,
+    walletProviderId,
     createdAt,
     updatedAt,
   );
@@ -23855,88 +28780,133 @@ class WalletProviderMetadataData extends DataClass
       identical(this, other) ||
       (other is WalletProviderMetadataData &&
           other.id == this.id &&
-          other.providerId == this.providerId &&
-          other.key == this.key &&
-          other.value == this.value &&
-          other.tempId == this.tempId &&
-          other.isSynced == this.isSynced &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.urlValue == this.urlValue &&
+          other.emailValue == this.emailValue &&
+          other.userId == this.userId &&
+          other.walletProviderId == this.walletProviderId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
 class WalletProviderMetadataCompanion
     extends UpdateCompanion<WalletProviderMetadataData> {
-  final Value<int> id;
-  final Value<String> providerId;
-  final Value<String> key;
-  final Value<String> value;
-  final Value<String?> tempId;
-  final Value<bool> isSynced;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
+  final Value<String> id;
+  final Value<String?> name;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> urlValue;
+  final Value<String?> emailValue;
+  final Value<String?> userId;
+  final Value<String?> walletProviderId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<int> rowid;
   const WalletProviderMetadataCompanion({
     this.id = const Value.absent(),
-    this.providerId = const Value.absent(),
-    this.key = const Value.absent(),
-    this.value = const Value.absent(),
-    this.tempId = const Value.absent(),
-    this.isSynced = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.walletProviderId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   WalletProviderMetadataCompanion.insert({
-    this.id = const Value.absent(),
-    required String providerId,
-    required String key,
-    required String value,
-    this.tempId = const Value.absent(),
-    this.isSynced = const Value.absent(),
+    required String id,
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.urlValue = const Value.absent(),
+    this.emailValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.walletProviderId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : providerId = Value(providerId),
-       key = Value(key),
-       value = Value(value);
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
   static Insertable<WalletProviderMetadataData> custom({
-    Expression<int>? id,
-    Expression<String>? providerId,
-    Expression<String>? key,
-    Expression<String>? value,
-    Expression<String>? tempId,
-    Expression<bool>? isSynced,
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? urlValue,
+    Expression<String>? emailValue,
+    Expression<String>? userId,
+    Expression<String>? walletProviderId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (providerId != null) 'provider_id': providerId,
-      if (key != null) 'key': key,
-      if (value != null) 'value': value,
-      if (tempId != null) 'temp_id': tempId,
-      if (isSynced != null) 'is_synced': isSynced,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (urlValue != null) 'url_value': urlValue,
+      if (emailValue != null) 'email_value': emailValue,
+      if (userId != null) 'user_id': userId,
+      if (walletProviderId != null) 'wallet_provider_id': walletProviderId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   WalletProviderMetadataCompanion copyWith({
-    Value<int>? id,
-    Value<String>? providerId,
-    Value<String>? key,
-    Value<String>? value,
-    Value<String?>? tempId,
-    Value<bool>? isSynced,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
+    Value<String>? id,
+    Value<String?>? name,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? urlValue,
+    Value<String?>? emailValue,
+    Value<String?>? userId,
+    Value<String?>? walletProviderId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<int>? rowid,
   }) {
     return WalletProviderMetadataCompanion(
       id: id ?? this.id,
-      providerId: providerId ?? this.providerId,
-      key: key ?? this.key,
-      value: value ?? this.value,
-      tempId: tempId ?? this.tempId,
-      isSynced: isSynced ?? this.isSynced,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      userId: userId ?? this.userId,
+      walletProviderId: walletProviderId ?? this.walletProviderId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -23944,28 +28914,46 @@ class WalletProviderMetadataCompanion
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
-    if (providerId.present) {
-      map['provider_id'] = Variable<String>(providerId.value);
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
     }
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
     }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
     }
-    if (tempId.present) {
-      map['temp_id'] = Variable<String>(tempId.value);
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
     }
-    if (isSynced.present) {
-      map['is_synced'] = Variable<bool>(isSynced.value);
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (urlValue.present) {
+      map['url_value'] = Variable<String>(urlValue.value);
+    }
+    if (emailValue.present) {
+      map['email_value'] = Variable<String>(emailValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (walletProviderId.present) {
+      map['wallet_provider_id'] = Variable<String>(walletProviderId.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -23974,13 +28962,19 @@ class WalletProviderMetadataCompanion
   String toString() {
     return (StringBuffer('WalletProviderMetadataCompanion(')
           ..write('id: $id, ')
-          ..write('providerId: $providerId, ')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('tempId: $tempId, ')
-          ..write('isSynced: $isSynced, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('urlValue: $urlValue, ')
+          ..write('emailValue: $emailValue, ')
+          ..write('userId: $userId, ')
+          ..write('walletProviderId: $walletProviderId, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -23989,6 +28983,7 @@ class WalletProviderMetadataCompanion
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $UsersTable users = $UsersTable(this);
   late final $CurrenciesTable currencies = $CurrenciesTable(this);
   late final $WalletProvidersTable walletProviders = $WalletProvidersTable(
     this,
@@ -24007,6 +29002,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $InvestmentsTable investments = $InvestmentsTable(this);
   late final $GoalsTable goals = $GoalsTable(this);
+  late final $BudgetsTable budgets = $BudgetsTable(this);
   late final $RemindersTable reminders = $RemindersTable(this);
   late final $ExpensesTable expenses = $ExpensesTable(this);
   late final $PaymentsTable payments = $PaymentsTable(this);
@@ -24024,7 +29020,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $TagsTable tags = $TagsTable(this);
   late final $ContactInfoTable contactInfo = $ContactInfoTable(this);
   late final $WalletMetadataTable walletMetadata = $WalletMetadataTable(this);
-  late final $BudgetsTable budgets = $BudgetsTable(this);
+  late final $BudgetMetadataTable budgetMetadata = $BudgetMetadataTable(this);
   late final $GoalMetadataTable goalMetadata = $GoalMetadataTable(this);
   late final $GoalContributionTable goalContribution = $GoalContributionTable(
     this,
@@ -24042,6 +29038,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+    users,
     currencies,
     walletProviders,
     wallets,
@@ -24054,6 +29051,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     investmentTypes,
     investments,
     goals,
+    budgets,
     reminders,
     expenses,
     payments,
@@ -24068,7 +29066,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     tags,
     contactInfo,
     walletMetadata,
-    budgets,
+    budgetMetadata,
     goalMetadata,
     goalContribution,
     investmentMetadata,
@@ -24122,13 +29120,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'contacts',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('contact_info', kind: UpdateKind.delete)],
-    ),
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
         'investments',
         limitUpdateKind: UpdateKind.delete,
       ),
@@ -24137,6 +29128,258 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   ]);
 }
 
+typedef $$UsersTableCreateCompanionBuilder =
+    UsersCompanion Function({
+      required String id,
+      Value<String?> email,
+      Value<bool?> emailVisibility,
+      Value<bool?> verified,
+      Value<String?> name,
+      Value<String?> avatar,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$UsersTableUpdateCompanionBuilder =
+    UsersCompanion Function({
+      Value<String> id,
+      Value<String?> email,
+      Value<bool?> emailVisibility,
+      Value<bool?> verified,
+      Value<String?> name,
+      Value<String?> avatar,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get emailVisibility => $composableBuilder(
+    column: $table.emailVisibility,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get verified => $composableBuilder(
+    column: $table.verified,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatar => $composableBuilder(
+    column: $table.avatar,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UsersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get emailVisibility => $composableBuilder(
+    column: $table.emailVisibility,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get verified => $composableBuilder(
+    column: $table.verified,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatar => $composableBuilder(
+    column: $table.avatar,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UsersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<bool> get emailVisibility => $composableBuilder(
+    column: $table.emailVisibility,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get verified =>
+      $composableBuilder(column: $table.verified, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get avatar =>
+      $composableBuilder(column: $table.avatar, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$UsersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UsersTable,
+          User,
+          $$UsersTableFilterComposer,
+          $$UsersTableOrderingComposer,
+          $$UsersTableAnnotationComposer,
+          $$UsersTableCreateCompanionBuilder,
+          $$UsersTableUpdateCompanionBuilder,
+          (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+          User,
+          PrefetchHooks Function()
+        > {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<bool?> emailVisibility = const Value.absent(),
+                Value<bool?> verified = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> avatar = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UsersCompanion(
+                id: id,
+                email: email,
+                emailVisibility: emailVisibility,
+                verified: verified,
+                name: name,
+                avatar: avatar,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<String?> email = const Value.absent(),
+                Value<bool?> emailVisibility = const Value.absent(),
+                Value<bool?> verified = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> avatar = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UsersCompanion.insert(
+                id: id,
+                email: email,
+                emailVisibility: emailVisibility,
+                verified: verified,
+                name: name,
+                avatar: avatar,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UsersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UsersTable,
+      User,
+      $$UsersTableFilterComposer,
+      $$UsersTableOrderingComposer,
+      $$UsersTableAnnotationComposer,
+      $$UsersTableCreateCompanionBuilder,
+      $$UsersTableUpdateCompanionBuilder,
+      (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+      User,
+      PrefetchHooks Function()
+    >;
 typedef $$CurrenciesTableCreateCompanionBuilder =
     CurrenciesCompanion Function({
       required String id,
@@ -24149,6 +29392,9 @@ typedef $$CurrenciesTableCreateCompanionBuilder =
       Value<bool> isActive,
       required String tempId,
       Value<String?> userId,
+      Value<bool?> isSynced,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
       Value<int> rowid,
     });
 typedef $$CurrenciesTableUpdateCompanionBuilder =
@@ -24163,6 +29409,9 @@ typedef $$CurrenciesTableUpdateCompanionBuilder =
       Value<bool> isActive,
       Value<String> tempId,
       Value<String?> userId,
+      Value<bool?> isSynced,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
       Value<int> rowid,
     });
 
@@ -24202,6 +29451,44 @@ final class $$CurrenciesTableReferences
     ).filter((f) => f.currency.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_investmentsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$GoalsTable, List<Goal>> _goalsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.goals,
+    aliasName: $_aliasNameGenerator(db.currencies.id, db.goals.currencyId),
+  );
+
+  $$GoalsTableProcessedTableManager get goalsRefs {
+    final manager = $$GoalsTableTableManager(
+      $_db,
+      $_db.goals,
+    ).filter((f) => f.currencyId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_goalsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.budgets,
+    aliasName: $_aliasNameGenerator(db.currencies.id, db.budgets.currency),
+  );
+
+  $$BudgetsTableProcessedTableManager get budgetsRefs {
+    final manager = $$BudgetsTableTableManager(
+      $_db,
+      $_db.budgets,
+    ).filter((f) => f.currency.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -24259,25 +29546,6 @@ final class $$CurrenciesTableReferences
     ).filter((f) => f.currency.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_incomeRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.budgets,
-    aliasName: $_aliasNameGenerator(db.currencies.id, db.budgets.currency),
-  );
-
-  $$BudgetsTableProcessedTableManager get budgetsRefs {
-    final manager = $$BudgetsTableTableManager(
-      $_db,
-      $_db.budgets,
-    ).filter((f) => f.currency.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -24343,6 +29611,21 @@ class $$CurrenciesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> walletsRefs(
     Expression<bool> Function($$WalletsTableFilterComposer f) f,
   ) {
@@ -24384,6 +29667,56 @@ class $$CurrenciesTableFilterComposer
           }) => $$InvestmentsTableFilterComposer(
             $db: $db,
             $table: $db.investments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> goalsRefs(
+    Expression<bool> Function($$GoalsTableFilterComposer f) f,
+  ) {
+    final $$GoalsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.goals,
+      getReferencedColumn: (t) => t.currencyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableFilterComposer(
+            $db: $db,
+            $table: $db.goals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> budgetsRefs(
+    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
+  ) {
+    final $$BudgetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.currency,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -24467,31 +29800,6 @@ class $$CurrenciesTableFilterComposer
     );
     return f(composer);
   }
-
-  Expression<bool> budgetsRefs(
-    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
-  ) {
-    final $$BudgetsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.budgets,
-      getReferencedColumn: (t) => t.currency,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetsTableFilterComposer(
-            $db: $db,
-            $table: $db.budgets,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$CurrenciesTableOrderingComposer
@@ -24552,6 +29860,21 @@ class $$CurrenciesTableOrderingComposer
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CurrenciesTableAnnotationComposer
@@ -24595,6 +29918,15 @@ class $$CurrenciesTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get created =>
+      $composableBuilder(column: $table.created, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updated =>
+      $composableBuilder(column: $table.updated, builder: (column) => column);
+
   Expression<T> walletsRefs<T extends Object>(
     Expression<T> Function($$WalletsTableAnnotationComposer a) f,
   ) {
@@ -24636,6 +29968,56 @@ class $$CurrenciesTableAnnotationComposer
           }) => $$InvestmentsTableAnnotationComposer(
             $db: $db,
             $table: $db.investments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> goalsRefs<T extends Object>(
+    Expression<T> Function($$GoalsTableAnnotationComposer a) f,
+  ) {
+    final $$GoalsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.goals,
+      getReferencedColumn: (t) => t.currencyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.goals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> budgetsRefs<T extends Object>(
+    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
+  ) {
+    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.currency,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -24719,31 +30101,6 @@ class $$CurrenciesTableAnnotationComposer
     );
     return f(composer);
   }
-
-  Expression<T> budgetsRefs<T extends Object>(
-    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
-  ) {
-    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.budgets,
-      getReferencedColumn: (t) => t.currency,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.budgets,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$CurrenciesTableTableManager
@@ -24762,10 +30119,11 @@ class $$CurrenciesTableTableManager
           PrefetchHooks Function({
             bool walletsRefs,
             bool investmentsRefs,
+            bool goalsRefs,
+            bool budgetsRefs,
             bool expensesRefs,
             bool paymentsRefs,
             bool incomeRefs,
-            bool budgetsRefs,
           })
         > {
   $$CurrenciesTableTableManager(_$AppDatabase db, $CurrenciesTable table)
@@ -24791,6 +30149,9 @@ class $$CurrenciesTableTableManager
                 Value<bool> isActive = const Value.absent(),
                 Value<String> tempId = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
+                Value<bool?> isSynced = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CurrenciesCompanion(
                 id: id,
@@ -24803,6 +30164,9 @@ class $$CurrenciesTableTableManager
                 isActive: isActive,
                 tempId: tempId,
                 userId: userId,
+                isSynced: isSynced,
+                created: created,
+                updated: updated,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -24817,6 +30181,9 @@ class $$CurrenciesTableTableManager
                 Value<bool> isActive = const Value.absent(),
                 required String tempId,
                 Value<String?> userId = const Value.absent(),
+                Value<bool?> isSynced = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CurrenciesCompanion.insert(
                 id: id,
@@ -24829,6 +30196,9 @@ class $$CurrenciesTableTableManager
                 isActive: isActive,
                 tempId: tempId,
                 userId: userId,
+                isSynced: isSynced,
+                created: created,
+                updated: updated,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -24843,20 +30213,22 @@ class $$CurrenciesTableTableManager
               ({
                 walletsRefs = false,
                 investmentsRefs = false,
+                goalsRefs = false,
+                budgetsRefs = false,
                 expensesRefs = false,
                 paymentsRefs = false,
                 incomeRefs = false,
-                budgetsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (walletsRefs) db.wallets,
                     if (investmentsRefs) db.investments,
+                    if (goalsRefs) db.goals,
+                    if (budgetsRefs) db.budgets,
                     if (expensesRefs) db.expenses,
                     if (paymentsRefs) db.payments,
                     if (incomeRefs) db.income,
-                    if (budgetsRefs) db.budgets,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -24897,6 +30269,48 @@ class $$CurrenciesTableTableManager
                                 table,
                                 p0,
                               ).investmentsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.currency == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (goalsRefs)
+                        await $_getPrefetchedData<
+                          Currency,
+                          $CurrenciesTable,
+                          Goal
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CurrenciesTableReferences
+                              ._goalsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CurrenciesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).goalsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.currencyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (budgetsRefs)
+                        await $_getPrefetchedData<
+                          Currency,
+                          $CurrenciesTable,
+                          Budget
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CurrenciesTableReferences
+                              ._budgetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CurrenciesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).budgetsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.currency == item.id,
@@ -24966,27 +30380,6 @@ class $$CurrenciesTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (budgetsRefs)
-                        await $_getPrefetchedData<
-                          Currency,
-                          $CurrenciesTable,
-                          Budget
-                        >(
-                          currentTable: table,
-                          referencedTable: $$CurrenciesTableReferences
-                              ._budgetsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$CurrenciesTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).budgetsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.currency == item.id,
-                              ),
-                          typedResults: items,
-                        ),
                     ];
                   },
                 );
@@ -25010,10 +30403,11 @@ typedef $$CurrenciesTableProcessedTableManager =
       PrefetchHooks Function({
         bool walletsRefs,
         bool investmentsRefs,
+        bool goalsRefs,
+        bool budgetsRefs,
         bool expensesRefs,
         bool paymentsRefs,
         bool incomeRefs,
-        bool budgetsRefs,
       })
     >;
 typedef $$WalletProvidersTableCreateCompanionBuilder =
@@ -25091,6 +30485,37 @@ final class $$WalletProvidersTableReferences
     ).filter((f) => f.providerId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_walletsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletProviderMetadataTable,
+    List<WalletProviderMetadataData>
+  >
+  _walletProviderMetadataRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletProviderMetadata,
+        aliasName: $_aliasNameGenerator(
+          db.walletProviders.id,
+          db.walletProviderMetadata.walletProviderId,
+        ),
+      );
+
+  $$WalletProviderMetadataTableProcessedTableManager
+  get walletProviderMetadataRefs {
+    final manager =
+        $$WalletProviderMetadataTableTableManager(
+          $_db,
+          $_db.walletProviderMetadata,
+        ).filter(
+          (f) => f.walletProviderId.id.sqlEquals($_itemColumn<String>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletProviderMetadataRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -25228,6 +30653,32 @@ class $$WalletProvidersTableFilterComposer
                 $removeJoinBuilderFromRootComposer,
           ),
     );
+    return f(composer);
+  }
+
+  Expression<bool> walletProviderMetadataRefs(
+    Expression<bool> Function($$WalletProviderMetadataTableFilterComposer f) f,
+  ) {
+    final $$WalletProviderMetadataTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletProviderMetadata,
+          getReferencedColumn: (t) => t.walletProviderId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletProviderMetadataTableFilterComposer(
+                $db: $db,
+                $table: $db.walletProviderMetadata,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
@@ -25449,6 +30900,32 @@ class $$WalletProvidersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> walletProviderMetadataRefs<T extends Object>(
+    Expression<T> Function($$WalletProviderMetadataTableAnnotationComposer a) f,
+  ) {
+    final $$WalletProviderMetadataTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletProviderMetadata,
+          getReferencedColumn: (t) => t.walletProviderId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletProviderMetadataTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletProviderMetadata,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WalletProvidersTableTableManager
@@ -25464,7 +30941,10 @@ class $$WalletProvidersTableTableManager
           $$WalletProvidersTableUpdateCompanionBuilder,
           (WalletProvider, $$WalletProvidersTableReferences),
           WalletProvider,
-          PrefetchHooks Function({bool walletsRefs})
+          PrefetchHooks Function({
+            bool walletsRefs,
+            bool walletProviderMetadataRefs,
+          })
         > {
   $$WalletProvidersTableTableManager(
     _$AppDatabase db,
@@ -25579,36 +31059,63 @@ class $$WalletProvidersTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({walletsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (walletsRefs) db.wallets],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (walletsRefs)
-                    await $_getPrefetchedData<
-                      WalletProvider,
-                      $WalletProvidersTable,
-                      Wallet
-                    >(
-                      currentTable: table,
-                      referencedTable: $$WalletProvidersTableReferences
-                          ._walletsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$WalletProvidersTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).walletsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.providerId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({walletsRefs = false, walletProviderMetadataRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletsRefs) db.wallets,
+                    if (walletProviderMetadataRefs) db.walletProviderMetadata,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletsRefs)
+                        await $_getPrefetchedData<
+                          WalletProvider,
+                          $WalletProvidersTable,
+                          Wallet
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletProvidersTableReferences
+                              ._walletsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletProvidersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.providerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletProviderMetadataRefs)
+                        await $_getPrefetchedData<
+                          WalletProvider,
+                          $WalletProvidersTable,
+                          WalletProviderMetadataData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletProvidersTableReferences
+                              ._walletProviderMetadataRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletProvidersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletProviderMetadataRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletProviderId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -25625,7 +31132,10 @@ typedef $$WalletProvidersTableProcessedTableManager =
       $$WalletProvidersTableUpdateCompanionBuilder,
       (WalletProvider, $$WalletProvidersTableReferences),
       WalletProvider,
-      PrefetchHooks Function({bool walletsRefs})
+      PrefetchHooks Function({
+        bool walletsRefs,
+        bool walletProviderMetadataRefs,
+      })
     >;
 typedef $$WalletsTableCreateCompanionBuilder =
     WalletsCompanion Function({
@@ -25644,6 +31154,7 @@ typedef $$WalletsTableCreateCompanionBuilder =
       required String name,
       Value<String?> tempId,
       required String userId,
+      Value<String?> projectId,
       Value<bool> isSynced,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -25666,6 +31177,7 @@ typedef $$WalletsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String?> tempId,
       Value<String> userId,
+      Value<String?> projectId,
       Value<bool> isSynced,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -25768,6 +31280,24 @@ final class $$WalletsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$WalletMetadataTable, List<WalletMetadataData>>
+  _walletMetadataRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletMetadata,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.walletMetadata.walletId),
+  );
+
+  $$WalletMetadataTableProcessedTableManager get walletMetadataRefs {
+    final manager = $$WalletMetadataTableTableManager(
+      $_db,
+      $_db.walletMetadata,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_walletMetadataRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$WalletsTableFilterComposer
@@ -25841,6 +31371,11 @@ class $$WalletsTableFilterComposer
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get projectId => $composableBuilder(
+    column: $table.projectId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25979,6 +31514,31 @@ class $$WalletsTableFilterComposer
     );
     return f(composer);
   }
+
+  Expression<bool> walletMetadataRefs(
+    Expression<bool> Function($$WalletMetadataTableFilterComposer f) f,
+  ) {
+    final $$WalletMetadataTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMetadata,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMetadataTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$WalletsTableOrderingComposer
@@ -26052,6 +31612,11 @@ class $$WalletsTableOrderingComposer
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get projectId => $composableBuilder(
+    column: $table.projectId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -26170,6 +31735,9 @@ class $$WalletsTableAnnotationComposer
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get projectId =>
+      $composableBuilder(column: $table.projectId, builder: (column) => column);
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
@@ -26300,6 +31868,31 @@ class $$WalletsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> walletMetadataRefs<T extends Object>(
+    Expression<T> Function($$WalletMetadataTableAnnotationComposer a) f,
+  ) {
+    final $$WalletMetadataTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMetadata,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMetadataTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$WalletsTableTableManager
@@ -26321,6 +31914,7 @@ class $$WalletsTableTableManager
             bool projectsRefs,
             bool expensesRefs,
             bool incomeRefs,
+            bool walletMetadataRefs,
           })
         > {
   $$WalletsTableTableManager(_$AppDatabase db, $WalletsTable table)
@@ -26351,6 +31945,7 @@ class $$WalletsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<String?> projectId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -26371,6 +31966,7 @@ class $$WalletsTableTableManager
                 name: name,
                 tempId: tempId,
                 userId: userId,
+                projectId: projectId,
                 isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -26393,6 +31989,7 @@ class $$WalletsTableTableManager
                 required String name,
                 Value<String?> tempId = const Value.absent(),
                 required String userId,
+                Value<String?> projectId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -26413,6 +32010,7 @@ class $$WalletsTableTableManager
                 name: name,
                 tempId: tempId,
                 userId: userId,
+                projectId: projectId,
                 isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -26433,6 +32031,7 @@ class $$WalletsTableTableManager
                 projectsRefs = false,
                 expensesRefs = false,
                 incomeRefs = false,
+                walletMetadataRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -26440,6 +32039,7 @@ class $$WalletsTableTableManager
                     if (projectsRefs) db.projects,
                     if (expensesRefs) db.expenses,
                     if (incomeRefs) db.income,
+                    if (walletMetadataRefs) db.walletMetadata,
                   ],
                   addJoins:
                       <
@@ -26551,6 +32151,27 @@ class $$WalletsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (walletMetadataRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletMetadataData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletMetadataRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletMetadataRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -26577,6 +32198,7 @@ typedef $$WalletsTableProcessedTableManager =
         bool projectsRefs,
         bool expensesRefs,
         bool incomeRefs,
+        bool walletMetadataRefs,
       })
     >;
 typedef $$ProjectsTableCreateCompanionBuilder =
@@ -26642,6 +32264,48 @@ final class $$ProjectsTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$ProjectMetadataTable, List<ProjectMetadataData>>
+  _projectMetadataRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.projectMetadata,
+    aliasName: $_aliasNameGenerator(
+      db.projects.id,
+      db.projectMetadata.projectId,
+    ),
+  );
+
+  $$ProjectMetadataTableProcessedTableManager get projectMetadataRefs {
+    final manager = $$ProjectMetadataTableTableManager(
+      $_db,
+      $_db.projectMetadata,
+    ).filter((f) => f.projectId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _projectMetadataRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.budgets,
+    aliasName: $_aliasNameGenerator(db.projects.id, db.budgets.projectId),
+  );
+
+  $$BudgetsTableProcessedTableManager get budgetsRefs {
+    final manager = $$BudgetsTableTableManager(
+      $_db,
+      $_db.budgets,
+    ).filter((f) => f.projectId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
@@ -26714,25 +32378,6 @@ final class $$ProjectsTableReferences
     ).filter((f) => f.projectId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_shoppingListsRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.budgets,
-    aliasName: $_aliasNameGenerator(db.projects.id, db.budgets.projectId),
-  );
-
-  $$BudgetsTableProcessedTableManager get budgetsRefs {
-    final manager = $$BudgetsTableTableManager(
-      $_db,
-      $_db.budgets,
-    ).filter((f) => f.projectId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -26851,6 +32496,56 @@ class $$ProjectsTableFilterComposer
     return composer;
   }
 
+  Expression<bool> projectMetadataRefs(
+    Expression<bool> Function($$ProjectMetadataTableFilterComposer f) f,
+  ) {
+    final $$ProjectMetadataTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.projectMetadata,
+      getReferencedColumn: (t) => t.projectId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectMetadataTableFilterComposer(
+            $db: $db,
+            $table: $db.projectMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> budgetsRefs(
+    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
+  ) {
+    final $$BudgetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.projectId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<bool> expensesRefs(
     Expression<bool> Function($$ExpensesTableFilterComposer f) f,
   ) {
@@ -26942,31 +32637,6 @@ class $$ProjectsTableFilterComposer
           }) => $$ShoppingListsTableFilterComposer(
             $db: $db,
             $table: $db.shoppingLists,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> budgetsRefs(
-    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
-  ) {
-    final $$BudgetsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.budgets,
-      getReferencedColumn: (t) => t.projectId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetsTableFilterComposer(
-            $db: $db,
-            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -27178,6 +32848,56 @@ class $$ProjectsTableAnnotationComposer
     return composer;
   }
 
+  Expression<T> projectMetadataRefs<T extends Object>(
+    Expression<T> Function($$ProjectMetadataTableAnnotationComposer a) f,
+  ) {
+    final $$ProjectMetadataTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.projectMetadata,
+      getReferencedColumn: (t) => t.projectId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectMetadataTableAnnotationComposer(
+            $db: $db,
+            $table: $db.projectMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> budgetsRefs<T extends Object>(
+    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
+  ) {
+    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.projectId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> expensesRefs<T extends Object>(
     Expression<T> Function($$ExpensesTableAnnotationComposer a) f,
   ) {
@@ -27277,31 +32997,6 @@ class $$ProjectsTableAnnotationComposer
     );
     return f(composer);
   }
-
-  Expression<T> budgetsRefs<T extends Object>(
-    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
-  ) {
-    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.budgets,
-      getReferencedColumn: (t) => t.projectId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.budgets,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$ProjectsTableTableManager
@@ -27319,11 +33014,12 @@ class $$ProjectsTableTableManager
           Project,
           PrefetchHooks Function({
             bool defaultWallet,
+            bool projectMetadataRefs,
+            bool budgetsRefs,
             bool expensesRefs,
             bool incomeRefs,
             bool todoItemsRefs,
             bool shoppingListsRefs,
-            bool budgetsRefs,
           })
         > {
   $$ProjectsTableTableManager(_$AppDatabase db, $ProjectsTable table)
@@ -27428,20 +33124,22 @@ class $$ProjectsTableTableManager
           prefetchHooksCallback:
               ({
                 defaultWallet = false,
+                projectMetadataRefs = false,
+                budgetsRefs = false,
                 expensesRefs = false,
                 incomeRefs = false,
                 todoItemsRefs = false,
                 shoppingListsRefs = false,
-                budgetsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (projectMetadataRefs) db.projectMetadata,
+                    if (budgetsRefs) db.budgets,
                     if (expensesRefs) db.expenses,
                     if (incomeRefs) db.income,
                     if (todoItemsRefs) db.todoItems,
                     if (shoppingListsRefs) db.shoppingLists,
-                    if (budgetsRefs) db.budgets,
                   ],
                   addJoins:
                       <
@@ -27477,6 +33175,48 @@ class $$ProjectsTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (projectMetadataRefs)
+                        await $_getPrefetchedData<
+                          Project,
+                          $ProjectsTable,
+                          ProjectMetadataData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProjectsTableReferences
+                              ._projectMetadataRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProjectsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).projectMetadataRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.projectId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (budgetsRefs)
+                        await $_getPrefetchedData<
+                          Project,
+                          $ProjectsTable,
+                          Budget
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProjectsTableReferences
+                              ._budgetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProjectsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).budgetsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.projectId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (expensesRefs)
                         await $_getPrefetchedData<
                           Project,
@@ -27561,27 +33301,6 @@ class $$ProjectsTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (budgetsRefs)
-                        await $_getPrefetchedData<
-                          Project,
-                          $ProjectsTable,
-                          Budget
-                        >(
-                          currentTable: table,
-                          referencedTable: $$ProjectsTableReferences
-                              ._budgetsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$ProjectsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).budgetsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.projectId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
                     ];
                   },
                 );
@@ -27604,27 +33323,81 @@ typedef $$ProjectsTableProcessedTableManager =
       Project,
       PrefetchHooks Function({
         bool defaultWallet,
+        bool projectMetadataRefs,
+        bool budgetsRefs,
         bool expensesRefs,
         bool incomeRefs,
         bool todoItemsRefs,
         bool shoppingListsRefs,
-        bool budgetsRefs,
       })
     >;
 typedef $$ProjectMetadataTableCreateCompanionBuilder =
     ProjectMetadataCompanion Function({
-      Value<int> id,
-      required String projectId,
-      required String key,
-      required String value,
+      required String id,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> projectId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
     });
 typedef $$ProjectMetadataTableUpdateCompanionBuilder =
     ProjectMetadataCompanion Function({
-      Value<int> id,
-      Value<String> projectId,
-      Value<String> key,
-      Value<String> value,
+      Value<String> id,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> projectId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
     });
+
+final class $$ProjectMetadataTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $ProjectMetadataTable,
+          ProjectMetadataData
+        > {
+  $$ProjectMetadataTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProjectsTable _projectIdTable(_$AppDatabase db) =>
+      db.projects.createAlias(
+        $_aliasNameGenerator(db.projectMetadata.projectId, db.projects.id),
+      );
+
+  $$ProjectsTableProcessedTableManager? get projectId {
+    final $_column = $_itemColumn<String>('project_id');
+    if ($_column == null) return null;
+    final manager = $$ProjectsTableTableManager(
+      $_db,
+      $_db.projects,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_projectIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$ProjectMetadataTableFilterComposer
     extends Composer<_$AppDatabase, $ProjectMetadataTable> {
@@ -27635,25 +33408,88 @@ class $$ProjectMetadataTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get projectId => $composableBuilder(
-    column: $table.projectId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProjectsTableFilterComposer get projectId {
+    final $$ProjectsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableFilterComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ProjectMetadataTableOrderingComposer
@@ -27665,25 +33501,88 @@ class $$ProjectMetadataTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get projectId => $composableBuilder(
-    column: $table.projectId,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProjectsTableOrderingComposer get projectId {
+    final $$ProjectsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableOrderingComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ProjectMetadataTableAnnotationComposer
@@ -27695,17 +33594,74 @@ class $$ProjectMetadataTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get projectId =>
-      $composableBuilder(column: $table.projectId, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get key =>
-      $composableBuilder(column: $table.key, builder: (column) => column);
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$ProjectsTableAnnotationComposer get projectId {
+    final $$ProjectsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ProjectMetadataTableTableManager
@@ -27719,16 +33675,9 @@ class $$ProjectMetadataTableTableManager
           $$ProjectMetadataTableAnnotationComposer,
           $$ProjectMetadataTableCreateCompanionBuilder,
           $$ProjectMetadataTableUpdateCompanionBuilder,
-          (
-            ProjectMetadataData,
-            BaseReferences<
-              _$AppDatabase,
-              $ProjectMetadataTable,
-              ProjectMetadataData
-            >,
-          ),
+          (ProjectMetadataData, $$ProjectMetadataTableReferences),
           ProjectMetadataData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool projectId})
         > {
   $$ProjectMetadataTableTableManager(
     _$AppDatabase db,
@@ -27745,32 +33694,119 @@ class $$ProjectMetadataTableTableManager
               $$ProjectMetadataTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                Value<String> projectId = const Value.absent(),
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> projectId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => ProjectMetadataCompanion(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 projectId: projectId,
-                key: key,
-                value: value,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                required String projectId,
-                required String key,
-                required String value,
+                required String id,
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> projectId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => ProjectMetadataCompanion.insert(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 projectId: projectId,
-                key: key,
-                value: value,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProjectMetadataTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({projectId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (projectId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.projectId,
+                                referencedTable:
+                                    $$ProjectMetadataTableReferences
+                                        ._projectIdTable(db),
+                                referencedColumn:
+                                    $$ProjectMetadataTableReferences
+                                        ._projectIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -27785,16 +33821,9 @@ typedef $$ProjectMetadataTableProcessedTableManager =
       $$ProjectMetadataTableAnnotationComposer,
       $$ProjectMetadataTableCreateCompanionBuilder,
       $$ProjectMetadataTableUpdateCompanionBuilder,
-      (
-        ProjectMetadataData,
-        BaseReferences<
-          _$AppDatabase,
-          $ProjectMetadataTable,
-          ProjectMetadataData
-        >,
-      ),
+      (ProjectMetadataData, $$ProjectMetadataTableReferences),
       ProjectMetadataData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool projectId})
     >;
 typedef $$CategoryGroupsTableCreateCompanionBuilder =
     CategoryGroupsCompanion Function({
@@ -27802,6 +33831,7 @@ typedef $$CategoryGroupsTableCreateCompanionBuilder =
       required String name,
       Value<String?> tempId,
       Value<bool> isSynced,
+      Value<String?> userId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -27812,6 +33842,7 @@ typedef $$CategoryGroupsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String?> tempId,
       Value<bool> isSynced,
+      Value<String?> userId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -27872,6 +33903,11 @@ class $$CategoryGroupsTableFilterComposer
 
   ColumnFilters<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -27940,6 +33976,11 @@ class $$CategoryGroupsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -27971,6 +34012,9 @@ class $$CategoryGroupsTableAnnotationComposer
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -28038,6 +34082,7 @@ class $$CategoryGroupsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -28046,6 +34091,7 @@ class $$CategoryGroupsTableTableManager
                 name: name,
                 tempId: tempId,
                 isSynced: isSynced,
+                userId: userId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -28056,6 +34102,7 @@ class $$CategoryGroupsTableTableManager
                 required String name,
                 Value<String?> tempId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -28064,6 +34111,7 @@ class $$CategoryGroupsTableTableManager
                 name: name,
                 tempId: tempId,
                 isSynced: isSynced,
+                userId: userId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -28138,6 +34186,7 @@ typedef $$CategoriesTableCreateCompanionBuilder =
       required String categoryGroupId,
       Value<bool> isSynced,
       Value<String?> tempId,
+      Value<String?> userId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -28154,6 +34203,7 @@ typedef $$CategoriesTableUpdateCompanionBuilder =
       Value<String> categoryGroupId,
       Value<bool> isSynced,
       Value<String?> tempId,
+      Value<String?> userId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -28204,6 +34254,25 @@ final class $$CategoriesTableReferences
     );
   }
 
+  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.budgets,
+    aliasName: $_aliasNameGenerator(db.categories.id, db.budgets.categoryId),
+  );
+
+  $$BudgetsTableProcessedTableManager get budgetsRefs {
+    final manager = $$BudgetsTableTableManager(
+      $_db,
+      $_db.budgets,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$ExpensesTable, List<Expense>> _expensesRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
@@ -28237,25 +34306,6 @@ final class $$CategoriesTableReferences
     ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_incomeRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.budgets,
-    aliasName: $_aliasNameGenerator(db.categories.id, db.budgets.categoryId),
-  );
-
-  $$BudgetsTableProcessedTableManager get budgetsRefs {
-    final manager = $$BudgetsTableTableManager(
-      $_db,
-      $_db.budgets,
-    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -28313,6 +34363,11 @@ class $$CategoriesTableFilterComposer
 
   ColumnFilters<String> get tempId => $composableBuilder(
     column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28374,6 +34429,31 @@ class $$CategoriesTableFilterComposer
     return f(composer);
   }
 
+  Expression<bool> budgetsRefs(
+    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
+  ) {
+    final $$BudgetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<bool> expensesRefs(
     Expression<bool> Function($$ExpensesTableFilterComposer f) f,
   ) {
@@ -28415,31 +34495,6 @@ class $$CategoriesTableFilterComposer
           }) => $$IncomeTableFilterComposer(
             $db: $db,
             $table: $db.income,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> budgetsRefs(
-    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
-  ) {
-    final $$BudgetsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.budgets,
-      getReferencedColumn: (t) => t.categoryId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetsTableFilterComposer(
-            $db: $db,
-            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -28501,6 +34556,11 @@ class $$CategoriesTableOrderingComposer
 
   ColumnOrderings<String> get tempId => $composableBuilder(
     column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -28576,6 +34636,9 @@ class $$CategoriesTableAnnotationComposer
   GeneratedColumn<String> get tempId =>
       $composableBuilder(column: $table.tempId, builder: (column) => column);
 
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -28621,6 +34684,31 @@ class $$CategoriesTableAnnotationComposer
           }) => $$GoalsTableAnnotationComposer(
             $db: $db,
             $table: $db.goals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> budgetsRefs<T extends Object>(
+    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
+  ) {
+    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -28679,31 +34767,6 @@ class $$CategoriesTableAnnotationComposer
     );
     return f(composer);
   }
-
-  Expression<T> budgetsRefs<T extends Object>(
-    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
-  ) {
-    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.budgets,
-      getReferencedColumn: (t) => t.categoryId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.budgets,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$CategoriesTableTableManager
@@ -28722,9 +34785,9 @@ class $$CategoriesTableTableManager
           PrefetchHooks Function({
             bool categoryGroupId,
             bool goalsRefs,
+            bool budgetsRefs,
             bool expensesRefs,
             bool incomeRefs,
-            bool budgetsRefs,
           })
         > {
   $$CategoriesTableTableManager(_$AppDatabase db, $CategoriesTable table)
@@ -28750,6 +34813,7 @@ class $$CategoriesTableTableManager
                 Value<String> categoryGroupId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -28764,6 +34828,7 @@ class $$CategoriesTableTableManager
                 categoryGroupId: categoryGroupId,
                 isSynced: isSynced,
                 tempId: tempId,
+                userId: userId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -28780,6 +34845,7 @@ class $$CategoriesTableTableManager
                 required String categoryGroupId,
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -28794,6 +34860,7 @@ class $$CategoriesTableTableManager
                 categoryGroupId: categoryGroupId,
                 isSynced: isSynced,
                 tempId: tempId,
+                userId: userId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -28810,17 +34877,17 @@ class $$CategoriesTableTableManager
               ({
                 categoryGroupId = false,
                 goalsRefs = false,
+                budgetsRefs = false,
                 expensesRefs = false,
                 incomeRefs = false,
-                budgetsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (goalsRefs) db.goals,
+                    if (budgetsRefs) db.budgets,
                     if (expensesRefs) db.expenses,
                     if (incomeRefs) db.income,
-                    if (budgetsRefs) db.budgets,
                   ],
                   addJoins:
                       <
@@ -28878,6 +34945,27 @@ class $$CategoriesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (budgetsRefs)
+                        await $_getPrefetchedData<
+                          Category,
+                          $CategoriesTable,
+                          Budget
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._budgetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).budgetsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.categoryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (expensesRefs)
                         await $_getPrefetchedData<
                           Category,
@@ -28920,27 +35008,6 @@ class $$CategoriesTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (budgetsRefs)
-                        await $_getPrefetchedData<
-                          Category,
-                          $CategoriesTable,
-                          Budget
-                        >(
-                          currentTable: table,
-                          referencedTable: $$CategoriesTableReferences
-                              ._budgetsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$CategoriesTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).budgetsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.categoryId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
                     ];
                   },
                 );
@@ -28964,9 +35031,9 @@ typedef $$CategoriesTableProcessedTableManager =
       PrefetchHooks Function({
         bool categoryGroupId,
         bool goalsRefs,
+        bool budgetsRefs,
         bool expensesRefs,
         bool incomeRefs,
-        bool budgetsRefs,
       })
     >;
 typedef $$MerchantsTableCreateCompanionBuilder =
@@ -29065,6 +35132,29 @@ final class $$MerchantsTableReferences
     ).filter((f) => f.merchantId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_incomeRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$MerchantMetadataTable, List<MerchantMetadataData>>
+  _merchantMetadataRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.merchantMetadata,
+    aliasName: $_aliasNameGenerator(
+      db.merchants.id,
+      db.merchantMetadata.merchantId,
+    ),
+  );
+
+  $$MerchantMetadataTableProcessedTableManager get merchantMetadataRefs {
+    final manager = $$MerchantMetadataTableTableManager(
+      $_db,
+      $_db.merchantMetadata,
+    ).filter((f) => f.merchantId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _merchantMetadataRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -29226,6 +35316,31 @@ class $$MerchantsTableFilterComposer
           }) => $$IncomeTableFilterComposer(
             $db: $db,
             $table: $db.income,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> merchantMetadataRefs(
+    Expression<bool> Function($$MerchantMetadataTableFilterComposer f) f,
+  ) {
+    final $$MerchantMetadataTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.merchantMetadata,
+      getReferencedColumn: (t) => t.merchantId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantMetadataTableFilterComposer(
+            $db: $db,
+            $table: $db.merchantMetadata,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -29463,6 +35578,31 @@ class $$MerchantsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> merchantMetadataRefs<T extends Object>(
+    Expression<T> Function($$MerchantMetadataTableAnnotationComposer a) f,
+  ) {
+    final $$MerchantMetadataTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.merchantMetadata,
+      getReferencedColumn: (t) => t.merchantId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantMetadataTableAnnotationComposer(
+            $db: $db,
+            $table: $db.merchantMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$MerchantsTableTableManager
@@ -29482,6 +35622,7 @@ class $$MerchantsTableTableManager
             bool investmentsRefs,
             bool expensesRefs,
             bool incomeRefs,
+            bool merchantMetadataRefs,
           })
         > {
   $$MerchantsTableTableManager(_$AppDatabase db, $MerchantsTable table)
@@ -29584,6 +35725,7 @@ class $$MerchantsTableTableManager
                 investmentsRefs = false,
                 expensesRefs = false,
                 incomeRefs = false,
+                merchantMetadataRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -29591,6 +35733,7 @@ class $$MerchantsTableTableManager
                     if (investmentsRefs) db.investments,
                     if (expensesRefs) db.expenses,
                     if (incomeRefs) db.income,
+                    if (merchantMetadataRefs) db.merchantMetadata,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -29658,6 +35801,27 @@ class $$MerchantsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (merchantMetadataRefs)
+                        await $_getPrefetchedData<
+                          Merchant,
+                          $MerchantsTable,
+                          MerchantMetadataData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MerchantsTableReferences
+                              ._merchantMetadataRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MerchantsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).merchantMetadataRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.merchantId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -29682,6 +35846,7 @@ typedef $$MerchantsTableProcessedTableManager =
         bool investmentsRefs,
         bool expensesRefs,
         bool incomeRefs,
+        bool merchantMetadataRefs,
       })
     >;
 typedef $$ContactsTableCreateCompanionBuilder =
@@ -29694,6 +35859,8 @@ typedef $$ContactsTableCreateCompanionBuilder =
       Value<String?> iconEmoji,
       Value<String> iconType,
       Value<String?> color,
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
       Value<bool> isSynced,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -29709,6 +35876,8 @@ typedef $$ContactsTableUpdateCompanionBuilder =
       Value<String?> iconEmoji,
       Value<String> iconType,
       Value<String?> color,
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
       Value<bool> isSynced,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -29859,6 +36028,16 @@ class $$ContactsTableFilterComposer
 
   ColumnFilters<String> get color => $composableBuilder(
     column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -30052,6 +36231,16 @@ class $$ContactsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
     builder: (column) => ColumnOrderings(column),
@@ -30102,6 +36291,14 @@ class $$ContactsTableAnnotationComposer
 
   GeneratedColumn<String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
@@ -30280,6 +36477,8 @@ class $$ContactsTableTableManager
                 Value<String?> iconEmoji = const Value.absent(),
                 Value<String> iconType = const Value.absent(),
                 Value<String?> color = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -30293,6 +36492,8 @@ class $$ContactsTableTableManager
                 iconEmoji: iconEmoji,
                 iconType: iconType,
                 color: color,
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
                 isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -30308,6 +36509,8 @@ class $$ContactsTableTableManager
                 Value<String?> iconEmoji = const Value.absent(),
                 Value<String> iconType = const Value.absent(),
                 Value<String?> color = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -30321,6 +36524,8 @@ class $$ContactsTableTableManager
                 iconEmoji: iconEmoji,
                 iconType: iconType,
                 color: color,
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
                 isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -30777,7 +36982,7 @@ typedef $$InvestmentsTableCreateCompanionBuilder =
       required String userId,
       required int investedAmount,
       Value<int> currentValue,
-      required ReturnCalculationType returnCalculationType,
+      required String returnCalculationType,
       Value<int?> interestRate,
       Value<int?> fixedReturnAmount,
       Value<String?> returnFrequency,
@@ -30801,7 +37006,7 @@ typedef $$InvestmentsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<int> investedAmount,
       Value<int> currentValue,
-      Value<ReturnCalculationType> returnCalculationType,
+      Value<String> returnCalculationType,
       Value<int?> interestRate,
       Value<int?> fixedReturnAmount,
       Value<String?> returnFrequency,
@@ -30937,6 +37142,33 @@ final class $$InvestmentsTableReferences
     );
   }
 
+  static MultiTypedResultKey<
+    $InvestmentMetadataTable,
+    List<InvestmentMetadataData>
+  >
+  _investmentMetadataRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.investmentMetadata,
+        aliasName: $_aliasNameGenerator(
+          db.investments.id,
+          db.investmentMetadata.investmentId,
+        ),
+      );
+
+  $$InvestmentMetadataTableProcessedTableManager get investmentMetadataRefs {
+    final manager = $$InvestmentMetadataTableTableManager(
+      $_db,
+      $_db.investmentMetadata,
+    ).filter((f) => f.investmentId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _investmentMetadataRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$InvestmentPaymentsTable, List<InvestmentPayment>>
   _investmentPaymentsRefsTable(_$AppDatabase db) =>
       MultiTypedResultKey.fromTable(
@@ -31040,14 +37272,9 @@ class $$InvestmentsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<
-    ReturnCalculationType,
-    ReturnCalculationType,
-    String
-  >
-  get returnCalculationType => $composableBuilder(
+  ColumnFilters<String> get returnCalculationType => $composableBuilder(
     column: $table.returnCalculationType,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
+    builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<int> get interestRate => $composableBuilder(
@@ -31213,6 +37440,31 @@ class $$InvestmentsTableFilterComposer
           }) => $$IncomeTableFilterComposer(
             $db: $db,
             $table: $db.income,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> investmentMetadataRefs(
+    Expression<bool> Function($$InvestmentMetadataTableFilterComposer f) f,
+  ) {
+    final $$InvestmentMetadataTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.investmentMetadata,
+      getReferencedColumn: (t) => t.investmentId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvestmentMetadataTableFilterComposer(
+            $db: $db,
+            $table: $db.investmentMetadata,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31501,8 +37753,7 @@ class $$InvestmentsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumnWithTypeConverter<ReturnCalculationType, String>
-  get returnCalculationType => $composableBuilder(
+  GeneratedColumn<String> get returnCalculationType => $composableBuilder(
     column: $table.returnCalculationType,
     builder: (column) => column,
   );
@@ -31673,6 +37924,32 @@ class $$InvestmentsTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> investmentMetadataRefs<T extends Object>(
+    Expression<T> Function($$InvestmentMetadataTableAnnotationComposer a) f,
+  ) {
+    final $$InvestmentMetadataTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.investmentMetadata,
+          getReferencedColumn: (t) => t.investmentId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InvestmentMetadataTableAnnotationComposer(
+                $db: $db,
+                $table: $db.investmentMetadata,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> investmentPaymentsRefs<T extends Object>(
     Expression<T> Function($$InvestmentPaymentsTableAnnotationComposer a) f,
   ) {
@@ -31746,6 +38023,7 @@ class $$InvestmentsTableTableManager
             bool merchantId,
             bool expensesRefs,
             bool incomeRefs,
+            bool investmentMetadataRefs,
             bool investmentPaymentsRefs,
             bool investmentReturnsRefs,
           })
@@ -31774,8 +38052,7 @@ class $$InvestmentsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<int> investedAmount = const Value.absent(),
                 Value<int> currentValue = const Value.absent(),
-                Value<ReturnCalculationType> returnCalculationType =
-                    const Value.absent(),
+                Value<String> returnCalculationType = const Value.absent(),
                 Value<int?> interestRate = const Value.absent(),
                 Value<int?> fixedReturnAmount = const Value.absent(),
                 Value<String?> returnFrequency = const Value.absent(),
@@ -31821,7 +38098,7 @@ class $$InvestmentsTableTableManager
                 required String userId,
                 required int investedAmount,
                 Value<int> currentValue = const Value.absent(),
-                required ReturnCalculationType returnCalculationType,
+                required String returnCalculationType,
                 Value<int?> interestRate = const Value.absent(),
                 Value<int?> fixedReturnAmount = const Value.absent(),
                 Value<String?> returnFrequency = const Value.absent(),
@@ -31870,6 +38147,7 @@ class $$InvestmentsTableTableManager
                 merchantId = false,
                 expensesRefs = false,
                 incomeRefs = false,
+                investmentMetadataRefs = false,
                 investmentPaymentsRefs = false,
                 investmentReturnsRefs = false,
               }) {
@@ -31878,6 +38156,7 @@ class $$InvestmentsTableTableManager
                   explicitlyWatchedTables: [
                     if (expensesRefs) db.expenses,
                     if (incomeRefs) db.income,
+                    if (investmentMetadataRefs) db.investmentMetadata,
                     if (investmentPaymentsRefs) db.investmentPayments,
                     if (investmentReturnsRefs) db.investmentReturns,
                   ],
@@ -32004,6 +38283,27 @@ class $$InvestmentsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (investmentMetadataRefs)
+                        await $_getPrefetchedData<
+                          Investment,
+                          $InvestmentsTable,
+                          InvestmentMetadataData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InvestmentsTableReferences
+                              ._investmentMetadataRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InvestmentsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).investmentMetadataRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.investmentId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (investmentPaymentsRefs)
                         await $_getPrefetchedData<
                           Investment,
@@ -32073,6 +38373,7 @@ typedef $$InvestmentsTableProcessedTableManager =
         bool merchantId,
         bool expensesRefs,
         bool incomeRefs,
+        bool investmentMetadataRefs,
         bool investmentPaymentsRefs,
         bool investmentReturnsRefs,
       })
@@ -32081,7 +38382,7 @@ typedef $$GoalsTableCreateCompanionBuilder =
     GoalsCompanion Function({
       required String id,
       required String name,
-      required GoalType type,
+      required String type,
       required int targetAmount,
       Value<String?> contactId,
       Value<String?> categoryId,
@@ -32098,13 +38399,18 @@ typedef $$GoalsTableCreateCompanionBuilder =
       Value<String?> color,
       Value<bool> isSynced,
       Value<String?> tempId,
+      Value<String?> currencyId,
+      Value<DateTime?> goalDate,
+      Value<DateTime?> completionDate,
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
       Value<int> rowid,
     });
 typedef $$GoalsTableUpdateCompanionBuilder =
     GoalsCompanion Function({
       Value<String> id,
       Value<String> name,
-      Value<GoalType> type,
+      Value<String> type,
       Value<int> targetAmount,
       Value<String?> contactId,
       Value<String?> categoryId,
@@ -32121,6 +38427,11 @@ typedef $$GoalsTableUpdateCompanionBuilder =
       Value<String?> color,
       Value<bool> isSynced,
       Value<String?> tempId,
+      Value<String?> currencyId,
+      Value<DateTime?> goalDate,
+      Value<DateTime?> completionDate,
+      Value<String?> imageUrl,
+      Value<String?> localImagePath,
       Value<int> rowid,
     });
 
@@ -32156,6 +38467,23 @@ final class $$GoalsTableReferences
       $_db.categories,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CurrenciesTable _currencyIdTable(_$AppDatabase db) => db.currencies
+      .createAlias($_aliasNameGenerator(db.goals.currencyId, db.currencies.id));
+
+  $$CurrenciesTableProcessedTableManager? get currencyId {
+    final $_column = $_itemColumn<String>('currency_id');
+    if ($_column == null) return null;
+    final manager = $$CurrenciesTableTableManager(
+      $_db,
+      $_db.currencies,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_currencyIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -32200,6 +38528,24 @@ final class $$GoalsTableReferences
     );
   }
 
+  static MultiTypedResultKey<$GoalMetadataTable, List<GoalMetadataData>>
+  _goalMetadataRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.goalMetadata,
+    aliasName: $_aliasNameGenerator(db.goals.id, db.goalMetadata.goalId),
+  );
+
+  $$GoalMetadataTableProcessedTableManager get goalMetadataRefs {
+    final manager = $$GoalMetadataTableTableManager(
+      $_db,
+      $_db.goalMetadata,
+    ).filter((f) => f.goalId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_goalMetadataRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$GoalContributionTable, List<GoalContributionData>>
   _goalContributionRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.goalContribution,
@@ -32239,11 +38585,10 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<GoalType, GoalType, String> get type =>
-      $composableBuilder(
-        column: $table.type,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get targetAmount => $composableBuilder(
     column: $table.targetAmount,
@@ -32315,6 +38660,26 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get goalDate => $composableBuilder(
+    column: $table.goalDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completionDate => $composableBuilder(
+    column: $table.completionDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$ContactsTableFilterComposer get contactId {
     final $$ContactsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -32352,6 +38717,29 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
           }) => $$CategoriesTableFilterComposer(
             $db: $db,
             $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CurrenciesTableFilterComposer get currencyId {
+    final $$CurrenciesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.currencyId,
+      referencedTable: $db.currencies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CurrenciesTableFilterComposer(
+            $db: $db,
+            $table: $db.currencies,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32402,6 +38790,31 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
           }) => $$IncomeTableFilterComposer(
             $db: $db,
             $table: $db.income,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> goalMetadataRefs(
+    Expression<bool> Function($$GoalMetadataTableFilterComposer f) f,
+  ) {
+    final $$GoalMetadataTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.goalMetadata,
+      getReferencedColumn: (t) => t.goalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalMetadataTableFilterComposer(
+            $db: $db,
+            $table: $db.goalMetadata,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32531,6 +38944,26 @@ class $$GoalsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get goalDate => $composableBuilder(
+    column: $table.goalDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completionDate => $composableBuilder(
+    column: $table.completionDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$ContactsTableOrderingComposer get contactId {
     final $$ContactsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -32576,6 +39009,29 @@ class $$GoalsTableOrderingComposer
     );
     return composer;
   }
+
+  $$CurrenciesTableOrderingComposer get currencyId {
+    final $$CurrenciesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.currencyId,
+      referencedTable: $db.currencies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CurrenciesTableOrderingComposer(
+            $db: $db,
+            $table: $db.currencies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$GoalsTableAnnotationComposer
@@ -32593,7 +39049,7 @@ class $$GoalsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<GoalType, String> get type =>
+  GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
   GeneratedColumn<int> get targetAmount => $composableBuilder(
@@ -32650,6 +39106,22 @@ class $$GoalsTableAnnotationComposer
   GeneratedColumn<String> get tempId =>
       $composableBuilder(column: $table.tempId, builder: (column) => column);
 
+  GeneratedColumn<DateTime> get goalDate =>
+      $composableBuilder(column: $table.goalDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get completionDate => $composableBuilder(
+    column: $table.completionDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => column,
+  );
+
   $$ContactsTableAnnotationComposer get contactId {
     final $$ContactsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -32687,6 +39159,29 @@ class $$GoalsTableAnnotationComposer
           }) => $$CategoriesTableAnnotationComposer(
             $db: $db,
             $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CurrenciesTableAnnotationComposer get currencyId {
+    final $$CurrenciesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.currencyId,
+      referencedTable: $db.currencies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CurrenciesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.currencies,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32746,6 +39241,31 @@ class $$GoalsTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> goalMetadataRefs<T extends Object>(
+    Expression<T> Function($$GoalMetadataTableAnnotationComposer a) f,
+  ) {
+    final $$GoalMetadataTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.goalMetadata,
+      getReferencedColumn: (t) => t.goalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalMetadataTableAnnotationComposer(
+            $db: $db,
+            $table: $db.goalMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> goalContributionRefs<T extends Object>(
     Expression<T> Function($$GoalContributionTableAnnotationComposer a) f,
   ) {
@@ -32788,8 +39308,10 @@ class $$GoalsTableTableManager
           PrefetchHooks Function({
             bool contactId,
             bool categoryId,
+            bool currencyId,
             bool expensesRefs,
             bool incomeRefs,
+            bool goalMetadataRefs,
             bool goalContributionRefs,
           })
         > {
@@ -32808,7 +39330,7 @@ class $$GoalsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<GoalType> type = const Value.absent(),
+                Value<String> type = const Value.absent(),
                 Value<int> targetAmount = const Value.absent(),
                 Value<String?> contactId = const Value.absent(),
                 Value<String?> categoryId = const Value.absent(),
@@ -32825,6 +39347,11 @@ class $$GoalsTableTableManager
                 Value<String?> color = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
+                Value<String?> currencyId = const Value.absent(),
+                Value<DateTime?> goalDate = const Value.absent(),
+                Value<DateTime?> completionDate = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalsCompanion(
                 id: id,
@@ -32846,13 +39373,18 @@ class $$GoalsTableTableManager
                 color: color,
                 isSynced: isSynced,
                 tempId: tempId,
+                currencyId: currencyId,
+                goalDate: goalDate,
+                completionDate: completionDate,
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
                 required String name,
-                required GoalType type,
+                required String type,
                 required int targetAmount,
                 Value<String?> contactId = const Value.absent(),
                 Value<String?> categoryId = const Value.absent(),
@@ -32869,6 +39401,11 @@ class $$GoalsTableTableManager
                 Value<String?> color = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
+                Value<String?> currencyId = const Value.absent(),
+                Value<DateTime?> goalDate = const Value.absent(),
+                Value<DateTime?> completionDate = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalsCompanion.insert(
                 id: id,
@@ -32890,6 +39427,11 @@ class $$GoalsTableTableManager
                 color: color,
                 isSynced: isSynced,
                 tempId: tempId,
+                currencyId: currencyId,
+                goalDate: goalDate,
+                completionDate: completionDate,
+                imageUrl: imageUrl,
+                localImagePath: localImagePath,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -32902,8 +39444,10 @@ class $$GoalsTableTableManager
               ({
                 contactId = false,
                 categoryId = false,
+                currencyId = false,
                 expensesRefs = false,
                 incomeRefs = false,
+                goalMetadataRefs = false,
                 goalContributionRefs = false,
               }) {
                 return PrefetchHooks(
@@ -32911,6 +39455,7 @@ class $$GoalsTableTableManager
                   explicitlyWatchedTables: [
                     if (expensesRefs) db.expenses,
                     if (incomeRefs) db.income,
+                    if (goalMetadataRefs) db.goalMetadata,
                     if (goalContributionRefs) db.goalContribution,
                   ],
                   addJoins:
@@ -32955,6 +39500,19 @@ class $$GoalsTableTableManager
                                   )
                                   as T;
                         }
+                        if (currencyId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.currencyId,
+                                    referencedTable: $$GoalsTableReferences
+                                        ._currencyIdTable(db),
+                                    referencedColumn: $$GoalsTableReferences
+                                        ._currencyIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
 
                         return state;
                       },
@@ -32988,6 +39546,27 @@ class $$GoalsTableTableManager
                               ._incomeRefsTable(db),
                           managerFromTypedResult: (p0) =>
                               $$GoalsTableReferences(db, table, p0).incomeRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.goalId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (goalMetadataRefs)
+                        await $_getPrefetchedData<
+                          Goal,
+                          $GoalsTable,
+                          GoalMetadataData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$GoalsTableReferences
+                              ._goalMetadataRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$GoalsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).goalMetadataRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.goalId == item.id,
@@ -33038,9 +39617,1039 @@ typedef $$GoalsTableProcessedTableManager =
       PrefetchHooks Function({
         bool contactId,
         bool categoryId,
+        bool currencyId,
         bool expensesRefs,
         bool incomeRefs,
+        bool goalMetadataRefs,
         bool goalContributionRefs,
+      })
+    >;
+typedef $$BudgetsTableCreateCompanionBuilder =
+    BudgetsCompanion Function({
+      Value<int?> underLimitGoal,
+      required DateTime startDate,
+      required DateTime endDate,
+      Value<bool> isActive,
+      required String projectId,
+      Value<String?> categoryId,
+      required String currency,
+      required String userId,
+      required int limitAmount,
+      Value<int> spentAmount,
+      Value<int> overBudgetAllowance,
+      Value<int?> iconCodePoint,
+      Value<String?> iconEmoji,
+      Value<String> iconType,
+      Value<String?> color,
+      required String id,
+      required String name,
+      Value<String?> description,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$BudgetsTableUpdateCompanionBuilder =
+    BudgetsCompanion Function({
+      Value<int?> underLimitGoal,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+      Value<bool> isActive,
+      Value<String> projectId,
+      Value<String?> categoryId,
+      Value<String> currency,
+      Value<String> userId,
+      Value<int> limitAmount,
+      Value<int> spentAmount,
+      Value<int> overBudgetAllowance,
+      Value<int?> iconCodePoint,
+      Value<String?> iconEmoji,
+      Value<String> iconType,
+      Value<String?> color,
+      Value<String> id,
+      Value<String> name,
+      Value<String?> description,
+      Value<String?> tempId,
+      Value<bool> isSynced,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$BudgetsTableReferences
+    extends BaseReferences<_$AppDatabase, $BudgetsTable, Budget> {
+  $$BudgetsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ProjectsTable _projectIdTable(_$AppDatabase db) => db.projects
+      .createAlias($_aliasNameGenerator(db.budgets.projectId, db.projects.id));
+
+  $$ProjectsTableProcessedTableManager get projectId {
+    final $_column = $_itemColumn<String>('project_id')!;
+
+    final manager = $$ProjectsTableTableManager(
+      $_db,
+      $_db.projects,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_projectIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
+      db.categories.createAlias(
+        $_aliasNameGenerator(db.budgets.categoryId, db.categories.id),
+      );
+
+  $$CategoriesTableProcessedTableManager? get categoryId {
+    final $_column = $_itemColumn<String>('category_id');
+    if ($_column == null) return null;
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CurrenciesTable _currencyTable(_$AppDatabase db) => db.currencies
+      .createAlias($_aliasNameGenerator(db.budgets.currency, db.currencies.id));
+
+  $$CurrenciesTableProcessedTableManager get currency {
+    final $_column = $_itemColumn<String>('currency')!;
+
+    final manager = $$CurrenciesTableTableManager(
+      $_db,
+      $_db.currencies,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_currencyTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$ExpensesTable, List<Expense>> _expensesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.expenses,
+    aliasName: $_aliasNameGenerator(db.budgets.id, db.expenses.budgetId),
+  );
+
+  $$ExpensesTableProcessedTableManager get expensesRefs {
+    final manager = $$ExpensesTableTableManager(
+      $_db,
+      $_db.expenses,
+    ).filter((f) => f.budgetId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_expensesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$BudgetMetadataTable, List<BudgetMetadataData>>
+  _budgetMetadataRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.budgetMetadata,
+    aliasName: $_aliasNameGenerator(db.budgets.id, db.budgetMetadata.budgetId),
+  );
+
+  $$BudgetMetadataTableProcessedTableManager get budgetMetadataRefs {
+    final manager = $$BudgetMetadataTableTableManager(
+      $_db,
+      $_db.budgetMetadata,
+    ).filter((f) => f.budgetId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_budgetMetadataRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$BudgetsTableFilterComposer
+    extends Composer<_$AppDatabase, $BudgetsTable> {
+  $$BudgetsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get underLimitGoal => $composableBuilder(
+    column: $table.underLimitGoal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get limitAmount => $composableBuilder(
+    column: $table.limitAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get spentAmount => $composableBuilder(
+    column: $table.spentAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get overBudgetAllowance => $composableBuilder(
+    column: $table.overBudgetAllowance,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get iconCodePoint => $composableBuilder(
+    column: $table.iconCodePoint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconEmoji => $composableBuilder(
+    column: $table.iconEmoji,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconType => $composableBuilder(
+    column: $table.iconType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProjectsTableFilterComposer get projectId {
+    final $$ProjectsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableFilterComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CurrenciesTableFilterComposer get currency {
+    final $$CurrenciesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.currency,
+      referencedTable: $db.currencies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CurrenciesTableFilterComposer(
+            $db: $db,
+            $table: $db.currencies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> expensesRefs(
+    Expression<bool> Function($$ExpensesTableFilterComposer f) f,
+  ) {
+    final $$ExpensesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.budgetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableFilterComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> budgetMetadataRefs(
+    Expression<bool> Function($$BudgetMetadataTableFilterComposer f) f,
+  ) {
+    final $$BudgetMetadataTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgetMetadata,
+      getReferencedColumn: (t) => t.budgetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetMetadataTableFilterComposer(
+            $db: $db,
+            $table: $db.budgetMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$BudgetsTableOrderingComposer
+    extends Composer<_$AppDatabase, $BudgetsTable> {
+  $$BudgetsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get underLimitGoal => $composableBuilder(
+    column: $table.underLimitGoal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get limitAmount => $composableBuilder(
+    column: $table.limitAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get spentAmount => $composableBuilder(
+    column: $table.spentAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get overBudgetAllowance => $composableBuilder(
+    column: $table.overBudgetAllowance,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get iconCodePoint => $composableBuilder(
+    column: $table.iconCodePoint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconEmoji => $composableBuilder(
+    column: $table.iconEmoji,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconType => $composableBuilder(
+    column: $table.iconType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProjectsTableOrderingComposer get projectId {
+    final $$ProjectsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableOrderingComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CurrenciesTableOrderingComposer get currency {
+    final $$CurrenciesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.currency,
+      referencedTable: $db.currencies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CurrenciesTableOrderingComposer(
+            $db: $db,
+            $table: $db.currencies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BudgetsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BudgetsTable> {
+  $$BudgetsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get underLimitGoal => $composableBuilder(
+    column: $table.underLimitGoal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get limitAmount => $composableBuilder(
+    column: $table.limitAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get spentAmount => $composableBuilder(
+    column: $table.spentAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get overBudgetAllowance => $composableBuilder(
+    column: $table.overBudgetAllowance,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get iconCodePoint => $composableBuilder(
+    column: $table.iconCodePoint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get iconEmoji =>
+      $composableBuilder(column: $table.iconEmoji, builder: (column) => column);
+
+  GeneratedColumn<String> get iconType =>
+      $composableBuilder(column: $table.iconType, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get tempId =>
+      $composableBuilder(column: $table.tempId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$ProjectsTableAnnotationComposer get projectId {
+    final $$ProjectsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CurrenciesTableAnnotationComposer get currency {
+    final $$CurrenciesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.currency,
+      referencedTable: $db.currencies,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CurrenciesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.currencies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> expensesRefs<T extends Object>(
+    Expression<T> Function($$ExpensesTableAnnotationComposer a) f,
+  ) {
+    final $$ExpensesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.budgetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> budgetMetadataRefs<T extends Object>(
+    Expression<T> Function($$BudgetMetadataTableAnnotationComposer a) f,
+  ) {
+    final $$BudgetMetadataTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgetMetadata,
+      getReferencedColumn: (t) => t.budgetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetMetadataTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgetMetadata,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$BudgetsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BudgetsTable,
+          Budget,
+          $$BudgetsTableFilterComposer,
+          $$BudgetsTableOrderingComposer,
+          $$BudgetsTableAnnotationComposer,
+          $$BudgetsTableCreateCompanionBuilder,
+          $$BudgetsTableUpdateCompanionBuilder,
+          (Budget, $$BudgetsTableReferences),
+          Budget,
+          PrefetchHooks Function({
+            bool projectId,
+            bool categoryId,
+            bool currency,
+            bool expensesRefs,
+            bool budgetMetadataRefs,
+          })
+        > {
+  $$BudgetsTableTableManager(_$AppDatabase db, $BudgetsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BudgetsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BudgetsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BudgetsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int?> underLimitGoal = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<String> projectId = const Value.absent(),
+                Value<String?> categoryId = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<int> limitAmount = const Value.absent(),
+                Value<int> spentAmount = const Value.absent(),
+                Value<int> overBudgetAllowance = const Value.absent(),
+                Value<int?> iconCodePoint = const Value.absent(),
+                Value<String?> iconEmoji = const Value.absent(),
+                Value<String> iconType = const Value.absent(),
+                Value<String?> color = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BudgetsCompanion(
+                underLimitGoal: underLimitGoal,
+                startDate: startDate,
+                endDate: endDate,
+                isActive: isActive,
+                projectId: projectId,
+                categoryId: categoryId,
+                currency: currency,
+                userId: userId,
+                limitAmount: limitAmount,
+                spentAmount: spentAmount,
+                overBudgetAllowance: overBudgetAllowance,
+                iconCodePoint: iconCodePoint,
+                iconEmoji: iconEmoji,
+                iconType: iconType,
+                color: color,
+                id: id,
+                name: name,
+                description: description,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int?> underLimitGoal = const Value.absent(),
+                required DateTime startDate,
+                required DateTime endDate,
+                Value<bool> isActive = const Value.absent(),
+                required String projectId,
+                Value<String?> categoryId = const Value.absent(),
+                required String currency,
+                required String userId,
+                required int limitAmount,
+                Value<int> spentAmount = const Value.absent(),
+                Value<int> overBudgetAllowance = const Value.absent(),
+                Value<int?> iconCodePoint = const Value.absent(),
+                Value<String?> iconEmoji = const Value.absent(),
+                Value<String> iconType = const Value.absent(),
+                Value<String?> color = const Value.absent(),
+                required String id,
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BudgetsCompanion.insert(
+                underLimitGoal: underLimitGoal,
+                startDate: startDate,
+                endDate: endDate,
+                isActive: isActive,
+                projectId: projectId,
+                categoryId: categoryId,
+                currency: currency,
+                userId: userId,
+                limitAmount: limitAmount,
+                spentAmount: spentAmount,
+                overBudgetAllowance: overBudgetAllowance,
+                iconCodePoint: iconCodePoint,
+                iconEmoji: iconEmoji,
+                iconType: iconType,
+                color: color,
+                id: id,
+                name: name,
+                description: description,
+                tempId: tempId,
+                isSynced: isSynced,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$BudgetsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                projectId = false,
+                categoryId = false,
+                currency = false,
+                expensesRefs = false,
+                budgetMetadataRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (expensesRefs) db.expenses,
+                    if (budgetMetadataRefs) db.budgetMetadata,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (projectId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.projectId,
+                                    referencedTable: $$BudgetsTableReferences
+                                        ._projectIdTable(db),
+                                    referencedColumn: $$BudgetsTableReferences
+                                        ._projectIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (categoryId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.categoryId,
+                                    referencedTable: $$BudgetsTableReferences
+                                        ._categoryIdTable(db),
+                                    referencedColumn: $$BudgetsTableReferences
+                                        ._categoryIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (currency) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.currency,
+                                    referencedTable: $$BudgetsTableReferences
+                                        ._currencyTable(db),
+                                    referencedColumn: $$BudgetsTableReferences
+                                        ._currencyTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (expensesRefs)
+                        await $_getPrefetchedData<
+                          Budget,
+                          $BudgetsTable,
+                          Expense
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BudgetsTableReferences
+                              ._expensesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BudgetsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).expensesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.budgetId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (budgetMetadataRefs)
+                        await $_getPrefetchedData<
+                          Budget,
+                          $BudgetsTable,
+                          BudgetMetadataData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BudgetsTableReferences
+                              ._budgetMetadataRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BudgetsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).budgetMetadataRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.budgetId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$BudgetsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BudgetsTable,
+      Budget,
+      $$BudgetsTableFilterComposer,
+      $$BudgetsTableOrderingComposer,
+      $$BudgetsTableAnnotationComposer,
+      $$BudgetsTableCreateCompanionBuilder,
+      $$BudgetsTableUpdateCompanionBuilder,
+      (Budget, $$BudgetsTableReferences),
+      Budget,
+      PrefetchHooks Function({
+        bool projectId,
+        bool categoryId,
+        bool currency,
+        bool expensesRefs,
+        bool budgetMetadataRefs,
       })
     >;
 typedef $$RemindersTableCreateCompanionBuilder =
@@ -33530,6 +41139,7 @@ typedef $$ExpensesTableCreateCompanionBuilder =
       Value<String?> walletId,
       Value<String?> investmentId,
       Value<String?> goalId,
+      Value<String?> budgetId,
       Value<String?> reminderId,
       Value<String> source,
       Value<String?> notes,
@@ -33558,6 +41168,7 @@ typedef $$ExpensesTableUpdateCompanionBuilder =
       Value<String?> walletId,
       Value<String?> investmentId,
       Value<String?> goalId,
+      Value<String?> budgetId,
       Value<String?> reminderId,
       Value<String> source,
       Value<String?> notes,
@@ -33718,6 +41329,23 @@ final class $$ExpensesTableReferences
     );
   }
 
+  static $BudgetsTable _budgetIdTable(_$AppDatabase db) => db.budgets
+      .createAlias($_aliasNameGenerator(db.expenses.budgetId, db.budgets.id));
+
+  $$BudgetsTableProcessedTableManager? get budgetId {
+    final $_column = $_itemColumn<String>('budget_id');
+    if ($_column == null) return null;
+    final manager = $$BudgetsTableTableManager(
+      $_db,
+      $_db.budgets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_budgetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
   static $RemindersTable _reminderIdTable(_$AppDatabase db) =>
       db.reminders.createAlias(
         $_aliasNameGenerator(db.expenses.reminderId, db.reminders.id),
@@ -33734,6 +41362,42 @@ final class $$ExpensesTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TodoItemsTable, List<TodoItem>>
+  _todoItemsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.todoItems,
+    aliasName: $_aliasNameGenerator(db.expenses.id, db.todoItems.expenseId),
+  );
+
+  $$TodoItemsTableProcessedTableManager get todoItemsRefs {
+    final manager = $$TodoItemsTableTableManager(
+      $_db,
+      $_db.todoItems,
+    ).filter((f) => f.expenseId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_todoItemsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ShoppingListsTable, List<ShoppingList>>
+  _shoppingListsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.shoppingLists,
+    aliasName: $_aliasNameGenerator(db.expenses.id, db.shoppingLists.expenseId),
+  );
+
+  $$ShoppingListsTableProcessedTableManager get shoppingListsRefs {
+    final manager = $$ShoppingListsTableTableManager(
+      $_db,
+      $_db.shoppingLists,
+    ).filter((f) => f.expenseId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_shoppingListsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
@@ -34006,6 +41670,29 @@ class $$ExpensesTableFilterComposer
     return composer;
   }
 
+  $$BudgetsTableFilterComposer get budgetId {
+    final $$BudgetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.budgetId,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   $$RemindersTableFilterComposer get reminderId {
     final $$RemindersTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -34027,6 +41714,56 @@ class $$ExpensesTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> todoItemsRefs(
+    Expression<bool> Function($$TodoItemsTableFilterComposer f) f,
+  ) {
+    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.expenseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> shoppingListsRefs(
+    Expression<bool> Function($$ShoppingListsTableFilterComposer f) f,
+  ) {
+    final $$ShoppingListsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.shoppingLists,
+      getReferencedColumn: (t) => t.expenseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ShoppingListsTableFilterComposer(
+            $db: $db,
+            $table: $db.shoppingLists,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 }
 
@@ -34289,6 +42026,29 @@ class $$ExpensesTableOrderingComposer
           }) => $$GoalsTableOrderingComposer(
             $db: $db,
             $table: $db.goals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$BudgetsTableOrderingComposer get budgetId {
+    final $$BudgetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.budgetId,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -34564,6 +42324,29 @@ class $$ExpensesTableAnnotationComposer
     return composer;
   }
 
+  $$BudgetsTableAnnotationComposer get budgetId {
+    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.budgetId,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   $$RemindersTableAnnotationComposer get reminderId {
     final $$RemindersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -34585,6 +42368,56 @@ class $$ExpensesTableAnnotationComposer
           ),
     );
     return composer;
+  }
+
+  Expression<T> todoItemsRefs<T extends Object>(
+    Expression<T> Function($$TodoItemsTableAnnotationComposer a) f,
+  ) {
+    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.expenseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> shoppingListsRefs<T extends Object>(
+    Expression<T> Function($$ShoppingListsTableAnnotationComposer a) f,
+  ) {
+    final $$ShoppingListsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.shoppingLists,
+      getReferencedColumn: (t) => t.expenseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ShoppingListsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.shoppingLists,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 }
 
@@ -34610,7 +42443,10 @@ class $$ExpensesTableTableManager
             bool walletId,
             bool investmentId,
             bool goalId,
+            bool budgetId,
             bool reminderId,
+            bool todoItemsRefs,
+            bool shoppingListsRefs,
           })
         > {
   $$ExpensesTableTableManager(_$AppDatabase db, $ExpensesTable table)
@@ -34642,6 +42478,7 @@ class $$ExpensesTableTableManager
                 Value<String?> walletId = const Value.absent(),
                 Value<String?> investmentId = const Value.absent(),
                 Value<String?> goalId = const Value.absent(),
+                Value<String?> budgetId = const Value.absent(),
                 Value<String?> reminderId = const Value.absent(),
                 Value<String> source = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
@@ -34668,6 +42505,7 @@ class $$ExpensesTableTableManager
                 walletId: walletId,
                 investmentId: investmentId,
                 goalId: goalId,
+                budgetId: budgetId,
                 reminderId: reminderId,
                 source: source,
                 notes: notes,
@@ -34696,6 +42534,7 @@ class $$ExpensesTableTableManager
                 Value<String?> walletId = const Value.absent(),
                 Value<String?> investmentId = const Value.absent(),
                 Value<String?> goalId = const Value.absent(),
+                Value<String?> budgetId = const Value.absent(),
                 Value<String?> reminderId = const Value.absent(),
                 Value<String> source = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
@@ -34722,6 +42561,7 @@ class $$ExpensesTableTableManager
                 walletId: walletId,
                 investmentId: investmentId,
                 goalId: goalId,
+                budgetId: budgetId,
                 reminderId: reminderId,
                 source: source,
                 notes: notes,
@@ -34750,11 +42590,17 @@ class $$ExpensesTableTableManager
                 walletId = false,
                 investmentId = false,
                 goalId = false,
+                budgetId = false,
                 reminderId = false,
+                todoItemsRefs = false,
+                shoppingListsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
-                  explicitlyWatchedTables: [],
+                  explicitlyWatchedTables: [
+                    if (todoItemsRefs) db.todoItems,
+                    if (shoppingListsRefs) db.shoppingLists,
+                  ],
                   addJoins:
                       <
                         T extends TableManagerState<
@@ -34875,6 +42721,19 @@ class $$ExpensesTableTableManager
                                   )
                                   as T;
                         }
+                        if (budgetId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.budgetId,
+                                    referencedTable: $$ExpensesTableReferences
+                                        ._budgetIdTable(db),
+                                    referencedColumn: $$ExpensesTableReferences
+                                        ._budgetIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
                         if (reminderId) {
                           state =
                               state.withJoin(
@@ -34892,7 +42751,50 @@ class $$ExpensesTableTableManager
                         return state;
                       },
                   getPrefetchedDataCallback: (items) async {
-                    return [];
+                    return [
+                      if (todoItemsRefs)
+                        await $_getPrefetchedData<
+                          Expense,
+                          $ExpensesTable,
+                          TodoItem
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ExpensesTableReferences
+                              ._todoItemsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ExpensesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).todoItemsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.expenseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (shoppingListsRefs)
+                        await $_getPrefetchedData<
+                          Expense,
+                          $ExpensesTable,
+                          ShoppingList
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ExpensesTableReferences
+                              ._shoppingListsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ExpensesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).shoppingListsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.expenseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
                   },
                 );
               },
@@ -34921,7 +42823,10 @@ typedef $$ExpensesTableProcessedTableManager =
         bool walletId,
         bool investmentId,
         bool goalId,
+        bool budgetId,
         bool reminderId,
+        bool todoItemsRefs,
+        bool shoppingListsRefs,
       })
     >;
 typedef $$PaymentsTableCreateCompanionBuilder =
@@ -34995,6 +42900,48 @@ final class $$PaymentsTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TodoItemsTable, List<TodoItem>>
+  _todoItemsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.todoItems,
+    aliasName: $_aliasNameGenerator(db.payments.id, db.todoItems.paymentId),
+  );
+
+  $$TodoItemsTableProcessedTableManager get todoItemsRefs {
+    final manager = $$TodoItemsTableTableManager(
+      $_db,
+      $_db.todoItems,
+    ).filter((f) => f.paymentId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_todoItemsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ShoppingListItemsTable, List<ShoppingListItem>>
+  _shoppingListItemsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.shoppingListItems,
+        aliasName: $_aliasNameGenerator(
+          db.payments.id,
+          db.shoppingListItems.paymentId,
+        ),
+      );
+
+  $$ShoppingListItemsTableProcessedTableManager get shoppingListItemsRefs {
+    final manager = $$ShoppingListItemsTableTableManager(
+      $_db,
+      $_db.shoppingListItems,
+    ).filter((f) => f.paymentId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _shoppingListItemsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
@@ -35176,6 +43123,56 @@ class $$PaymentsTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> todoItemsRefs(
+    Expression<bool> Function($$TodoItemsTableFilterComposer f) f,
+  ) {
+    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.paymentId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> shoppingListItemsRefs(
+    Expression<bool> Function($$ShoppingListItemsTableFilterComposer f) f,
+  ) {
+    final $$ShoppingListItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.shoppingListItems,
+      getReferencedColumn: (t) => t.paymentId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ShoppingListItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.shoppingListItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 
   Expression<bool> goalContributionRefs(
@@ -35466,6 +43463,57 @@ class $$PaymentsTableAnnotationComposer
     return composer;
   }
 
+  Expression<T> todoItemsRefs<T extends Object>(
+    Expression<T> Function($$TodoItemsTableAnnotationComposer a) f,
+  ) {
+    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.paymentId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> shoppingListItemsRefs<T extends Object>(
+    Expression<T> Function($$ShoppingListItemsTableAnnotationComposer a) f,
+  ) {
+    final $$ShoppingListItemsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.shoppingListItems,
+          getReferencedColumn: (t) => t.paymentId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ShoppingListItemsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.shoppingListItems,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> goalContributionRefs<T extends Object>(
     Expression<T> Function($$GoalContributionTableAnnotationComposer a) f,
   ) {
@@ -35533,6 +43581,8 @@ class $$PaymentsTableTableManager
           Payment,
           PrefetchHooks Function({
             bool currency,
+            bool todoItemsRefs,
+            bool shoppingListItemsRefs,
             bool goalContributionRefs,
             bool investmentPaymentsRefs,
           })
@@ -35655,12 +43705,16 @@ class $$PaymentsTableTableManager
           prefetchHooksCallback:
               ({
                 currency = false,
+                todoItemsRefs = false,
+                shoppingListItemsRefs = false,
                 goalContributionRefs = false,
                 investmentPaymentsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (todoItemsRefs) db.todoItems,
+                    if (shoppingListItemsRefs) db.shoppingListItems,
                     if (goalContributionRefs) db.goalContribution,
                     if (investmentPaymentsRefs) db.investmentPayments,
                   ],
@@ -35698,6 +43752,48 @@ class $$PaymentsTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (todoItemsRefs)
+                        await $_getPrefetchedData<
+                          Payment,
+                          $PaymentsTable,
+                          TodoItem
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PaymentsTableReferences
+                              ._todoItemsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PaymentsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).todoItemsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.paymentId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (shoppingListItemsRefs)
+                        await $_getPrefetchedData<
+                          Payment,
+                          $PaymentsTable,
+                          ShoppingListItem
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PaymentsTableReferences
+                              ._shoppingListItemsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PaymentsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).shoppingListItemsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.paymentId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (goalContributionRefs)
                         await $_getPrefetchedData<
                           Payment,
@@ -35762,6 +43858,8 @@ typedef $$PaymentsTableProcessedTableManager =
       Payment,
       PrefetchHooks Function({
         bool currency,
+        bool todoItemsRefs,
+        bool shoppingListItemsRefs,
         bool goalContributionRefs,
         bool investmentPaymentsRefs,
       })
@@ -37210,6 +45308,8 @@ typedef $$TodoItemsTableCreateCompanionBuilder =
       Value<String?> createdPaymentId,
       Value<String?> linkedShoppingListId,
       Value<String?> parentTodoId,
+      Value<String?> expenseId,
+      Value<String?> paymentId,
       Value<bool> isSynced,
       Value<String?> tempId,
       Value<DateTime> createdAt,
@@ -37234,6 +45334,8 @@ typedef $$TodoItemsTableUpdateCompanionBuilder =
       Value<String?> createdPaymentId,
       Value<String?> linkedShoppingListId,
       Value<String?> parentTodoId,
+      Value<String?> expenseId,
+      Value<String?> paymentId,
       Value<bool> isSynced,
       Value<String?> tempId,
       Value<DateTime> createdAt,
@@ -37258,6 +45360,44 @@ final class $$TodoItemsTableReferences
       $_db.projects,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_projectIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ExpensesTable _expenseIdTable(_$AppDatabase db) =>
+      db.expenses.createAlias(
+        $_aliasNameGenerator(db.todoItems.expenseId, db.expenses.id),
+      );
+
+  $$ExpensesTableProcessedTableManager? get expenseId {
+    final $_column = $_itemColumn<String>('expense_id');
+    if ($_column == null) return null;
+    final manager = $$ExpensesTableTableManager(
+      $_db,
+      $_db.expenses,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_expenseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $PaymentsTable _paymentIdTable(_$AppDatabase db) =>
+      db.payments.createAlias(
+        $_aliasNameGenerator(db.todoItems.paymentId, db.payments.id),
+      );
+
+  $$PaymentsTableProcessedTableManager? get paymentId {
+    final $_column = $_itemColumn<String>('payment_id');
+    if ($_column == null) return null;
+    final manager = $$PaymentsTableTableManager(
+      $_db,
+      $_db.payments,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_paymentIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -37383,6 +45523,52 @@ class $$TodoItemsTableFilterComposer
           }) => $$ProjectsTableFilterComposer(
             $db: $db,
             $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ExpensesTableFilterComposer get expenseId {
+    final $$ExpensesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.expenseId,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableFilterComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$PaymentsTableFilterComposer get paymentId {
+    final $$PaymentsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.payments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PaymentsTableFilterComposer(
+            $db: $db,
+            $table: $db.payments,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -37519,6 +45705,52 @@ class $$TodoItemsTableOrderingComposer
     );
     return composer;
   }
+
+  $$ExpensesTableOrderingComposer get expenseId {
+    final $$ExpensesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.expenseId,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableOrderingComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$PaymentsTableOrderingComposer get paymentId {
+    final $$PaymentsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.payments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PaymentsTableOrderingComposer(
+            $db: $db,
+            $table: $db.payments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TodoItemsTableAnnotationComposer
@@ -37633,6 +45865,52 @@ class $$TodoItemsTableAnnotationComposer
     );
     return composer;
   }
+
+  $$ExpensesTableAnnotationComposer get expenseId {
+    final $$ExpensesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.expenseId,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$PaymentsTableAnnotationComposer get paymentId {
+    final $$PaymentsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.payments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PaymentsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.payments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TodoItemsTableTableManager
@@ -37648,7 +45926,11 @@ class $$TodoItemsTableTableManager
           $$TodoItemsTableUpdateCompanionBuilder,
           (TodoItem, $$TodoItemsTableReferences),
           TodoItem,
-          PrefetchHooks Function({bool projectId})
+          PrefetchHooks Function({
+            bool projectId,
+            bool expenseId,
+            bool paymentId,
+          })
         > {
   $$TodoItemsTableTableManager(_$AppDatabase db, $TodoItemsTable table)
     : super(
@@ -37679,6 +45961,8 @@ class $$TodoItemsTableTableManager
                 Value<String?> createdPaymentId = const Value.absent(),
                 Value<String?> linkedShoppingListId = const Value.absent(),
                 Value<String?> parentTodoId = const Value.absent(),
+                Value<String?> expenseId = const Value.absent(),
+                Value<String?> paymentId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -37701,6 +45985,8 @@ class $$TodoItemsTableTableManager
                 createdPaymentId: createdPaymentId,
                 linkedShoppingListId: linkedShoppingListId,
                 parentTodoId: parentTodoId,
+                expenseId: expenseId,
+                paymentId: paymentId,
                 isSynced: isSynced,
                 tempId: tempId,
                 createdAt: createdAt,
@@ -37725,6 +46011,8 @@ class $$TodoItemsTableTableManager
                 Value<String?> createdPaymentId = const Value.absent(),
                 Value<String?> linkedShoppingListId = const Value.absent(),
                 Value<String?> parentTodoId = const Value.absent(),
+                Value<String?> expenseId = const Value.absent(),
+                Value<String?> paymentId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -37747,6 +46035,8 @@ class $$TodoItemsTableTableManager
                 createdPaymentId: createdPaymentId,
                 linkedShoppingListId: linkedShoppingListId,
                 parentTodoId: parentTodoId,
+                expenseId: expenseId,
+                paymentId: paymentId,
                 isSynced: isSynced,
                 tempId: tempId,
                 createdAt: createdAt,
@@ -37761,47 +46051,74 @@ class $$TodoItemsTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({projectId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (projectId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.projectId,
-                                referencedTable: $$TodoItemsTableReferences
-                                    ._projectIdTable(db),
-                                referencedColumn: $$TodoItemsTableReferences
-                                    ._projectIdTable(db)
-                                    .id,
-                              )
-                              as T;
-                    }
+          prefetchHooksCallback:
+              ({projectId = false, expenseId = false, paymentId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (projectId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.projectId,
+                                    referencedTable: $$TodoItemsTableReferences
+                                        ._projectIdTable(db),
+                                    referencedColumn: $$TodoItemsTableReferences
+                                        ._projectIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (expenseId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.expenseId,
+                                    referencedTable: $$TodoItemsTableReferences
+                                        ._expenseIdTable(db),
+                                    referencedColumn: $$TodoItemsTableReferences
+                                        ._expenseIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (paymentId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.paymentId,
+                                    referencedTable: $$TodoItemsTableReferences
+                                        ._paymentIdTable(db),
+                                    referencedColumn: $$TodoItemsTableReferences
+                                        ._paymentIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
 
-                    return state;
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
                   },
-              getPrefetchedDataCallback: (items) async {
-                return [];
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -37818,7 +46135,7 @@ typedef $$TodoItemsTableProcessedTableManager =
       $$TodoItemsTableUpdateCompanionBuilder,
       (TodoItem, $$TodoItemsTableReferences),
       TodoItem,
-      PrefetchHooks Function({bool projectId})
+      PrefetchHooks Function({bool projectId, bool expenseId, bool paymentId})
     >;
 typedef $$ShoppingListsTableCreateCompanionBuilder =
     ShoppingListsCompanion Function({
@@ -37828,6 +46145,7 @@ typedef $$ShoppingListsTableCreateCompanionBuilder =
       Value<String?> description,
       required String userId,
       Value<String?> linkedExpenseId,
+      Value<String?> expenseId,
       Value<bool> isSynced,
       Value<String?> tempId,
       Value<DateTime> createdAt,
@@ -37842,6 +46160,7 @@ typedef $$ShoppingListsTableUpdateCompanionBuilder =
       Value<String?> description,
       Value<String> userId,
       Value<String?> linkedExpenseId,
+      Value<String?> expenseId,
       Value<bool> isSynced,
       Value<String?> tempId,
       Value<DateTime> createdAt,
@@ -37870,6 +46189,25 @@ final class $$ShoppingListsTableReferences
       $_db.projects,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_projectIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ExpensesTable _expenseIdTable(_$AppDatabase db) =>
+      db.expenses.createAlias(
+        $_aliasNameGenerator(db.shoppingLists.expenseId, db.expenses.id),
+      );
+
+  $$ExpensesTableProcessedTableManager? get expenseId {
+    final $_column = $_itemColumn<String>('expense_id');
+    if ($_column == null) return null;
+    final manager = $$ExpensesTableTableManager(
+      $_db,
+      $_db.expenses,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_expenseIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -37969,6 +46307,29 @@ class $$ShoppingListsTableFilterComposer
           }) => $$ProjectsTableFilterComposer(
             $db: $db,
             $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ExpensesTableFilterComposer get expenseId {
+    final $$ExpensesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.expenseId,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableFilterComposer(
+            $db: $db,
+            $table: $db.expenses,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -38080,6 +46441,29 @@ class $$ShoppingListsTableOrderingComposer
     );
     return composer;
   }
+
+  $$ExpensesTableOrderingComposer get expenseId {
+    final $$ExpensesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.expenseId,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableOrderingComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ShoppingListsTableAnnotationComposer
@@ -38145,6 +46529,29 @@ class $$ShoppingListsTableAnnotationComposer
     return composer;
   }
 
+  $$ExpensesTableAnnotationComposer get expenseId {
+    final $$ExpensesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.expenseId,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   Expression<T> shoppingListItemsRefs<T extends Object>(
     Expression<T> Function($$ShoppingListItemsTableAnnotationComposer a) f,
   ) {
@@ -38185,7 +46592,11 @@ class $$ShoppingListsTableTableManager
           $$ShoppingListsTableUpdateCompanionBuilder,
           (ShoppingList, $$ShoppingListsTableReferences),
           ShoppingList,
-          PrefetchHooks Function({bool projectId, bool shoppingListItemsRefs})
+          PrefetchHooks Function({
+            bool projectId,
+            bool expenseId,
+            bool shoppingListItemsRefs,
+          })
         > {
   $$ShoppingListsTableTableManager(_$AppDatabase db, $ShoppingListsTable table)
     : super(
@@ -38206,6 +46617,7 @@ class $$ShoppingListsTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String?> linkedExpenseId = const Value.absent(),
+                Value<String?> expenseId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -38218,6 +46630,7 @@ class $$ShoppingListsTableTableManager
                 description: description,
                 userId: userId,
                 linkedExpenseId: linkedExpenseId,
+                expenseId: expenseId,
                 isSynced: isSynced,
                 tempId: tempId,
                 createdAt: createdAt,
@@ -38232,6 +46645,7 @@ class $$ShoppingListsTableTableManager
                 Value<String?> description = const Value.absent(),
                 required String userId,
                 Value<String?> linkedExpenseId = const Value.absent(),
+                Value<String?> expenseId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<String?> tempId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -38244,6 +46658,7 @@ class $$ShoppingListsTableTableManager
                 description: description,
                 userId: userId,
                 linkedExpenseId: linkedExpenseId,
+                expenseId: expenseId,
                 isSynced: isSynced,
                 tempId: tempId,
                 createdAt: createdAt,
@@ -38259,7 +46674,11 @@ class $$ShoppingListsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({projectId = false, shoppingListItemsRefs = false}) {
+              ({
+                projectId = false,
+                expenseId = false,
+                shoppingListItemsRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
@@ -38292,6 +46711,21 @@ class $$ShoppingListsTableTableManager
                                     referencedColumn:
                                         $$ShoppingListsTableReferences
                                             ._projectIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (expenseId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.expenseId,
+                                    referencedTable:
+                                        $$ShoppingListsTableReferences
+                                            ._expenseIdTable(db),
+                                    referencedColumn:
+                                        $$ShoppingListsTableReferences
+                                            ._expenseIdTable(db)
                                             .id,
                                   )
                                   as T;
@@ -38342,18 +46776,24 @@ typedef $$ShoppingListsTableProcessedTableManager =
       $$ShoppingListsTableUpdateCompanionBuilder,
       (ShoppingList, $$ShoppingListsTableReferences),
       ShoppingList,
-      PrefetchHooks Function({bool projectId, bool shoppingListItemsRefs})
+      PrefetchHooks Function({
+        bool projectId,
+        bool expenseId,
+        bool shoppingListItemsRefs,
+      })
     >;
 typedef $$ShoppingListItemsTableCreateCompanionBuilder =
     ShoppingListItemsCompanion Function({
       required String id,
       required String shoppingListId,
       required String name,
+      Value<String?> description,
       Value<int?> estimatedAmount,
       Value<int?> actualAmount,
       Value<String> currency,
       required String userId,
       Value<int> quantity,
+      Value<String?> paymentId,
       Value<bool> isPurchased,
       Value<DateTime?> purchasedAt,
       Value<String?> notes,
@@ -38369,11 +46809,13 @@ typedef $$ShoppingListItemsTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> shoppingListId,
       Value<String> name,
+      Value<String?> description,
       Value<int?> estimatedAmount,
       Value<int?> actualAmount,
       Value<String> currency,
       Value<String> userId,
       Value<int> quantity,
+      Value<String?> paymentId,
       Value<bool> isPurchased,
       Value<DateTime?> purchasedAt,
       Value<String?> notes,
@@ -38419,6 +46861,25 @@ final class $$ShoppingListItemsTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static $PaymentsTable _paymentIdTable(_$AppDatabase db) =>
+      db.payments.createAlias(
+        $_aliasNameGenerator(db.shoppingListItems.paymentId, db.payments.id),
+      );
+
+  $$PaymentsTableProcessedTableManager? get paymentId {
+    final $_column = $_itemColumn<String>('payment_id');
+    if ($_column == null) return null;
+    final manager = $$PaymentsTableTableManager(
+      $_db,
+      $_db.payments,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_paymentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 }
 
 class $$ShoppingListItemsTableFilterComposer
@@ -38437,6 +46898,11 @@ class $$ShoppingListItemsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -38527,6 +46993,29 @@ class $$ShoppingListItemsTableFilterComposer
     );
     return composer;
   }
+
+  $$PaymentsTableFilterComposer get paymentId {
+    final $$PaymentsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.payments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PaymentsTableFilterComposer(
+            $db: $db,
+            $table: $db.payments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ShoppingListItemsTableOrderingComposer
@@ -38545,6 +47034,11 @@ class $$ShoppingListItemsTableOrderingComposer
 
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -38635,6 +47129,29 @@ class $$ShoppingListItemsTableOrderingComposer
     );
     return composer;
   }
+
+  $$PaymentsTableOrderingComposer get paymentId {
+    final $$PaymentsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.payments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PaymentsTableOrderingComposer(
+            $db: $db,
+            $table: $db.payments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ShoppingListItemsTableAnnotationComposer
@@ -38651,6 +47168,11 @@ class $$ShoppingListItemsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get estimatedAmount => $composableBuilder(
     column: $table.estimatedAmount,
@@ -38723,6 +47245,29 @@ class $$ShoppingListItemsTableAnnotationComposer
     );
     return composer;
   }
+
+  $$PaymentsTableAnnotationComposer get paymentId {
+    final $$PaymentsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.payments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PaymentsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.payments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ShoppingListItemsTableTableManager
@@ -38738,7 +47283,7 @@ class $$ShoppingListItemsTableTableManager
           $$ShoppingListItemsTableUpdateCompanionBuilder,
           (ShoppingListItem, $$ShoppingListItemsTableReferences),
           ShoppingListItem,
-          PrefetchHooks Function({bool shoppingListId})
+          PrefetchHooks Function({bool shoppingListId, bool paymentId})
         > {
   $$ShoppingListItemsTableTableManager(
     _$AppDatabase db,
@@ -38761,11 +47306,13 @@ class $$ShoppingListItemsTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> shoppingListId = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
                 Value<int?> estimatedAmount = const Value.absent(),
                 Value<int?> actualAmount = const Value.absent(),
                 Value<String> currency = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<int> quantity = const Value.absent(),
+                Value<String?> paymentId = const Value.absent(),
                 Value<bool> isPurchased = const Value.absent(),
                 Value<DateTime?> purchasedAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
@@ -38779,11 +47326,13 @@ class $$ShoppingListItemsTableTableManager
                 id: id,
                 shoppingListId: shoppingListId,
                 name: name,
+                description: description,
                 estimatedAmount: estimatedAmount,
                 actualAmount: actualAmount,
                 currency: currency,
                 userId: userId,
                 quantity: quantity,
+                paymentId: paymentId,
                 isPurchased: isPurchased,
                 purchasedAt: purchasedAt,
                 notes: notes,
@@ -38799,11 +47348,13 @@ class $$ShoppingListItemsTableTableManager
                 required String id,
                 required String shoppingListId,
                 required String name,
+                Value<String?> description = const Value.absent(),
                 Value<int?> estimatedAmount = const Value.absent(),
                 Value<int?> actualAmount = const Value.absent(),
                 Value<String> currency = const Value.absent(),
                 required String userId,
                 Value<int> quantity = const Value.absent(),
+                Value<String?> paymentId = const Value.absent(),
                 Value<bool> isPurchased = const Value.absent(),
                 Value<DateTime?> purchasedAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
@@ -38817,11 +47368,13 @@ class $$ShoppingListItemsTableTableManager
                 id: id,
                 shoppingListId: shoppingListId,
                 name: name,
+                description: description,
                 estimatedAmount: estimatedAmount,
                 actualAmount: actualAmount,
                 currency: currency,
                 userId: userId,
                 quantity: quantity,
+                paymentId: paymentId,
                 isPurchased: isPurchased,
                 purchasedAt: purchasedAt,
                 notes: notes,
@@ -38840,7 +47393,7 @@ class $$ShoppingListItemsTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({shoppingListId = false}) {
+          prefetchHooksCallback: ({shoppingListId = false, paymentId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -38875,6 +47428,21 @@ class $$ShoppingListItemsTableTableManager
                               )
                               as T;
                     }
+                    if (paymentId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.paymentId,
+                                referencedTable:
+                                    $$ShoppingListItemsTableReferences
+                                        ._paymentIdTable(db),
+                                referencedColumn:
+                                    $$ShoppingListItemsTableReferences
+                                        ._paymentIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
 
                     return state;
                   },
@@ -38899,7 +47467,7 @@ typedef $$ShoppingListItemsTableProcessedTableManager =
       $$ShoppingListItemsTableUpdateCompanionBuilder,
       (ShoppingListItem, $$ShoppingListItemsTableReferences),
       ShoppingListItem,
-      PrefetchHooks Function({bool shoppingListId})
+      PrefetchHooks Function({bool shoppingListId, bool paymentId})
     >;
 typedef $$MessageRulesTableCreateCompanionBuilder =
     MessageRulesCompanion Function({
@@ -39833,27 +48401,70 @@ typedef $$IdMappingsTableProcessedTableManager =
 typedef $$MerchantMetadataTableCreateCompanionBuilder =
     MerchantMetadataCompanion Function({
       required String id,
-      required String merchantId,
-      required String key,
-      required String value,
-      Value<String?> tempId,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> merchantId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
 typedef $$MerchantMetadataTableUpdateCompanionBuilder =
     MerchantMetadataCompanion Function({
       Value<String> id,
-      Value<String> merchantId,
-      Value<String> key,
-      Value<String> value,
-      Value<String?> tempId,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> merchantId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
+
+final class $$MerchantMetadataTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $MerchantMetadataTable,
+          MerchantMetadataData
+        > {
+  $$MerchantMetadataTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $MerchantsTable _merchantIdTable(_$AppDatabase db) =>
+      db.merchants.createAlias(
+        $_aliasNameGenerator(db.merchantMetadata.merchantId, db.merchants.id),
+      );
+
+  $$MerchantsTableProcessedTableManager? get merchantId {
+    final $_column = $_itemColumn<String>('merchant_id');
+    if ($_column == null) return null;
+    final manager = $$MerchantsTableTableManager(
+      $_db,
+      $_db.merchants,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_merchantIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$MerchantMetadataTableFilterComposer
     extends Composer<_$AppDatabase, $MerchantMetadataTable> {
@@ -39869,28 +48480,48 @@ class $$MerchantMetadataTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get merchantId => $composableBuilder(
-    column: $table.merchantId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get tempId => $composableBuilder(
-    column: $table.tempId,
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -39903,6 +48534,29 @@ class $$MerchantMetadataTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$MerchantsTableFilterComposer get merchantId {
+    final $$MerchantsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.merchantId,
+      referencedTable: $db.merchants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantsTableFilterComposer(
+            $db: $db,
+            $table: $db.merchants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$MerchantMetadataTableOrderingComposer
@@ -39919,28 +48573,48 @@ class $$MerchantMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get merchantId => $composableBuilder(
-    column: $table.merchantId,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tempId => $composableBuilder(
-    column: $table.tempId,
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -39953,6 +48627,29 @@ class $$MerchantMetadataTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$MerchantsTableOrderingComposer get merchantId {
+    final $$MerchantsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.merchantId,
+      referencedTable: $db.merchants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantsTableOrderingComposer(
+            $db: $db,
+            $table: $db.merchants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$MerchantMetadataTableAnnotationComposer
@@ -39967,28 +48664,71 @@ class $$MerchantMetadataTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get merchantId => $composableBuilder(
-    column: $table.merchantId,
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get key =>
-      $composableBuilder(column: $table.key, builder: (column) => column);
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get tempId =>
-      $composableBuilder(column: $table.tempId, builder: (column) => column);
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get isSynced =>
-      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$MerchantsTableAnnotationComposer get merchantId {
+    final $$MerchantsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.merchantId,
+      referencedTable: $db.merchants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.merchants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$MerchantMetadataTableTableManager
@@ -40002,16 +48742,9 @@ class $$MerchantMetadataTableTableManager
           $$MerchantMetadataTableAnnotationComposer,
           $$MerchantMetadataTableCreateCompanionBuilder,
           $$MerchantMetadataTableUpdateCompanionBuilder,
-          (
-            MerchantMetadataData,
-            BaseReferences<
-              _$AppDatabase,
-              $MerchantMetadataTable,
-              MerchantMetadataData
-            >,
-          ),
+          (MerchantMetadataData, $$MerchantMetadataTableReferences),
           MerchantMetadataData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool merchantId})
         > {
   $$MerchantMetadataTableTableManager(
     _$AppDatabase db,
@@ -40029,21 +48762,31 @@ class $$MerchantMetadataTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> merchantId = const Value.absent(),
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<String?> tempId = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> merchantId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MerchantMetadataCompanion(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 merchantId: merchantId,
-                key: key,
-                value: value,
-                tempId: tempId,
-                isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -40051,29 +48794,86 @@ class $$MerchantMetadataTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String merchantId,
-                required String key,
-                required String value,
-                Value<String?> tempId = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> merchantId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MerchantMetadataCompanion.insert(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 merchantId: merchantId,
-                key: key,
-                value: value,
-                tempId: tempId,
-                isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$MerchantMetadataTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({merchantId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (merchantId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.merchantId,
+                                referencedTable:
+                                    $$MerchantMetadataTableReferences
+                                        ._merchantIdTable(db),
+                                referencedColumn:
+                                    $$MerchantMetadataTableReferences
+                                        ._merchantIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -40088,16 +48888,9 @@ typedef $$MerchantMetadataTableProcessedTableManager =
       $$MerchantMetadataTableAnnotationComposer,
       $$MerchantMetadataTableCreateCompanionBuilder,
       $$MerchantMetadataTableUpdateCompanionBuilder,
-      (
-        MerchantMetadataData,
-        BaseReferences<
-          _$AppDatabase,
-          $MerchantMetadataTable,
-          MerchantMetadataData
-        >,
-      ),
+      (MerchantMetadataData, $$MerchantMetadataTableReferences),
       MerchantMetadataData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool merchantId})
     >;
 typedef $$TagsTableCreateCompanionBuilder =
     TagsCompanion Function({
@@ -40332,25 +49125,35 @@ typedef $$TagsTableProcessedTableManager =
 typedef $$ContactInfoTableCreateCompanionBuilder =
     ContactInfoCompanion Function({
       required String id,
-      required String contactId,
-      Value<String?> tempId,
-      required String value,
-      required String type,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> contactId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
 typedef $$ContactInfoTableUpdateCompanionBuilder =
     ContactInfoCompanion Function({
       Value<String> id,
-      Value<String> contactId,
-      Value<String?> tempId,
-      Value<String> value,
-      Value<String> type,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> contactId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
 
@@ -40363,9 +49166,9 @@ final class $$ContactInfoTableReferences
         $_aliasNameGenerator(db.contactInfo.contactId, db.contacts.id),
       );
 
-  $$ContactsTableProcessedTableManager get contactId {
-    final $_column = $_itemColumn<String>('contact_id')!;
-
+  $$ContactsTableProcessedTableManager? get contactId {
+    final $_column = $_itemColumn<String>('contact_id');
+    if ($_column == null) return null;
     final manager = $$ContactsTableTableManager(
       $_db,
       $_db.contacts,
@@ -40392,13 +49195,8 @@ class $$ContactInfoTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get tempId => $composableBuilder(
-    column: $table.tempId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -40407,8 +49205,38 @@ class $$ContactInfoTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -40460,13 +49288,8 @@ class $$ContactInfoTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tempId => $composableBuilder(
-    column: $table.tempId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -40475,8 +49298,38 @@ class $$ContactInfoTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -40526,17 +49379,42 @@ class $$ContactInfoTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get tempId =>
-      $composableBuilder(column: $table.tempId, builder: (column) => column);
-
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
-  GeneratedColumn<bool> get isSynced =>
-      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -40597,21 +49475,31 @@ class $$ContactInfoTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> contactId = const Value.absent(),
-                Value<String?> tempId = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<String> type = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> contactId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ContactInfoCompanion(
                 id: id,
-                contactId: contactId,
-                tempId: tempId,
-                value: value,
+                name: name,
                 type: type,
-                isSynced: isSynced,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
+                contactId: contactId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -40619,21 +49507,31 @@ class $$ContactInfoTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String contactId,
-                Value<String?> tempId = const Value.absent(),
-                required String value,
-                required String type,
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> contactId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ContactInfoCompanion.insert(
                 id: id,
-                contactId: contactId,
-                tempId: tempId,
-                value: value,
+                name: name,
                 type: type,
-                isSynced: isSynced,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
+                contactId: contactId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -40708,25 +49606,70 @@ typedef $$ContactInfoTableProcessedTableManager =
 typedef $$WalletMetadataTableCreateCompanionBuilder =
     WalletMetadataCompanion Function({
       required String id,
-      required String walletId,
-      required String key,
-      required String value,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> walletId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
 typedef $$WalletMetadataTableUpdateCompanionBuilder =
     WalletMetadataCompanion Function({
       Value<String> id,
-      Value<String> walletId,
-      Value<String> key,
-      Value<String> value,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> walletId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
+
+final class $$WalletMetadataTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletMetadataTable,
+          WalletMetadataData
+        > {
+  $$WalletMetadataTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletMetadata.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager? get walletId {
+    final $_column = $_itemColumn<String>('wallet_id');
+    if ($_column == null) return null;
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$WalletMetadataTableFilterComposer
     extends Composer<_$AppDatabase, $WalletMetadataTable> {
@@ -40742,23 +49685,48 @@ class $$WalletMetadataTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get walletId => $composableBuilder(
-    column: $table.walletId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -40771,6 +49739,29 @@ class $$WalletMetadataTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletMetadataTableOrderingComposer
@@ -40787,23 +49778,48 @@ class $$WalletMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get walletId => $composableBuilder(
-    column: $table.walletId,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -40816,6 +49832,29 @@ class $$WalletMetadataTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletMetadataTableAnnotationComposer
@@ -40830,23 +49869,71 @@ class $$WalletMetadataTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get key =>
-      $composableBuilder(column: $table.key, builder: (column) => column);
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get isSynced =>
-      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletMetadataTableTableManager
@@ -40860,16 +49947,9 @@ class $$WalletMetadataTableTableManager
           $$WalletMetadataTableAnnotationComposer,
           $$WalletMetadataTableCreateCompanionBuilder,
           $$WalletMetadataTableUpdateCompanionBuilder,
-          (
-            WalletMetadataData,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletMetadataTable,
-              WalletMetadataData
-            >,
-          ),
+          (WalletMetadataData, $$WalletMetadataTableReferences),
           WalletMetadataData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId})
         > {
   $$WalletMetadataTableTableManager(
     _$AppDatabase db,
@@ -40887,19 +49967,31 @@ class $$WalletMetadataTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> walletId = const Value.absent(),
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> walletId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WalletMetadataCompanion(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 walletId: walletId,
-                key: key,
-                value: value,
-                isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -40907,27 +49999,85 @@ class $$WalletMetadataTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String walletId,
-                required String key,
-                required String value,
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> walletId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WalletMetadataCompanion.insert(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 walletId: walletId,
-                key: key,
-                value: value,
-                isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletMetadataTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable: $$WalletMetadataTableReferences
+                                    ._walletIdTable(db),
+                                referencedColumn:
+                                    $$WalletMetadataTableReferences
+                                        ._walletIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -40942,117 +50092,71 @@ typedef $$WalletMetadataTableProcessedTableManager =
       $$WalletMetadataTableAnnotationComposer,
       $$WalletMetadataTableCreateCompanionBuilder,
       $$WalletMetadataTableUpdateCompanionBuilder,
-      (
-        WalletMetadataData,
-        BaseReferences<_$AppDatabase, $WalletMetadataTable, WalletMetadataData>,
-      ),
+      (WalletMetadataData, $$WalletMetadataTableReferences),
       WalletMetadataData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId})
     >;
-typedef $$BudgetsTableCreateCompanionBuilder =
-    BudgetsCompanion Function({
-      Value<int?> underLimitGoal,
-      required DateTime startDate,
-      required DateTime endDate,
-      Value<bool> isActive,
-      required String projectId,
-      Value<String?> categoryId,
-      required String currency,
-      required String userId,
-      required int limitAmount,
-      Value<int> spentAmount,
-      Value<int> overBudgetAllowance,
-      Value<int?> iconCodePoint,
-      Value<String?> iconEmoji,
-      Value<String> iconType,
-      Value<String?> color,
+typedef $$BudgetMetadataTableCreateCompanionBuilder =
+    BudgetMetadataCompanion Function({
       required String id,
-      required String name,
-      Value<String?> description,
-      Value<String?> tempId,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> budgetId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
-typedef $$BudgetsTableUpdateCompanionBuilder =
-    BudgetsCompanion Function({
-      Value<int?> underLimitGoal,
-      Value<DateTime> startDate,
-      Value<DateTime> endDate,
-      Value<bool> isActive,
-      Value<String> projectId,
-      Value<String?> categoryId,
-      Value<String> currency,
-      Value<String> userId,
-      Value<int> limitAmount,
-      Value<int> spentAmount,
-      Value<int> overBudgetAllowance,
-      Value<int?> iconCodePoint,
-      Value<String?> iconEmoji,
-      Value<String> iconType,
-      Value<String?> color,
+typedef $$BudgetMetadataTableUpdateCompanionBuilder =
+    BudgetMetadataCompanion Function({
       Value<String> id,
-      Value<String> name,
-      Value<String?> description,
-      Value<String?> tempId,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> budgetId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
 
-final class $$BudgetsTableReferences
-    extends BaseReferences<_$AppDatabase, $BudgetsTable, Budget> {
-  $$BudgetsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$BudgetMetadataTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $BudgetMetadataTable,
+          BudgetMetadataData
+        > {
+  $$BudgetMetadataTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
 
-  static $ProjectsTable _projectIdTable(_$AppDatabase db) => db.projects
-      .createAlias($_aliasNameGenerator(db.budgets.projectId, db.projects.id));
-
-  $$ProjectsTableProcessedTableManager get projectId {
-    final $_column = $_itemColumn<String>('project_id')!;
-
-    final manager = $$ProjectsTableTableManager(
-      $_db,
-      $_db.projects,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_projectIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
-      db.categories.createAlias(
-        $_aliasNameGenerator(db.budgets.categoryId, db.categories.id),
+  static $BudgetsTable _budgetIdTable(_$AppDatabase db) =>
+      db.budgets.createAlias(
+        $_aliasNameGenerator(db.budgetMetadata.budgetId, db.budgets.id),
       );
 
-  $$CategoriesTableProcessedTableManager? get categoryId {
-    final $_column = $_itemColumn<String>('category_id');
+  $$BudgetsTableProcessedTableManager? get budgetId {
+    final $_column = $_itemColumn<String>('budget_id');
     if ($_column == null) return null;
-    final manager = $$CategoriesTableTableManager(
+    final manager = $$BudgetsTableTableManager(
       $_db,
-      $_db.categories,
+      $_db.budgets,
     ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $CurrenciesTable _currencyTable(_$AppDatabase db) => db.currencies
-      .createAlias($_aliasNameGenerator(db.budgets.currency, db.currencies.id));
-
-  $$CurrenciesTableProcessedTableManager get currency {
-    final $_column = $_itemColumn<String>('currency')!;
-
-    final manager = $$CurrenciesTableTableManager(
-      $_db,
-      $_db.currencies,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_currencyTable($_db));
+    final item = $_typedResult.readTableOrNull(_budgetIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -41060,75 +50164,15 @@ final class $$BudgetsTableReferences
   }
 }
 
-class $$BudgetsTableFilterComposer
-    extends Composer<_$AppDatabase, $BudgetsTable> {
-  $$BudgetsTableFilterComposer({
+class $$BudgetMetadataTableFilterComposer
+    extends Composer<_$AppDatabase, $BudgetMetadataTable> {
+  $$BudgetMetadataTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get underLimitGoal => $composableBuilder(
-    column: $table.underLimitGoal,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get startDate => $composableBuilder(
-    column: $table.startDate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get endDate => $composableBuilder(
-    column: $table.endDate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isActive => $composableBuilder(
-    column: $table.isActive,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get limitAmount => $composableBuilder(
-    column: $table.limitAmount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get spentAmount => $composableBuilder(
-    column: $table.spentAmount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get overBudgetAllowance => $composableBuilder(
-    column: $table.overBudgetAllowance,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get iconCodePoint => $composableBuilder(
-    column: $table.iconCodePoint,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get iconEmoji => $composableBuilder(
-    column: $table.iconEmoji,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get iconType => $composableBuilder(
-    column: $table.iconType,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get color => $composableBuilder(
-    column: $table.color,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -41139,18 +50183,43 @@ class $$BudgetsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get tempId => $composableBuilder(
-    column: $table.tempId,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -41164,66 +50233,20 @@ class $$BudgetsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$ProjectsTableFilterComposer get projectId {
-    final $$ProjectsTableFilterComposer composer = $composerBuilder(
+  $$BudgetsTableFilterComposer get budgetId {
+    final $$BudgetsTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.projectId,
-      referencedTable: $db.projects,
+      getCurrentColumn: (t) => t.budgetId,
+      referencedTable: $db.budgets,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ProjectsTableFilterComposer(
+          }) => $$BudgetsTableFilterComposer(
             $db: $db,
-            $table: $db.projects,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CategoriesTableFilterComposer get categoryId {
-    final $$CategoriesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.categories,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CategoriesTableFilterComposer(
-            $db: $db,
-            $table: $db.categories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CurrenciesTableFilterComposer get currency {
-    final $$CurrenciesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.currency,
-      referencedTable: $db.currencies,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CurrenciesTableFilterComposer(
-            $db: $db,
-            $table: $db.currencies,
+            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -41234,75 +50257,15 @@ class $$BudgetsTableFilterComposer
   }
 }
 
-class $$BudgetsTableOrderingComposer
-    extends Composer<_$AppDatabase, $BudgetsTable> {
-  $$BudgetsTableOrderingComposer({
+class $$BudgetMetadataTableOrderingComposer
+    extends Composer<_$AppDatabase, $BudgetMetadataTable> {
+  $$BudgetMetadataTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get underLimitGoal => $composableBuilder(
-    column: $table.underLimitGoal,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get startDate => $composableBuilder(
-    column: $table.startDate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get endDate => $composableBuilder(
-    column: $table.endDate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isActive => $composableBuilder(
-    column: $table.isActive,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get limitAmount => $composableBuilder(
-    column: $table.limitAmount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get spentAmount => $composableBuilder(
-    column: $table.spentAmount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get overBudgetAllowance => $composableBuilder(
-    column: $table.overBudgetAllowance,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get iconCodePoint => $composableBuilder(
-    column: $table.iconCodePoint,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get iconEmoji => $composableBuilder(
-    column: $table.iconEmoji,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get iconType => $composableBuilder(
-    column: $table.iconType,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get color => $composableBuilder(
-    column: $table.color,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -41313,18 +50276,43 @@ class $$BudgetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tempId => $composableBuilder(
-    column: $table.tempId,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -41338,66 +50326,20 @@ class $$BudgetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$ProjectsTableOrderingComposer get projectId {
-    final $$ProjectsTableOrderingComposer composer = $composerBuilder(
+  $$BudgetsTableOrderingComposer get budgetId {
+    final $$BudgetsTableOrderingComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.projectId,
-      referencedTable: $db.projects,
+      getCurrentColumn: (t) => t.budgetId,
+      referencedTable: $db.budgets,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ProjectsTableOrderingComposer(
+          }) => $$BudgetsTableOrderingComposer(
             $db: $db,
-            $table: $db.projects,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CategoriesTableOrderingComposer get categoryId {
-    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.categories,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CategoriesTableOrderingComposer(
-            $db: $db,
-            $table: $db.categories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CurrenciesTableOrderingComposer get currency {
-    final $$CurrenciesTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.currency,
-      referencedTable: $db.currencies,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CurrenciesTableOrderingComposer(
-            $db: $db,
-            $table: $db.currencies,
+            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -41408,77 +50350,54 @@ class $$BudgetsTableOrderingComposer
   }
 }
 
-class $$BudgetsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $BudgetsTable> {
-  $$BudgetsTableAnnotationComposer({
+class $$BudgetMetadataTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BudgetMetadataTable> {
+  $$BudgetMetadataTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get underLimitGoal => $composableBuilder(
-    column: $table.underLimitGoal,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get startDate =>
-      $composableBuilder(column: $table.startDate, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get endDate =>
-      $composableBuilder(column: $table.endDate, builder: (column) => column);
-
-  GeneratedColumn<bool> get isActive =>
-      $composableBuilder(column: $table.isActive, builder: (column) => column);
-
-  GeneratedColumn<String> get userId =>
-      $composableBuilder(column: $table.userId, builder: (column) => column);
-
-  GeneratedColumn<int> get limitAmount => $composableBuilder(
-    column: $table.limitAmount,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get spentAmount => $composableBuilder(
-    column: $table.spentAmount,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get overBudgetAllowance => $composableBuilder(
-    column: $table.overBudgetAllowance,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get iconCodePoint => $composableBuilder(
-    column: $table.iconCodePoint,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get iconEmoji =>
-      $composableBuilder(column: $table.iconEmoji, builder: (column) => column);
-
-  GeneratedColumn<String> get iconType =>
-      $composableBuilder(column: $table.iconType, builder: (column) => column);
-
-  GeneratedColumn<String> get color =>
-      $composableBuilder(column: $table.color, builder: (column) => column);
-
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get tempId =>
-      $composableBuilder(column: $table.tempId, builder: (column) => column);
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get isSynced =>
-      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -41486,66 +50405,20 @@ class $$BudgetsTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  $$ProjectsTableAnnotationComposer get projectId {
-    final $$ProjectsTableAnnotationComposer composer = $composerBuilder(
+  $$BudgetsTableAnnotationComposer get budgetId {
+    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.projectId,
-      referencedTable: $db.projects,
+      getCurrentColumn: (t) => t.budgetId,
+      referencedTable: $db.budgets,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ProjectsTableAnnotationComposer(
+          }) => $$BudgetsTableAnnotationComposer(
             $db: $db,
-            $table: $db.projects,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CategoriesTableAnnotationComposer get categoryId {
-    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.categories,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CategoriesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.categories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CurrenciesTableAnnotationComposer get currency {
-    final $$CurrenciesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.currency,
-      referencedTable: $db.currencies,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CurrenciesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.currencies,
+            $table: $db.budgets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -41556,132 +50429,94 @@ class $$BudgetsTableAnnotationComposer
   }
 }
 
-class $$BudgetsTableTableManager
+class $$BudgetMetadataTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $BudgetsTable,
-          Budget,
-          $$BudgetsTableFilterComposer,
-          $$BudgetsTableOrderingComposer,
-          $$BudgetsTableAnnotationComposer,
-          $$BudgetsTableCreateCompanionBuilder,
-          $$BudgetsTableUpdateCompanionBuilder,
-          (Budget, $$BudgetsTableReferences),
-          Budget,
-          PrefetchHooks Function({
-            bool projectId,
-            bool categoryId,
-            bool currency,
-          })
+          $BudgetMetadataTable,
+          BudgetMetadataData,
+          $$BudgetMetadataTableFilterComposer,
+          $$BudgetMetadataTableOrderingComposer,
+          $$BudgetMetadataTableAnnotationComposer,
+          $$BudgetMetadataTableCreateCompanionBuilder,
+          $$BudgetMetadataTableUpdateCompanionBuilder,
+          (BudgetMetadataData, $$BudgetMetadataTableReferences),
+          BudgetMetadataData,
+          PrefetchHooks Function({bool budgetId})
         > {
-  $$BudgetsTableTableManager(_$AppDatabase db, $BudgetsTable table)
-    : super(
+  $$BudgetMetadataTableTableManager(
+    _$AppDatabase db,
+    $BudgetMetadataTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$BudgetsTableFilterComposer($db: db, $table: table),
+              $$BudgetMetadataTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$BudgetsTableOrderingComposer($db: db, $table: table),
+              $$BudgetMetadataTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$BudgetsTableAnnotationComposer($db: db, $table: table),
+              $$BudgetMetadataTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int?> underLimitGoal = const Value.absent(),
-                Value<DateTime> startDate = const Value.absent(),
-                Value<DateTime> endDate = const Value.absent(),
-                Value<bool> isActive = const Value.absent(),
-                Value<String> projectId = const Value.absent(),
-                Value<String?> categoryId = const Value.absent(),
-                Value<String> currency = const Value.absent(),
-                Value<String> userId = const Value.absent(),
-                Value<int> limitAmount = const Value.absent(),
-                Value<int> spentAmount = const Value.absent(),
-                Value<int> overBudgetAllowance = const Value.absent(),
-                Value<int?> iconCodePoint = const Value.absent(),
-                Value<String?> iconEmoji = const Value.absent(),
-                Value<String> iconType = const Value.absent(),
-                Value<String?> color = const Value.absent(),
                 Value<String> id = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String?> description = const Value.absent(),
-                Value<String?> tempId = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> budgetId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => BudgetsCompanion(
-                underLimitGoal: underLimitGoal,
-                startDate: startDate,
-                endDate: endDate,
-                isActive: isActive,
-                projectId: projectId,
-                categoryId: categoryId,
-                currency: currency,
-                userId: userId,
-                limitAmount: limitAmount,
-                spentAmount: spentAmount,
-                overBudgetAllowance: overBudgetAllowance,
-                iconCodePoint: iconCodePoint,
-                iconEmoji: iconEmoji,
-                iconType: iconType,
-                color: color,
+              }) => BudgetMetadataCompanion(
                 id: id,
                 name: name,
-                description: description,
-                tempId: tempId,
-                isSynced: isSynced,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
+                budgetId: budgetId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int?> underLimitGoal = const Value.absent(),
-                required DateTime startDate,
-                required DateTime endDate,
-                Value<bool> isActive = const Value.absent(),
-                required String projectId,
-                Value<String?> categoryId = const Value.absent(),
-                required String currency,
-                required String userId,
-                required int limitAmount,
-                Value<int> spentAmount = const Value.absent(),
-                Value<int> overBudgetAllowance = const Value.absent(),
-                Value<int?> iconCodePoint = const Value.absent(),
-                Value<String?> iconEmoji = const Value.absent(),
-                Value<String> iconType = const Value.absent(),
-                Value<String?> color = const Value.absent(),
                 required String id,
-                required String name,
-                Value<String?> description = const Value.absent(),
-                Value<String?> tempId = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> budgetId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => BudgetsCompanion.insert(
-                underLimitGoal: underLimitGoal,
-                startDate: startDate,
-                endDate: endDate,
-                isActive: isActive,
-                projectId: projectId,
-                categoryId: categoryId,
-                currency: currency,
-                userId: userId,
-                limitAmount: limitAmount,
-                spentAmount: spentAmount,
-                overBudgetAllowance: overBudgetAllowance,
-                iconCodePoint: iconCodePoint,
-                iconEmoji: iconEmoji,
-                iconType: iconType,
-                color: color,
+              }) => BudgetMetadataCompanion.insert(
                 id: id,
                 name: name,
-                description: description,
-                tempId: tempId,
-                isSynced: isSynced,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
+                budgetId: budgetId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -41690,118 +50525,128 @@ class $$BudgetsTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$BudgetsTableReferences(db, table, e),
+                  $$BudgetMetadataTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback:
-              ({projectId = false, categoryId = false, currency = false}) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (projectId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.projectId,
-                                    referencedTable: $$BudgetsTableReferences
-                                        ._projectIdTable(db),
-                                    referencedColumn: $$BudgetsTableReferences
-                                        ._projectIdTable(db)
+          prefetchHooksCallback: ({budgetId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (budgetId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.budgetId,
+                                referencedTable: $$BudgetMetadataTableReferences
+                                    ._budgetIdTable(db),
+                                referencedColumn:
+                                    $$BudgetMetadataTableReferences
+                                        ._budgetIdTable(db)
                                         .id,
-                                  )
-                                  as T;
-                        }
-                        if (categoryId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.categoryId,
-                                    referencedTable: $$BudgetsTableReferences
-                                        ._categoryIdTable(db),
-                                    referencedColumn: $$BudgetsTableReferences
-                                        ._categoryIdTable(db)
-                                        .id,
-                                  )
-                                  as T;
-                        }
-                        if (currency) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.currency,
-                                    referencedTable: $$BudgetsTableReferences
-                                        ._currencyTable(db),
-                                    referencedColumn: $$BudgetsTableReferences
-                                        ._currencyTable(db)
-                                        .id,
-                                  )
-                                  as T;
-                        }
+                              )
+                              as T;
+                    }
 
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [];
+                    return state;
                   },
-                );
+              getPrefetchedDataCallback: (items) async {
+                return [];
               },
+            );
+          },
         ),
       );
 }
 
-typedef $$BudgetsTableProcessedTableManager =
+typedef $$BudgetMetadataTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $BudgetsTable,
-      Budget,
-      $$BudgetsTableFilterComposer,
-      $$BudgetsTableOrderingComposer,
-      $$BudgetsTableAnnotationComposer,
-      $$BudgetsTableCreateCompanionBuilder,
-      $$BudgetsTableUpdateCompanionBuilder,
-      (Budget, $$BudgetsTableReferences),
-      Budget,
-      PrefetchHooks Function({bool projectId, bool categoryId, bool currency})
+      $BudgetMetadataTable,
+      BudgetMetadataData,
+      $$BudgetMetadataTableFilterComposer,
+      $$BudgetMetadataTableOrderingComposer,
+      $$BudgetMetadataTableAnnotationComposer,
+      $$BudgetMetadataTableCreateCompanionBuilder,
+      $$BudgetMetadataTableUpdateCompanionBuilder,
+      (BudgetMetadataData, $$BudgetMetadataTableReferences),
+      BudgetMetadataData,
+      PrefetchHooks Function({bool budgetId})
     >;
 typedef $$GoalMetadataTableCreateCompanionBuilder =
     GoalMetadataCompanion Function({
       required String id,
-      required String goalId,
-      required String key,
-      required String value,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> goalId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
 typedef $$GoalMetadataTableUpdateCompanionBuilder =
     GoalMetadataCompanion Function({
       Value<String> id,
-      Value<String> goalId,
-      Value<String> key,
-      Value<String> value,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> goalId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
+
+final class $$GoalMetadataTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $GoalMetadataTable, GoalMetadataData> {
+  $$GoalMetadataTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $GoalsTable _goalIdTable(_$AppDatabase db) => db.goals.createAlias(
+    $_aliasNameGenerator(db.goalMetadata.goalId, db.goals.id),
+  );
+
+  $$GoalsTableProcessedTableManager? get goalId {
+    final $_column = $_itemColumn<String>('goal_id');
+    if ($_column == null) return null;
+    final manager = $$GoalsTableTableManager(
+      $_db,
+      $_db.goals,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_goalIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$GoalMetadataTableFilterComposer
     extends Composer<_$AppDatabase, $GoalMetadataTable> {
@@ -41817,23 +50662,48 @@ class $$GoalMetadataTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get goalId => $composableBuilder(
-    column: $table.goalId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -41846,6 +50716,29 @@ class $$GoalMetadataTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$GoalsTableFilterComposer get goalId {
+    final $$GoalsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.goals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableFilterComposer(
+            $db: $db,
+            $table: $db.goals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$GoalMetadataTableOrderingComposer
@@ -41862,23 +50755,48 @@ class $$GoalMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get goalId => $composableBuilder(
-    column: $table.goalId,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -41891,6 +50809,29 @@ class $$GoalMetadataTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$GoalsTableOrderingComposer get goalId {
+    final $$GoalsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.goals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableOrderingComposer(
+            $db: $db,
+            $table: $db.goals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$GoalMetadataTableAnnotationComposer
@@ -41905,23 +50846,71 @@ class $$GoalMetadataTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get goalId =>
-      $composableBuilder(column: $table.goalId, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get key =>
-      $composableBuilder(column: $table.key, builder: (column) => column);
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get isSynced =>
-      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$GoalsTableAnnotationComposer get goalId {
+    final $$GoalsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.goals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.goals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$GoalMetadataTableTableManager
@@ -41935,12 +50924,9 @@ class $$GoalMetadataTableTableManager
           $$GoalMetadataTableAnnotationComposer,
           $$GoalMetadataTableCreateCompanionBuilder,
           $$GoalMetadataTableUpdateCompanionBuilder,
-          (
-            GoalMetadataData,
-            BaseReferences<_$AppDatabase, $GoalMetadataTable, GoalMetadataData>,
-          ),
+          (GoalMetadataData, $$GoalMetadataTableReferences),
           GoalMetadataData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool goalId})
         > {
   $$GoalMetadataTableTableManager(_$AppDatabase db, $GoalMetadataTable table)
     : super(
@@ -41956,19 +50942,31 @@ class $$GoalMetadataTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> goalId = const Value.absent(),
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> goalId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalMetadataCompanion(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 goalId: goalId,
-                key: key,
-                value: value,
-                isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -41976,27 +50974,84 @@ class $$GoalMetadataTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String goalId,
-                required String key,
-                required String value,
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> goalId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalMetadataCompanion.insert(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 goalId: goalId,
-                key: key,
-                value: value,
-                isSynced: isSynced,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$GoalMetadataTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({goalId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (goalId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.goalId,
+                                referencedTable: $$GoalMetadataTableReferences
+                                    ._goalIdTable(db),
+                                referencedColumn: $$GoalMetadataTableReferences
+                                    ._goalIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -42011,12 +51066,9 @@ typedef $$GoalMetadataTableProcessedTableManager =
       $$GoalMetadataTableAnnotationComposer,
       $$GoalMetadataTableCreateCompanionBuilder,
       $$GoalMetadataTableUpdateCompanionBuilder,
-      (
-        GoalMetadataData,
-        BaseReferences<_$AppDatabase, $GoalMetadataTable, GoalMetadataData>,
-      ),
+      (GoalMetadataData, $$GoalMetadataTableReferences),
       GoalMetadataData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool goalId})
     >;
 typedef $$GoalContributionTableCreateCompanionBuilder =
     GoalContributionCompanion Function({
@@ -42026,6 +51078,8 @@ typedef $$GoalContributionTableCreateCompanionBuilder =
       required int allocatedAmount,
       Value<DateTime> allocatedAt,
       Value<String?> notes,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
       Value<int> rowid,
     });
 typedef $$GoalContributionTableUpdateCompanionBuilder =
@@ -42036,6 +51090,8 @@ typedef $$GoalContributionTableUpdateCompanionBuilder =
       Value<int> allocatedAmount,
       Value<DateTime> allocatedAt,
       Value<String?> notes,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
       Value<int> rowid,
     });
 
@@ -42119,6 +51175,16 @@ class $$GoalContributionTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$PaymentsTableFilterComposer get paymentId {
     final $$PaymentsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -42195,6 +51261,16 @@ class $$GoalContributionTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$PaymentsTableOrderingComposer get paymentId {
     final $$PaymentsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -42266,6 +51342,12 @@ class $$GoalContributionTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get created =>
+      $composableBuilder(column: $table.created, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updated =>
+      $composableBuilder(column: $table.updated, builder: (column) => column);
 
   $$PaymentsTableAnnotationComposer get paymentId {
     final $$PaymentsTableAnnotationComposer composer = $composerBuilder(
@@ -42350,6 +51432,8 @@ class $$GoalContributionTableTableManager
                 Value<int> allocatedAmount = const Value.absent(),
                 Value<DateTime> allocatedAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalContributionCompanion(
                 id: id,
@@ -42358,6 +51442,8 @@ class $$GoalContributionTableTableManager
                 allocatedAmount: allocatedAmount,
                 allocatedAt: allocatedAt,
                 notes: notes,
+                created: created,
+                updated: updated,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -42368,6 +51454,8 @@ class $$GoalContributionTableTableManager
                 required int allocatedAmount,
                 Value<DateTime> allocatedAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GoalContributionCompanion.insert(
                 id: id,
@@ -42376,6 +51464,8 @@ class $$GoalContributionTableTableManager
                 allocatedAmount: allocatedAmount,
                 allocatedAt: allocatedAt,
                 notes: notes,
+                created: created,
+                updated: updated,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -42465,19 +51555,73 @@ typedef $$GoalContributionTableProcessedTableManager =
 typedef $$InvestmentMetadataTableCreateCompanionBuilder =
     InvestmentMetadataCompanion Function({
       required String id,
-      required String investmentId,
-      required String key,
-      required String value,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> investmentId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
 typedef $$InvestmentMetadataTableUpdateCompanionBuilder =
     InvestmentMetadataCompanion Function({
       Value<String> id,
-      Value<String> investmentId,
-      Value<String> key,
-      Value<String> value,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> investmentId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
       Value<int> rowid,
     });
+
+final class $$InvestmentMetadataTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $InvestmentMetadataTable,
+          InvestmentMetadataData
+        > {
+  $$InvestmentMetadataTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InvestmentsTable _investmentIdTable(_$AppDatabase db) =>
+      db.investments.createAlias(
+        $_aliasNameGenerator(
+          db.investmentMetadata.investmentId,
+          db.investments.id,
+        ),
+      );
+
+  $$InvestmentsTableProcessedTableManager? get investmentId {
+    final $_column = $_itemColumn<String>('investment_id');
+    if ($_column == null) return null;
+    final manager = $$InvestmentsTableTableManager(
+      $_db,
+      $_db.investments,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_investmentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$InvestmentMetadataTableFilterComposer
     extends Composer<_$AppDatabase, $InvestmentMetadataTable> {
@@ -42493,20 +51637,83 @@ class $$InvestmentMetadataTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get investmentId => $composableBuilder(
-    column: $table.investmentId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InvestmentsTableFilterComposer get investmentId {
+    final $$InvestmentsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.investmentId,
+      referencedTable: $db.investments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvestmentsTableFilterComposer(
+            $db: $db,
+            $table: $db.investments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$InvestmentMetadataTableOrderingComposer
@@ -42523,20 +51730,83 @@ class $$InvestmentMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get investmentId => $composableBuilder(
-    column: $table.investmentId,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InvestmentsTableOrderingComposer get investmentId {
+    final $$InvestmentsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.investmentId,
+      referencedTable: $db.investments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvestmentsTableOrderingComposer(
+            $db: $db,
+            $table: $db.investments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$InvestmentMetadataTableAnnotationComposer
@@ -42551,16 +51821,71 @@ class $$InvestmentMetadataTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get investmentId => $composableBuilder(
-    column: $table.investmentId,
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get key =>
-      $composableBuilder(column: $table.key, builder: (column) => column);
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$InvestmentsTableAnnotationComposer get investmentId {
+    final $$InvestmentsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.investmentId,
+      referencedTable: $db.investments,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvestmentsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.investments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$InvestmentMetadataTableTableManager
@@ -42574,16 +51899,9 @@ class $$InvestmentMetadataTableTableManager
           $$InvestmentMetadataTableAnnotationComposer,
           $$InvestmentMetadataTableCreateCompanionBuilder,
           $$InvestmentMetadataTableUpdateCompanionBuilder,
-          (
-            InvestmentMetadataData,
-            BaseReferences<
-              _$AppDatabase,
-              $InvestmentMetadataTable,
-              InvestmentMetadataData
-            >,
-          ),
+          (InvestmentMetadataData, $$InvestmentMetadataTableReferences),
           InvestmentMetadataData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool investmentId})
         > {
   $$InvestmentMetadataTableTableManager(
     _$AppDatabase db,
@@ -42604,35 +51922,118 @@ class $$InvestmentMetadataTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> investmentId = const Value.absent(),
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> investmentId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => InvestmentMetadataCompanion(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 investmentId: investmentId,
-                key: key,
-                value: value,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
-                required String investmentId,
-                required String key,
-                required String value,
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> investmentId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => InvestmentMetadataCompanion.insert(
                 id: id,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
                 investmentId: investmentId,
-                key: key,
-                value: value,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InvestmentMetadataTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({investmentId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (investmentId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.investmentId,
+                                referencedTable:
+                                    $$InvestmentMetadataTableReferences
+                                        ._investmentIdTable(db),
+                                referencedColumn:
+                                    $$InvestmentMetadataTableReferences
+                                        ._investmentIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -42647,16 +52048,9 @@ typedef $$InvestmentMetadataTableProcessedTableManager =
       $$InvestmentMetadataTableAnnotationComposer,
       $$InvestmentMetadataTableCreateCompanionBuilder,
       $$InvestmentMetadataTableUpdateCompanionBuilder,
-      (
-        InvestmentMetadataData,
-        BaseReferences<
-          _$AppDatabase,
-          $InvestmentMetadataTable,
-          InvestmentMetadataData
-        >,
-      ),
+      (InvestmentMetadataData, $$InvestmentMetadataTableReferences),
       InvestmentMetadataData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool investmentId})
     >;
 typedef $$InvestmentPaymentsTableCreateCompanionBuilder =
     InvestmentPaymentsCompanion Function({
@@ -42666,6 +52060,9 @@ typedef $$InvestmentPaymentsTableCreateCompanionBuilder =
       required int allocatedAmount,
       Value<DateTime> allocatedAt,
       Value<String?> notes,
+      Value<String?> userId,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
       Value<int> rowid,
     });
 typedef $$InvestmentPaymentsTableUpdateCompanionBuilder =
@@ -42676,6 +52073,9 @@ typedef $$InvestmentPaymentsTableUpdateCompanionBuilder =
       Value<int> allocatedAmount,
       Value<DateTime> allocatedAt,
       Value<String?> notes,
+      Value<String?> userId,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
       Value<int> rowid,
     });
 
@@ -42763,6 +52163,21 @@ class $$InvestmentPaymentsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$PaymentsTableFilterComposer get paymentId {
     final $$PaymentsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -42839,6 +52254,21 @@ class $$InvestmentPaymentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$PaymentsTableOrderingComposer get paymentId {
     final $$PaymentsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -42910,6 +52340,15 @@ class $$InvestmentPaymentsTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get created =>
+      $composableBuilder(column: $table.created, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updated =>
+      $composableBuilder(column: $table.updated, builder: (column) => column);
 
   $$PaymentsTableAnnotationComposer get paymentId {
     final $$PaymentsTableAnnotationComposer composer = $composerBuilder(
@@ -42997,6 +52436,9 @@ class $$InvestmentPaymentsTableTableManager
                 Value<int> allocatedAmount = const Value.absent(),
                 Value<DateTime> allocatedAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => InvestmentPaymentsCompanion(
                 id: id,
@@ -43005,6 +52447,9 @@ class $$InvestmentPaymentsTableTableManager
                 allocatedAmount: allocatedAmount,
                 allocatedAt: allocatedAt,
                 notes: notes,
+                userId: userId,
+                created: created,
+                updated: updated,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -43015,6 +52460,9 @@ class $$InvestmentPaymentsTableTableManager
                 required int allocatedAmount,
                 Value<DateTime> allocatedAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => InvestmentPaymentsCompanion.insert(
                 id: id,
@@ -43023,6 +52471,9 @@ class $$InvestmentPaymentsTableTableManager
                 allocatedAmount: allocatedAmount,
                 allocatedAt: allocatedAt,
                 notes: notes,
+                userId: userId,
+                created: created,
+                updated: updated,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -43468,26 +52919,74 @@ typedef $$InvestmentReturnsTableProcessedTableManager =
     >;
 typedef $$WalletProviderMetadataTableCreateCompanionBuilder =
     WalletProviderMetadataCompanion Function({
-      Value<int> id,
-      required String providerId,
-      required String key,
-      required String value,
-      Value<String?> tempId,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      required String id,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> walletProviderId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
     });
 typedef $$WalletProviderMetadataTableUpdateCompanionBuilder =
     WalletProviderMetadataCompanion Function({
-      Value<int> id,
-      Value<String> providerId,
-      Value<String> key,
-      Value<String> value,
-      Value<String?> tempId,
-      Value<bool> isSynced,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<String> id,
+      Value<String?> name,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> urlValue,
+      Value<String?> emailValue,
+      Value<String?> userId,
+      Value<String?> walletProviderId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
     });
+
+final class $$WalletProviderMetadataTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletProviderMetadataTable,
+          WalletProviderMetadataData
+        > {
+  $$WalletProviderMetadataTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletProvidersTable _walletProviderIdTable(_$AppDatabase db) =>
+      db.walletProviders.createAlias(
+        $_aliasNameGenerator(
+          db.walletProviderMetadata.walletProviderId,
+          db.walletProviders.id,
+        ),
+      );
+
+  $$WalletProvidersTableProcessedTableManager? get walletProviderId {
+    final $_column = $_itemColumn<String>('wallet_provider_id');
+    if ($_column == null) return null;
+    final manager = $$WalletProvidersTableTableManager(
+      $_db,
+      $_db.walletProviders,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletProviderIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$WalletProviderMetadataTableFilterComposer
     extends Composer<_$AppDatabase, $WalletProviderMetadataTable> {
@@ -43498,33 +52997,53 @@ class $$WalletProviderMetadataTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get providerId => $composableBuilder(
-    column: $table.providerId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get tempId => $composableBuilder(
-    column: $table.tempId,
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -43537,6 +53056,29 @@ class $$WalletProviderMetadataTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletProvidersTableFilterComposer get walletProviderId {
+    final $$WalletProvidersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletProviderId,
+      referencedTable: $db.walletProviders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletProvidersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletProviders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletProviderMetadataTableOrderingComposer
@@ -43548,33 +53090,53 @@ class $$WalletProviderMetadataTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get providerId => $composableBuilder(
-    column: $table.providerId,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get key => $composableBuilder(
-    column: $table.key,
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tempId => $composableBuilder(
-    column: $table.tempId,
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlValue => $composableBuilder(
+    column: $table.urlValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -43587,6 +53149,29 @@ class $$WalletProviderMetadataTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletProvidersTableOrderingComposer get walletProviderId {
+    final $$WalletProvidersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletProviderId,
+      referencedTable: $db.walletProviders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletProvidersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletProviders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletProviderMetadataTableAnnotationComposer
@@ -43598,31 +53183,74 @@ class $$WalletProviderMetadataTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get providerId => $composableBuilder(
-    column: $table.providerId,
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get key =>
-      $composableBuilder(column: $table.key, builder: (column) => column);
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get tempId =>
-      $composableBuilder(column: $table.tempId, builder: (column) => column);
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get isSynced =>
-      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+  GeneratedColumn<String> get urlValue =>
+      $composableBuilder(column: $table.urlValue, builder: (column) => column);
+
+  GeneratedColumn<String> get emailValue => $composableBuilder(
+    column: $table.emailValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletProvidersTableAnnotationComposer get walletProviderId {
+    final $$WalletProvidersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletProviderId,
+      referencedTable: $db.walletProviders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletProvidersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletProviders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletProviderMetadataTableTableManager
@@ -43636,16 +53264,9 @@ class $$WalletProviderMetadataTableTableManager
           $$WalletProviderMetadataTableAnnotationComposer,
           $$WalletProviderMetadataTableCreateCompanionBuilder,
           $$WalletProviderMetadataTableUpdateCompanionBuilder,
-          (
-            WalletProviderMetadataData,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletProviderMetadataTable,
-              WalletProviderMetadataData
-            >,
-          ),
+          (WalletProviderMetadataData, $$WalletProviderMetadataTableReferences),
           WalletProviderMetadataData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletProviderId})
         > {
   $$WalletProviderMetadataTableTableManager(
     _$AppDatabase db,
@@ -43671,48 +53292,119 @@ class $$WalletProviderMetadataTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                Value<String> providerId = const Value.absent(),
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<String?> tempId = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> walletProviderId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => WalletProviderMetadataCompanion(
                 id: id,
-                providerId: providerId,
-                key: key,
-                value: value,
-                tempId: tempId,
-                isSynced: isSynced,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
+                walletProviderId: walletProviderId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                required String providerId,
-                required String key,
-                required String value,
-                Value<String?> tempId = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                required String id,
+                Value<String?> name = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> urlValue = const Value.absent(),
+                Value<String?> emailValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> walletProviderId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => WalletProviderMetadataCompanion.insert(
                 id: id,
-                providerId: providerId,
-                key: key,
-                value: value,
-                tempId: tempId,
-                isSynced: isSynced,
+                name: name,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                urlValue: urlValue,
+                emailValue: emailValue,
+                userId: userId,
+                walletProviderId: walletProviderId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletProviderMetadataTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletProviderId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletProviderId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletProviderId,
+                                referencedTable:
+                                    $$WalletProviderMetadataTableReferences
+                                        ._walletProviderIdTable(db),
+                                referencedColumn:
+                                    $$WalletProviderMetadataTableReferences
+                                        ._walletProviderIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -43727,21 +53419,16 @@ typedef $$WalletProviderMetadataTableProcessedTableManager =
       $$WalletProviderMetadataTableAnnotationComposer,
       $$WalletProviderMetadataTableCreateCompanionBuilder,
       $$WalletProviderMetadataTableUpdateCompanionBuilder,
-      (
-        WalletProviderMetadataData,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletProviderMetadataTable,
-          WalletProviderMetadataData
-        >,
-      ),
+      (WalletProviderMetadataData, $$WalletProviderMetadataTableReferences),
       WalletProviderMetadataData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletProviderId})
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
   $$CurrenciesTableTableManager get currencies =>
       $$CurrenciesTableTableManager(_db, _db.currencies);
   $$WalletProvidersTableTableManager get walletProviders =>
@@ -43766,6 +53453,8 @@ class $AppDatabaseManager {
       $$InvestmentsTableTableManager(_db, _db.investments);
   $$GoalsTableTableManager get goals =>
       $$GoalsTableTableManager(_db, _db.goals);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db, _db.budgets);
   $$RemindersTableTableManager get reminders =>
       $$RemindersTableTableManager(_db, _db.reminders);
   $$ExpensesTableTableManager get expenses =>
@@ -43793,8 +53482,8 @@ class $AppDatabaseManager {
       $$ContactInfoTableTableManager(_db, _db.contactInfo);
   $$WalletMetadataTableTableManager get walletMetadata =>
       $$WalletMetadataTableTableManager(_db, _db.walletMetadata);
-  $$BudgetsTableTableManager get budgets =>
-      $$BudgetsTableTableManager(_db, _db.budgets);
+  $$BudgetMetadataTableTableManager get budgetMetadata =>
+      $$BudgetMetadataTableTableManager(_db, _db.budgetMetadata);
   $$GoalMetadataTableTableManager get goalMetadata =>
       $$GoalMetadataTableTableManager(_db, _db.goalMetadata);
   $$GoalContributionTableTableManager get goalContribution =>

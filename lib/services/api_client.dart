@@ -14,6 +14,7 @@ class ApiClient {
 
   static const String tokenKey = 'auth_token';
   static const String userKey = 'user_data';
+  static const String userIdKey = 'user_id';
 
   factory ApiClient() {
     return _instance;
@@ -88,16 +89,16 @@ class ApiClient {
   }
 
   // Save user data to secure storage
-  static Future<void> saveUser(User user) async {
+  static Future<void> saveUser(UserModel user) async {
     await _secureStorage.write(key: userKey, value: jsonEncode(user.toJson()));
   }
 
   // Get user data from secure storage
-  static Future<User?> getUser() async {
+  static Future<UserModel?> getUser() async {
     final userData = await _secureStorage.read(key: userKey);
     if (userData != null && userData.isNotEmpty) {
       try {
-        return User.fromJson(jsonDecode(userData));
+        return UserModel.fromJson(jsonDecode(userData));
       } catch (e) {
         // If there's an error parsing the user data, return null
         return null;

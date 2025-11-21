@@ -1,7 +1,54 @@
+import 'package:billkeep/models/contact_info_model.dart';
+import 'package:pocketbase/pocketbase.dart';
 import '../models/contact_model.dart';
 import 'base_api_service.dart';
 
 class ContactService extends BaseApiService {
+  ContactService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for contacts collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('contacts', _handleContactUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleContactUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Contact ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncContactFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle contact deletion in local DB if needed
+            print('🗑️ Contact deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling contact update: $e');
+    }
+  }
+
+  /// Sync contact from backend to local DB
+  Future<void> _syncContactFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing contact: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing contact: $e');
+    }
+  }
+
   /// Create a new contact
   Future<ContactModel> createContact({
     required String name,

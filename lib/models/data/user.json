@@ -1,0 +1,12 @@
+{
+  "collectionId": "_pb_users_auth_",
+  "collectionName": "users",
+  "id": "test",
+  "email": "test@example.com",
+  "emailVisibility": true,
+  "verified": true,
+  "name": "test",
+  "avatar": "filename.jpg",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

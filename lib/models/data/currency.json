@@ -1,0 +1,17 @@
+{
+  "collectionId": "pbc_3379852803",
+  "collectionName": "currencies",
+  "id": "test",
+  "code": "test",
+  "name": "test",
+  "symbol": "test",
+  "decimals": 123,
+  "isCrypto": true,
+  "isActive": true,
+  "user": "RELATION_RECORD_ID",
+  "isSynced": true,
+  "tempId": "test",
+  "metadata": "JSON",
+  "created": "2022-01-01 10:00:00.123Z",
+  "updated": "2022-01-01 10:00:00.123Z"
+}

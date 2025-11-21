@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../services/auth_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:billkeep/services/auth_service.dart';
 
 /// Coordinator to manage onboarding flow
 /// This determines which screen to show based on authentication state
-class OnboardingCoordinator extends StatefulWidget {
+class OnboardingCoordinator extends ConsumerStatefulWidget {
   const OnboardingCoordinator({super.key});
 
   @override
-  State<OnboardingCoordinator> createState() => _OnboardingCoordinatorState();
+  ConsumerState<OnboardingCoordinator> createState() => _OnboardingCoordinatorState();
 }
 
-class _OnboardingCoordinatorState extends State<OnboardingCoordinator> {
+class _OnboardingCoordinatorState extends ConsumerState<OnboardingCoordinator> {
   final AuthService _authService = AuthService();
   bool _isLoading = true;
 
@@ -18,6 +19,12 @@ class _OnboardingCoordinatorState extends State<OnboardingCoordinator> {
   void initState() {
     super.initState();
     _checkAuthStatus();
+  }
+
+  @override
+  void dispose() {
+    _authService.dispose();
+    super.dispose();
   }
 
   Future<void> _checkAuthStatus() async {
@@ -28,11 +35,16 @@ class _OnboardingCoordinatorState extends State<OnboardingCoordinator> {
       });
 
       if (isAuth) {
+        // TODO: Optionally refresh user data here
+        // TODO: sync local database with server data
+        // TODO: fetch user settings/preferences
+        // TODO: set default configurations based on user preferences
         // User is already authenticated, go to main screen
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/main');
         }
       } else {
+        // TODO: Empty shared preferences of any residual data
         // User is not authenticated, show welcome screen
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/onboarding/welcome');

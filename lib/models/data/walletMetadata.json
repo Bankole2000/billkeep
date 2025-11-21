@@ -1,0 +1,17 @@
+{
+  "collectionId": "pbc_2495670206",
+  "collectionName": "walletMetadata",
+  "id": "test2",
+  "name": "test",
+  "type": "test",
+  "stringValue": "test",
+  "numberValue": 123,
+  "booleanValue": true,
+  "dateTimeValue": "2022-01-01 10:00:00.123Z",
+  "urlValue": "https://example.com",
+  "emailValue": "test@example.com",
+  "user": "RELATION_RECORD_ID",
+  "wallet": "RELATION_RECORD_ID",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

@@ -1,0 +1,23 @@
+{
+  "collectionId": "pbc_2215399828",
+  "collectionName": "investments",
+  "id": "test",
+  "name": "test",
+  "tempId": "test",
+  "investmentDate": "2022-01-01 10:00:00.123Z",
+  "maturityDate": "2022-01-01 10:00:00.123Z",
+  "closedDate": "2022-01-01 10:00:00.123Z",
+  "currency": "RELATION_RECORD_ID",
+  "user": "RELATION_RECORD_ID",
+  "investedAmount": 123,
+  "currentValue": 123,
+  "interestRate": 123,
+  "fixedReturnAmount": 123,
+  "returnFrequency": "test",
+  "contact": "RELATION_RECORD_ID",
+  "merchant": "RELATION_RECORD_ID",
+  "isSynced": true,
+  "returnCalculationType": "test",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

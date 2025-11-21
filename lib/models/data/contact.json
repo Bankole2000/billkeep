@@ -1,0 +1,18 @@
+{
+  "collectionId": "pbc_1930317162",
+  "collectionName": "contacts",
+  "id": "test",
+  "name": "test",
+  "tempId": "test",
+  "iconCodePoint": 123,
+  "iconEmoji": "test",
+  "iconType": "test",
+  "color": "test",
+  "isSynced": true,
+  "imageUrl": "https://example.com",
+  "localImagePath": "test",
+  "metadata": "JSON",
+  "user": "RELATION_RECORD_ID",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

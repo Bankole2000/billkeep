@@ -1,7 +1,53 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/investment_model.dart';
 import 'base_api_service.dart';
 
 class InvestmentService extends BaseApiService {
+  InvestmentService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for investments collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('investments', _handleInvestmentUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleInvestmentUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Investment ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncInvestmentFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle investment deletion in local DB if needed
+            print('🗑️ Investment deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling investment update: $e');
+    }
+  }
+
+  /// Sync investment from backend to local DB
+  Future<void> _syncInvestmentFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing investment: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing investment: $e');
+    }
+  }
+
   /// Create a new investment
   Future<InvestmentModel> createInvestment({
     required String name,

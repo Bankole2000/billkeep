@@ -1,0 +1,23 @@
+{
+  "collectionId": "pbc_631030571",
+  "collectionName": "payments",
+  "id": "test",
+  "paymentType": "DEBIT",
+  "wallet": "RELATION_RECORD_ID",
+  "expense": "RELATION_RECORD_ID",
+  "income": "RELATION_RECORD_ID",
+  "actualAmount": 123,
+  "currency": "test",
+  "paymentDate": "2022-01-01 10:00:00.123Z",
+  "source": "MANUAL",
+  "verified": true,
+  "isSynced": true,
+  "tempId": "test",
+  "user": "RELATION_RECORD_ID",
+  "metadata": "JSON",
+  "category": "RELATION_RECORD_ID",
+  "merchant": "RELATION_RECORD_ID",
+  "contact": "RELATION_RECORD_ID",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

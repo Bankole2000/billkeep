@@ -1,3 +1,4 @@
+import 'package:billkeep/database/database.dart';
 import 'package:billkeep/models/user_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:billkeep/utils/default_merchants.dart';

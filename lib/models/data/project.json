@@ -1,0 +1,22 @@
+{
+  "collectionId": "pbc_484305853",
+  "collectionName": "projects",
+  "id": "test",
+  "name": "test",
+  "description": "test",
+  "iconCodePoint": 123,
+  "iconEmoji": "test",
+  "iconType": "test",
+  "imageUrl": "test",
+  "localImagePath": "test",
+  "color": "test",
+  "isSynced": true,
+  "tempId": "test",
+  "isArchived": true,
+  "defaultWallet": "RELATION_RECORD_ID",
+  "user": "RELATION_RECORD_ID",
+  "status": "PAUSED",
+  "metadata": "JSON",
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

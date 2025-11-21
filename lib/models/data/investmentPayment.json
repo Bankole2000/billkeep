@@ -1,0 +1,14 @@
+{
+  "collectionId": "pbc_1034627600",
+  "collectionName": "investmentPayments",
+  "id": "test",
+  "payment": "RELATION_RECORD_ID",
+  "investment": "RELATION_RECORD_ID",
+  "allocatedAmount": 123,
+  "allocatedAt": "2022-01-01 10:00:00.123Z",
+  "notes": "test",
+  "user": "RELATION_RECORD_ID",
+  "metadata": "JSON",
+  "created": "2022-01-01 10:00:00.123Z",
+  "updated": "2022-01-01 10:00:00.123Z"
+}

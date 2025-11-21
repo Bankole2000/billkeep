@@ -1,7 +1,9 @@
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Step indicator widget for multi-step forms
-class StepIndicator extends StatelessWidget {
+class StepIndicator extends ConsumerWidget {
   final int step;
   final int currentStep;
   final String label;
@@ -14,10 +16,10 @@ class StepIndicator extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isActive = step == currentStep;
     final isCompleted = step < currentStep;
-
+    final colors = ref.read(appColorsProvider);
     return Expanded(
       child: Column(
         children: [
@@ -27,7 +29,7 @@ class StepIndicator extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isCompleted || isActive
-                  ? Theme.of(context).primaryColor
+                  ? colors.text
                   : Colors.grey[300],
             ),
             child: Center(

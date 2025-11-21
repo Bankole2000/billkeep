@@ -1,5 +1,10 @@
 import 'dart:io';
+import 'package:billkeep/providers/auth_provider.dart';
+import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/services/auth_service.dart';
+import 'package:billkeep/services/project_service.dart';
+import 'package:billkeep/services/wallet_service.dart';
 import 'package:billkeep/utils/id_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,11 +35,17 @@ class InitialConfigScreen extends ConsumerStatefulWidget {
 }
 
 class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
+  late WalletService _walletService;
+  late ProjectService _projectService;
+  late AuthService _authService;
+
   final _formKey = GlobalKey<FormState>();
   final PageController _pageController = PageController();
 
   int _currentStep = 0;
   bool _isLoading = false;
+
+
 
   // Services (non-repository services)
   final AnalyticsService _analytics = AnalyticsService();
@@ -71,6 +82,9 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     _projectNameController.text = '${widget.user.username}\'s Project';
     _projectDescriptionController.text =
         'This is ${widget.user.username}\'s first project.';
+    _walletService = ref.read(walletServiceProvider);
+    _projectService = ref.read(projectServiceProvider);
+    _authService = ref.read(authServiceProvider);
   }
 
   @override
@@ -123,7 +137,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
   Future<void> _nextStep() async {
     setState(() => _isLoading = true);
-
+    print('Moving to next step $_currentStep');
     try {
       switch (_currentStep) {
         case 0:
@@ -165,22 +179,19 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       throw Exception('Please enter wallet details to continue.');
     }
 
-    final walletBalance =
-        (double.tryParse(_initialBalanceController.text) ?? 0) * 100;
+    final walletBalance = _initialBalanceController.text;
     print(walletBalance);
     print(_initialBalanceController.text);
 
-    // Get wallet service from provider
-    final walletService = ref.read(walletServiceProvider);
     print(_selectedCurrency);
     print(widget.user.id);
-    _createdWallet = await walletService.createWallet(
+    _createdWallet = await _walletService.createWallet(
       name: _walletNameController.text.trim(),
       userId: widget.user.id,
       walletType: _walletType!.name,
       providerId: _walletProvider?.id,
       currency: _selectedCurrency!,
-      balance: walletBalance.toInt(),
+      balance: walletBalance,
       imageUrl: _walletProvider?.imageUrl,
       localImagePath: _walletProvider?.localImagePath,
       isGlobal: true,
@@ -216,35 +227,39 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   }
 
   Future<void> _completeSetup() async {
-    if (!_formKey.currentState!.validate()) {
-      setState(() => _isLoading = false);
-      return;
-    }
+    // if (!_formKey.currentState!.validate()) {
+    //   setState(() => _isLoading = false);
+    //   return;
+    // }
+
+    print('Creating first project');
 
     // Get project service from provider
-    final projectService = ref.read(projectServiceProvider);
-    final defaultWallet = ref.watch(walletsProvider).value?.firstWhere(
-          (w) => w.id == _selectedDefaultWalletId || w.tempId == _selectedDefaultWalletId,
-        );
+    final walletsAsync = ref.read(walletsProvider);
+
+    walletsAsync.whenData((wallets) async {
+      final defaultWallet = wallets[0];
+      print(defaultWallet);
+      final project = await _projectService.createProject(
+        name: _projectNameController.text.trim(),
+        description: _projectDescriptionController.text.trim().isEmpty
+            ? null
+            : _projectDescriptionController.text.trim(),
+        defaultWallet: defaultWallet.id,
+        userId: widget.user.id,
+      );
+      _analytics.logInitialConfigCompleted(
+        currency: _selectedCurrency!,
+        walletType: _walletType!.name,
+      );
+      if (mounted) {
+        _showSuccess('Setup complete! Project "${project.name}" created.');
+        _navigateToMain();
+      }
+    });
     // Create first project
-    final project = await projectService.createProject(
-      name: _projectNameController.text.trim(),
-      description: _projectDescriptionController.text.trim().isEmpty
-          ? null
-          : _projectDescriptionController.text.trim(),
-      defaultWallet: defaultWallet?.id,
-      userId: widget.user.id,
-    );
 
-    _analytics.logInitialConfigCompleted(
-      currency: _selectedCurrency!,
-      walletType: _walletType!.name,
-    );
 
-    if (mounted) {
-      _showSuccess('Setup complete! Project "${project.name}" created.');
-      _navigateToMain();
-    }
   }
 
   void _skipSetup() {
@@ -300,6 +315,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.read(appColorsProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Setup Your Account'),
@@ -381,7 +397,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _nextStep,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: colors.text,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

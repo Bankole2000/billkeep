@@ -1,7 +1,53 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/shopping_list_model.dart';
 import 'base_api_service.dart';
 
 class ShoppingListService extends BaseApiService {
+  ShoppingListService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for shopping_lists collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('shopping_lists', _handleShoppingListUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleShoppingListUpdate(RecordSubscriptionEvent event) {
+    print('🔄 ShoppingList ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncShoppingListFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle shopping list deletion in local DB if needed
+            print('🗑️ ShoppingList deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling shopping list update: $e');
+    }
+  }
+
+  /// Sync shopping list from backend to local DB
+  Future<void> _syncShoppingListFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing shopping list: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing shopping list: $e');
+    }
+  }
+
   /// Create a new shopping list
   Future<ShoppingListModel> createShoppingList({
     required String projectId,

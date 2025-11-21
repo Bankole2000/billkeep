@@ -1,3 +1,4 @@
+import 'package:billkeep/models/wallet_model.dart';
 import 'package:billkeep/utils/currency_helper.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:drift/drift.dart';
@@ -226,21 +227,7 @@ class WalletRepository {
 
   WalletRepository(this._database);
 
-  Future<String> createWallet({
-    required String name,
-    required String walletType,
-    required String currency,
-    required String balance,
-    required String userId,
-    String? providerId,
-    String? imageUrl,
-    String? localImagePath,
-    String? iconEmoji,
-    int? iconCodePoint,
-    String? iconType,
-    String? color,
-    bool isGlobal = true,
-  }) async {
+  Future<String> createWallet(WalletModel params) async {
     final tempId = IdGenerator.tempWallet();
     print(currency);
     try {
@@ -253,7 +240,7 @@ class WalletRepository {
               name: drift.Value(name),
               walletType: drift.Value(walletType),
               currency: drift.Value(currency),
-              balance: drift.Value(CurrencyHelper.dollarsToCents(balance)),
+              balance: drift.Value(balance),
               providerId: drift.Value(providerId),
               imageUrl: drift.Value(imageUrl),
               localImagePath: drift.Value(localImagePath),
@@ -272,6 +259,12 @@ class WalletRepository {
     }
 
     return tempId;
+  }
+
+  Future<Wallet?> getWalletByTempId({ required String tempId})async {
+    return await (_database.select(
+      _database.wallets,
+    )..where((w) => w.tempId.equals(tempId))).getSingleOrNull();
   }
 
   // Called after server responds with canonical ID

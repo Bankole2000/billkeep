@@ -1,0 +1,21 @@
+{
+  "collectionId": "pbc_3084659764",
+  "collectionName": "shoppingListItems",
+  "id": "test",
+  "name": "test",
+  "description": "test",
+  "tempId": "test",
+  "metadata": "JSON",
+  "user": "RELATION_RECORD_ID",
+  "shoppingList": "RELATION_RECORD_ID",
+  "estimatedAmount": 123,
+  "actualAmount": 123,
+  "currency": "RELATION_RECORD_ID",
+  "quantity": 123,
+  "isPurchased": true,
+  "purchasedAt": "2022-01-01 10:00:00.123Z",
+  "payment": "RELATION_RECORD_ID",
+  "isSynced": true,
+  "createdAt": "2022-01-01 10:00:00.123Z",
+  "updatedAt": "2022-01-01 10:00:00.123Z"
+}

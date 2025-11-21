@@ -1,32 +1,49 @@
+import 'package:billkeep/database/database.dart';
+import 'package:drift/drift.dart';
+import 'user_model.dart';
+
 class ReminderModel {
-  final String id;
-  final DateTime reminderDate;
-  final bool isActive;
-  final String reminderType;
+  final String? id;
+  final String? reminderType;
   final String? tempId;
-  final bool isSynced;
+  final bool? isSynced;
+  final DateTime? reminderDate;
+  final bool? isActive;
+  final String? user;
+  final UserModel? userData;
+  final Map<String, dynamic>? metadata;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   ReminderModel({
-    required this.id,
-    required this.reminderDate,
-    this.isActive = true,
-    required this.reminderType,
+    this.id,
+    this.reminderType,
     this.tempId,
-    this.isSynced = false,
+    this.isSynced,
+    this.reminderDate,
+    this.isActive,
+    this.user,
+    this.userData,
+    this.metadata,
     this.createdAt,
     this.updatedAt,
   });
 
   factory ReminderModel.fromJson(Map<String, dynamic> json) {
     return ReminderModel(
-      id: json['id'] as String,
-      reminderDate: DateTime.parse(json['reminderDate'] as String),
-      isActive: json['isActive'] as bool? ?? true,
-      reminderType: json['reminderType'] as String,
+      id: json['id'] as String?,
+      reminderType: json['reminderType'] as String?,
       tempId: json['tempId'] as String?,
-      isSynced: json['isSynced'] as bool? ?? false,
+      isSynced: json['isSynced'] as bool?,
+      reminderDate: json['reminderDate'] != null
+          ? DateTime.parse(json['reminderDate'] as String)
+          : null,
+      isActive: json['isActive'] as bool?,
+      user: json['user'] as String?,
+      userData: json['expand']?['user'] != null
+          ? UserModel.fromJson(json['expand']['user'] as Map<String, dynamic>)
+          : null,
+      metadata: json['metadata'] as Map<String, dynamic>?,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : null,
@@ -39,13 +56,43 @@ class ReminderModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'reminderDate': reminderDate.toIso8601String(),
-      'isActive': isActive,
       'reminderType': reminderType,
       'tempId': tempId,
       'isSynced': isSynced,
+      'reminderDate': reminderDate?.toIso8601String(),
+      'isActive': isActive,
+      'user': user,
+      'metadata': metadata,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };
   }
+
+  /// Converts this model to a Drift Companion for database operations
+  RemindersCompanion toCompanion({
+    String? id,
+    String? reminderType,
+    String? tempId,
+    bool? isSynced,
+    DateTime? reminderDate,
+    bool? isActive,
+    String? user,
+    UserModel? userData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return RemindersCompanion(
+      id: id != null ? Value(id) : (this.id != null ? Value(this.id!) : const Value.absent()),
+      reminderType: reminderType != null ? Value(reminderType) : (this.reminderType != null ? Value(this.reminderType!) : const Value.absent()),
+      tempId: tempId != null ? Value(tempId) : (this.tempId != null ? Value(this.tempId!) : const Value.absent()),
+      isSynced: isSynced != null ? Value(isSynced) : (this.isSynced != null ? Value(this.isSynced!) : const Value.absent()),
+      reminderDate: reminderDate != null ? Value(reminderDate) : (this.reminderDate != null ? Value(this.reminderDate!) : const Value.absent()),
+      isActive: isActive != null ? Value(isActive) : (this.isActive != null ? Value(this.isActive!) : const Value.absent()),
+      userId: user != null ? Value(user) : (this.user != null ? Value(this.user!) : const Value.absent()),
+      // userData: userData != null ? Value(userData) : (this.userData != null ? Value(this.userData!) : const Value.absent()),
+      createdAt: createdAt != null ? Value(createdAt) : (this.createdAt != null ? Value(this.createdAt!) : const Value.absent()),
+      updatedAt: updatedAt != null ? Value(updatedAt) : (this.updatedAt != null ? Value(this.updatedAt!) : const Value.absent()),
+    );
+  }
+
 }

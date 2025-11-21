@@ -1,7 +1,53 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/reminder_model.dart';
 import 'base_api_service.dart';
 
 class ReminderService extends BaseApiService {
+  ReminderService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for reminders collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('reminders', _handleReminderUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleReminderUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Reminder ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncReminderFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle reminder deletion in local DB if needed
+            print('🗑️ Reminder deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling reminder update: $e');
+    }
+  }
+
+  /// Sync reminder from backend to local DB
+  Future<void> _syncReminderFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing reminder: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing reminder: $e');
+    }
+  }
+
   /// Create a new reminder
   Future<ReminderModel> createReminder({
     required DateTime reminderDate,

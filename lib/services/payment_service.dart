@@ -1,7 +1,53 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/payment_model.dart';
 import 'base_api_service.dart';
 
 class PaymentService extends BaseApiService {
+  PaymentService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for payments collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('payments', _handlePaymentUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handlePaymentUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Payment ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncPaymentFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle payment deletion in local DB if needed
+            print('🗑️ Payment deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling payment update: $e');
+    }
+  }
+
+  /// Sync payment from backend to local DB
+  Future<void> _syncPaymentFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing payment: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing payment: $e');
+    }
+  }
+
   /// Create a new payment
   Future<PaymentModel> createPayment({
     required String paymentType,

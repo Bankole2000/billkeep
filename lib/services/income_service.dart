@@ -1,7 +1,53 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/income_model.dart';
 import 'base_api_service.dart';
 
 class IncomeService extends BaseApiService {
+  IncomeService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for income collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('income', _handleIncomeUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleIncomeUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Income ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncIncomeFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle income deletion in local DB if needed
+            print('🗑️ Income deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling income update: $e');
+    }
+  }
+
+  /// Sync income from backend to local DB
+  Future<void> _syncIncomeFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing income: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing income: $e');
+    }
+  }
+
   /// Create a new income
   Future<IncomeModel> createIncome({
     required String projectId,

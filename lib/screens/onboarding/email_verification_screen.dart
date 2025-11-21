@@ -39,6 +39,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     _timer?.cancel();
     _codeController.dispose();
     _codeFocusNode.dispose();
+    _authService.dispose();
     super.dispose();
   }
 

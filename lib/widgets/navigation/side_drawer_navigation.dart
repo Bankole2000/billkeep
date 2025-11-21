@@ -1,8 +1,8 @@
+import 'package:billkeep/providers/auth_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/screens/home/old_ui.dart';
 import 'package:billkeep/screens/settings/database_management_screen.dart';
 import 'package:billkeep/screens/sms/sms_import_screen.dart';
-import 'package:billkeep/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +11,7 @@ class SideNavigationDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AuthService authService = AuthService();
+    final authService = ref.read(authServiceProvider);
     final activeColor = ref.watch(activeThemeColorProvider);
     return Drawer(
       child: ListView(

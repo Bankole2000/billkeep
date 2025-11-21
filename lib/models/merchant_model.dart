@@ -1,6 +1,10 @@
+import 'package:billkeep/database/database.dart';
+import 'package:drift/drift.dart';
+import 'user_model.dart';
+
 class MerchantModel {
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   final String? tempId;
   final String? description;
   final String? website;
@@ -8,16 +12,18 @@ class MerchantModel {
   final String? localImagePath;
   final int? iconCodePoint;
   final String? iconEmoji;
-  final String iconType;
+  final String? iconType;
   final String? color;
-  final bool isDefault;
-  final bool isSynced;
+  final bool? isSynced;
+  final String? user;
+  final UserModel? userData;
+  final Map<String, dynamic>? metadata;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   MerchantModel({
-    required this.id,
-    required this.name,
+    this.id,
+    this.name,
     this.tempId,
     this.description,
     this.website,
@@ -25,29 +31,35 @@ class MerchantModel {
     this.localImagePath,
     this.iconCodePoint,
     this.iconEmoji,
-    this.iconType = 'MaterialIcons',
+    this.iconType,
     this.color,
-    this.isDefault = false,
-    this.isSynced = false,
+    this.isSynced,
+    this.user,
+    this.userData,
+    this.metadata,
     this.createdAt,
     this.updatedAt,
   });
 
   factory MerchantModel.fromJson(Map<String, dynamic> json) {
     return MerchantModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
+      id: json['id'] as String?,
+      name: json['name'] as String?,
       tempId: json['tempId'] as String?,
       description: json['description'] as String?,
       website: json['website'] as String?,
       imageUrl: json['imageUrl'] as String?,
       localImagePath: json['localImagePath'] as String?,
-      iconCodePoint: json['iconCodePoint'] as int?,
+      iconCodePoint: json['iconCodePoint'] is bool ? null : json['iconCodePoint'] as int?,
       iconEmoji: json['iconEmoji'] as String?,
-      iconType: json['iconType'] as String? ?? 'MaterialIcons',
+      iconType: json['iconType'] as String?,
       color: json['color'] as String?,
-      isDefault: json['isDefault'] as bool? ?? false,
-      isSynced: json['isSynced'] as bool? ?? false,
+      isSynced: json['isSynced'] as bool?,
+      user: json['user'] as String?,
+      userData: json['expand']?['user'] != null
+          ? UserModel.fromJson(json['expand']['user'] as Map<String, dynamic>)
+          : null,
+      metadata: json['metadata'] as Map<String, dynamic>?,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : null,
@@ -70,10 +82,51 @@ class MerchantModel {
       'iconEmoji': iconEmoji,
       'iconType': iconType,
       'color': color,
-      'isDefault': isDefault,
       'isSynced': isSynced,
+      'user': user,
+      'metadata': metadata,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };
   }
+
+  /// Converts this model to a Drift Companion for database operations
+  MerchantsCompanion toCompanion({
+    String? id,
+    String? name,
+    String? tempId,
+    String? description,
+    String? website,
+    String? imageUrl,
+    String? localImagePath,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    bool? isSynced,
+    String? user,
+    UserModel? userData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return MerchantsCompanion(
+      id: id != null ? Value(id) : (this.id != null ? Value(this.id!) : const Value.absent()),
+      name: name != null ? Value(name) : (this.name != null ? Value(this.name!) : const Value.absent()),
+      tempId: tempId != null ? Value(tempId) : (this.tempId != null ? Value(this.tempId!) : const Value.absent()),
+      description: description != null ? Value(description) : (this.description != null ? Value(this.description!) : const Value.absent()),
+      website: website != null ? Value(website) : (this.website != null ? Value(this.website!) : const Value.absent()),
+      imageUrl: imageUrl != null ? Value(imageUrl) : (this.imageUrl != null ? Value(this.imageUrl!) : const Value.absent()),
+      localImagePath: localImagePath != null ? Value(localImagePath) : (this.localImagePath != null ? Value(this.localImagePath!) : const Value.absent()),
+      iconCodePoint: iconCodePoint != null ? Value(iconCodePoint) : (this.iconCodePoint != null ? Value(this.iconCodePoint!) : const Value.absent()),
+      iconEmoji: iconEmoji != null ? Value(iconEmoji) : (this.iconEmoji != null ? Value(this.iconEmoji!) : const Value.absent()),
+      iconType: iconType != null ? Value(iconType) : (this.iconType != null ? Value(this.iconType!) : const Value.absent()),
+      color: color != null ? Value(color) : (this.color != null ? Value(this.color!) : const Value.absent()),
+      isSynced: isSynced != null ? Value(isSynced) : (this.isSynced != null ? Value(this.isSynced!) : const Value.absent()),
+      userId: user != null ? Value(user) : (this.user != null ? Value(this.user!) : const Value.absent()),
+      // userData: userData != null ? Value(userData) : (this.userData != null ? Value(this.userData!) : const Value.absent()),
+      createdAt: createdAt != null ? Value(createdAt) : (this.createdAt != null ? Value(this.createdAt!) : const Value.absent()),
+      updatedAt: updatedAt != null ? Value(updatedAt) : (this.updatedAt != null ? Value(this.updatedAt!) : const Value.absent()),
+    );
+  }
+
 }

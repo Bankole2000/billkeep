@@ -9,10 +9,18 @@ class AuthService {
   final pb = PocketBase(AppConfig.pocketbaseUrl);
 
   AuthService() : _apiClient = ApiClient() {
+    print('AuthService initialized with PocketBase at ${AppConfig.pocketbaseUrl}');
+    print('Subscribing to pocketbase \'user\' collection events');
     pb.collection('users').subscribe('*', (e) {
       print('Realtime update for users: ${e.record.toString()}');
       // Handle realtime updates if needed
     });
+  }
+
+  /// Dispose and cleanup resources
+  Future<void> dispose() async {
+    print('Unsubscribing from pocketbase \'users\' collection events');
+    await pb.collection('users').unsubscribe();
   }
 
   /// Sign up a new user with email, username, and password
@@ -84,10 +92,10 @@ class AuthService {
   }
 
   /// Get current user profile
-  Future<User> getCurrentUser() async {
+  Future<UserModel> getCurrentUser() async {
     try {
-      final response = await _apiClient.dio.get('/auth/me');
-      return User.fromJson(response.data);
+      final response = await _apiClient.dio.get('/users/auth-refresh');
+      return UserModel.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);
     }

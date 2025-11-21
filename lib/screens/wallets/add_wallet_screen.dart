@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:billkeep/providers/auth_provider.dart';
+import 'package:billkeep/providers/service_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/database/database.dart';
@@ -216,12 +217,12 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
     if(userId == null) {
       throw Exception('User not logged in');
     }
-    return await ref.read(walletRepositoryProvider).createWallet(
+    return await ref.read(walletServiceProvider).createWallet(
           name: _nameController.text.trim(),
           userId: userId!,
           walletType: _selectedWalletType!.name,
-          currency: _selectedCurrency!.code,
-          balance: _amountController.text.replaceAll(',', ''),
+          currency: _selectedCurrency!,
+          balance: _amountController.text,
           providerId: _selectedWalletProvider?.id,
           imageUrl: _useProviderAppearance
               ? _selectedWalletProvider?.imageUrl

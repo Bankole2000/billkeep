@@ -1,7 +1,53 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/goal_model.dart';
 import 'base_api_service.dart';
 
 class GoalService extends BaseApiService {
+  GoalService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for goals collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('goals', _handleGoalUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleGoalUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Goal ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncGoalFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle goal deletion in local DB if needed
+            print('🗑️ Goal deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling goal update: $e');
+    }
+  }
+
+  /// Sync goal from backend to local DB
+  Future<void> _syncGoalFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing goal: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing goal: $e');
+    }
+  }
+
   /// Create a new goal
   Future<GoalModel> createGoal({
     required String name,

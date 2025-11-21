@@ -8,7 +8,7 @@ import 'service_providers.dart';
 ///
 /// Handles loading user from secure storage on app start,
 /// updating user state on login, and clearing on logout
-class CurrentUserNotifier extends StateNotifier<User?> {
+class CurrentUserNotifier extends StateNotifier<UserModel?> {
   final Ref _ref;
 
   CurrentUserNotifier(this._ref) : super(null) {
@@ -27,7 +27,7 @@ class CurrentUserNotifier extends StateNotifier<User?> {
   }
 
   /// Set the current user and save to secure storage
-  Future<void> setUser(User user) async {
+  Future<void> setUser(UserModel user) async {
     await ApiClient.saveUser(user);
     state = user;
 
@@ -40,7 +40,7 @@ class CurrentUserNotifier extends StateNotifier<User?> {
     try {
       final realtimeService = _ref.read(realtimeSyncServiceProvider);
       realtimeService.startSync();
-      print('✅ Realtime sync started for user: ${state?.username}');
+      print('✅ Realtime sync started for user: ${state?.name}');
     } catch (e) {
       print('⚠️ Realtime sync initialization delayed or failed: $e');
       // Not critical - sync can start later
@@ -70,7 +70,7 @@ class CurrentUserNotifier extends StateNotifier<User?> {
   /// Refresh user data from the backend
   Future<void> refreshUser() async {
     try {
-      final authService = AuthService();
+      final authService = _ref.read(authServiceProvider);
       final user = await authService.getCurrentUser();
       await setUser(user);
     } catch (e) {
@@ -88,7 +88,7 @@ class CurrentUserNotifier extends StateNotifier<User?> {
 /// - To clear: `ref.read(currentUserProvider.notifier).clearUser()`
 ///
 /// Note: Automatically starts realtime sync when user logs in
-final currentUserProvider = StateNotifierProvider<CurrentUserNotifier, User?>((ref) {
+final currentUserProvider = StateNotifierProvider<CurrentUserNotifier, UserModel?>((ref) {
   return CurrentUserNotifier(ref);
 });
 
@@ -109,6 +109,14 @@ final currentUserIdProvider = Provider<String?>((ref) {
 });
 
 /// Provider for auth service
-final authServiceProvider = Provider<AuthService>((ref) {
-  return AuthService();
+/// Uses autoDispose to properly clean up PocketBase subscriptions
+final authServiceProvider = Provider.autoDispose<AuthService>((ref) {
+  final authService = AuthService();
+
+  // Dispose the auth service when the provider is disposed
+  ref.onDispose(() {
+    authService.dispose();
+  });
+
+  return authService;
 });

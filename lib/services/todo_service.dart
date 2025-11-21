@@ -1,9 +1,55 @@
+import 'package:pocketbase/pocketbase.dart';
 import '../models/todo_model.dart';
 import 'base_api_service.dart';
 
 class TodoService extends BaseApiService {
+  TodoService() {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for todos collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('todos', _handleTodoUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleTodoUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Todo ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncTodoFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            // TODO: Handle todo deletion in local DB if needed
+            print('🗑️ Todo deleted: ${event.record!.id}');
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling todo update: $e');
+    }
+  }
+
+  /// Sync todo from backend to local DB
+  Future<void> _syncTodoFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      print('📥 Syncing todo: canonicalId=$canonicalId');
+      // TODO: Implement local DB sync if needed
+      // This would involve updating providers or local state
+    } catch (e) {
+      print('⚠️ Error syncing todo: $e');
+    }
+  }
+
   /// Create a new todo
-  Future<TodoModel> createTodo({
+  Future<TodoItemModel> createTodo({
     required String projectId,
     required String title,
     String? description,
@@ -17,7 +63,7 @@ class TodoService extends BaseApiService {
     String? linkedShoppingListId,
     String? parentTodoId,
   }) async {
-    return executeRequest<TodoModel>(
+    return executeRequest<TodoItemModel>(
       request: () => dio.post(
         '/todos',
         data: {
@@ -35,12 +81,12 @@ class TodoService extends BaseApiService {
           'parentTodoId': parentTodoId,
         },
       ),
-      parser: (data) => TodoModel.fromJson(data),
+      parser: (data) => TodoItemModel.fromJson(data),
     );
   }
 
   /// Get all todos
-  Future<List<TodoModel>> getAllTodos({
+  Future<List<TodoItemModel>> getAllTodos({
     String? projectId,
     bool? isCompleted,
     String? parentTodoId,
@@ -55,25 +101,25 @@ class TodoService extends BaseApiService {
     if (page != null) queryParameters['page'] = page;
     if (limit != null) queryParameters['limit'] = limit;
 
-    return executeListRequest<TodoModel>(
+    return executeListRequest<TodoItemModel>(
       request: () => dio.get(
         '/todos',
         queryParameters: queryParameters,
       ),
-      itemParser: (json) => TodoModel.fromJson(json),
+      itemParser: (json) => TodoItemModel.fromJson(json),
     );
   }
 
   /// Get a single todo by ID
-  Future<TodoModel> getTodoById(String id) async {
-    return executeRequest<TodoModel>(
+  Future<TodoItemModel> getTodoById(String id) async {
+    return executeRequest<TodoItemModel>(
       request: () => dio.get('/todos/$id'),
-      parser: (data) => TodoModel.fromJson(data),
+      parser: (data) => TodoItemModel.fromJson(data),
     );
   }
 
   /// Update an existing todo
-  Future<TodoModel> updateTodo({
+  Future<TodoItemModel> updateTodo({
     required String id,
     String? title,
     String? description,
@@ -115,9 +161,9 @@ class TodoService extends BaseApiService {
     }
     if (parentTodoId != null) data['parentTodoId'] = parentTodoId;
 
-    return executeRequest<TodoModel>(
+    return executeRequest<TodoItemModel>(
       request: () => dio.put('/todos/$id', data: data),
-      parser: (data) => TodoModel.fromJson(data),
+      parser: (data) => TodoItemModel.fromJson(data),
     );
   }
 

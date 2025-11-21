@@ -1,6 +1,5 @@
-import 'package:billkeep/config/app_config.dart';
+import 'package:billkeep/database/database.dart';
 import 'package:pocketbase/pocketbase.dart';
-
 import 'package:billkeep/models/project_model.dart';
 import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/utils/connectivity_helper.dart';
@@ -8,13 +7,52 @@ import 'base_api_service.dart';
 
 class ProjectService extends BaseApiService {
   final ProjectRepository _repository;
-  final pb = PocketBase(AppConfig.pocketbaseUrl);
 
-  ProjectService(this._repository){
-      pb.collection('projects').subscribe('*', (e) {
-      print('Realtime update for projects: ${e.record.toString()}');
-      // Handle realtime updates if needed
-    });
+  ProjectService(this._repository) {
+    _setupRealtimeSync();
+  }
+
+  /// Setup realtime sync for projects collection
+  void _setupRealtimeSync() {
+    subscribeToCollection('projects', _handleProjectUpdate);
+  }
+
+  /// Handle realtime updates from PocketBase
+  void _handleProjectUpdate(RecordSubscriptionEvent event) {
+    print('🔄 Project ${event.action}: ${event.record?.id}');
+
+    try {
+      switch (event.action) {
+        case 'create':
+        case 'update':
+          if (event.record != null) {
+            _syncProjectFromBackend(event.record!);
+          }
+          break;
+        case 'delete':
+          if (event.record != null) {
+            _repository.deleteProject(event.record!.id);
+          }
+          break;
+      }
+    } catch (e) {
+      print('❌ Error handling project update: $e');
+    }
+  }
+
+  /// Sync project from backend to local DB
+  Future<void> _syncProjectFromBackend(RecordModel record) async {
+    try {
+      final canonicalId = record.id;
+      final tempId = record.getStringValue('tempId');
+
+      print('📥 Syncing project: tempId=$tempId → canonicalId=$canonicalId');
+      // TODO: handle realtime event
+      // Find local project by tempId and update with canonical ID
+      // Similar to WalletService implementation
+    } catch (e) {
+      print('⚠️ Error syncing project: $e');
+    }
   }
   /// Create a new project
   ///
@@ -22,95 +60,95 @@ class ProjectService extends BaseApiService {
   /// 1. Create in local DB first with temp ID
   /// 2. Check connectivity and send to backend if online
   /// 3. Realtime sync will update with canonical ID when backend confirms
-  Future<Project> createProject({
-    required String name,
-    required String userId,
-    String? defaultWallet,
-    String? description,
-    String? emoji = '📂',
-    String? imageUrl,
-    String? localImagePath,
-    String? color,
-    String? iconType = 'emoji',
-    int? iconCodePoint,
-    bool? isArchived,
-    String? status,
-  }) async {
-    // 1. Create in local database first (optimistic)
-    final tempId = await _repository.createProject(
-      name: name,
-      userId: userId,
-      description: description,
-      defaultWallet: defaultWallet,
-      iconType: iconType!,
-      emoji: emoji,
-      imageUrl: imageUrl,
-      localImagePath: localImagePath,
-      iconCodePoint: iconCodePoint,
-      color: color,
-      isArchived: false,
-    );
+  // Future<Project> createProject({
+  //   required String name,
+  //   required String userId,
+  //   String? defaultWallet,
+  //   String? description,
+  //   String? emoji = '📂',
+  //   String? imageUrl,
+  //   String? localImagePath,
+  //   String? color,
+  //   String? iconType = 'emoji',
+  //   int? iconCodePoint,
+  //   bool? isArchived,
+  //   String? status,
+  // }) async {
+  //   // 1. Create in local database first (optimistic)
+  //   final tempId = await _repository.createProject(
+  //     name: name,
+  //     userId: userId,
+  //     description: description,
+  //     defaultWallet: defaultWallet,
+  //     iconType: iconType!,
+  //     emoji: emoji,
+  //     imageUrl: imageUrl,
+  //     localImagePath: localImagePath,
+  //     iconCodePoint: iconCodePoint,
+  //     color: color,
+  //     isArchived: false,
+  //   );
 
-    // 2. Check connectivity and send to backend if online
-    final isOnline = await ConnectivityHelper.hasInternetConnection();
+  //   // 2. Check connectivity and send to backend if online
+  //   final isOnline = await ConnectivityHelper.hasInternetConnection();
 
-    if (isOnline) {
-      try {
-        final apiProject = await executeRequest<Project>(
-          request: () => dio.post(
-            '/projects/records',
-            data: {
-              'name': name,
-              'description': description,
-              'defaultWallet': defaultWallet,
-              'user': userId,
-              'status': status ?? 'ACTIVE',
-            },
-          ),
-          parser: (data) => Project.fromJson(data),
-        );
+  //   if (isOnline) {
+  //     try {
+  //       final apiProject = await executeRequest<Project>(
+  //         request: () => dio.post(
+  //           '/projects/records',
+  //           data: {
+  //             'name': name,
+  //             'description': description,
+  //             'defaultWallet': defaultWallet,
+  //             'user': userId,
+  //             'status': status ?? 'ACTIVE',
+  //           },
+  //         ),
+  //         parser: (data) => Project.fromJson(data),
+  //       );
 
-        // Note: Realtime sync service will handle updating local DB with canonical ID
-        // But we return the API response immediately
-        return apiProject;
-      } catch (e) {
-        // If API fails, we still have local copy
-        print('API call failed, project saved locally: $e');
+  //       // Note: Realtime sync service will handle updating local DB with canonical ID
+  //       // But we return the API response immediately
+  //       return apiProject;
+  //     } catch (e) {
+  //       // If API fails, we still have local copy
+  //       print('API call failed, project saved locally: $e');
 
-        // Get the local project to return
-        final localProjects = await _repository.getUnsyncedProjects();
-        final localProject = localProjects.firstWhere(
-          (p) => p.id == tempId,
-          orElse: () => throw Exception('Failed to retrieve local project'),
-        );
+  //       // Get the local project to return
+  //       final localProjects = await _repository.getUnsyncedProjects();
+  //       final localProject = localProjects.firstWhere(
+  //         (p) => p.id == tempId,
+  //         orElse: () => throw Exception('Failed to retrieve local project'),
+  //       );
 
-        return Project(
-          id: localProject.id,
-          name: localProject.name,
-          description: localProject.description,
-          status: status ?? 'ACTIVE',
-          createdAt: localProject.createdAt,
-          updatedAt: localProject.updatedAt,
-        );
-      }
-    } else {
-      // Offline: return local project
-      final localProjects = await _repository.getUnsyncedProjects();
-      final localProject = localProjects.firstWhere(
-        (p) => p.id == tempId,
-        orElse: () => throw Exception('Failed to retrieve local project'),
-      );
+  //       return Project(
+  //         id: localProject.id,
+  //         name: localProject.name,
+  //         description: localProject.description,
+  //         status: status ?? 'ACTIVE',
+  //         createdAt: localProject.createdAt,
+  //         updatedAt: localProject.updatedAt,
+  //       );
+  //     }
+  //   } else {
+  //     // Offline: return local project
+  //     final localProjects = await _repository.getUnsyncedProjects();
+  //     final localProject = localProjects.firstWhere(
+  //       (p) => p.id == tempId,
+  //       orElse: () => throw Exception('Failed to retrieve local project'),
+  //     );
 
-      return Project(
-        id: localProject.id,
-        name: localProject.name,
-        description: localProject.description,
-        status: status ?? 'ACTIVE',
-        createdAt: localProject.createdAt,
-        updatedAt: localProject.updatedAt,
-      );
-    }
-  }
+  //     return Project(
+  //       id: localProject.id,
+  //       name: localProject.name,
+  //       description: localProject.description,
+  //       status: status ?? 'ACTIVE',
+  //       createdAt: localProject.createdAt,
+  //       updatedAt: localProject.updatedAt,
+  //     );
+  //   }
+  // }
 
   /// Get all projects
   Future<List<Project>> getAllProjects({
