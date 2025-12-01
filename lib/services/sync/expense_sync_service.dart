@@ -15,11 +15,9 @@ class ExpenseSyncService extends BaseSyncService {
   final AppDatabase _database;
   final Dio _dio;
 
-  ExpenseSyncService({
-    required AppDatabase database,
-    Dio? dio,
-  })  : _database = database,
-        _dio = dio ?? ApiClient().dio;
+  ExpenseSyncService({required AppDatabase database, Dio? dio})
+    : _database = database,
+      _dio = dio ?? ApiClient().dio;
 
   @override
   Future<void> syncEntity(String tempId) async {
@@ -76,10 +74,11 @@ class ExpenseSyncService extends BaseSyncService {
       // Update local database with canonical ID
       await _updateExpenseWithCanonicalId(
         tempId: tempId,
-        canonicalId: apiExpense.id,
+        canonicalId: apiExpense.id!,
       );
     } on DioException catch (e) {
-      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
+      final message =
+          e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
         'Failed to sync expense: $message',
         'Unable to sync expense. Will retry later.',
@@ -128,25 +127,25 @@ class ExpenseSyncService extends BaseSyncService {
       for (final apiExpense in apiExpenses) {
         final existingExpense = await (_database.select(
           _database.expenses,
-        )..where((e) => e.id.equals(apiExpense.id))).getSingleOrNull();
+        )..where((e) => e.id.equals(apiExpense.id!))).getSingleOrNull();
 
         if (existingExpense != null) {
           // Update existing
           await (_database.update(
             _database.expenses,
-          )..where((e) => e.id.equals(apiExpense.id))).write(
+          )..where((e) => e.id.equals(apiExpense.id!))).write(
             ExpensesCompanion(
-              name: Value(apiExpense.name),
-              expectedAmount: Value(apiExpense.expectedAmount),
-              currency: Value(apiExpense.currency),
-              type: Value(apiExpense.type),
+              name: Value(apiExpense.name!),
+              expectedAmount: Value(apiExpense.expectedAmount!),
+              currency: Value(apiExpense.currency!),
+              type: Value(apiExpense.type!),
               frequency: Value(apiExpense.frequency),
-              startDate: Value(apiExpense.startDate),
+              startDate: Value(apiExpense.startDate!),
               nextRenewalDate: Value(apiExpense.nextRenewalDate),
-              categoryId: Value(apiExpense.categoryId),
-              merchantId: Value(apiExpense.merchantId),
+              // categoryId: Value(apiExpense.categoryId!),
+              // merchantId: Value(apiExpense.merchantId!),
               notes: Value(apiExpense.notes),
-              isActive: Value(apiExpense.isActive),
+              isActive: Value(apiExpense.isActive!),
               isSynced: const Value(true),
             ),
           );
@@ -156,26 +155,27 @@ class ExpenseSyncService extends BaseSyncService {
               .into(_database.expenses)
               .insert(
                 ExpensesCompanion(
-                  id: Value(apiExpense.id),
-                  projectId: Value(apiExpense.projectId),
-                  name: Value(apiExpense.name),
-                  expectedAmount: Value(apiExpense.expectedAmount),
-                  currency: Value(apiExpense.currency),
-                  type: Value(apiExpense.type),
-                  frequency: Value(apiExpense.frequency),
-                  startDate: Value(apiExpense.startDate),
-                  nextRenewalDate: Value(apiExpense.nextRenewalDate),
-                  categoryId: Value(apiExpense.categoryId),
-                  merchantId: Value(apiExpense.merchantId),
-                  notes: Value(apiExpense.notes),
-                  isActive: Value(apiExpense.isActive),
+                  id: Value(apiExpense.id!),
+                  // projectId: Value(apiExpense.projectId!),
+                  name: Value(apiExpense.name!),
+                  expectedAmount: Value(apiExpense.expectedAmount!),
+                  currency: Value(apiExpense.currency!),
+                  type: Value(apiExpense.type!),
+                  frequency: Value(apiExpense.frequency!),
+                  startDate: Value(apiExpense.startDate!),
+                  nextRenewalDate: Value(apiExpense.nextRenewalDate!),
+                  // categoryId: Value(apiExpense.categoryId!),
+                  // merchantId: Value(apiExpense.merchantId!),
+                  notes: Value(apiExpense.notes!),
+                  isActive: Value(apiExpense.isActive!),
                   isSynced: const Value(true),
                 ),
               );
         }
       }
     } on DioException catch (e) {
-      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
+      final message =
+          e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
         'Failed to pull expenses from server: $message',
         'Unable to fetch expenses from server.',
@@ -257,7 +257,8 @@ class ExpenseSyncService extends BaseSyncService {
       try {
         await _dio.delete('/expenses/records/$expenseId');
       } on DioException catch (e) {
-        final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
+        final message =
+            e.response?.data?['message'] ?? e.message ?? 'Unknown error';
         throw SyncException(
           'Failed to delete expense from server: $message',
           'Unable to delete expense from server.',

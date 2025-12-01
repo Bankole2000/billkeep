@@ -1,16 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/sync/sync_coordinator.dart';
+import 'package:billkeep/services/sync/sync_coordinator.dart';
 import 'database_provider.dart';
 import 'project_provider.dart';
 
 /// Provider for the sync coordinator
 final syncCoordinatorProvider = Provider<SyncCoordinator>((ref) {
   final database = ref.watch(databaseProvider);
-  final projectRepository = ref.watch(projectRepositoryProvider);
+  // final projectRepository = ref.watch(projectRepositoryProvider);
 
   return SyncCoordinator(
     database: database,
-    projectRepository: projectRepository,
+    // projectRepository: projectRepository,
+    projectRepository: null,
   );
 });
 
@@ -57,10 +58,7 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
         );
       }
     } catch (e) {
-      state = SyncState.error(
-        message: 'Sync failed',
-        details: e.toString(),
-      );
+      state = SyncState.error(message: 'Sync failed', details: e.toString());
     }
   }
 
@@ -101,10 +99,7 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
         timestamp: DateTime.now(),
       );
     } catch (e) {
-      state = SyncState.error(
-        message: 'Refresh failed',
-        details: e.toString(),
-      );
+      state = SyncState.error(message: 'Refresh failed', details: e.toString());
     }
   }
 
@@ -127,10 +122,7 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
         );
       }
     } catch (e) {
-      state = SyncState.error(
-        message: 'Push failed',
-        details: e.toString(),
-      );
+      state = SyncState.error(message: 'Push failed', details: e.toString());
     }
   }
 
@@ -141,8 +133,9 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 }
 
 /// Provider for sync state management
-final syncStateProvider =
-    StateNotifierProvider<SyncStateNotifier, SyncState>((ref) {
+final syncStateProvider = StateNotifierProvider<SyncStateNotifier, SyncState>((
+  ref,
+) {
   final coordinator = ref.watch(syncCoordinatorProvider);
   return SyncStateNotifier(coordinator);
 });
@@ -166,51 +159,49 @@ class SyncState {
   });
 
   const SyncState.idle()
-      : status = SyncStatus.idle,
-        message = null,
-        details = null,
-        timestamp = null,
-        successCount = 0,
-        failureCount = 0;
+    : status = SyncStatus.idle,
+      message = null,
+      details = null,
+      timestamp = null,
+      successCount = 0,
+      failureCount = 0;
 
   const SyncState.syncing()
-      : status = SyncStatus.syncing,
-        message = 'Syncing...',
-        details = null,
-        timestamp = null,
-        successCount = 0,
-        failureCount = 0;
+    : status = SyncStatus.syncing,
+      message = 'Syncing...',
+      details = null,
+      timestamp = null,
+      successCount = 0,
+      failureCount = 0;
 
   const SyncState.success({
     required String message,
     required DateTime timestamp,
-  })  : status = SyncStatus.success,
-        message = message,
-        details = null,
-        timestamp = timestamp,
-        successCount = 0,
-        failureCount = 0;
+  }) : status = SyncStatus.success,
+       message = message,
+       details = null,
+       timestamp = timestamp,
+       successCount = 0,
+       failureCount = 0;
 
-  const SyncState.error({
-    required String message,
-    String? details,
-  })  : status = SyncStatus.error,
-        message = message,
-        details = details,
-        timestamp = null,
-        successCount = 0,
-        failureCount = 0;
+  const SyncState.error({required String message, String? details})
+    : status = SyncStatus.error,
+      message = message,
+      details = details,
+      timestamp = null,
+      successCount = 0,
+      failureCount = 0;
 
   const SyncState.partial({
     required String message,
     required int successCount,
     required int failureCount,
-  })  : status = SyncStatus.partial,
-        message = message,
-        details = null,
-        timestamp = null,
-        successCount = successCount,
-        failureCount = failureCount;
+  }) : status = SyncStatus.partial,
+       message = message,
+       details = null,
+       timestamp = null,
+       successCount = successCount,
+       failureCount = failureCount;
 
   bool get isIdle => status == SyncStatus.idle;
   bool get isSyncing => status == SyncStatus.syncing;
@@ -219,10 +210,4 @@ class SyncState {
   bool get isPartial => status == SyncStatus.partial;
 }
 
-enum SyncStatus {
-  idle,
-  syncing,
-  success,
-  error,
-  partial,
-}
+enum SyncStatus { idle, syncing, success, error, partial }

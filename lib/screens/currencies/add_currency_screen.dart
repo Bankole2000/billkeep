@@ -1,5 +1,7 @@
 import 'package:billkeep/database/database.dart';
+import 'package:billkeep/models/currency_model.dart';
 import 'package:billkeep/providers/currency_provider.dart';
+import 'package:billkeep/providers/local/user_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/utils/app_enums.dart';
 import 'package:billkeep/utils/wallet_types.dart';
@@ -19,6 +21,8 @@ class AddCurrencyScreen extends ConsumerStatefulWidget {
 }
 
 class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
+  late final _currencyService = ref.read(currencyServiceProvider);
+  late final currentUser = ref.read(currentUserProvider);
   CurrencyType? _selectedCurrencyType;
   final IconSelectionType _selectedSegment = IconSelectionType.emoji;
   String? currencyId;
@@ -35,7 +39,7 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
 
   @override
   void initState() {
-    if(widget.currency != null){
+    if (widget.currency != null) {
       currencyId = widget.currency?.id;
       _codeController.text = widget.currency?.code ?? '';
       _nameController.text = widget.currency?.name ?? '';
@@ -75,21 +79,32 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
     });
 
     try {
-      final repository = ref.read(currencyRepositoryProvider);
+      // final repository = ref.read(currencyRepositoryProvider);
       final isCrypto = _selectedCurrencyType == CurrencyType.CRYPTO;
-
-      await repository.createCurrency(
+      final newCurrency = CurrencyModel(
         code: _codeController.text,
         name: _nameController.text,
         symbol: _symbolController.text,
-        decimals: _decimals.round(),
+        decimals: 2,
         countryISO2: _countryISO2Controller.text.isEmpty
             ? null
             : _countryISO2Controller.text,
         isCrypto: isCrypto,
         isActive: true,
-        userId: widget.userId,
+        user: currentUser?.id,
       );
+      // await repository.createCurrency(
+      //   code: _codeController.text,
+      //   name: _nameController.text,
+      //   symbol: _symbolController.text,
+      //   decimals: _decimals.round(),
+      //   countryISO2: _countryISO2Controller.text.isEmpty
+      //       ? null
+      //       : _countryISO2Controller.text,
+      //   isCrypto: isCrypto,
+      //   isActive: true,
+      //   userId: widget.userId,
+      // );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -99,9 +114,9 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error creating currency: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error creating currency: $e')));
       }
     } finally {
       if (mounted) {
@@ -119,7 +134,7 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
     return Scaffold(
       // backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: activeColor,
+        backgroundColor: colors.text,
         iconTheme: IconThemeData(color: colors.textInverse),
         actionsIconTheme: IconThemeData(color: colors.textInverse),
         title: Text(
@@ -336,7 +351,10 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
                       ),
                       title: Padding(
                         padding: EdgeInsetsGeometry.only(top: 0, left: 8),
-                        child: Text('Country Code (ISO2)', textAlign: TextAlign.start),
+                        child: Text(
+                          'Country Code (ISO2)',
+                          textAlign: TextAlign.start,
+                        ),
                       ),
                       subtitle: CupertinoTextFormFieldRow(
                         controller: _countryISO2Controller,
@@ -394,7 +412,7 @@ class _AddCurrencyScreenState extends ConsumerState<AddCurrencyScreen> {
           child: ElevatedButton(
             onPressed: _isSaving ? null : _saveCurrency,
             style: ElevatedButton.styleFrom(
-              backgroundColor: activeColor,
+              backgroundColor: colors.text,
               foregroundColor: colors.textInverse,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),

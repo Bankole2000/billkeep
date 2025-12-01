@@ -46,16 +46,16 @@ class _ShoppingListFormState extends ConsumerState<ShoppingListForm> {
         // }
 
         // Create shopping list with linked expense
-        await ref
-            .read(shoppingListRepositoryProvider)
-            .createShoppingList(
-              projectId: widget.projectId,
-              name: _nameController.text.trim(),
-              description: _descriptionController.text.trim().isEmpty
-                  ? null
-                  : _descriptionController.text.trim(),
-              linkedExpenseId: expenseId,
-            );
+        // await ref
+        //     .read(shoppingListRepositoryProvider)
+        //     .createShoppingList(
+        //       projectId: widget.projectId,
+        //       name: _nameController.text.trim(),
+        //       description: _descriptionController.text.trim().isEmpty
+        //           ? null
+        //           : _descriptionController.text.trim(),
+        //       linkedExpenseId: expenseId,
+        //     );
 
         if (mounted) Navigator.pop(context);
       } catch (e) {

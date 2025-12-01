@@ -102,6 +102,134 @@ class InvestmentModel {
     );
   }
 
+  /// Converts a Drift database record to an InvestmentModel
+  factory InvestmentModel.fromDrift(Investment investment) {
+    return InvestmentModel(
+      id: investment.id,
+      name: investment.name,
+      tempId: investment.tempId,
+      investmentDate: investment.investmentDate,
+      maturityDate: investment.maturityDate,
+      closedDate: investment.closedDate,
+      currency: investment.currency,
+      user: investment.userId,
+      investedAmount: investment.investedAmount,
+      currentValue: investment.currentValue,
+      interestRate: investment.interestRate,
+      fixedReturnAmount: investment.fixedReturnAmount,
+      returnFrequency: investment.returnFrequency,
+      contact: investment.contactId,
+      merchant: investment.merchantId,
+      isSynced: investment.isSynced,
+      returnCalculationType: investment.returnCalculationType,
+      createdAt: investment.createdAt,
+      updatedAt: investment.updatedAt,
+    );
+  }
+
+
+  /// Compares this InvestmentModel with another for equality
+  bool isEqualTo(InvestmentModel other) {
+    return id == other.id &&
+        name == other.name &&
+        tempId == other.tempId &&
+        investmentDate == other.investmentDate &&
+        maturityDate == other.maturityDate &&
+        closedDate == other.closedDate &&
+        currency == other.currency &&
+        user == other.user &&
+        investedAmount == other.investedAmount &&
+        currentValue == other.currentValue &&
+        interestRate == other.interestRate &&
+        fixedReturnAmount == other.fixedReturnAmount &&
+        returnFrequency == other.returnFrequency &&
+        contact == other.contact &&
+        merchant == other.merchant &&
+        isSynced == other.isSynced &&
+        returnCalculationType == other.returnCalculationType;
+  }
+
+  /// Updates this InvestmentModel with another, prioritizing non-null fields from the other
+  InvestmentModel merge(InvestmentModel other) {
+    return InvestmentModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      tempId: other.tempId ?? tempId,
+      investmentDate: other.investmentDate ?? investmentDate,
+      maturityDate: other.maturityDate ?? maturityDate,
+      closedDate: other.closedDate ?? closedDate,
+      currency: other.currency ?? currency,
+      currencyData: other.currencyData ?? currencyData,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      investedAmount: other.investedAmount ?? investedAmount,
+      currentValue: other.currentValue ?? currentValue,
+      interestRate: other.interestRate ?? interestRate,
+      fixedReturnAmount: other.fixedReturnAmount ?? fixedReturnAmount,
+      returnFrequency: other.returnFrequency ?? returnFrequency,
+      contact: other.contact ?? contact,
+      contactData: other.contactData ?? contactData,
+      merchant: other.merchant ?? merchant,
+      merchantData: other.merchantData ?? merchantData,
+      isSynced: other.isSynced ?? isSynced,
+      returnCalculationType: other.returnCalculationType ?? returnCalculationType,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this InvestmentModel with the given fields replaced with new values
+  InvestmentModel copyWith({
+    String? id,
+    String? name,
+    String? tempId,
+    DateTime? investmentDate,
+    DateTime? maturityDate,
+    DateTime? closedDate,
+    String? currency,
+    CurrencyModel? currencyData,
+    String? user,
+    UserModel? userData,
+    int? investedAmount,
+    int? currentValue,
+    int? interestRate,
+    int? fixedReturnAmount,
+    String? returnFrequency,
+    String? contact,
+    ContactModel? contactData,
+    String? merchant,
+    MerchantModel? merchantData,
+    bool? isSynced,
+    String? returnCalculationType,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return InvestmentModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      tempId: tempId ?? this.tempId,
+      investmentDate: investmentDate ?? this.investmentDate,
+      maturityDate: maturityDate ?? this.maturityDate,
+      closedDate: closedDate ?? this.closedDate,
+      currency: currency ?? this.currency,
+      currencyData: currencyData ?? this.currencyData,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      investedAmount: investedAmount ?? this.investedAmount,
+      currentValue: currentValue ?? this.currentValue,
+      interestRate: interestRate ?? this.interestRate,
+      fixedReturnAmount: fixedReturnAmount ?? this.fixedReturnAmount,
+      returnFrequency: returnFrequency ?? this.returnFrequency,
+      contact: contact ?? this.contact,
+      contactData: contactData ?? this.contactData,
+      merchant: merchant ?? this.merchant,
+      merchantData: merchantData ?? this.merchantData,
+      isSynced: isSynced ?? this.isSynced,
+      returnCalculationType: returnCalculationType ?? this.returnCalculationType,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

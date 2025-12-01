@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/expense_provider.dart';
-import '../../screens/payments/add_payment_screen.dart';
-import '../../utils/currency_helper.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/expense_provider.dart';
+import 'package:billkeep/screens/payments/add_payment_screen.dart';
+import 'package:billkeep/utils/currency_helper.dart';
 
 class ExpenseListItem extends ConsumerStatefulWidget {
   final Expense expense;
@@ -92,12 +92,12 @@ class _ExpenseListItemState extends ConsumerState<ExpenseListItem> {
                     if (value == 'edit') {
                       _showEditDialog(context);
                     } else if (value == 'toggle_active') {
-                      ref
-                          .read(expenseRepositoryProvider)
-                          .toggleExpenseActive(
-                            widget.expense.id,
-                            !widget.expense.isActive,
-                          );
+                      // ref
+                      //     .read(expenseRepositoryProvider)
+                      //     .toggleExpenseActive(
+                      //       widget.expense.id,
+                      //       !widget.expense.isActive,
+                      //     );
                     } else if (value == 'delete') {
                       _showDeleteConfirmation(context);
                     }
@@ -396,18 +396,18 @@ class _ExpenseListItemState extends ConsumerState<ExpenseListItem> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await ref
-                    .read(expenseRepositoryProvider)
-                    .updateExpense(
-                      expenseId: widget.expense.id,
-                      name: nameController.text.trim(),
-                      amount: amountController.text.trim(),
-                      type: type,
-                      frequency: frequency,
-                      notes: notesController.text.trim().isEmpty
-                          ? null
-                          : notesController.text.trim(),
-                    );
+                // await ref
+                //     .read(expenseRepositoryProvider)
+                //     .updateExpense(
+                //       expenseId: widget.expense.id,
+                //       name: nameController.text.trim(),
+                //       amount: amountController.text.trim(),
+                //       type: type,
+                //       frequency: frequency,
+                //       notes: notesController.text.trim().isEmpty
+                //           ? null
+                //           : notesController.text.trim(),
+                //     );
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -438,9 +438,9 @@ class _ExpenseListItemState extends ConsumerState<ExpenseListItem> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await ref
-                  .read(expenseRepositoryProvider)
-                  .deleteExpense(widget.expense.id);
+              // await ref
+              //     .read(expenseRepositoryProvider)
+              //     .deleteExpense(widget.expense.id);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -518,16 +518,16 @@ class _ExpenseListItemState extends ConsumerState<ExpenseListItem> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await ref
-                    .read(expenseRepositoryProvider)
-                    .updatePayment(
-                      paymentId: payment.id,
-                      actualAmount: amountController.text.trim(),
-                      paymentDate: paymentDate,
-                      notes: notesController.text.trim().isEmpty
-                          ? null
-                          : notesController.text.trim(),
-                    );
+                // await ref
+                //     .read(expenseRepositoryProvider)
+                //     .updatePayment(
+                //       paymentId: payment.id,
+                //       actualAmount: amountController.text.trim(),
+                //       paymentDate: paymentDate,
+                //       notes: notesController.text.trim().isEmpty
+                //           ? null
+                //           : notesController.text.trim(),
+                //     );
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -558,9 +558,9 @@ class _ExpenseListItemState extends ConsumerState<ExpenseListItem> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await ref
-                  .read(expenseRepositoryProvider)
-                  .deletePayment(paymentId);
+              // await ref
+              //     .read(expenseRepositoryProvider)
+              //     .deletePayment(paymentId);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(

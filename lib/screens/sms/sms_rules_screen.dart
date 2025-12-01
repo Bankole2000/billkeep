@@ -3,7 +3,7 @@ import 'package:billkeep/screens/sms/rule_builder_screen.dart';
 import 'package:billkeep/screens/sms/test_rule_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
+import 'package:billkeep/database/database.dart';
 
 class SmsRulesScreen extends ConsumerStatefulWidget {
   const SmsRulesScreen({super.key});
@@ -19,7 +19,7 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final repo = ref.read(smsRepositoryProvider);
+      // final repo = ref.read(smsRepositoryProvider);
 
       // Default Nigerian bank SMS rules
       final defaultRules = [
@@ -135,14 +135,14 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
       ];
 
       for (final rule in defaultRules) {
-        await repo.createMessageRule(
-          name: rule['name'] as String,
-          type: 'SMS',
-          sender: rule['sender'] as String,
-          pattern: rule['pattern'] as String,
-          amountPattern: rule['amountPattern'] as String,
-          descriptionPattern: rule['descriptionPattern'],
-        );
+        // await repo.createMessageRule(
+        //   name: rule['name'] as String,
+        //   type: 'SMS',
+        //   sender: rule['sender'] as String,
+        //   pattern: rule['pattern'] as String,
+        //   amountPattern: rule['amountPattern'] as String,
+        //   descriptionPattern: rule['descriptionPattern'],
+        // );
       }
 
       if (mounted) {
@@ -190,7 +190,7 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
     );
 
     if (confirmed == true) {
-      await ref.read(smsRepositoryProvider).deleteMessageRule(ruleId);
+      // await ref.read(smsRepositoryProvider).deleteMessageRule(ruleId);
       if (mounted) {
         ScaffoldMessenger.of(
           context,
@@ -200,9 +200,9 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
   }
 
   Future<void> _toggleRuleActive(MessageRule rule) async {
-    await ref
-        .read(smsRepositoryProvider)
-        .updateMessageRule(ruleId: rule.id, isActive: !rule.isActive);
+    // await ref
+    //     .read(smsRepositoryProvider)
+    //     .updateMessageRule(ruleId: rule.id, isActive: !rule.isActive);
   }
 
   @override
@@ -621,19 +621,19 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
                 return;
               }
 
-              await ref
-                  .read(smsRepositoryProvider)
-                  .createMessageRule(
-                    name: nameController.text.trim(),
-                    type: selectedType,
-                    sender: senderController.text.trim(),
-                    pattern: patternController.text.trim(),
-                    amountPattern: amountPatternController.text.trim(),
-                    descriptionPattern:
-                        descriptionPatternController.text.trim().isEmpty
-                        ? null
-                        : descriptionPatternController.text.trim(),
-                  );
+              // await ref
+              //     .read(smsRepositoryProvider)
+              //     .createMessageRule(
+              //       name: nameController.text.trim(),
+              //       type: selectedType,
+              //       sender: senderController.text.trim(),
+              //       pattern: patternController.text.trim(),
+              //       amountPattern: amountPatternController.text.trim(),
+              //       descriptionPattern:
+              //           descriptionPatternController.text.trim().isEmpty
+              //           ? null
+              //           : descriptionPatternController.text.trim(),
+              //     );
 
               if (context.mounted) {
                 Navigator.pop(context);
@@ -731,19 +731,19 @@ class _SmsRulesScreenState extends ConsumerState<SmsRulesScreen> {
                 return;
               }
 
-              await ref
-                  .read(smsRepositoryProvider)
-                  .updateMessageRuleComplete(
-                    ruleId: rule.id,
-                    name: nameController.text.trim(),
-                    sender: senderController.text.trim(),
-                    pattern: patternController.text.trim(),
-                    amountPattern: amountPatternController.text.trim(),
-                    descriptionPattern:
-                        descriptionPatternController.text.trim().isEmpty
-                        ? null
-                        : descriptionPatternController.text.trim(),
-                  );
+              // await ref
+              //     .read(smsRepositoryProvider)
+              //     .updateMessageRuleComplete(
+              //       ruleId: rule.id,
+              //       name: nameController.text.trim(),
+              //       sender: senderController.text.trim(),
+              //       pattern: patternController.text.trim(),
+              //       amountPattern: amountPatternController.text.trim(),
+              //       descriptionPattern:
+              //           descriptionPatternController.text.trim().isEmpty
+              //           ? null
+              //           : descriptionPatternController.text.trim(),
+              //     );
 
               if (context.mounted) {
                 Navigator.pop(context);

@@ -53,6 +53,77 @@ class ReminderModel {
     );
   }
 
+  /// Converts a Drift database record to a ReminderModel
+  factory ReminderModel.fromDrift(Reminder reminder) {
+    return ReminderModel(
+      id: reminder.id,
+      reminderType: reminder.reminderType,
+      tempId: reminder.tempId,
+      isSynced: reminder.isSynced,
+      reminderDate: reminder.reminderDate,
+      isActive: reminder.isActive,
+      user: reminder.userId,
+      createdAt: reminder.createdAt,
+      updatedAt: reminder.updatedAt,
+    );
+  }
+
+
+  /// Compares this ReminderModel with another for equality
+  bool isEqualTo(ReminderModel other) {
+    return id == other.id &&
+        reminderType == other.reminderType &&
+        tempId == other.tempId &&
+        isSynced == other.isSynced &&
+        reminderDate == other.reminderDate &&
+        isActive == other.isActive &&
+        user == other.user;
+  }
+
+  /// Updates this ReminderModel with another, prioritizing non-null fields from the other
+  ReminderModel merge(ReminderModel other) {
+    return ReminderModel(
+      id: other.id ?? id,
+      reminderType: other.reminderType ?? reminderType,
+      tempId: other.tempId ?? tempId,
+      isSynced: other.isSynced ?? isSynced,
+      reminderDate: other.reminderDate ?? reminderDate,
+      isActive: other.isActive ?? isActive,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this ReminderModel with the given fields replaced with new values
+  ReminderModel copyWith({
+    String? id,
+    String? reminderType,
+    String? tempId,
+    bool? isSynced,
+    DateTime? reminderDate,
+    bool? isActive,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ReminderModel(
+      id: id ?? this.id,
+      reminderType: reminderType ?? this.reminderType,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      reminderDate: reminderDate ?? this.reminderDate,
+      isActive: isActive ?? this.isActive,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

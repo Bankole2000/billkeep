@@ -68,6 +68,98 @@ class WalletProviderMetadataModel {
     );
   }
 
+  /// Converts a Drift database record to a WalletProviderMetadataModel
+  factory WalletProviderMetadataModel.fromDrift(WalletProviderMetadataData metadata) {
+    return WalletProviderMetadataModel(
+      id: metadata.id,
+      name: metadata.name,
+      type: metadata.type,
+      stringValue: metadata.stringValue,
+      numberValue: metadata.numberValue,
+      booleanValue: metadata.booleanValue,
+      dateTimeValue: metadata.dateTimeValue,
+      urlValue: metadata.urlValue,
+      emailValue: metadata.emailValue,
+      user: metadata.userId,
+      walletProvider: metadata.walletProviderId,
+      createdAt: metadata.createdAt,
+      updatedAt: metadata.updatedAt,
+    );
+  }
+
+
+  /// Compares this WalletProviderMetadataModel with another for equality
+  bool isEqualTo(WalletProviderMetadataModel other) {
+    return id == other.id &&
+        name == other.name &&
+        type == other.type &&
+        stringValue == other.stringValue &&
+        numberValue == other.numberValue &&
+        booleanValue == other.booleanValue &&
+        dateTimeValue == other.dateTimeValue &&
+        urlValue == other.urlValue &&
+        emailValue == other.emailValue &&
+        user == other.user &&
+        walletProvider == other.walletProvider;
+  }
+
+  /// Updates this WalletProviderMetadataModel with another, prioritizing non-null fields from the other
+  WalletProviderMetadataModel merge(WalletProviderMetadataModel other) {
+    return WalletProviderMetadataModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      type: other.type ?? type,
+      stringValue: other.stringValue ?? stringValue,
+      numberValue: other.numberValue ?? numberValue,
+      booleanValue: other.booleanValue ?? booleanValue,
+      dateTimeValue: other.dateTimeValue ?? dateTimeValue,
+      urlValue: other.urlValue ?? urlValue,
+      emailValue: other.emailValue ?? emailValue,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      walletProvider: other.walletProvider ?? walletProvider,
+      walletProviderData: other.walletProviderData ?? walletProviderData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this WalletProviderMetadataModel with the given fields replaced with new values
+  WalletProviderMetadataModel copyWith({
+    String? id,
+    String? name,
+    String? type,
+    String? stringValue,
+    int? numberValue,
+    bool? booleanValue,
+    DateTime? dateTimeValue,
+    String? urlValue,
+    String? emailValue,
+    String? user,
+    UserModel? userData,
+    String? walletProvider,
+    WalletProviderModel? walletProviderData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return WalletProviderMetadataModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      walletProvider: walletProvider ?? this.walletProvider,
+      walletProviderData: walletProviderData ?? this.walletProviderData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

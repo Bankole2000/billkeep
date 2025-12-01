@@ -116,6 +116,140 @@ class PaymentModel {
     );
   }
 
+  /// Converts a Drift database record to a PaymentModel
+  factory PaymentModel.fromDrift(Payment payment) {
+    return PaymentModel(
+      id: payment.id,
+      paymentType: payment.paymentType,
+      wallet: payment.walletId,
+      expense: payment.expenseId,
+      income: payment.incomeId,
+      actualAmount: payment.actualAmount,
+      currency: payment.currency,
+      paymentDate: payment.paymentDate,
+      source: payment.source,
+      verified: payment.verified,
+      isSynced: payment.isSynced,
+      tempId: payment.tempId,
+      user: payment.userId,
+      category: payment.categoryId,
+      merchant: payment.merchantId,
+      contact: payment.contactId,
+      createdAt: payment.createdAt,
+      updatedAt: payment.updatedAt,
+    );
+  }
+
+
+  /// Compares this PaymentModel with another for equality
+  bool isEqualTo(PaymentModel other) {
+    return id == other.id &&
+        paymentType == other.paymentType &&
+        wallet == other.wallet &&
+        expense == other.expense &&
+        income == other.income &&
+        actualAmount == other.actualAmount &&
+        currency == other.currency &&
+        paymentDate == other.paymentDate &&
+        source == other.source &&
+        verified == other.verified &&
+        isSynced == other.isSynced &&
+        tempId == other.tempId &&
+        user == other.user &&
+        category == other.category &&
+        merchant == other.merchant &&
+        contact == other.contact;
+  }
+
+  /// Updates this PaymentModel with another, prioritizing non-null fields from the other
+  PaymentModel merge(PaymentModel other) {
+    return PaymentModel(
+      id: other.id ?? id,
+      paymentType: other.paymentType ?? paymentType,
+      wallet: other.wallet ?? wallet,
+      walletData: other.walletData ?? walletData,
+      expense: other.expense ?? expense,
+      expenseData: other.expenseData ?? expenseData,
+      income: other.income ?? income,
+      incomeData: other.incomeData ?? incomeData,
+      actualAmount: other.actualAmount ?? actualAmount,
+      currency: other.currency ?? currency,
+      paymentDate: other.paymentDate ?? paymentDate,
+      source: other.source ?? source,
+      verified: other.verified ?? verified,
+      isSynced: other.isSynced ?? isSynced,
+      tempId: other.tempId ?? tempId,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      category: other.category ?? category,
+      categoryData: other.categoryData ?? categoryData,
+      merchant: other.merchant ?? merchant,
+      merchantData: other.merchantData ?? merchantData,
+      contact: other.contact ?? contact,
+      contactData: other.contactData ?? contactData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this PaymentModel with the given fields replaced with new values
+  PaymentModel copyWith({
+    String? id,
+    String? paymentType,
+    String? wallet,
+    WalletModel? walletData,
+    String? expense,
+    ExpenseModel? expenseData,
+    String? income,
+    IncomeModel? incomeData,
+    int? actualAmount,
+    String? currency,
+    DateTime? paymentDate,
+    String? source,
+    bool? verified,
+    bool? isSynced,
+    String? tempId,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    String? category,
+    CategoryModel? categoryData,
+    String? merchant,
+    MerchantModel? merchantData,
+    String? contact,
+    ContactModel? contactData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return PaymentModel(
+      id: id ?? this.id,
+      paymentType: paymentType ?? this.paymentType,
+      wallet: wallet ?? this.wallet,
+      walletData: walletData ?? this.walletData,
+      expense: expense ?? this.expense,
+      expenseData: expenseData ?? this.expenseData,
+      income: income ?? this.income,
+      incomeData: incomeData ?? this.incomeData,
+      actualAmount: actualAmount ?? this.actualAmount,
+      currency: currency ?? this.currency,
+      paymentDate: paymentDate ?? this.paymentDate,
+      source: source ?? this.source,
+      verified: verified ?? this.verified,
+      isSynced: isSynced ?? this.isSynced,
+      tempId: tempId ?? this.tempId,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      category: category ?? this.category,
+      categoryData: categoryData ?? this.categoryData,
+      merchant: merchant ?? this.merchant,
+      merchantData: merchantData ?? this.merchantData,
+      contact: contact ?? this.contact,
+      contactData: contactData ?? this.contactData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

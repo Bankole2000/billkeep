@@ -99,9 +99,9 @@ class _GeneralSettings extends ConsumerWidget {
                 trailing: Switch(
                   value: project.isArchived,
                   onChanged: (value) async {
-                    await ref
-                        .read(projectRepositoryProvider)
-                        .toggleArchiveProject(project.id, value);
+                    // await ref
+                    //     .read(projectRepositoryProvider)
+                    //     .toggleArchiveProject(project.id, value);
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -179,9 +179,9 @@ class _GeneralSettings extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              await ref
-                  .read(projectRepositoryProvider)
-                  .deleteProject(project.id);
+              // await ref
+              //     .read(projectRepositoryProvider)
+              //     .deleteProject(project.id);
               if (context.mounted) {
                 Navigator.pop(context); // Close dialog
                 Navigator.pop(context); // Close settings

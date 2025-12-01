@@ -1,4 +1,5 @@
 import 'package:billkeep/database/database.dart';
+import 'package:billkeep/repositories/project_repository.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:billkeep/models/project_model.dart';
 import 'package:billkeep/providers/project_provider.dart';
@@ -54,6 +55,7 @@ class ProjectService extends BaseApiService {
       print('⚠️ Error syncing project: $e');
     }
   }
+
   /// Create a new project
   ///
   /// Local-first approach:
@@ -163,10 +165,7 @@ class ProjectService extends BaseApiService {
     if (status != null) queryParameters['status'] = status;
 
     return executeListRequest<Project>(
-      request: () => dio.get(
-        '/projects',
-        queryParameters: queryParameters,
-      ),
+      request: () => dio.get('/projects', queryParameters: queryParameters),
       itemParser: (json) => Project.fromJson(json),
     );
   }
@@ -193,10 +192,7 @@ class ProjectService extends BaseApiService {
     if (status != null) data['status'] = status;
 
     return executeRequest<Project>(
-      request: () => dio.put(
-        '/projects/$id',
-        data: data,
-      ),
+      request: () => dio.put('/projects/$id', data: data),
       parser: (data) => Project.fromJson(data),
     );
   }
@@ -207,18 +203,13 @@ class ProjectService extends BaseApiService {
     Map<String, dynamic>? updates,
   }) async {
     return executeRequest<Project>(
-      request: () => dio.patch(
-        '/projects/$id',
-        data: updates,
-      ),
+      request: () => dio.patch('/projects/$id', data: updates),
       parser: (data) => Project.fromJson(data),
     );
   }
 
   /// Delete a project
   Future<void> deleteProject(String id) async {
-    return executeVoidRequest(
-      request: () => dio.delete('/projects/$id'),
-    );
+    return executeVoidRequest(request: () => dio.delete('/projects/$id'));
   }
 }

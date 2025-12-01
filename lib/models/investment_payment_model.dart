@@ -65,6 +65,85 @@ class InvestmentPaymentModel {
     );
   }
 
+  /// Converts a Drift database record to an InvestmentPaymentModel
+  factory InvestmentPaymentModel.fromDrift(InvestmentPayment investmentPayment) {
+    return InvestmentPaymentModel(
+      id: investmentPayment.id,
+      payment: investmentPayment.paymentId,
+      investment: investmentPayment.investmentId,
+      allocatedAmount: investmentPayment.allocatedAmount,
+      allocatedAt: investmentPayment.allocatedAt,
+      notes: investmentPayment.notes,
+      user: investmentPayment.userId,
+      created: investmentPayment.created,
+      updated: investmentPayment.updated,
+    );
+  }
+
+
+  /// Compares this InvestmentPaymentModel with another for equality
+  bool isEqualTo(InvestmentPaymentModel other) {
+    return id == other.id &&
+        payment == other.payment &&
+        investment == other.investment &&
+        allocatedAmount == other.allocatedAmount &&
+        allocatedAt == other.allocatedAt &&
+        notes == other.notes &&
+        user == other.user &&
+        created == other.created &&
+        updated == other.updated;
+  }
+
+  /// Updates this InvestmentPaymentModel with another, prioritizing non-null fields from the other
+  InvestmentPaymentModel merge(InvestmentPaymentModel other) {
+    return InvestmentPaymentModel(
+      id: other.id ?? id,
+      payment: other.payment ?? payment,
+      paymentData: other.paymentData ?? paymentData,
+      investment: other.investment ?? investment,
+      investmentData: other.investmentData ?? investmentData,
+      allocatedAmount: other.allocatedAmount ?? allocatedAmount,
+      allocatedAt: other.allocatedAt ?? allocatedAt,
+      notes: other.notes ?? notes,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      created: other.created ?? created,
+      updated: other.updated ?? updated,
+    );
+  }
+  /// Creates a copy of this InvestmentPaymentModel with the given fields replaced with new values
+  InvestmentPaymentModel copyWith({
+    String? id,
+    String? payment,
+    PaymentModel? paymentData,
+    String? investment,
+    InvestmentModel? investmentData,
+    int? allocatedAmount,
+    DateTime? allocatedAt,
+    String? notes,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    DateTime? created,
+    DateTime? updated,
+  }) {
+    return InvestmentPaymentModel(
+      id: id ?? this.id,
+      payment: payment ?? this.payment,
+      paymentData: paymentData ?? this.paymentData,
+      investment: investment ?? this.investment,
+      investmentData: investmentData ?? this.investmentData,
+      allocatedAmount: allocatedAmount ?? this.allocatedAmount,
+      allocatedAt: allocatedAt ?? this.allocatedAt,
+      notes: notes ?? this.notes,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

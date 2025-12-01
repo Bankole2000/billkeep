@@ -91,12 +91,12 @@ class _IncomeListItemState extends ConsumerState<IncomeListItem> {
                     if (value == 'edit') {
                       _showEditDialog(context);
                     } else if (value == 'toggle_active') {
-                      ref
-                          .read(incomeRepositoryProvider)
-                          .toggleIncomeActive(
-                            widget.income.id,
-                            !widget.income.isActive,
-                          );
+                      // ref
+                      //     .read(incomeRepositoryProvider)
+                      //     .toggleIncomeActive(
+                      //       widget.income.id,
+                      //       !widget.income.isActive,
+                      //     );
                     } else if (value == 'delete') {
                       _showDeleteConfirmation(context);
                     }
@@ -396,21 +396,21 @@ class _IncomeListItemState extends ConsumerState<IncomeListItem> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await ref
-                    .read(incomeRepositoryProvider)
-                    .updateIncome(
-                      incomeId: widget.income.id,
-                      description: descriptionController.text.trim(),
-                      amount: amountController.text.trim(),
-                      type: type,
-                      frequency: frequency,
-                      invoiceNumber: invoiceController.text.trim().isEmpty
-                          ? null
-                          : invoiceController.text.trim(),
-                      notes: notesController.text.trim().isEmpty
-                          ? null
-                          : notesController.text.trim(),
-                    );
+                // await ref
+                //     .read(incomeRepositoryProvider)
+                //     .updateIncome(
+                //       incomeId: widget.income.id,
+                //       description: descriptionController.text.trim(),
+                //       amount: amountController.text.trim(),
+                //       type: type,
+                //       frequency: frequency,
+                //       invoiceNumber: invoiceController.text.trim().isEmpty
+                //           ? null
+                //           : invoiceController.text.trim(),
+                //       notes: notesController.text.trim().isEmpty
+                //           ? null
+                //           : notesController.text.trim(),
+                //     );
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -441,9 +441,9 @@ class _IncomeListItemState extends ConsumerState<IncomeListItem> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await ref
-                  .read(incomeRepositoryProvider)
-                  .deleteIncome(widget.income.id);
+              // await ref
+              //     .read(incomeRepositoryProvider)
+              //     .deleteIncome(widget.income.id);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(
@@ -511,13 +511,13 @@ class _IncomeListItemState extends ConsumerState<IncomeListItem> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await ref
-                    .read(incomeRepositoryProvider)
-                    .recordPayment(
-                      incomeId: widget.income.id,
-                      actualAmount: amountController.text.trim(),
-                      paymentDate: paymentDate,
-                    );
+                // await ref
+                //     .read(incomeRepositoryProvider)
+                //     .recordPayment(
+                //       incomeId: widget.income.id,
+                //       actualAmount: amountController.text.trim(),
+                //       paymentDate: paymentDate,
+                //     );
                 if (context.mounted) Navigator.pop(context);
               },
               child: const Text('Record'),
@@ -590,16 +590,16 @@ class _IncomeListItemState extends ConsumerState<IncomeListItem> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await ref
-                    .read(incomeRepositoryProvider)
-                    .updatePayment(
-                      paymentId: payment.id,
-                      actualAmount: amountController.text.trim(),
-                      paymentDate: paymentDate,
-                      notes: notesController.text.trim().isEmpty
-                          ? null
-                          : notesController.text.trim(),
-                    );
+                // await ref
+                //     .read(incomeRepositoryProvider)
+                //     .updatePayment(
+                //       paymentId: payment.id,
+                //       actualAmount: amountController.text.trim(),
+                //       paymentDate: paymentDate,
+                //       notes: notesController.text.trim().isEmpty
+                //           ? null
+                //           : notesController.text.trim(),
+                //     );
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -630,7 +630,7 @@ class _IncomeListItemState extends ConsumerState<IncomeListItem> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await ref.read(incomeRepositoryProvider).deletePayment(paymentId);
+              // await ref.read(incomeRepositoryProvider).deletePayment(paymentId);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(

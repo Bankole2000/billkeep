@@ -1,6 +1,8 @@
 import 'package:billkeep/database/database.dart';
-import '../providers/currency_provider.dart';
-import '../utils/connectivity_helper.dart';
+import 'package:billkeep/models/currency_model.dart';
+import 'package:billkeep/repositories/currency_repository.dart';
+import 'package:billkeep/providers/currency_provider.dart';
+import 'package:billkeep/utils/connectivity_helper.dart';
 import 'base_api_service.dart';
 
 /// Service for managing currency operations
@@ -20,48 +22,20 @@ class CurrencyService extends BaseApiService {
   /// 1. Create in local DB first with generated ID and tempID
   /// 2. Check connectivity and send to backend if online
   /// 3. Realtime sync will update with canonical ID when backend confirms
-  Future<Currency> createCurrency({
-    required String code,
-    required String name,
-    required String symbol,
-    int decimals = 2,
-    String? countryISO2,
-    bool isCrypto = false,
-    bool isActive = true,
-    String? userId,
-  }) async {
+  Future<Currency> createCurrency(CurrencyModel newCurrency) async {
     // 1. Create in local database first (optimistic)
-    final tempId = await _repository.createCurrency(
-      code: code,
-      name: name,
-      symbol: symbol,
-      decimals: decimals,
-      countryISO2: countryISO2,
-      isCrypto: isCrypto,
-      isActive: isActive,
-      userId: userId,
-    );
+    final tempId = await _repository.createCurrency(newCurrency);
 
     // 2. Check connectivity and send to backend if online
     final isOnline = await ConnectivityHelper.hasInternetConnection();
 
-    if (isOnline && userId != null) {
+    if (isOnline && newCurrency.user != null) {
       try {
         // Send to backend API
         await executeRequest<Map<String, dynamic>>(
           request: () => dio.post(
             '/currencies/records',
-            data: {
-              'code': code.toUpperCase(),
-              'name': name,
-              'symbol': symbol,
-              'decimals': decimals,
-              'countryISO2': countryISO2,
-              'isCrypto': isCrypto,
-              'isActive': isActive,
-              'user': userId,
-              'tempId': tempId,
-            },
+            data: newCurrency.toJson()..['tempId'] = tempId,
           ),
           parser: (data) => data as Map<String, dynamic>,
         );
@@ -87,44 +61,27 @@ class CurrencyService extends BaseApiService {
   /// Local-first approach:
   /// 1. Update in local DB first
   /// 2. Check connectivity and sync to backend if online
-  Future<void> updateCurrency({
-    required String currencyCode,
-    String? name,
-    String? symbol,
-    int? decimals,
-    String? countryISO2,
-    bool? isCrypto,
-    bool? isActive,
-    String? userId,
-  }) async {
+  Future<void> updateCurrency(CurrencyModel updatedCurrency) async {
     // 1. Update in local database first
-    await _repository.updateCurrency(
-      currencyCode: currencyCode,
-      name: name,
-      symbol: symbol,
-      decimals: decimals,
-      countryISO2: countryISO2,
-      isCrypto: isCrypto,
-      isActive: isActive,
-    );
+    await _repository.updateCurrency(updatedCurrency);
 
     // 2. Check connectivity and send to backend if online
     final isOnline = await ConnectivityHelper.hasInternetConnection();
 
-    if (isOnline && userId != null) {
+    if (isOnline && updatedCurrency.user != null) {
       try {
-        final updateData = <String, dynamic>{};
-        if (name != null) updateData['name'] = name;
-        if (symbol != null) updateData['symbol'] = symbol;
-        if (decimals != null) updateData['decimals'] = decimals;
-        if (countryISO2 != null) updateData['countryISO2'] = countryISO2;
-        if (isCrypto != null) updateData['isCrypto'] = isCrypto;
-        if (isActive != null) updateData['isActive'] = isActive;
+        // final updateData = <String, dynamic>{};
+        // if (name != null) updateData['name'] = name;
+        // if (symbol != null) updateData['symbol'] = symbol;
+        // if (decimals != null) updateData['decimals'] = decimals;
+        // if (countryISO2 != null) updateData['countryISO2'] = countryISO2;
+        // if (isCrypto != null) updateData['isCrypto'] = isCrypto;
+        // if (isActive != null) updateData['isActive'] = isActive;
 
         await executeRequest<Map<String, dynamic>>(
           request: () => dio.patch(
-            '/currencies/records/${currencyCode.toUpperCase()}',
-            data: updateData,
+            '/currencies/records/${updatedCurrency.id}',
+            data: updatedCurrency.toJson(),
           ),
           parser: (data) => data as Map<String, dynamic>,
         );
@@ -149,9 +106,8 @@ class CurrencyService extends BaseApiService {
     if (isOnline && userId != null) {
       try {
         await executeVoidRequest(
-          request: () => dio.delete(
-            '/currencies/records/${currencyCode.toUpperCase()}',
-          ),
+          request: () =>
+              dio.delete('/currencies/records/${currencyCode.toUpperCase()}'),
         );
       } catch (e) {
         // If API fails, local deletion is already done
@@ -215,11 +171,11 @@ class CurrencyService extends BaseApiService {
       throw Exception('Currency not found');
     }
 
-    await updateCurrency(
-      currencyCode: currencyCode,
-      isActive: !currency.isActive,
-      userId: userId,
-    );
+    // await updateCurrency(
+    //   currencyCode: currencyCode,
+    //   isActive: !currency.isActive,
+    //   userId: userId,
+    // );
   }
 
   /// Sync currencies from backend
@@ -255,15 +211,15 @@ class CurrencyService extends BaseApiService {
       for (final currency in currencies) {
         final exists = await _repository.currencyExists(currency.code);
         if (exists) {
-          await _repository.updateCurrency(
-            currencyCode: currency.code,
-            name: currency.name,
-            symbol: currency.symbol,
-            decimals: currency.decimals,
-            countryISO2: currency.countryISO2,
-            isCrypto: currency.isCrypto,
-            isActive: currency.isActive,
-          );
+          // await _repository.updateCurrency(
+          //   currencyCode: currency.code,
+          //   name: currency.name,
+          //   symbol: currency.symbol,
+          //   decimals: currency.decimals,
+          //   countryISO2: currency.countryISO2,
+          //   isCrypto: currency.isCrypto,
+          //   isActive: currency.isActive,
+          // );
         } else {
           // Currency doesn't exist locally, would need to insert
           // This would require extending the repository

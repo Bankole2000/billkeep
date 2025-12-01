@@ -87,6 +87,109 @@ class TodoItemModel {
     );
   }
 
+  /// Converts a Drift database record to a TodoItemModel
+  factory TodoItemModel.fromDrift(TodoItem todoItem) {
+    return TodoItemModel(
+      id: todoItem.id,
+      title: todoItem.title,
+      description: todoItem.description,
+      project: todoItem.projectId,
+      isCompleted: todoItem.isCompleted,
+      expense: todoItem.expenseId,
+      isSynced: todoItem.isSynced,
+      tempId: todoItem.tempId,
+      user: todoItem.userId,
+      parentTodo: todoItem.parentTodoId,
+      payment: todoItem.paymentId,
+      createdAt: todoItem.createdAt,
+      updatedAt: todoItem.updatedAt,
+    );
+  }
+
+
+  /// Compares this TodoItemModel with another for equality
+  bool isEqualTo(TodoItemModel other) {
+    return id == other.id &&
+        title == other.title &&
+        description == other.description &&
+        project == other.project &&
+        isCompleted == other.isCompleted &&
+        expense == other.expense &&
+        isSynced == other.isSynced &&
+        tempId == other.tempId &&
+        user == other.user &&
+        parentTodo == other.parentTodo &&
+        payment == other.payment;
+  }
+
+  /// Updates this TodoItemModel with another, prioritizing non-null fields from the other
+  TodoItemModel merge(TodoItemModel other) {
+    return TodoItemModel(
+      id: other.id ?? id,
+      title: other.title ?? title,
+      description: other.description ?? description,
+      project: other.project ?? project,
+      projectData: other.projectData ?? projectData,
+      isCompleted: other.isCompleted ?? isCompleted,
+      expense: other.expense ?? expense,
+      expenseData: other.expenseData ?? expenseData,
+      isSynced: other.isSynced ?? isSynced,
+      tempId: other.tempId ?? tempId,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      parentTodo: other.parentTodo ?? parentTodo,
+      parentTodoData: other.parentTodoData ?? parentTodoData,
+      payment: other.payment ?? payment,
+      paymentData: other.paymentData ?? paymentData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this TodoItemModel with the given fields replaced with new values
+  TodoItemModel copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? project,
+    ProjectModel? projectData,
+    bool? isCompleted,
+    String? expense,
+    ExpenseModel? expenseData,
+    bool? isSynced,
+    String? tempId,
+    String? user,
+    UserModel? userData,
+    String? parentTodo,
+    TodoItemModel? parentTodoData,
+    Map<String, dynamic>? metadata,
+    String? payment,
+    PaymentModel? paymentData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return TodoItemModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      project: project ?? this.project,
+      projectData: projectData ?? this.projectData,
+      isCompleted: isCompleted ?? this.isCompleted,
+      expense: expense ?? this.expense,
+      expenseData: expenseData ?? this.expenseData,
+      isSynced: isSynced ?? this.isSynced,
+      tempId: tempId ?? this.tempId,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      parentTodo: parentTodo ?? this.parentTodo,
+      parentTodoData: parentTodoData ?? this.parentTodoData,
+      metadata: metadata ?? this.metadata,
+      payment: payment ?? this.payment,
+      paymentData: paymentData ?? this.paymentData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

@@ -27,7 +27,7 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
       setState(() => _isLoading = true);
 
       try {
-        ref.read(projectRepositoryProvider);
+        // ref.read(projectRepositoryProvider);
         // .createProject(
         //   name: _nameController.text.trim(),
         //   description: _descriptionController.text.trim().isEmpty

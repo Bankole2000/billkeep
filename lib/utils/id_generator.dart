@@ -57,6 +57,7 @@ class IdGenerator {
   static String tempInvestmentPayment() => generateTempId('invpay');
   static String tempInvestmentReturn() => generateTempId('invret');
   static String tempReminder() => generateTempId('rem');
+  static String tempUser() => generateTempId('user');
 }
 
 /// Extension to generate temp IDs with a more fluent syntax

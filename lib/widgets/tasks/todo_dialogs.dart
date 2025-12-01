@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/todo_provider.dart';
-import '../../utils/currency_helper.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/todo_provider.dart';
+import 'package:billkeep/utils/currency_helper.dart';
 
 /// Show add subtask dialog
 void showAddSubtaskDialog(
@@ -65,18 +65,18 @@ void showAddSubtaskDialog(
             onPressed: () async {
               if (titleController.text.trim().isEmpty) return;
 
-              await ref.read(todoRepositoryProvider).createTodo(
-                    projectId: parentTodo.projectId,
-                    title: titleController.text.trim(),
-                    parentTodoId: parentTodo.id,
-                    directExpenseAmount:
-                        hasExpense && amountController.text.trim().isNotEmpty
-                            ? CurrencyHelper.dollarsToCents(
-                                amountController.text.trim(),
-                              )
-                            : null,
-                    directExpenseType: hasExpense ? 'ONE_TIME' : null,
-                  );
+              // await ref.read(todoRepositoryProvider).createTodo(
+              //       projectId: parentTodo.projectId,
+              //       title: titleController.text.trim(),
+              //       parentTodoId: parentTodo.id,
+              //       directExpenseAmount:
+              //           hasExpense && amountController.text.trim().isNotEmpty
+              //               ? CurrencyHelper.dollarsToCents(
+              //                   amountController.text.trim(),
+              //                 )
+              //               : null,
+              //       directExpenseType: hasExpense ? 'ONE_TIME' : null,
+              //     );
 
               if (context.mounted) Navigator.pop(context);
             },
@@ -89,15 +89,9 @@ void showAddSubtaskDialog(
 }
 
 /// Show edit todo dialog
-void showEditTodoDialog(
-  BuildContext context,
-  WidgetRef ref,
-  TodoItem todo,
-) {
+void showEditTodoDialog(BuildContext context, WidgetRef ref, TodoItem todo) {
   final titleController = TextEditingController(text: todo.title);
-  final descriptionController = TextEditingController(
-    text: todo.description,
-  );
+  final descriptionController = TextEditingController(text: todo.description);
 
   showDialog(
     context: context,
@@ -133,19 +127,19 @@ void showEditTodoDialog(
           onPressed: () async {
             if (titleController.text.trim().isEmpty) return;
 
-            await ref.read(todoRepositoryProvider).updateTodo(
-                  todoId: todo.id,
-                  title: titleController.text.trim(),
-                  description: descriptionController.text.trim().isEmpty
-                      ? null
-                      : descriptionController.text.trim(),
-                );
+            // await ref.read(todoRepositoryProvider).updateTodo(
+            //       todoId: todo.id,
+            //       title: titleController.text.trim(),
+            //       description: descriptionController.text.trim().isEmpty
+            //           ? null
+            //           : descriptionController.text.trim(),
+            //     );
 
             if (context.mounted) {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Todo updated')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Todo updated')));
             }
           },
           child: const Text('Save'),
@@ -175,12 +169,12 @@ void showDeleteTodoConfirmation(
         ),
         ElevatedButton(
           onPressed: () async {
-            await ref.read(todoRepositoryProvider).deleteTodo(todoId);
+            // await ref.read(todoRepositoryProvider).deleteTodo(todoId);
             if (context.mounted) {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Todo deleted')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Todo deleted')));
             }
           },
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

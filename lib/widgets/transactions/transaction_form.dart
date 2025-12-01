@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/expense_provider.dart';
-import '../../providers/project_provider.dart';
-import '../../providers/ui_providers.dart';
-import '../../providers/wallet_provider.dart';
-import '../../screens/categories/category_select_screen.dart';
-import '../../screens/contacts/contact_select_screen.dart';
-import '../../screens/merchants/add_merchant_screen.dart';
-import '../../screens/merchants/merchant_select_screen.dart';
-import '../../utils/app_enums.dart';
-import '../../widgets/common/select_recurrence_bottomsheet.dart';
-import '../../widgets/projects/select_project_bottomsheet.dart';
-import '../../widgets/wallets/select_wallet_bottomsheet.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/expense_provider.dart';
+import 'package:billkeep/providers/project_provider.dart';
+import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/screens/categories/category_select_screen.dart';
+import 'package:billkeep/screens/contacts/contact_select_screen.dart';
+import 'package:billkeep/screens/merchants/add_merchant_screen.dart';
+import 'package:billkeep/screens/merchants/merchant_select_screen.dart';
+import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/widgets/common/select_recurrence_bottomsheet.dart';
+import 'package:billkeep/widgets/projects/select_project_bottomsheet.dart';
+import 'package:billkeep/widgets/wallets/select_wallet_bottomsheet.dart';
 import 'form/amount_input_field.dart';
 import 'form/date_recurrence_fields.dart';
 import 'form/title_input_field.dart';
@@ -185,28 +185,28 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(expenseRepositoryProvider).createExpense(
-            projectId: _selectedProject!.id,
-            name: _titleController.text.trim(),
-            amount: _amountController.text.trim(),
-            walletId: _fromWallet!.id,
-            categoryId: _selectedCategory!.id,
-            merchantId: _selectedMerchant!.id,
-            currency: _fromWallet!.currency,
-            startDate: _selectedDate!,
-            frequency: _recurrence,
-            createInitialPayment: _selectedDate!.isBefore(DateTime.now()),
-            source: source,
-          );
+      // await ref.read(expenseRepositoryProvider).createExpense(
+      //       projectId: _selectedProject!.id,
+      //       name: _titleController.text.trim(),
+      //       amount: _amountController.text.trim(),
+      //       walletId: _fromWallet!.id,
+      //       categoryId: _selectedCategory!.id,
+      //       merchantId: _selectedMerchant!.id,
+      //       currency: _fromWallet!.currency,
+      //       startDate: _selectedDate!,
+      //       frequency: _recurrence,
+      //       createInitialPayment: _selectedDate!.isBefore(DateTime.now()),
+      //       source: source,
+      //     );
 
       if (mounted) {
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) {
@@ -240,7 +240,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
         children: [
           // Scrollable content
           SizedBox(
-            height: MediaQuery.of(context).size.height -
+            height:
+                MediaQuery.of(context).size.height -
                 ((Scaffold.of(context).appBarMaxHeight as num) + 100),
             child: SingleChildScrollView(
               child: Column(
@@ -271,7 +272,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     selectedMerchant: _selectedMerchant,
                     onTap: () => _selectMerchant(add: false),
                     onAdd: () => _selectMerchant(add: true),
-                    isVisible: widget.transactionType == TransactionType.expense,
+                    isVisible:
+                        widget.transactionType == TransactionType.expense,
                   ),
                   Divider(height: 1, color: colors.textMute.withAlpha(50)),
 
@@ -288,7 +290,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     selectedWallet: _fromWallet,
                     label: 'From',
                     onTap: () => _selectWallet(to: false),
-                    isVisible: widget.transactionType == TransactionType.expense ||
+                    isVisible:
+                        widget.transactionType == TransactionType.expense ||
                         widget.transactionType == TransactionType.transfer,
                   ),
                   if (widget.transactionType != TransactionType.expense)
@@ -299,7 +302,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                     selectedWallet: _toWallet,
                     label: 'To',
                     onTap: () => _selectWallet(to: true),
-                    isVisible: widget.transactionType == TransactionType.income ||
+                    isVisible:
+                        widget.transactionType == TransactionType.income ||
                         widget.transactionType == TransactionType.transfer,
                   ),
                   Divider(height: 1, color: colors.textMute.withAlpha(50)),

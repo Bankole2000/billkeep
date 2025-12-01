@@ -3,15 +3,15 @@ import 'package:billkeep/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/project_provider.dart';
-import '../../providers/ui_providers.dart';
-import '../../screens/projects/add_project_settings_screen.dart';
-import '../../utils/app_colors.dart';
-import '../../utils/app_enums.dart';
-import '../../utils/validators.dart';
-import '../../widgets/projects/form/project_details_section.dart';
-import '../../widgets/wallets/form/appearance_section.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/project_provider.dart';
+import 'package:billkeep/providers/ui_providers.dart';
+import 'package:billkeep/screens/projects/add_project_settings_screen.dart';
+import 'package:billkeep/utils/app_colors.dart';
+import 'package:billkeep/utils/app_enums.dart';
+import 'package:billkeep/utils/validators.dart';
+import 'package:billkeep/widgets/projects/form/project_details_section.dart';
+import 'package:billkeep/widgets/wallets/form/appearance_section.dart';
 
 /// Refactored add/edit project screen
 class AddProjectScreen extends ConsumerStatefulWidget {
@@ -103,13 +103,13 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
     try {
       final iconType = _determineIconType();
 
-      final resultId = projectId == null
-          ? await _createProject(iconType)
-          : await _updateProject(iconType);
+      // final resultId = projectId == null
+      //     ? await _createProject(iconType)
+      //     : await _updateProject(iconType);
 
       if (mounted) {
         _showSuccess('Project ${projectId == null ? 'created' : 'updated'}');
-        Navigator.pop(context, resultId);
+        // Navigator.pop(context, resultId);
       }
     } catch (e) {
       if (mounted) {
@@ -131,64 +131,58 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
     return _selectedSegment.name;
   }
 
-  Future<String> _createProject(String iconType) async {
-    final userId = ref.read(currentUserIdProvider);
-    return await ref.read(projectRepositoryProvider).createProject(
-          name: _nameController.text.trim(),
-          description: _descriptionController.text.trim(),
-          iconType: iconType,
-          color: _selectedColor?.toHexString(),
-          emoji: _selectedEmoji,
-          localImagePath: iconType == 'localImage' && _localImageFile != null
-              ? _localImageFile?.path
-              : null,
-          imageUrl: iconType == IconSelectionType.image.name &&
-                  _imageUrlController.text.trim().isNotEmpty
-              ? _imageUrlController.text.trim()
-              : null,
-          isArchived: _isArchived,
-          iconCodePoint: _selectedIcon?.codePoint,
-          userId: userId!,
-        );
-  }
+  // Future<String> _createProject(String iconType) async {
+  //   final userId = ref.read(currentUserIdProvider);
+  //   return await ref.read(projectRepositoryProvider).createProject(
+  //         name: _nameController.text.trim(),
+  //         description: _descriptionController.text.trim(),
+  //         iconType: iconType,
+  //         color: _selectedColor?.toHexString(),
+  //         emoji: _selectedEmoji,
+  //         localImagePath: iconType == 'localImage' && _localImageFile != null
+  //             ? _localImageFile?.path
+  //             : null,
+  //         imageUrl: iconType == IconSelectionType.image.name &&
+  //                 _imageUrlController.text.trim().isNotEmpty
+  //             ? _imageUrlController.text.trim()
+  //             : null,
+  //         isArchived: _isArchived,
+  //         iconCodePoint: _selectedIcon?.codePoint,
+  //         userId: userId!,
+  //       );
+  // }
 
-  Future<String> _updateProject(String iconType) async {
-    return await ref.read(projectRepositoryProvider).updateProject(
-          projectId: projectId!,
-          name: _nameController.text.trim(),
-          description: _descriptionController.text.trim(),
-          iconType: iconType,
-          color: _selectedColor?.toHexString(),
-          emoji: _selectedEmoji,
-          localImagePath: iconType == 'localImage' && _localImageFile != null
-              ? _localImageFile?.path
-              : null,
-          imageUrl: iconType == IconSelectionType.image.name &&
-                  _imageUrlController.text.trim().isNotEmpty
-              ? _imageUrlController.text.trim()
-              : null,
-          isArchived: _isArchived,
-          iconCodePoint: _selectedIcon?.codePoint,
-        );
-  }
+  // Future<String> _updateProject(String iconType) async {
+  //   return await ref.read(projectRepositoryProvider).updateProject(
+  //         projectId: projectId!,
+  //         name: _nameController.text.trim(),
+  //         description: _descriptionController.text.trim(),
+  //         iconType: iconType,
+  //         color: _selectedColor?.toHexString(),
+  //         emoji: _selectedEmoji,
+  //         localImagePath: iconType == 'localImage' && _localImageFile != null
+  //             ? _localImageFile?.path
+  //             : null,
+  //         imageUrl: iconType == IconSelectionType.image.name &&
+  //                 _imageUrlController.text.trim().isNotEmpty
+  //             ? _imageUrlController.text.trim()
+  //             : null,
+  //         isArchived: _isArchived,
+  //         iconCodePoint: _selectedIcon?.codePoint,
+  //       );
+  // }
 
   void _showError(String message) {
     final colors = ref.read(appColorsProvider);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: colors.fire,
-      ),
+      SnackBar(content: Text(message), backgroundColor: colors.fire),
     );
   }
 
   void _showSuccess(String message) {
     final colors = ref.read(appColorsProvider);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: colors.navy,
-      ),
+      SnackBar(content: Text(message), backgroundColor: colors.navy),
     );
   }
 
@@ -284,10 +278,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
                 ? const CircularProgressIndicator(color: Colors.white)
                 : const Text(
                     'SAVE',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:billkeep/repositories/budget_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:billkeep/database/database.dart';
 import 'package:billkeep/providers/budget_provider.dart';
@@ -21,9 +22,9 @@ class BudgetSyncService extends BaseSyncService {
     required AppDatabase database,
     required BudgetRepository repository,
     Dio? dio,
-  })  : _database = database,
-        _repository = repository,
-        _dio = dio ?? ApiClient().dio;
+  }) : _database = database,
+       _repository = repository,
+       _dio = dio ?? ApiClient().dio;
 
   @override
   Future<void> syncEntity(String tempId) async {
@@ -36,7 +37,9 @@ class BudgetSyncService extends BaseSyncService {
     // 2. Send to API via _dio.post('/budgets/records', data: {...})
     // 3. Update local with canonical ID
 
-    throw UnimplementedError('Budget sync not yet implemented - adjust field mappings');
+    throw UnimplementedError(
+      'Budget sync not yet implemented - adjust field mappings',
+    );
   }
 
   @override
@@ -55,6 +58,8 @@ class BudgetSyncService extends BaseSyncService {
     // 1. Fetch from API via _dio.get('/budgets/records')
     // 2. Update/insert in local database
 
-    throw UnimplementedError('Budget pull not yet implemented - adjust field mappings');
+    throw UnimplementedError(
+      'Budget pull not yet implemented - adjust field mappings',
+    );
   }
 }

@@ -81,6 +81,127 @@ class WalletProviderModel {
     );
   }
 
+  /// Converts a Drift database record to a WalletProviderModel
+  factory WalletProviderModel.fromDrift(WalletProvider walletProvider) {
+    return WalletProviderModel(
+      id: walletProvider.id,
+      name: walletProvider.name,
+      description: walletProvider.description,
+      imageUrl: walletProvider.imageUrl,
+      localImagePath: walletProvider.localImagePath,
+      iconCodePoint: walletProvider.iconCodePoint,
+      iconEmoji: walletProvider.iconEmoji,
+      iconType: walletProvider.iconType,
+      color: walletProvider.color,
+      websiteUrl: walletProvider.websiteUrl,
+      isFiatBank: walletProvider.isFiatBank,
+      isCrypto: walletProvider.isCrypto,
+      isMobileMoney: walletProvider.isMobileMoney,
+      isCreditCard: walletProvider.isCreditCard,
+      tempId: walletProvider.tempId,
+      isSynced: walletProvider.isSynced,
+      user: walletProvider.userId,
+      createdAt: walletProvider.createdAt,
+      updatedAt: walletProvider.updatedAt,
+    );
+  }
+
+
+  /// Compares this WalletProviderModel with another for equality
+  bool isEqualTo(WalletProviderModel other) {
+    return id == other.id &&
+        name == other.name &&
+        description == other.description &&
+        imageUrl == other.imageUrl &&
+        localImagePath == other.localImagePath &&
+        iconCodePoint == other.iconCodePoint &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        color == other.color &&
+        websiteUrl == other.websiteUrl &&
+        isFiatBank == other.isFiatBank &&
+        isCrypto == other.isCrypto &&
+        isMobileMoney == other.isMobileMoney &&
+        isCreditCard == other.isCreditCard &&
+        tempId == other.tempId &&
+        isSynced == other.isSynced &&
+        user == other.user;
+  }
+
+  /// Updates this WalletProviderModel with another, prioritizing non-null fields from the other
+  WalletProviderModel merge(WalletProviderModel other) {
+    return WalletProviderModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      description: other.description ?? description,
+      imageUrl: other.imageUrl ?? imageUrl,
+      localImagePath: other.localImagePath ?? localImagePath,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      color: other.color ?? color,
+      websiteUrl: other.websiteUrl ?? websiteUrl,
+      isFiatBank: other.isFiatBank ?? isFiatBank,
+      isCrypto: other.isCrypto ?? isCrypto,
+      isMobileMoney: other.isMobileMoney ?? isMobileMoney,
+      isCreditCard: other.isCreditCard ?? isCreditCard,
+      tempId: other.tempId ?? tempId,
+      isSynced: other.isSynced ?? isSynced,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this WalletProviderModel with the given fields replaced with new values
+  WalletProviderModel copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? imageUrl,
+    String? localImagePath,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    String? websiteUrl,
+    bool? isFiatBank,
+    bool? isCrypto,
+    bool? isMobileMoney,
+    bool? isCreditCard,
+    String? tempId,
+    bool? isSynced,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return WalletProviderModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      websiteUrl: websiteUrl ?? this.websiteUrl,
+      isFiatBank: isFiatBank ?? this.isFiatBank,
+      isCrypto: isCrypto ?? this.isCrypto,
+      isMobileMoney: isMobileMoney ?? this.isMobileMoney,
+      isCreditCard: isCreditCard ?? this.isCreditCard,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

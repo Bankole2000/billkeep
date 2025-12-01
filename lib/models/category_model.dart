@@ -67,6 +67,95 @@ class CategoryModel {
     );
   }
 
+  /// Converts a Drift database record to a CategoryModel
+  factory CategoryModel.fromDrift(Category category) {
+    return CategoryModel(
+      id: category.id,
+      name: category.name,
+      iconCodePoint: category.iconCodePoint,
+      iconEmoji: category.iconEmoji,
+      iconType: category.iconType,
+      color: category.color,
+      categoryGroup: category.categoryGroupId,
+      isSynced: category.isSynced,
+      tempId: category.tempId,
+      user: category.userId,
+      createdAt: category.createdAt,
+      updatedAt: category.updatedAt,
+    );
+  }
+
+
+  /// Compares this CategoryModel with another for equality
+  bool isEqualTo(CategoryModel other) {
+    return id == other.id &&
+        name == other.name &&
+        iconCodePoint == other.iconCodePoint &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        color == other.color &&
+        categoryGroup == other.categoryGroup &&
+        isSynced == other.isSynced &&
+        tempId == other.tempId &&
+        user == other.user;
+  }
+
+  /// Updates this CategoryModel with another, prioritizing non-null fields from the other
+  CategoryModel merge(CategoryModel other) {
+    return CategoryModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      color: other.color ?? color,
+      categoryGroup: other.categoryGroup ?? categoryGroup,
+      categoryGroupData: other.categoryGroupData ?? categoryGroupData,
+      isSynced: other.isSynced ?? isSynced,
+      tempId: other.tempId ?? tempId,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this CategoryModel with the given fields replaced with new values
+  CategoryModel copyWith({
+    String? id,
+    String? name,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    String? categoryGroup,
+    CategoryGroupModel? categoryGroupData,
+    bool? isSynced,
+    String? tempId,
+    Map<String, dynamic>? metadata,
+    String? user,
+    UserModel? userData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return CategoryModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      categoryGroup: categoryGroup ?? this.categoryGroup,
+      categoryGroupData: categoryGroupData ?? this.categoryGroupData,
+      isSynced: isSynced ?? this.isSynced,
+      tempId: tempId ?? this.tempId,
+      metadata: metadata ?? this.metadata,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

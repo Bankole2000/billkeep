@@ -100,6 +100,138 @@ class GoalModel {
     );
   }
 
+  /// Converts a Drift database record to a GoalModel
+  factory GoalModel.fromDrift(Goal goal) {
+    return GoalModel(
+      id: goal.id,
+      name: goal.name,
+      type: goal.type,
+      targetAmount: goal.targetAmount,
+      category: goal.categoryId,
+      user: goal.userId,
+      goalDate: goal.goalDate,
+      currency: goal.currencyId,
+      iconEmoji: goal.iconEmoji,
+      iconType: goal.iconType,
+      color: goal.color,
+      tempId: goal.tempId,
+      iconCodePoint: goal.iconCodePoint,
+      description: goal.description,
+      isCompleted: goal.isCompleted,
+      completionDate: goal.completionDate,
+      imageUrl: goal.imageUrl,
+      localImagePath: goal.localImagePath,
+      createdAt: goal.createdAt,
+      updatedAt: goal.updatedAt,
+    );
+  }
+
+
+  /// Compares this GoalModel with another for equality
+  bool isEqualTo(GoalModel other) {
+    return id == other.id &&
+        name == other.name &&
+        type == other.type &&
+        targetAmount == other.targetAmount &&
+        category == other.category &&
+        user == other.user &&
+        goalDate == other.goalDate &&
+        currency == other.currency &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        color == other.color &&
+        tempId == other.tempId &&
+        iconCodePoint == other.iconCodePoint &&
+        description == other.description &&
+        isCompleted == other.isCompleted &&
+        completionDate == other.completionDate &&
+        imageUrl == other.imageUrl &&
+        localImagePath == other.localImagePath;
+  }
+
+  /// Updates this GoalModel with another, prioritizing non-null fields from the other
+  GoalModel merge(GoalModel other) {
+    return GoalModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      type: other.type ?? type,
+      targetAmount: other.targetAmount ?? targetAmount,
+      category: other.category ?? category,
+      categoryData: other.categoryData ?? categoryData,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      goalDate: other.goalDate ?? goalDate,
+      currency: other.currency ?? currency,
+      currencyData: other.currencyData ?? currencyData,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      color: other.color ?? color,
+      tempId: other.tempId ?? tempId,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      description: other.description ?? description,
+      isCompleted: other.isCompleted ?? isCompleted,
+      completionDate: other.completionDate ?? completionDate,
+      imageUrl: other.imageUrl ?? imageUrl,
+      localImagePath: other.localImagePath ?? localImagePath,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this GoalModel with the given fields replaced with new values
+  GoalModel copyWith({
+    String? id,
+    String? name,
+    String? type,
+    int? targetAmount,
+    String? category,
+    CategoryModel? categoryData,
+    String? user,
+    UserModel? userData,
+    DateTime? goalDate,
+    String? currency,
+    CurrencyModel? currencyData,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    String? tempId,
+    int? iconCodePoint,
+    Map<String, dynamic>? metadata,
+    String? description,
+    bool? isCompleted,
+    DateTime? completionDate,
+    String? imageUrl,
+    String? localImagePath,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return GoalModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      targetAmount: targetAmount ?? this.targetAmount,
+      category: category ?? this.category,
+      categoryData: categoryData ?? this.categoryData,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      goalDate: goalDate ?? this.goalDate,
+      currency: currency ?? this.currency,
+      currencyData: currencyData ?? this.currencyData,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      tempId: tempId ?? this.tempId,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      metadata: metadata ?? this.metadata,
+      description: description ?? this.description,
+      isCompleted: isCompleted ?? this.isCompleted,
+      completionDate: completionDate ?? this.completionDate,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

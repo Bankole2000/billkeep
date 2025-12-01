@@ -39,6 +39,67 @@ class UserModel {
     );
   }
 
+  /// Converts a Drift database record to a UserModel
+  factory UserModel.fromDrift(User user) {
+    return UserModel(
+      id: user.id,
+      email: user.email,
+      emailVisibility: user.emailVisibility,
+      verified: user.verified,
+      name: user.name,
+      avatar: user.avatar,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    );
+  }
+
+  /// Compares this UserModel with another for equality
+  bool isEqualTo(UserModel other) {
+    return id == other.id &&
+        email == other.email &&
+        emailVisibility == other.emailVisibility &&
+        verified == other.verified &&
+        name == other.name &&
+        avatar == other.avatar;
+  }
+
+  /// Updates this UserModel with another, prioritizing non-null fields from the other
+  UserModel merge(UserModel other) {
+    return UserModel(
+      id: other.id ?? id,
+      email: other.email ?? email,
+      emailVisibility: other.emailVisibility ?? emailVisibility,
+      verified: other.verified ?? verified,
+      name: other.name ?? name,
+      avatar: other.avatar ?? avatar,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+
+  /// Creates a copy of this UserModel with the given fields replaced with new values
+  UserModel copyWith({
+    String? id,
+    String? email,
+    bool? emailVisibility,
+    bool? verified,
+    String? name,
+    String? avatar,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      emailVisibility: emailVisibility ?? this.emailVisibility,
+      verified: verified ?? this.verified,
+      name: name ?? this.name,
+      avatar: avatar ?? this.avatar,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -64,14 +125,38 @@ class UserModel {
     DateTime? updatedAt,
   }) {
     return UsersCompanion(
-      id: id != null ? Value(id) : (this.id != null ? Value(this.id!) : const Value.absent()),
-      email: email != null ? Value(email) : (this.email != null ? Value(this.email!) : const Value.absent()),
-      emailVisibility: emailVisibility != null ? Value(emailVisibility) : (this.emailVisibility != null ? Value(this.emailVisibility!) : const Value.absent()),
-      verified: verified != null ? Value(verified) : (this.verified != null ? Value(this.verified!) : const Value.absent()),
-      name: name != null ? Value(name) : (this.name != null ? Value(this.name!) : const Value.absent()),
-      avatar: avatar != null ? Value(avatar) : (this.avatar != null ? Value(this.avatar!) : const Value.absent()),
-      createdAt: createdAt != null ? Value(createdAt) : (this.createdAt != null ? Value(this.createdAt!) : const Value.absent()),
-      updatedAt: updatedAt != null ? Value(updatedAt) : (this.updatedAt != null ? Value(this.updatedAt!) : const Value.absent()),
+      id: id != null
+          ? Value(id)
+          : (this.id != null ? Value(this.id!) : const Value.absent()),
+      email: email != null
+          ? Value(email)
+          : (this.email != null ? Value(this.email!) : const Value.absent()),
+      emailVisibility: emailVisibility != null
+          ? Value(emailVisibility)
+          : (this.emailVisibility != null
+                ? Value(this.emailVisibility!)
+                : const Value.absent()),
+      verified: verified != null
+          ? Value(verified)
+          : (this.verified != null
+                ? Value(this.verified!)
+                : const Value.absent()),
+      name: name != null
+          ? Value(name)
+          : (this.name != null ? Value(this.name!) : const Value.absent()),
+      avatar: avatar != null
+          ? Value(avatar)
+          : (this.avatar != null ? Value(this.avatar!) : const Value.absent()),
+      createdAt: createdAt != null
+          ? Value(createdAt)
+          : (this.createdAt != null
+                ? Value(this.createdAt!)
+                : const Value.absent()),
+      updatedAt: updatedAt != null
+          ? Value(updatedAt)
+          : (this.updatedAt != null
+                ? Value(this.updatedAt!)
+                : const Value.absent()),
     );
   }
 }
@@ -80,10 +165,7 @@ class AuthResponse {
   final String token;
   final UserModel user;
 
-  AuthResponse({
-    required this.token,
-    required this.user,
-  });
+  AuthResponse({required this.token, required this.user});
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
     return AuthResponse(
@@ -93,29 +175,20 @@ class AuthResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'token': token,
-      'user': user.toJson(),
-    };
+    return {'token': token, 'user': user.toJson()};
   }
 }
 
 class SignupResponse {
   final UserModel user;
 
-  SignupResponse({
-    required this.user,
-  });
+  SignupResponse({required this.user});
 
   factory SignupResponse.fromJson(Map<String, dynamic> json) {
-    return SignupResponse(
-      user: UserModel.fromJson(json),
-    );
+    return SignupResponse(user: UserModel.fromJson(json));
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'user': user.toJson(),
-    };
+    return {'user': user.toJson()};
   }
 }

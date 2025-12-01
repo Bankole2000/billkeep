@@ -1,5 +1,7 @@
 import 'package:billkeep/providers/project_provider.dart';
 import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/repositories/project_repository.dart';
+import 'package:billkeep/repositories/wallet_repository.dart';
 import 'package:billkeep/services/pocketbase_realtime_service.dart';
 import 'package:billkeep/services/logging_service.dart';
 
@@ -16,9 +18,9 @@ class RealtimeSyncService {
     required PocketBaseRealtimeService realtimeService,
     required WalletRepository walletRepository,
     required ProjectRepository projectRepository,
-  })  : _realtimeService = realtimeService,
-        _walletRepository = walletRepository,
-        _projectRepository = projectRepository;
+  }) : _realtimeService = realtimeService,
+       _walletRepository = walletRepository,
+       _projectRepository = projectRepository;
 
   /// Start listening to all relevant collections
   Future<void> startSync() async {
@@ -35,56 +37,60 @@ class RealtimeSyncService {
 
   /// Subscribe to wallet changes
   void _subscribeToWallets() {
-    _realtimeService.subscribe('wallets').listen(
-      (event) async {
-        try {
-          if (event.isCreate || event.isUpdate) {
-            await _handleWalletCreateOrUpdate(event);
-          } else if (event.isDelete) {
-            await _handleWalletDelete(event);
-          }
-        } catch (e, stackTrace) {
-          LoggingService.error(
-            'Error handling wallet realtime event',
-            error: e,
-            stackTrace: stackTrace,
-          );
-        }
-      },
-      onError: (error) {
-        LoggingService.error(
-          'Wallet realtime subscription error',
-          error: error,
+    _realtimeService
+        .subscribe('wallets')
+        .listen(
+          (event) async {
+            try {
+              if (event.isCreate || event.isUpdate) {
+                await _handleWalletCreateOrUpdate(event);
+              } else if (event.isDelete) {
+                await _handleWalletDelete(event);
+              }
+            } catch (e, stackTrace) {
+              LoggingService.error(
+                'Error handling wallet realtime event',
+                error: e,
+                stackTrace: stackTrace,
+              );
+            }
+          },
+          onError: (error) {
+            LoggingService.error(
+              'Wallet realtime subscription error',
+              error: error,
+            );
+          },
         );
-      },
-    );
   }
 
   /// Subscribe to project changes
   void _subscribeToProjects() {
-    _realtimeService.subscribe('projects').listen(
-      (event) async {
-        try {
-          if (event.isCreate || event.isUpdate) {
-            await _handleProjectCreateOrUpdate(event);
-          } else if (event.isDelete) {
-            await _handleProjectDelete(event);
-          }
-        } catch (e, stackTrace) {
-          LoggingService.error(
-            'Error handling project realtime event',
-            error: e,
-            stackTrace: stackTrace,
-          );
-        }
-      },
-      onError: (error) {
-        LoggingService.error(
-          'Project realtime subscription error',
-          error: error,
+    _realtimeService
+        .subscribe('projects')
+        .listen(
+          (event) async {
+            try {
+              if (event.isCreate || event.isUpdate) {
+                await _handleProjectCreateOrUpdate(event);
+              } else if (event.isDelete) {
+                await _handleProjectDelete(event);
+              }
+            } catch (e, stackTrace) {
+              LoggingService.error(
+                'Error handling project realtime event',
+                error: e,
+                stackTrace: stackTrace,
+              );
+            }
+          },
+          onError: (error) {
+            LoggingService.error(
+              'Project realtime subscription error',
+              error: error,
+            );
+          },
         );
-      },
-    );
   }
 
   /// Handle wallet create or update from backend
@@ -109,7 +115,9 @@ class RealtimeSyncService {
       final unsyncedWallets = await _walletRepository.getUnsyncedWallets();
 
       final matchingLocal = unsyncedWallets.cast<dynamic>().firstWhere(
-        (w) => w.name == walletData['name'] && w.walletType == walletData['walletType'],
+        (w) =>
+            w.name == walletData['name'] &&
+            w.walletType == walletData['walletType'],
         orElse: () => null,
       );
 
@@ -136,7 +144,10 @@ class RealtimeSyncService {
   Future<void> _handleWalletDelete(RealtimeEvent event) async {
     final walletId = event.recordId;
 
-    LoggingService.debug('Deleting wallet from local DB', data: {'id': walletId});
+    LoggingService.debug(
+      'Deleting wallet from local DB',
+      data: {'id': walletId},
+    );
 
     try {
       await _walletRepository.deleteWallet(walletId);
@@ -188,7 +199,10 @@ class RealtimeSyncService {
   Future<void> _handleProjectDelete(RealtimeEvent event) async {
     final projectId = event.recordId;
 
-    LoggingService.debug('Deleting project from local DB', data: {'id': projectId});
+    LoggingService.debug(
+      'Deleting project from local DB',
+      data: {'id': projectId},
+    );
 
     try {
       await _projectRepository.deleteProject(projectId);

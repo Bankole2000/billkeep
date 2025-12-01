@@ -99,6 +99,81 @@ class WalletModel {
     );
   }
 
+  /// Converts a Drift database record to a WalletModel
+  factory WalletModel.fromDrift(Wallet wallet) {
+    return WalletModel(
+      id: wallet.id,
+      walletType: wallet.walletType,
+      balance: wallet.balance,
+      imageUrl: wallet.imageUrl,
+      localImagePath: wallet.localImagePath,
+      isGlobal: wallet.isGlobal,
+      iconCodePoint: wallet.iconCodePoint,
+      iconEmoji: wallet.iconEmoji,
+      iconType: wallet.iconType,
+      color: wallet.color,
+      name: wallet.name,
+      tempId: wallet.tempId,
+      isSynced: wallet.isSynced,
+      user: wallet.userId,
+      currency: wallet.currency,
+      provider: wallet.providerId,
+      project: wallet.projectId,
+      createdAt: wallet.createdAt,
+      updatedAt: wallet.updatedAt,
+    );
+  }
+
+
+  /// Compares this WalletModel with another for equality
+  bool isEqualTo(WalletModel other) {
+    return id == other.id &&
+        walletType == other.walletType &&
+        balance == other.balance &&
+        imageUrl == other.imageUrl &&
+        localImagePath == other.localImagePath &&
+        isGlobal == other.isGlobal &&
+        iconCodePoint == other.iconCodePoint &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        color == other.color &&
+        name == other.name &&
+        tempId == other.tempId &&
+        isSynced == other.isSynced &&
+        user == other.user &&
+        currency == other.currency &&
+        provider == other.provider &&
+        project == other.project;
+  }
+
+  /// Updates this WalletModel with another, prioritizing non-null fields from the other
+  WalletModel merge(WalletModel other) {
+    return WalletModel(
+      id: other.id ?? id,
+      walletType: other.walletType ?? walletType,
+      balance: other.balance ?? balance,
+      imageUrl: other.imageUrl ?? imageUrl,
+      localImagePath: other.localImagePath ?? localImagePath,
+      isGlobal: other.isGlobal ?? isGlobal,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      color: other.color ?? color,
+      name: other.name ?? name,
+      tempId: other.tempId ?? tempId,
+      isSynced: other.isSynced ?? isSynced,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      currency: other.currency ?? currency,
+      currencyData: other.currencyData ?? currencyData,
+      provider: other.provider ?? provider,
+      providerData: other.providerData ?? providerData,
+      project: other.project ?? project,
+      projectData: other.projectData ?? projectData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -122,6 +197,61 @@ class WalletModel {
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };
+  }
+
+  /// Creates a copy of this WalletModel with the given fields replaced with new values
+  WalletModel copyWith({
+    String? id,
+    String? walletType,
+    int? balance,
+    String? imageUrl,
+    String? localImagePath,
+    bool? isGlobal,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    String? name,
+    String? tempId,
+    bool? isSynced,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    String? currency,
+    CurrencyModel? currencyData,
+    String? provider,
+    WalletProviderModel? providerData,
+    String? project,
+    ProjectModel? projectData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return WalletModel(
+      id: id ?? this.id,
+      walletType: walletType ?? this.walletType,
+      balance: balance ?? this.balance,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
+      isGlobal: isGlobal ?? this.isGlobal,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      name: name ?? this.name,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      currency: currency ?? this.currency,
+      currencyData: currencyData ?? this.currencyData,
+      provider: provider ?? this.provider,
+      providerData: providerData ?? this.providerData,
+      project: project ?? this.project,
+      projectData: projectData ?? this.projectData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
   }
 
   /// Converts this model to a Drift Companion for database operations

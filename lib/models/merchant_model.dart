@@ -69,6 +69,107 @@ class MerchantModel {
     );
   }
 
+  /// Converts a Drift database record to a MerchantModel
+  factory MerchantModel.fromDrift(Merchant merchant) {
+    return MerchantModel(
+      id: merchant.id,
+      name: merchant.name,
+      tempId: merchant.tempId,
+      description: merchant.description,
+      website: merchant.website,
+      imageUrl: merchant.imageUrl,
+      localImagePath: merchant.localImagePath,
+      iconCodePoint: merchant.iconCodePoint,
+      iconEmoji: merchant.iconEmoji,
+      iconType: merchant.iconType,
+      color: merchant.color,
+      isSynced: merchant.isSynced,
+      user: merchant.userId,
+      createdAt: merchant.createdAt,
+      updatedAt: merchant.updatedAt,
+    );
+  }
+
+
+  /// Compares this MerchantModel with another for equality
+  bool isEqualTo(MerchantModel other) {
+    return id == other.id &&
+        name == other.name &&
+        tempId == other.tempId &&
+        description == other.description &&
+        website == other.website &&
+        imageUrl == other.imageUrl &&
+        localImagePath == other.localImagePath &&
+        iconCodePoint == other.iconCodePoint &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        color == other.color &&
+        isSynced == other.isSynced &&
+        user == other.user;
+  }
+
+  /// Updates this MerchantModel with another, prioritizing non-null fields from the other
+  MerchantModel merge(MerchantModel other) {
+    return MerchantModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      tempId: other.tempId ?? tempId,
+      description: other.description ?? description,
+      website: other.website ?? website,
+      imageUrl: other.imageUrl ?? imageUrl,
+      localImagePath: other.localImagePath ?? localImagePath,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      color: other.color ?? color,
+      isSynced: other.isSynced ?? isSynced,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this MerchantModel with the given fields replaced with new values
+  MerchantModel copyWith({
+    String? id,
+    String? name,
+    String? tempId,
+    String? description,
+    String? website,
+    String? imageUrl,
+    String? localImagePath,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    bool? isSynced,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return MerchantModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      tempId: tempId ?? this.tempId,
+      description: description ?? this.description,
+      website: website ?? this.website,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      isSynced: isSynced ?? this.isSynced,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

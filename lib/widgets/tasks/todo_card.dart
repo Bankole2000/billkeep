@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/todo_provider.dart';
-import '../../utils/currency_helper.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/todo_provider.dart';
+import 'package:billkeep/utils/currency_helper.dart';
 import 'shopping_list_link.dart';
 import 'todo_dialogs.dart';
 
@@ -33,9 +33,9 @@ class _TodoCardState extends ConsumerState<TodoCard> {
             leading: Checkbox(
               value: widget.todo.isCompleted,
               onChanged: (value) {
-                ref
-                    .read(todoRepositoryProvider)
-                    .toggleTodoComplete(widget.todo.id, value ?? false);
+                // ref
+                //     .read(todoRepositoryProvider)
+                //     .toggleTodoComplete(widget.todo.id, value ?? false);
               },
             ),
             title: Text(
@@ -84,8 +84,9 @@ class _TodoCardState extends ConsumerState<TodoCard> {
                 subtasksAsync.when(
                   data: (subtasks) {
                     if (subtasks.isEmpty) return const SizedBox.shrink();
-                    final completedCount =
-                        subtasks.where((s) => s.isCompleted).length;
+                    final completedCount = subtasks
+                        .where((s) => s.isCompleted)
+                        .length;
                     return Row(
                       children: [
                         Icon(
@@ -204,9 +205,9 @@ class _TodoCardState extends ConsumerState<TodoCard> {
                               : null,
                           value: subtask.isCompleted,
                           onChanged: (value) {
-                            ref
-                                .read(todoRepositoryProvider)
-                                .toggleTodoComplete(subtask.id, value ?? false);
+                            // ref
+                            //     .read(todoRepositoryProvider)
+                            //     .toggleTodoComplete(subtask.id, value ?? false);
                           },
                         ),
                       ),

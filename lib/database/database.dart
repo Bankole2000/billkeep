@@ -16,8 +16,8 @@ class Users extends Table {
   BoolColumn get verified => boolean().nullable()();
   TextColumn get name => text().nullable()();
   TextColumn get avatar => text().nullable()();
-  DateTimeColumn get createdAt => dateTime().nullable()();
-  DateTimeColumn get updatedAt => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -31,9 +31,9 @@ class Projects extends Table {
   TextColumn get status =>
       text().withDefault(const Constant('ACTIVE'))(); // ACTIVE, ARCHIVED
   TextColumn get defaultWallet => text().nullable().references(
-        Wallets,
-        #id,
-      )(); // Default wallet for this project
+    Wallets,
+    #id,
+  )(); // Default wallet for this project
 
   IntColumn get iconCodePoint => integer().nullable()(); // Icon name or emoji
   TextColumn get iconEmoji => text().nullable()(); // Icon name or emoji
@@ -101,10 +101,8 @@ class Expenses extends Table {
   )();
   TextColumn get name => text()();
   IntColumn get expectedAmount => integer()(); // Expected amount per cycle
-  TextColumn get currency => text().references(
-    Currencies,
-    #id,
-  )(); // Currency should come from Wallet
+  TextColumn get currency =>
+      text().references(Currencies, #id)(); // Currency should come from Wallet
   TextColumn get type =>
       text()(); // 'ONE_TIME' or 'RECURRING' or 'INSTALLMENTS'
   TextColumn get frequency => text().nullable()(); // 'MONTHLY' or 'YEARLY'
@@ -125,10 +123,8 @@ class Expenses extends Table {
     Goals,
     #id,
   )(); // Deduct from debt or add to savings
-  TextColumn get budgetId => text().nullable().references(
-    Budgets,
-    #id,
-  )(); // Link to budget
+  TextColumn get budgetId =>
+      text().nullable().references(Budgets, #id)(); // Link to budget
   TextColumn get reminderId => text().nullable().references(
     Reminders,
     #id,
@@ -610,7 +606,8 @@ class WalletProviderMetadata extends Table {
   TextColumn get urlValue => text().nullable()();
   TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
-  TextColumn get walletProviderId => text().nullable().references(WalletProviders, #id)();
+  TextColumn get walletProviderId =>
+      text().nullable().references(WalletProviders, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
   DateTimeColumn get updatedAt => dateTime().nullable()();
 
@@ -856,7 +853,8 @@ class InvestmentMetadata extends Table {
   TextColumn get urlValue => text().nullable()();
   TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
-  TextColumn get investmentId => text().nullable().references(Investments, #id)();
+  TextColumn get investmentId =>
+      text().nullable().references(Investments, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
   DateTimeColumn get updatedAt => dateTime().nullable()();
 
@@ -894,205 +892,7 @@ class InvestmentTypes extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-// class InvestmentTransactions extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-//   TextColumn get investmentId => text()();
-
-//   TextColumn get transactionType =>
-//       text().map(const _InvestmentTransactionTypeConverter())();
-//   IntColumn get amount => integer()();
-//   TextColumn get currencyCode => text().references(Currencies, #id)();
-
-//   DateTimeColumn get transactionDate => dateTime()();
-//   DateTimeColumn get dueDate =>
-//       dateTime().nullable()(); // For scheduled returns
-
-//   TextColumn get status => text().map(const _TransactionStatusConverter())();
-//   TextColumn get reference => text().nullable()();
-//   TextColumn get notes => text().nullable()();
-
-//   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-// }
-
-// enum InvestmentTransactionType {
-//   initialInvestment,
-//   returnPayment,
-//   interest,
-//   dividend,
-//   capitalGain,
-//   fee,
-//   withdrawal,
-//   adjustment,
-// }
-
-// class InvestmentSchedules extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-//   TextColumn get investmentId => text()();
-
-//   DateTimeColumn get dueDate => dateTime()();
-//   IntColumn get amount => integer()();
-//   TextColumn get currencyCode => text().references(Currencies, #id)();
-//   TextColumn get scheduleType =>
-//       text().map(const _InvestmentScheduleTypeConverter())();
-
-//   BoolColumn get isPaid => boolean().withDefault(const Constant(false))();
-//   IntColumn get transactionId => integer().nullable().references(
-//     InvestmentTransactions,
-//     #id,
-//     onDelete: KeyAction.setNull,
-//   )();
-//   TextColumn get notes => text().nullable()();
-// }
-
-// class Debts extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-
-//   // Basic info
-//   TextColumn get title => text()();
-//   TextColumn get description => text().nullable()();
-//   IntColumn get typeId => integer().references(DebtTypes, #id)();
-
-//   // Contact reference (who you borrowed from)
-//   TextColumn get contactId => text().nullable()();
-
-//   // Currency and amounts
-//   TextColumn get currencyCode => text().references(Currencies, #id)();
-//   IntColumn get borrowedAmount => integer()(); // Original loan amount
-//   IntColumn get outstandingBalance =>
-//       integer().withDefault(const Constant(0))();
-
-//   // Status
-//   TextColumn get status => text().map(const _DebtStatusConverter())();
-
-//   // Dates
-//   DateTimeColumn get borrowDate => dateTime()();
-//   DateTimeColumn get dueDate =>
-//       dateTime().nullable()(); // When debt should be fully repaid
-//   DateTimeColumn get closedDate =>
-//       dateTime().nullable()(); // When actually paid off
-
-//   // Interest configuration
-//   TextColumn get interestCalculationType =>
-//       text().map(const _InterestCalculationTypeConverter())();
-//   IntColumn get interestRate =>
-//       integer().nullable()(); // Annual percentage rate
-//   IntColumn get fixedInterestAmount =>
-//       integer().nullable()(); // Fixed interest per period
-//   TextColumn get interestFrequency =>
-//       text().nullable()(); // "monthly", "quarterly", etc.
-
-//   // For compound interest
-//   BoolColumn get isCompoundInterest =>
-//       boolean().withDefault(const Constant(false))();
-//   TextColumn get compoundingFrequency => text().nullable()();
-
-//   // Payment tracking
-//   IntColumn get totalPayments => integer().withDefault(const Constant(0))();
-//   IntColumn get totalInterestPaid => integer().withDefault(const Constant(0))();
-
-//   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-//   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
-// }
-
-// class DebtTypes extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-//   TextColumn get name =>
-//       text()(); // "Credit Card", "Mortgage", "Personal Loan", "Car Loan", etc.
-//   TextColumn get description => text().nullable()();
-// }
-
-// enum DebtStatus { active, paidOff, defaulted, writtenOff, renegotiated }
-
-// class _DebtStatusConverter extends TypeConverter<DebtStatus, String> {
-//   const _DebtStatusConverter();
-
-//   @override
-//   DebtStatus fromSql(String fromDb) {
-//     return DebtStatus.values.firstWhere(
-//       (e) => e.name == fromDb,
-//       orElse: () => DebtStatus.active,
-//     );
-//   }
-
-//   @override
-//   String toSql(DebtStatus value) => value.name;
-// }
-
-// class DebtTransactions extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-//   IntColumn get debtId => integer().references(Debts, #id)();
-
-//   TextColumn get transactionType =>
-//       text().map(const _DebtTransactionTypeConverter())();
-//   IntColumn get amount => integer()();
-//   TextColumn get currencyCode => text().references(Currencies, #id)();
-
-//   DateTimeColumn get transactionDate => dateTime()();
-//   DateTimeColumn get dueDate =>
-//       dateTime().nullable()(); // For scheduled payments
-
-//   TextColumn get status => text().map(const _TransactionStatusConverter())();
-//   TextColumn get reference => text().nullable()();
-//   TextColumn get notes => text().nullable()();
-
-//   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-// }
-
-// enum DebtTransactionType {
-//   loanDisbursement,
-//   principalPayment,
-//   interestPayment,
-//   fee,
-//   penalty,
-//   adjustment,
-// }
-
-// class DebtSchedules extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-//   IntColumn get debtId => integer().references(Debts, #id)();
-
-//   DateTimeColumn get dueDate => dateTime()();
-//   IntColumn get principalAmount => integer()();
-//   IntColumn get interestAmount => integer().withDefault(const Constant(0))();
-//   IntColumn get totalAmount => integer()(); // principal + interest
-//   TextColumn get currencyCode => text().references(Currencies, #id)();
-
-//   BoolColumn get isPaid => boolean().withDefault(const Constant(false))();
-//   IntColumn get transactionId => integer().nullable().references(
-//     DebtTransactions,
-//     #id,
-//     onDelete: KeyAction.setNull,
-//   )();
-//   TextColumn get notes => text().nullable()();
-// }
-
-// class DebtMetadata extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-//   IntColumn get debtId => integer().references(Debts, #id)();
-//   TextColumn get key => text()();
-//   TextColumn get value => text()();
-
-//   @override
-//   List<Set<Column>> get uniqueKeys => [
-//     {debtId, key},
-//   ];
-// }
-
-// #region Enums
-
 enum ReturnCalculationType { percentage, fixedAmount, fixedTotal, variable }
-
-// enum InterestCalculationType { percentage, fixedAmount, fixedTotal, variable }
-
-// enum InvestmentScheduleType { returnPayment, interest, dividend, capitalGain }
-
-// enum TransactionStatus { pending, completed, failed, cancelled }
-
-// enum DebtScheduleType { payment, principalOnly, interestOnly }
-
-// #endregion
-
-// #region Type Converters
 
 class _ReturnCalculationTypeConverter
     extends TypeConverter<ReturnCalculationType, String> {
@@ -1109,104 +909,6 @@ class _ReturnCalculationTypeConverter
   @override
   String toSql(ReturnCalculationType value) => value.name;
 }
-
-// class _InterestCalculationTypeConverter
-//     extends TypeConverter<InterestCalculationType, String> {
-//   const _InterestCalculationTypeConverter();
-
-//   @override
-//   InterestCalculationType fromSql(String fromDb) {
-//     return InterestCalculationType.values.firstWhere(
-//       (e) => e.name == fromDb,
-//       orElse: () => InterestCalculationType.variable,
-//     );
-//   }
-
-//   @override
-//   String toSql(InterestCalculationType value) => value.name;
-// }
-
-// class _InvestmentStatusConverter
-//     extends TypeConverter<InvestmentStatus, String> {
-//   const _InvestmentStatusConverter();
-
-//   @override
-//   InvestmentStatus fromSql(String fromDb) {
-//     return InvestmentStatus.values.firstWhere(
-//       (e) => e.name == fromDb,
-//       orElse: () => InvestmentStatus.active,
-//     );
-//   }
-
-//   @override
-//   String toSql(InvestmentStatus value) => value.name;
-// }
-
-// class _InvestmentTransactionTypeConverter
-//     extends TypeConverter<InvestmentTransactionType, String> {
-//   const _InvestmentTransactionTypeConverter();
-
-//   @override
-//   InvestmentTransactionType fromSql(String fromDb) {
-//     return InvestmentTransactionType.values.firstWhere(
-//       (e) => e.name == fromDb,
-//       orElse: () => InvestmentTransactionType.adjustment,
-//     );
-//   }
-
-//   @override
-//   String toSql(InvestmentTransactionType value) => value.name;
-// }
-
-// class _DebtTransactionTypeConverter
-//     extends TypeConverter<DebtTransactionType, String> {
-//   const _DebtTransactionTypeConverter();
-
-//   @override
-//   DebtTransactionType fromSql(String fromDb) {
-//     return DebtTransactionType.values.firstWhere(
-//       (e) => e.name == fromDb,
-//       orElse: () => DebtTransactionType.adjustment,
-//     );
-//   }
-
-//   @override
-//   String toSql(DebtTransactionType value) => value.name;
-// }
-
-// class _TransactionStatusConverter
-//     extends TypeConverter<TransactionStatus, String> {
-//   const _TransactionStatusConverter();
-
-//   @override
-//   TransactionStatus fromSql(String fromDb) {
-//     return TransactionStatus.values.firstWhere(
-//       (e) => e.name == fromDb,
-//       orElse: () => TransactionStatus.pending,
-//     );
-//   }
-
-//   @override
-//   String toSql(TransactionStatus value) => value.name;
-// }
-
-// class _InvestmentScheduleTypeConverter
-//     extends TypeConverter<InvestmentScheduleType, String> {
-//   const _InvestmentScheduleTypeConverter();
-
-//   @override
-//   InvestmentScheduleType fromSql(String fromDb) {
-//     return InvestmentScheduleType.values.firstWhere(
-//       (e) => e.name == fromDb,
-//       orElse: () => InvestmentScheduleType.returnPayment,
-//     );
-//   }
-
-//   @override
-//   String toSql(InvestmentScheduleType value) => value.name;
-// }
-
-// #endregion
 
 @DriftDatabase(
   tables: [
@@ -1251,13 +953,25 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        // For development: drop all tables and recreate
+        // In production, you'd write specific migration steps
+        if (from == 1 && to == 2) {
+          // Drop all tables
+          for (final table in allTables) {
+            await m.deleteTable(table.actualTableName);
+          }
+          // Recreate all tables
+          await m.createAll();
+        }
       },
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');

@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 class AuthErrorMessage extends StatelessWidget {
   final String? errorMessage;
 
-  const AuthErrorMessage({
-    super.key,
-    this.errorMessage,
-  });
+  const AuthErrorMessage({super.key, this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,7 @@ class AuthErrorMessage extends StatelessWidget {
           Icon(Icons.error_outline, color: Colors.red[700]),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
+            child: SelectableText(
               errorMessage!,
               style: TextStyle(color: Colors.red[700]),
             ),

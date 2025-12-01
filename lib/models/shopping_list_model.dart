@@ -66,6 +66,88 @@ class ShoppingListModel {
     );
   }
 
+  /// Converts a Drift database record to a ShoppingListModel
+  factory ShoppingListModel.fromDrift(ShoppingList shoppingList) {
+    return ShoppingListModel(
+      id: shoppingList.id,
+      name: shoppingList.name,
+      project: shoppingList.projectId,
+      description: shoppingList.description,
+      expense: shoppingList.expenseId,
+      tempId: shoppingList.tempId,
+      isSynced: shoppingList.isSynced,
+      user: shoppingList.userId,
+      createdAt: shoppingList.createdAt,
+      updatedAt: shoppingList.updatedAt,
+    );
+  }
+
+
+  /// Compares this ShoppingListModel with another for equality
+  bool isEqualTo(ShoppingListModel other) {
+    return id == other.id &&
+        name == other.name &&
+        project == other.project &&
+        description == other.description &&
+        expense == other.expense &&
+        tempId == other.tempId &&
+        isSynced == other.isSynced &&
+        user == other.user;
+  }
+
+  /// Updates this ShoppingListModel with another, prioritizing non-null fields from the other
+  ShoppingListModel merge(ShoppingListModel other) {
+    return ShoppingListModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      project: other.project ?? project,
+      projectData: other.projectData ?? projectData,
+      description: other.description ?? description,
+      expense: other.expense ?? expense,
+      expenseData: other.expenseData ?? expenseData,
+      tempId: other.tempId ?? tempId,
+      isSynced: other.isSynced ?? isSynced,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this ShoppingListModel with the given fields replaced with new values
+  ShoppingListModel copyWith({
+    String? id,
+    String? name,
+    String? project,
+    ProjectModel? projectData,
+    String? description,
+    String? expense,
+    ExpenseModel? expenseData,
+    String? tempId,
+    bool? isSynced,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ShoppingListModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      project: project ?? this.project,
+      projectData: projectData ?? this.projectData,
+      description: description ?? this.description,
+      expense: expense ?? this.expense,
+      expenseData: expenseData ?? this.expenseData,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

@@ -36,7 +36,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
       setState(() => _isLoading = true);
 
       try {
-        ref.read(expenseRepositoryProvider);
+        // ref.read(expenseRepositoryProvider);
         // .createExpense(
         //   projectId: widget.projectId,
         //   name: _nameController.text.trim(),

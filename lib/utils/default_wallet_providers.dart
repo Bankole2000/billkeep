@@ -1462,18 +1462,18 @@ class DefaultWalletProviders {
           );
 
       // Insert countryISO2 as metadata if available
-      if (provider['countryISO2'] != null) {
-        await database
-            .into(database.walletProviderMetadata)
-            .insert(
-              WalletProviderMetadataCompanion(
-                providerId: Value(provider['id'] as String),
-                key: const Value('countryISO2'),
-                value: Value(provider['countryISO2'] as String),
-                isSynced: const Value(false),
-              ),
-            );
-      }
+      // if (provider['countryISO2'] != null) {
+      //   await database
+      //       .into(database.walletProviderMetadata)
+      //       .insert(
+      //         WalletProviderMetadataCompanion(
+      //           providerId: Value(provider['id'] as String),
+      //           key: const Value('countryISO2'),
+      //           value: Value(provider['countryISO2'] as String),
+      //           isSynced: const Value(false),
+      //         ),
+      //       );
+      // }
     }
   }
 }

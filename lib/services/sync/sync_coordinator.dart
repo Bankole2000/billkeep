@@ -1,7 +1,8 @@
+import 'package:billkeep/repositories/project_repository.dart';
 import 'package:dio/dio.dart';
-import '../../database/database.dart';
-import '../../providers/project_provider.dart';
-import '../../services/api_client.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/project_provider.dart';
+import 'package:billkeep/services/api_client.dart';
 import 'project_sync_service.dart';
 import 'expense_sync_service.dart';
 import 'base_sync_service.dart';
@@ -12,18 +13,18 @@ import 'base_sync_service.dart';
 /// a single entry point for sync operations throughout the app
 class SyncCoordinator {
   final AppDatabase _database;
-  final ProjectRepository _projectRepository;
+  final ProjectRepository? _projectRepository;
   final Dio _dio;
   late final ProjectSyncService projectSync;
   late final ExpenseSyncService expenseSync;
 
   SyncCoordinator({
     required AppDatabase database,
-    required ProjectRepository projectRepository,
+    required ProjectRepository? projectRepository,
     Dio? dio,
-  })  : _database = database,
-        _projectRepository = projectRepository,
-        _dio = dio ?? ApiClient().dio {
+  }) : _database = database,
+       _projectRepository = projectRepository,
+       _dio = dio ?? ApiClient().dio {
     projectSync = ProjectSyncService(
       database: _database,
       repository: _projectRepository,
@@ -119,10 +120,7 @@ class SyncCoordinator {
     final projectIds = await projectSync.getUnsyncedEntityIds();
     final expenseIds = await expenseSync.getUnsyncedEntityIds();
 
-    return {
-      'projects': projectIds.length,
-      'expenses': expenseIds.length,
-    };
+    return {'projects': projectIds.length, 'expenses': expenseIds.length};
   }
 }
 

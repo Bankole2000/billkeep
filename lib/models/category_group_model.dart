@@ -46,6 +46,67 @@ class CategoryGroupModel {
     );
   }
 
+  /// Converts a Drift database record to a CategoryGroupModel
+  factory CategoryGroupModel.fromDrift(CategoryGroup categoryGroup) {
+    return CategoryGroupModel(
+      id: categoryGroup.id,
+      name: categoryGroup.name,
+      tempId: categoryGroup.tempId,
+      isSynced: categoryGroup.isSynced,
+      user: categoryGroup.userId,
+      createdAt: categoryGroup.createdAt,
+      updatedAt: categoryGroup.updatedAt,
+    );
+  }
+
+
+  /// Compares this CategoryGroupModel with another for equality
+  bool isEqualTo(CategoryGroupModel other) {
+    return id == other.id &&
+        name == other.name &&
+        tempId == other.tempId &&
+        isSynced == other.isSynced &&
+        user == other.user;
+  }
+
+  /// Updates this CategoryGroupModel with another, prioritizing non-null fields from the other
+  CategoryGroupModel merge(CategoryGroupModel other) {
+    return CategoryGroupModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      tempId: other.tempId ?? tempId,
+      isSynced: other.isSynced ?? isSynced,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this CategoryGroupModel with the given fields replaced with new values
+  CategoryGroupModel copyWith({
+    String? id,
+    String? name,
+    String? tempId,
+    bool? isSynced,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return CategoryGroupModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

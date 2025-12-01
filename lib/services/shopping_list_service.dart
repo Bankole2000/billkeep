@@ -1,3 +1,4 @@
+import 'package:billkeep/models/shopping_list_item_model.dart';
 import 'package:pocketbase/pocketbase.dart';
 import '../models/shopping_list_model.dart';
 import 'base_api_service.dart';
@@ -82,10 +83,8 @@ class ShoppingListService extends BaseApiService {
     if (limit != null) queryParameters['limit'] = limit;
 
     return executeListRequest<ShoppingListModel>(
-      request: () => dio.get(
-        '/shopping-lists',
-        queryParameters: queryParameters,
-      ),
+      request: () =>
+          dio.get('/shopping-lists', queryParameters: queryParameters),
       itemParser: (json) => ShoppingListModel.fromJson(json),
     );
   }
@@ -119,9 +118,7 @@ class ShoppingListService extends BaseApiService {
 
   /// Delete a shopping list
   Future<void> deleteShoppingList(String id) async {
-    return executeVoidRequest(
-      request: () => dio.delete('/shopping-lists/$id'),
-    );
+    return executeVoidRequest(request: () => dio.delete('/shopping-lists/$id'));
   }
 
   /// Create a new shopping list item
@@ -198,10 +195,8 @@ class ShoppingListService extends BaseApiService {
     if (notes != null) data['notes'] = notes;
 
     return executeRequest<ShoppingListItemModel>(
-      request: () => dio.put(
-        '/shopping-lists/$shoppingListId/items/$itemId',
-        data: data,
-      ),
+      request: () =>
+          dio.put('/shopping-lists/$shoppingListId/items/$itemId', data: data),
       parser: (data) => ShoppingListItemModel.fromJson(data),
     );
   }
@@ -212,7 +207,8 @@ class ShoppingListService extends BaseApiService {
     required String itemId,
   }) async {
     return executeVoidRequest(
-      request: () => dio.delete('/shopping-lists/$shoppingListId/items/$itemId'),
+      request: () =>
+          dio.delete('/shopping-lists/$shoppingListId/items/$itemId'),
     );
   }
 }

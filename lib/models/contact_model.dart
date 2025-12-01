@@ -64,6 +64,97 @@ class ContactModel {
     );
   }
 
+  /// Converts a Drift database record to a ContactModel
+  factory ContactModel.fromDrift(Contact contact) {
+    return ContactModel(
+      id: contact.id,
+      name: contact.name,
+      tempId: contact.tempId,
+      iconCodePoint: contact.iconCodePoint,
+      iconEmoji: contact.iconEmoji,
+      iconType: contact.iconType,
+      color: contact.color,
+      isSynced: contact.isSynced,
+      imageUrl: contact.imageUrl,
+      localImagePath: contact.localImagePath,
+      user: contact.userId,
+      createdAt: contact.createdAt,
+      updatedAt: contact.updatedAt,
+    );
+  }
+
+
+  /// Compares this ContactModel with another for equality
+  bool isEqualTo(ContactModel other) {
+    return id == other.id &&
+        name == other.name &&
+        tempId == other.tempId &&
+        iconCodePoint == other.iconCodePoint &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        color == other.color &&
+        isSynced == other.isSynced &&
+        imageUrl == other.imageUrl &&
+        localImagePath == other.localImagePath &&
+        user == other.user;
+  }
+
+  /// Updates this ContactModel with another, prioritizing non-null fields from the other
+  ContactModel merge(ContactModel other) {
+    return ContactModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      tempId: other.tempId ?? tempId,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      color: other.color ?? color,
+      isSynced: other.isSynced ?? isSynced,
+      imageUrl: other.imageUrl ?? imageUrl,
+      localImagePath: other.localImagePath ?? localImagePath,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this ContactModel with the given fields replaced with new values
+  ContactModel copyWith({
+    String? id,
+    String? name,
+    String? tempId,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    bool? isSynced,
+    String? imageUrl,
+    String? localImagePath,
+    Map<String, dynamic>? metadata,
+    String? user,
+    UserModel? userData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ContactModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      tempId: tempId ?? this.tempId,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      isSynced: isSynced ?? this.isSynced,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
+      metadata: metadata ?? this.metadata,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

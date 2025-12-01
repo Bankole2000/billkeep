@@ -69,6 +69,98 @@ class BudgetMetadataModel {
     );
   }
 
+  /// Converts a Drift database record to a BudgetMetadataModel
+  factory BudgetMetadataModel.fromDrift(BudgetMetadataData metadata) {
+    return BudgetMetadataModel(
+      id: metadata.id,
+      name: metadata.name,
+      type: metadata.type,
+      stringValue: metadata.stringValue,
+      numberValue: metadata.numberValue,
+      booleanValue: metadata.booleanValue,
+      dateTimeValue: metadata.dateTimeValue,
+      urlValue: metadata.urlValue,
+      emailValue: metadata.emailValue,
+      user: metadata.userId,
+      budget: metadata.budgetId,
+      createdAt: metadata.createdAt,
+      updatedAt: metadata.updatedAt,
+    );
+  }
+
+
+  /// Compares this BudgetMetadataModel with another for equality
+  bool isEqualTo(BudgetMetadataModel other) {
+    return id == other.id &&
+        name == other.name &&
+        type == other.type &&
+        stringValue == other.stringValue &&
+        numberValue == other.numberValue &&
+        booleanValue == other.booleanValue &&
+        dateTimeValue == other.dateTimeValue &&
+        urlValue == other.urlValue &&
+        emailValue == other.emailValue &&
+        user == other.user &&
+        budget == other.budget;
+  }
+
+  /// Updates this BudgetMetadataModel with another, prioritizing non-null fields from the other
+  BudgetMetadataModel merge(BudgetMetadataModel other) {
+    return BudgetMetadataModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      type: other.type ?? type,
+      stringValue: other.stringValue ?? stringValue,
+      numberValue: other.numberValue ?? numberValue,
+      booleanValue: other.booleanValue ?? booleanValue,
+      dateTimeValue: other.dateTimeValue ?? dateTimeValue,
+      urlValue: other.urlValue ?? urlValue,
+      emailValue: other.emailValue ?? emailValue,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      budget: other.budget ?? budget,
+      budgetData: other.budgetData ?? budgetData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this BudgetMetadataModel with the given fields replaced with new values
+  BudgetMetadataModel copyWith({
+    String? id,
+    String? name,
+    String? type,
+    String? stringValue,
+    int? numberValue,
+    bool? booleanValue,
+    DateTime? dateTimeValue,
+    String? urlValue,
+    String? emailValue,
+    String? user,
+    UserModel? userData,
+    String? budget,
+    BudgetModel? budgetData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return BudgetMetadataModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      budget: budget ?? this.budget,
+      budgetData: budgetData ?? this.budgetData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

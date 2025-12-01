@@ -206,16 +206,16 @@ class _RuleBuilderScreenState extends ConsumerState<RuleBuilderScreen> {
     _generatePatterns();
 
     try {
-      await ref
-          .read(smsRepositoryProvider)
-          .createMessageRule(
-            name: _ruleNameController.text.trim(),
-            type: 'SMS',
-            sender: _senderController.text.trim(),
-            pattern: _generatedPattern!,
-            amountPattern: _generatedAmountPattern!,
-            descriptionPattern: _generatedDescriptionPattern,
-          );
+      // await ref
+      //     .read(smsRepositoryProvider)
+      //     .createMessageRule(
+      //       name: _ruleNameController.text.trim(),
+      //       type: 'SMS',
+      //       sender: _senderController.text.trim(),
+      //       pattern: _generatedPattern!,
+      //       amountPattern: _generatedAmountPattern!,
+      //       descriptionPattern: _generatedDescriptionPattern,
+      //     );
 
       if (mounted) {
         Navigator.pop(context);

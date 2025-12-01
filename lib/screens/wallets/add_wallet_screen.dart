@@ -214,77 +214,71 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
 
   Future<dynamic> _createWallet(String iconType) async {
     final userId = ref.read(currentUserIdProvider);
-    if(userId == null) {
+    if (userId == null) {
       throw Exception('User not logged in');
     }
-    return await ref.read(walletServiceProvider).createWallet(
-          name: _nameController.text.trim(),
-          userId: userId!,
-          walletType: _selectedWalletType!.name,
-          currency: _selectedCurrency!,
-          balance: _amountController.text,
-          providerId: _selectedWalletProvider?.id,
-          imageUrl: _useProviderAppearance
-              ? _selectedWalletProvider?.imageUrl
-              : _imageUrlController.text,
-          localImagePath: _useProviderAppearance
-              ? _selectedWalletProvider?.localImagePath
-              : _localImageFile?.path,
-          iconEmoji: _useProviderAppearance
-              ? _selectedWalletProvider?.iconEmoji
-              : _selectedEmoji,
-          iconCodePoint: _useProviderAppearance
-              ? _selectedWalletProvider?.iconCodePoint
-              : _selectedIcon?.codePoint,
-          iconType: iconType,
-          color: _selectedColor?.toHexString(),
-          isGlobal: true,
-        );
+    // return await ref.read(walletServiceProvider).createWallet(
+    //       name: _nameController.text.trim(),
+    //       userId: userId!,
+    //       walletType: _selectedWalletType!.name,
+    //       currency: _selectedCurrency!,
+    //       balance: _amountController.text,
+    //       providerId: _selectedWalletProvider?.id,
+    //       imageUrl: _useProviderAppearance
+    //           ? _selectedWalletProvider?.imageUrl
+    //           : _imageUrlController.text,
+    //       localImagePath: _useProviderAppearance
+    //           ? _selectedWalletProvider?.localImagePath
+    //           : _localImageFile?.path,
+    //       iconEmoji: _useProviderAppearance
+    //           ? _selectedWalletProvider?.iconEmoji
+    //           : _selectedEmoji,
+    //       iconCodePoint: _useProviderAppearance
+    //           ? _selectedWalletProvider?.iconCodePoint
+    //           : _selectedIcon?.codePoint,
+    //       iconType: iconType,
+    //       color: _selectedColor?.toHexString(),
+    //       isGlobal: true,
+    //     );
   }
 
   Future<dynamic> _updateWallet(String iconType) async {
-    return await ref.read(walletRepositoryProvider).updateWallet(
-          walletId: walletId!,
-          name: _nameController.text.trim(),
-          walletType: _selectedWalletType!.name,
-          currency: _selectedCurrency!.code,
-          balance: _amountController.text.replaceAll(',', ''),
-          providerId: _selectedWalletProvider?.id,
-          imageUrl: _useProviderAppearance
-              ? _selectedWalletProvider?.imageUrl
-              : _imageUrlController.text,
-          localImagePath: _useProviderAppearance
-              ? _selectedWalletProvider?.localImagePath
-              : _localImageFile?.path,
-          iconEmoji: _useProviderAppearance
-              ? _selectedWalletProvider?.iconEmoji
-              : _selectedEmoji,
-          iconCodePoint: _useProviderAppearance
-              ? _selectedWalletProvider?.iconCodePoint
-              : _selectedIcon?.codePoint,
-          iconType: iconType,
-          color: _selectedColor?.toHexString(),
-          isGlobal: true,
-        );
+    // return await ref.read(walletRepositoryProvider).updateWallet(
+    //       walletId: walletId!,
+    //       name: _nameController.text.trim(),
+    //       walletType: _selectedWalletType!.name,
+    //       currency: _selectedCurrency!.code,
+    //       balance: _amountController.text.replaceAll(',', ''),
+    //       providerId: _selectedWalletProvider?.id,
+    //       imageUrl: _useProviderAppearance
+    //           ? _selectedWalletProvider?.imageUrl
+    //           : _imageUrlController.text,
+    //       localImagePath: _useProviderAppearance
+    //           ? _selectedWalletProvider?.localImagePath
+    //           : _localImageFile?.path,
+    //       iconEmoji: _useProviderAppearance
+    //           ? _selectedWalletProvider?.iconEmoji
+    //           : _selectedEmoji,
+    //       iconCodePoint: _useProviderAppearance
+    //           ? _selectedWalletProvider?.iconCodePoint
+    //           : _selectedIcon?.codePoint,
+    //       iconType: iconType,
+    //       color: _selectedColor?.toHexString(),
+    //       isGlobal: true,
+    //     );
   }
 
   void _showError(String message) {
     final colors = ref.read(appColorsProvider);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: SelectableText(message),
-        backgroundColor: colors.fire,
-      ),
+      SnackBar(content: SelectableText(message), backgroundColor: colors.fire),
     );
   }
 
   void _showSuccess(String message) {
     final colors = ref.read(appColorsProvider);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: colors.navy,
-      ),
+      SnackBar(content: Text(message), backgroundColor: colors.navy),
     );
   }
 
@@ -310,7 +304,8 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
               width: double.infinity,
               child: WalletTypeDropdown(
                 selectedType: _selectedWalletType,
-                onChanged: (value) => setState(() => _selectedWalletType = value),
+                onChanged: (value) =>
+                    setState(() => _selectedWalletType = value),
               ),
             ),
           ),

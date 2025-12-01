@@ -53,6 +53,75 @@ class GoalContributionModel {
     );
   }
 
+  /// Converts a Drift database record to a GoalContributionModel
+  factory GoalContributionModel.fromDrift(GoalContributionData contribution) {
+    return GoalContributionModel(
+      id: contribution.id,
+      payment: contribution.paymentId,
+      goal: contribution.goalId,
+      allocatedAmount: contribution.allocatedAmount,
+      allocatedAt: contribution.allocatedAt,
+      notes: contribution.notes,
+      created: contribution.created,
+      updated: contribution.updated,
+    );
+  }
+
+
+  /// Compares this GoalContributionModel with another for equality
+  bool isEqualTo(GoalContributionModel other) {
+    return id == other.id &&
+        payment == other.payment &&
+        goal == other.goal &&
+        allocatedAmount == other.allocatedAmount &&
+        allocatedAt == other.allocatedAt &&
+        notes == other.notes &&
+        created == other.created &&
+        updated == other.updated;
+  }
+
+  /// Updates this GoalContributionModel with another, prioritizing non-null fields from the other
+  GoalContributionModel merge(GoalContributionModel other) {
+    return GoalContributionModel(
+      id: other.id ?? id,
+      payment: other.payment ?? payment,
+      paymentData: other.paymentData ?? paymentData,
+      goal: other.goal ?? goal,
+      goalData: other.goalData ?? goalData,
+      allocatedAmount: other.allocatedAmount ?? allocatedAmount,
+      allocatedAt: other.allocatedAt ?? allocatedAt,
+      notes: other.notes ?? notes,
+      created: other.created ?? created,
+      updated: other.updated ?? updated,
+    );
+  }
+  /// Creates a copy of this GoalContributionModel with the given fields replaced with new values
+  GoalContributionModel copyWith({
+    String? id,
+    String? payment,
+    PaymentModel? paymentData,
+    String? goal,
+    GoalModel? goalData,
+    int? allocatedAmount,
+    DateTime? allocatedAt,
+    String? notes,
+    DateTime? created,
+    DateTime? updated,
+  }) {
+    return GoalContributionModel(
+      id: id ?? this.id,
+      payment: payment ?? this.payment,
+      paymentData: paymentData ?? this.paymentData,
+      goal: goal ?? this.goal,
+      goalData: goalData ?? this.goalData,
+      allocatedAmount: allocatedAmount ?? this.allocatedAmount,
+      allocatedAt: allocatedAt ?? this.allocatedAt,
+      notes: notes ?? this.notes,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

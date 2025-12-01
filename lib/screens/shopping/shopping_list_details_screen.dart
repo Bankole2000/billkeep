@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/shopping_list_provider.dart';
-import '../../utils/currency_helper.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/shopping_list_provider.dart';
+import 'package:billkeep/utils/currency_helper.dart';
 
 class ShoppingListDetailScreen extends ConsumerWidget {
   final ShoppingList shoppingList;
@@ -111,9 +111,9 @@ class ShoppingListDetailScreen extends ConsumerWidget {
                         leading: Checkbox(
                           value: item.isPurchased,
                           onChanged: (value) {
-                            ref
-                                .read(shoppingListRepositoryProvider)
-                                .toggleItemPurchased(item.id, value ?? false);
+                            // ref
+                            //     .read(shoppingListRepositoryProvider)
+                            //     .toggleItemPurchased(item.id, value ?? false);
                           },
                         ),
                         title: Text(
@@ -247,14 +247,14 @@ class ShoppingListDetailScreen extends ConsumerWidget {
                   ? null
                   : CurrencyHelper.dollarsToCents(amountController.text.trim());
 
-              await ref
-                  .read(shoppingListRepositoryProvider)
-                  .addShoppingListItem(
-                    shoppingListId: listId,
-                    name: nameController.text.trim(),
-                    estimatedAmount: amount,
-                    quantity: int.tryParse(quantityController.text) ?? 1,
-                  );
+              // await ref
+              //     .read(shoppingListRepositoryProvider)
+              //     .addShoppingListItem(
+              //       shoppingListId: listId,
+              //       name: nameController.text.trim(),
+              //       estimatedAmount: amount,
+              //       quantity: int.tryParse(quantityController.text) ?? 1,
+              //     );
 
               if (context.mounted) Navigator.pop(context);
             },
@@ -342,17 +342,17 @@ class ShoppingListDetailScreen extends ConsumerWidget {
                   ? null
                   : CurrencyHelper.dollarsToCents(amountController.text.trim());
 
-              await ref
-                  .read(shoppingListRepositoryProvider)
-                  .updateShoppingListItem(
-                    itemId: item.id,
-                    name: nameController.text.trim(),
-                    estimatedAmount: amount,
-                    quantity: int.tryParse(quantityController.text) ?? 1,
-                    notes: notesController.text.trim().isEmpty
-                        ? null
-                        : notesController.text.trim(),
-                  );
+              // await ref
+              //     .read(shoppingListRepositoryProvider)
+              //     .updateShoppingListItem(
+              //       itemId: item.id,
+              //       name: nameController.text.trim(),
+              //       estimatedAmount: amount,
+              //       quantity: int.tryParse(quantityController.text) ?? 1,
+              //       notes: notesController.text.trim().isEmpty
+              //           ? null
+              //           : notesController.text.trim(),
+              //     );
 
               if (context.mounted) {
                 Navigator.pop(context);
@@ -387,9 +387,9 @@ class ShoppingListDetailScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              await ref
-                  .read(shoppingListRepositoryProvider)
-                  .deleteShoppingListItem(itemId);
+              // await ref
+              //     .read(shoppingListRepositoryProvider)
+              //     .deleteShoppingListItem(itemId);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(

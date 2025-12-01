@@ -1,11 +1,12 @@
+import 'package:billkeep/repositories/project_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
-import '../../database/database.dart';
-import '../../models/project_model.dart' hide Project;
-import '../../providers/project_provider.dart';
-import '../../services/api_client.dart';
-import '../../utils/exceptions.dart';
-import '../../utils/id_generator.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/models/project_model.dart' hide Project;
+import 'package:billkeep/providers/project_provider.dart';
+import 'package:billkeep/services/api_client.dart';
+import 'package:billkeep/utils/exceptions.dart';
+import 'package:billkeep/utils/id_generator.dart';
 import 'base_sync_service.dart';
 
 /// Synchronization service for Projects
@@ -14,16 +15,16 @@ import 'base_sync_service.dart';
 /// Makes DIRECT API calls (not through ProjectService) to avoid double-writing
 class ProjectSyncService extends BaseSyncService {
   final AppDatabase _database;
-  final ProjectRepository _repository;
+  final ProjectRepository? _repository;
   final Dio _dio;
 
   ProjectSyncService({
     required AppDatabase database,
-    required ProjectRepository repository,
+    required ProjectRepository? repository,
     Dio? dio,
-  })  : _database = database,
-        _repository = repository,
-        _dio = dio ?? ApiClient().dio;
+  }) : _database = database,
+       _repository = repository,
+       _dio = dio ?? ApiClient().dio;
 
   @override
   Future<void> syncEntity(String tempId) async {
@@ -69,7 +70,8 @@ class ProjectSyncService extends BaseSyncService {
         canonicalId: apiProject.id,
       );
     } on DioException catch (e) {
-      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
+      final message =
+          e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
         'Failed to sync project: $message',
         'Unable to sync project. Will retry later.',
@@ -144,7 +146,8 @@ class ProjectSyncService extends BaseSyncService {
         }
       }
     } on DioException catch (e) {
-      final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
+      final message =
+          e.response?.data?['message'] ?? e.message ?? 'Unknown error';
       throw SyncException(
         'Failed to pull projects from server: $message',
         'Unable to fetch projects from server.',
@@ -206,7 +209,8 @@ class ProjectSyncService extends BaseSyncService {
       try {
         await _dio.delete('/projects/records/$projectId');
       } on DioException catch (e) {
-        final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
+        final message =
+            e.response?.data?['message'] ?? e.message ?? 'Unknown error';
         throw SyncException(
           'Failed to delete project from server: $message',
           'Unable to delete project from server.',
@@ -242,10 +246,7 @@ class ProjectSyncService extends BaseSyncService {
       try {
         await _dio.patch(
           '/projects/records/$projectId',
-          data: {
-            'name': name,
-            'description': description,
-          },
+          data: {'name': name, 'description': description},
         );
 
         // Mark as synced
@@ -253,7 +254,8 @@ class ProjectSyncService extends BaseSyncService {
               ..where((p) => p.id.equals(projectId)))
             .write(const ProjectsCompanion(isSynced: Value(true)));
       } on DioException catch (e) {
-        final message = e.response?.data?['message'] ?? e.message ?? 'Unknown error';
+        final message =
+            e.response?.data?['message'] ?? e.message ?? 'Unknown error';
         // Failed to sync, but local update succeeded
         // Will be synced later
         throw SyncException(

@@ -92,6 +92,121 @@ class ShoppingListItemModel {
     );
   }
 
+  /// Converts a Drift database record to a ShoppingListItemModel
+  factory ShoppingListItemModel.fromDrift(ShoppingListItem item) {
+    return ShoppingListItemModel(
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      tempId: item.tempId,
+      user: item.userId,
+      shoppingList: item.shoppingListId,
+      estimatedAmount: item.estimatedAmount,
+      actualAmount: item.actualAmount,
+      currency: item.currency,
+      quantity: item.quantity,
+      isPurchased: item.isPurchased,
+      purchasedAt: item.purchasedAt,
+      payment: item.paymentId,
+      isSynced: item.isSynced,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    );
+  }
+
+
+  /// Compares this ShoppingListItemModel with another for equality
+  bool isEqualTo(ShoppingListItemModel other) {
+    return id == other.id &&
+        name == other.name &&
+        description == other.description &&
+        tempId == other.tempId &&
+        user == other.user &&
+        shoppingList == other.shoppingList &&
+        estimatedAmount == other.estimatedAmount &&
+        actualAmount == other.actualAmount &&
+        currency == other.currency &&
+        quantity == other.quantity &&
+        isPurchased == other.isPurchased &&
+        purchasedAt == other.purchasedAt &&
+        payment == other.payment &&
+        isSynced == other.isSynced;
+  }
+
+  /// Updates this ShoppingListItemModel with another, prioritizing non-null fields from the other
+  ShoppingListItemModel merge(ShoppingListItemModel other) {
+    return ShoppingListItemModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      description: other.description ?? description,
+      tempId: other.tempId ?? tempId,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      shoppingList: other.shoppingList ?? shoppingList,
+      shoppingListData: other.shoppingListData ?? shoppingListData,
+      estimatedAmount: other.estimatedAmount ?? estimatedAmount,
+      actualAmount: other.actualAmount ?? actualAmount,
+      currency: other.currency ?? currency,
+      currencyData: other.currencyData ?? currencyData,
+      quantity: other.quantity ?? quantity,
+      isPurchased: other.isPurchased ?? isPurchased,
+      purchasedAt: other.purchasedAt ?? purchasedAt,
+      payment: other.payment ?? payment,
+      paymentData: other.paymentData ?? paymentData,
+      isSynced: other.isSynced ?? isSynced,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this ShoppingListItemModel with the given fields replaced with new values
+  ShoppingListItemModel copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? tempId,
+    Map<String, dynamic>? metadata,
+    String? user,
+    UserModel? userData,
+    String? shoppingList,
+    ShoppingListModel? shoppingListData,
+    int? estimatedAmount,
+    int? actualAmount,
+    String? currency,
+    CurrencyModel? currencyData,
+    int? quantity,
+    bool? isPurchased,
+    DateTime? purchasedAt,
+    String? payment,
+    PaymentModel? paymentData,
+    bool? isSynced,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ShoppingListItemModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      tempId: tempId ?? this.tempId,
+      metadata: metadata ?? this.metadata,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      shoppingList: shoppingList ?? this.shoppingList,
+      shoppingListData: shoppingListData ?? this.shoppingListData,
+      estimatedAmount: estimatedAmount ?? this.estimatedAmount,
+      actualAmount: actualAmount ?? this.actualAmount,
+      currency: currency ?? this.currency,
+      currencyData: currencyData ?? this.currencyData,
+      quantity: quantity ?? this.quantity,
+      isPurchased: isPurchased ?? this.isPurchased,
+      purchasedAt: purchasedAt ?? this.purchasedAt,
+      payment: payment ?? this.payment,
+      paymentData: paymentData ?? this.paymentData,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

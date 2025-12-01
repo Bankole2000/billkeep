@@ -157,6 +157,184 @@ class ExpenseModel {
     );
   }
 
+  /// Converts a Drift database record to an ExpenseModel
+  factory ExpenseModel.fromDrift(Expense expense) {
+    return ExpenseModel(
+      id: expense.id,
+      tempId: expense.tempId,
+      isSynced: expense.isSynced,
+      source: expense.source,
+      reminder: expense.reminderId,
+      wallet: expense.walletId,
+      frequency: expense.frequency,
+      name: expense.name,
+      project: expense.projectId,
+      expectedAmount: expense.expectedAmount,
+      type: expense.type,
+      startDate: expense.startDate,
+      nextRenewalDate: expense.nextRenewalDate,
+      user: expense.userId,
+      currency: expense.currency,
+      category: expense.categoryId,
+      merchant: expense.merchantId,
+      contact: expense.contactId,
+      investment: expense.investmentId,
+      goal: expense.goalId,
+      budget: expense.budgetId,
+      notes: expense.notes,
+      isActive: expense.isActive,
+      createdAt: expense.createdAt,
+      updatedAt: expense.updatedAt,
+    );
+  }
+
+
+  /// Compares this ExpenseModel with another for equality
+  bool isEqualTo(ExpenseModel other) {
+    return id == other.id &&
+        tempId == other.tempId &&
+        isSynced == other.isSynced &&
+        source == other.source &&
+        reminder == other.reminder &&
+        wallet == other.wallet &&
+        frequency == other.frequency &&
+        name == other.name &&
+        project == other.project &&
+        expectedAmount == other.expectedAmount &&
+        type == other.type &&
+        startDate == other.startDate &&
+        nextRenewalDate == other.nextRenewalDate &&
+        user == other.user &&
+        currency == other.currency &&
+        category == other.category &&
+        merchant == other.merchant &&
+        contact == other.contact &&
+        investment == other.investment &&
+        goal == other.goal &&
+        budget == other.budget &&
+        notes == other.notes &&
+        isActive == other.isActive;
+  }
+
+  /// Updates this ExpenseModel with another, prioritizing non-null fields from the other
+  ExpenseModel merge(ExpenseModel other) {
+    return ExpenseModel(
+      id: other.id ?? id,
+      tempId: other.tempId ?? tempId,
+      isSynced: other.isSynced ?? isSynced,
+      source: other.source ?? source,
+      reminder: other.reminder ?? reminder,
+      reminderData: other.reminderData ?? reminderData,
+      wallet: other.wallet ?? wallet,
+      walletData: other.walletData ?? walletData,
+      frequency: other.frequency ?? frequency,
+      name: other.name ?? name,
+      project: other.project ?? project,
+      projectData: other.projectData ?? projectData,
+      expectedAmount: other.expectedAmount ?? expectedAmount,
+      type: other.type ?? type,
+      startDate: other.startDate ?? startDate,
+      nextRenewalDate: other.nextRenewalDate ?? nextRenewalDate,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      currency: other.currency ?? currency,
+      category: other.category ?? category,
+      categoryData: other.categoryData ?? categoryData,
+      merchant: other.merchant ?? merchant,
+      merchantData: other.merchantData ?? merchantData,
+      contact: other.contact ?? contact,
+      contactData: other.contactData ?? contactData,
+      investment: other.investment ?? investment,
+      investmentData: other.investmentData ?? investmentData,
+      goal: other.goal ?? goal,
+      goalData: other.goalData ?? goalData,
+      budget: other.budget ?? budget,
+      budgetData: other.budgetData ?? budgetData,
+      notes: other.notes ?? notes,
+      isActive: other.isActive ?? isActive,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this ExpenseModel with the given fields replaced with new values
+  ExpenseModel copyWith({
+    String? id,
+    String? tempId,
+    bool? isSynced,
+    String? source,
+    String? reminder,
+    ReminderModel? reminderData,
+    String? wallet,
+    WalletModel? walletData,
+    String? frequency,
+    String? name,
+    String? project,
+    ProjectModel? projectData,
+    int? expectedAmount,
+    String? type,
+    DateTime? startDate,
+    DateTime? nextRenewalDate,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    String? currency,
+    String? category,
+    CategoryModel? categoryData,
+    String? merchant,
+    MerchantModel? merchantData,
+    String? contact,
+    ContactModel? contactData,
+    String? investment,
+    InvestmentModel? investmentData,
+    String? goal,
+    GoalModel? goalData,
+    String? budget,
+    BudgetModel? budgetData,
+    String? notes,
+    bool? isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ExpenseModel(
+      id: id ?? this.id,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      source: source ?? this.source,
+      reminder: reminder ?? this.reminder,
+      reminderData: reminderData ?? this.reminderData,
+      wallet: wallet ?? this.wallet,
+      walletData: walletData ?? this.walletData,
+      frequency: frequency ?? this.frequency,
+      name: name ?? this.name,
+      project: project ?? this.project,
+      projectData: projectData ?? this.projectData,
+      expectedAmount: expectedAmount ?? this.expectedAmount,
+      type: type ?? this.type,
+      startDate: startDate ?? this.startDate,
+      nextRenewalDate: nextRenewalDate ?? this.nextRenewalDate,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      currency: currency ?? this.currency,
+      category: category ?? this.category,
+      categoryData: categoryData ?? this.categoryData,
+      merchant: merchant ?? this.merchant,
+      merchantData: merchantData ?? this.merchantData,
+      contact: contact ?? this.contact,
+      contactData: contactData ?? this.contactData,
+      investment: investment ?? this.investment,
+      investmentData: investmentData ?? this.investmentData,
+      goal: goal ?? this.goal,
+      goalData: goalData ?? this.goalData,
+      budget: budget ?? this.budget,
+      budgetData: budgetData ?? this.budgetData,
+      notes: notes ?? this.notes,
+      isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

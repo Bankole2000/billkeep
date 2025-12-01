@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/shopping_list_provider.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/shopping_list_provider.dart';
 
 /// Show edit shopping list dialog
 void showEditShoppingListDialog(
@@ -46,13 +46,13 @@ void showEditShoppingListDialog(
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
 
-            await ref.read(shoppingListRepositoryProvider).updateShoppingList(
-                  shoppingListId: list.id,
-                  name: nameController.text.trim(),
-                  description: descriptionController.text.trim().isEmpty
-                      ? null
-                      : descriptionController.text.trim(),
-                );
+            // await ref.read(shoppingListRepositoryProvider).updateShoppingList(
+            //       shoppingListId: list.id,
+            //       name: nameController.text.trim(),
+            //       description: descriptionController.text.trim().isEmpty
+            //           ? null
+            //           : descriptionController.text.trim(),
+            //     );
 
             if (context.mounted) {
               Navigator.pop(context);
@@ -88,9 +88,9 @@ void showDeleteShoppingListConfirmation(
         ),
         ElevatedButton(
           onPressed: () async {
-            await ref
-                .read(shoppingListRepositoryProvider)
-                .deleteShoppingList(listId);
+            // await ref
+            //     .read(shoppingListRepositoryProvider)
+            //     .deleteShoppingList(listId);
             if (context.mounted) {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

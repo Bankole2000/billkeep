@@ -8,6 +8,7 @@ class CurrencyModel {
   final String? code;
   final String? name;
   final String? symbol;
+  final String? countryISO2;
   final int? decimals;
   final bool? isCrypto;
   final bool? isActive;
@@ -24,6 +25,7 @@ class CurrencyModel {
     this.code,
     this.name,
     this.symbol,
+    this.countryISO2,
     this.decimals,
     this.isCrypto,
     this.isActive,
@@ -42,6 +44,7 @@ class CurrencyModel {
       code: json['code'] as String?,
       name: json['name'] as String?,
       symbol: json['symbol'] as String?,
+      countryISO2: json['countryISO2'] as String?,
       decimals: json['decimals'] as int?,
       isCrypto: json['isCrypto'] as bool?,
       isActive: json['isActive'] as bool?,
@@ -61,12 +64,106 @@ class CurrencyModel {
     );
   }
 
+  /// Converts a Drift database record to a CurrencyModel
+  factory CurrencyModel.fromDrift(Currency currency) {
+    return CurrencyModel(
+      id: currency.id,
+      code: currency.code,
+      name: currency.name,
+      symbol: currency.symbol,
+      countryISO2: currency.countryISO2,
+      decimals: currency.decimals,
+      isCrypto: currency.isCrypto,
+      isActive: currency.isActive,
+      user: currency.userId,
+      isSynced: currency.isSynced,
+      tempId: currency.tempId,
+      created: currency.created,
+      updated: currency.updated,
+    );
+  }
+
+  /// Compares this CurrencyModel with another for equality
+  bool isEqualTo(CurrencyModel other) {
+    return id == other.id &&
+        code == other.code &&
+        name == other.name &&
+        symbol == other.symbol &&
+        countryISO2 == other.countryISO2 &&
+        decimals == other.decimals &&
+        isCrypto == other.isCrypto &&
+        isActive == other.isActive &&
+        user == other.user &&
+        isSynced == other.isSynced &&
+        tempId == other.tempId &&
+        created == other.created &&
+        updated == other.updated;
+  }
+
+  /// Updates this CurrencyModel with another, prioritizing non-null fields from the other
+  CurrencyModel merge(CurrencyModel other) {
+    return CurrencyModel(
+      id: other.id ?? id,
+      code: other.code ?? code,
+      name: other.name ?? name,
+      symbol: other.symbol ?? symbol,
+      countryISO2: other.countryISO2 ?? countryISO2,
+      decimals: other.decimals ?? decimals,
+      isCrypto: other.isCrypto ?? isCrypto,
+      isActive: other.isActive ?? isActive,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      isSynced: other.isSynced ?? isSynced,
+      tempId: other.tempId ?? tempId,
+      created: other.created ?? created,
+      updated: other.updated ?? updated,
+    );
+  }
+
+  /// Creates a copy of this CurrencyModel with the given fields replaced with new values
+  CurrencyModel copyWith({
+    String? id,
+    String? code,
+    String? name,
+    String? symbol,
+    String? countryISO2,
+    int? decimals,
+    bool? isCrypto,
+    bool? isActive,
+    String? user,
+    UserModel? userData,
+    bool? isSynced,
+    String? tempId,
+    Map<String, dynamic>? metadata,
+    DateTime? created,
+    DateTime? updated,
+  }) {
+    return CurrencyModel(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      symbol: symbol ?? this.symbol,
+      countryISO2: countryISO2 ?? this.countryISO2,
+      decimals: decimals ?? this.decimals,
+      isCrypto: isCrypto ?? this.isCrypto,
+      isActive: isActive ?? this.isActive,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      isSynced: isSynced ?? this.isSynced,
+      tempId: tempId ?? this.tempId,
+      metadata: metadata ?? this.metadata,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'code': code,
       'name': name,
       'symbol': symbol,
+      'countryISO2': countryISO2,
       'decimals': decimals,
       'isCrypto': isCrypto,
       'isActive': isActive,
@@ -85,6 +182,7 @@ class CurrencyModel {
     String? code,
     String? name,
     String? symbol,
+    String? countryISO2,
     int? decimals,
     bool? isCrypto,
     bool? isActive,
@@ -96,20 +194,60 @@ class CurrencyModel {
     DateTime? updated,
   }) {
     return CurrenciesCompanion(
-      id: id != null ? Value(id) : (this.id != null ? Value(this.id!) : const Value.absent()),
-      code: code != null ? Value(code) : (this.code != null ? Value(this.code!) : const Value.absent()),
-      name: name != null ? Value(name) : (this.name != null ? Value(this.name!) : const Value.absent()),
-      symbol: symbol != null ? Value(symbol) : (this.symbol != null ? Value(this.symbol!) : const Value.absent()),
-      decimals: decimals != null ? Value(decimals) : (this.decimals != null ? Value(this.decimals!) : const Value.absent()),
-      isCrypto: isCrypto != null ? Value(isCrypto) : (this.isCrypto != null ? Value(this.isCrypto!) : const Value.absent()),
-      isActive: isActive != null ? Value(isActive) : (this.isActive != null ? Value(this.isActive!) : const Value.absent()),
-      userId: user != null ? Value(user) : (this.user != null ? Value(this.user!) : const Value.absent()),
+      id: id != null
+          ? Value(id)
+          : (this.id != null ? Value(this.id!) : const Value.absent()),
+      code: code != null
+          ? Value(code)
+          : (this.code != null ? Value(this.code!) : const Value.absent()),
+      name: name != null
+          ? Value(name)
+          : (this.name != null ? Value(this.name!) : const Value.absent()),
+      symbol: symbol != null
+          ? Value(symbol)
+          : (this.symbol != null ? Value(this.symbol!) : const Value.absent()),
+      countryISO2: countryISO2 != null
+          ? Value(countryISO2)
+          : (this.countryISO2 != null
+                ? Value(this.countryISO2!)
+                : const Value.absent()),
+      decimals: decimals != null
+          ? Value(decimals)
+          : (this.decimals != null
+                ? Value(this.decimals!)
+                : const Value.absent()),
+      isCrypto: isCrypto != null
+          ? Value(isCrypto)
+          : (this.isCrypto != null
+                ? Value(this.isCrypto!)
+                : const Value.absent()),
+      isActive: isActive != null
+          ? Value(isActive)
+          : (this.isActive != null
+                ? Value(this.isActive!)
+                : const Value.absent()),
+      userId: user != null
+          ? Value(user)
+          : (this.user != null ? Value(this.user!) : const Value.absent()),
       // userData: userData != null ? Value(userData) : (this.userData != null ? Value(this.userData!) : const Value.absent()),
-      isSynced: isSynced != null ? Value(isSynced) : (this.isSynced != null ? Value(this.isSynced!) : const Value.absent()),
-      tempId: tempId != null ? Value(tempId) : (this.tempId != null ? Value(this.tempId!) : const Value.absent()),
-      created: created != null ? Value(created) : (this.created != null ? Value(this.created!) : const Value.absent()),
-      updated: updated != null ? Value(updated) : (this.updated != null ? Value(this.updated!) : const Value.absent()),
+      isSynced: isSynced != null
+          ? Value(isSynced)
+          : (this.isSynced != null
+                ? Value(this.isSynced!)
+                : const Value.absent()),
+      tempId: tempId != null
+          ? Value(tempId)
+          : (this.tempId != null ? Value(this.tempId!) : const Value.absent()),
+      created: created != null
+          ? Value(created)
+          : (this.created != null
+                ? Value(this.created!)
+                : const Value.absent()),
+      updated: updated != null
+          ? Value(updated)
+          : (this.updated != null
+                ? Value(this.updated!)
+                : const Value.absent()),
     );
   }
-
 }

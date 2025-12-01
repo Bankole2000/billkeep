@@ -163,7 +163,7 @@ class CategoryTile extends ConsumerWidget {
 
     if (confirmed == true && context.mounted) {
       try {
-        await ref.read(categoryRepositoryProvider).deleteCategory(category.id);
+        // await ref.read(categoryRepositoryProvider).deleteCategory(category.id);
 
         if (context.mounted) {
           ScaffoldMessenger.of(
@@ -382,14 +382,14 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
   void _saveCategory() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await ref
-            .read(categoryRepositoryProvider)
-            .createCategory(
-              name: _nameController.text,
-              icon: _selectedIcon,
-              color: _selectedColor,
-              categoryGroupId: _selectedCategoryGroupId!,
-            );
+        // await ref
+        //     .read(categoryRepositoryProvider)
+        //     .createCategory(
+        //       name: _nameController.text,
+        //       icon: _selectedIcon,
+        //       color: _selectedColor,
+        //       categoryGroupId: _selectedCategoryGroupId!,
+        //     );
 
         if (mounted) {
           Navigator.pop(context);
@@ -581,14 +581,14 @@ class _EditCategoryDialogState extends ConsumerState<EditCategoryDialog> {
   void _updateCategory() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await ref
-            .read(categoryRepositoryProvider)
-            .updateCategory(
-              categoryId: widget.category.id,
-              name: _nameController.text,
-              icon: _selectedIcon,
-              color: _selectedColor,
-            );
+        // await ref
+        //     .read(categoryRepositoryProvider)
+        //     .updateCategory(
+        //       categoryId: widget.category.id,
+        //       name: _nameController.text,
+        //       icon: _selectedIcon,
+        //       color: _selectedColor,
+        //     );
 
         if (mounted) {
           Navigator.pop(context);

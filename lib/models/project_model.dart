@@ -81,6 +81,120 @@ class ProjectModel {
     );
   }
 
+  /// Converts a Drift database record to a ProjectModel
+  factory ProjectModel.fromDrift(Project project) {
+    return ProjectModel(
+      id: project.id,
+      name: project.name,
+      description: project.description,
+      iconCodePoint: project.iconCodePoint,
+      iconEmoji: project.iconEmoji,
+      iconType: project.iconType,
+      imageUrl: project.imageUrl,
+      localImagePath: project.localImagePath,
+      color: project.color,
+      isSynced: project.isSynced,
+      tempId: project.tempId,
+      isArchived: project.isArchived,
+      defaultWallet: project.defaultWallet,
+      user: project.userId,
+      status: project.status,
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt,
+    );
+  }
+
+
+  /// Compares this ProjectModel with another for equality
+  bool isEqualTo(ProjectModel other) {
+    return id == other.id &&
+        name == other.name &&
+        description == other.description &&
+        iconCodePoint == other.iconCodePoint &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        imageUrl == other.imageUrl &&
+        localImagePath == other.localImagePath &&
+        color == other.color &&
+        isSynced == other.isSynced &&
+        tempId == other.tempId &&
+        isArchived == other.isArchived &&
+        defaultWallet == other.defaultWallet &&
+        user == other.user &&
+        status == other.status;
+  }
+
+  /// Updates this ProjectModel with another, prioritizing non-null fields from the other
+  ProjectModel merge(ProjectModel other) {
+    return ProjectModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      description: other.description ?? description,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      imageUrl: other.imageUrl ?? imageUrl,
+      localImagePath: other.localImagePath ?? localImagePath,
+      color: other.color ?? color,
+      isSynced: other.isSynced ?? isSynced,
+      tempId: other.tempId ?? tempId,
+      isArchived: other.isArchived ?? isArchived,
+      defaultWallet: other.defaultWallet ?? defaultWallet,
+      defaultWalletData: other.defaultWalletData ?? defaultWalletData,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      status: other.status ?? status,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this ProjectModel with the given fields replaced with new values
+  ProjectModel copyWith({
+    String? id,
+    String? name,
+    String? description,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? imageUrl,
+    String? localImagePath,
+    String? color,
+    bool? isSynced,
+    String? tempId,
+    bool? isArchived,
+    String? defaultWallet,
+    WalletModel? defaultWalletData,
+    String? user,
+    UserModel? userData,
+    String? status,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ProjectModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      imageUrl: imageUrl ?? this.imageUrl,
+      localImagePath: localImagePath ?? this.localImagePath,
+      color: color ?? this.color,
+      isSynced: isSynced ?? this.isSynced,
+      tempId: tempId ?? this.tempId,
+      isArchived: isArchived ?? this.isArchived,
+      defaultWallet: defaultWallet ?? this.defaultWallet,
+      defaultWalletData: defaultWalletData ?? this.defaultWalletData,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      status: status ?? this.status,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

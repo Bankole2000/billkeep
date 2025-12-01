@@ -1,15 +1,14 @@
 import 'dart:io';
-import 'package:billkeep/providers/auth_provider.dart';
+import 'package:billkeep/models/user_model.dart';
+import 'package:billkeep/providers/local/user_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/providers/wallet_provider.dart';
-import 'package:billkeep/services/auth_service.dart';
 import 'package:billkeep/services/project_service.dart';
 import 'package:billkeep/services/wallet_service.dart';
 import 'package:billkeep/utils/id_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/database/database.dart';
-import 'package:billkeep/models/user_model.dart';
 import 'package:billkeep/models/wallet_model.dart';
 import 'package:billkeep/providers/currency_provider.dart';
 import 'package:billkeep/providers/user_preferences_provider.dart';
@@ -25,9 +24,10 @@ import 'package:billkeep/widgets/onboarding/wallet_step.dart';
 
 /// Refactored initial configuration screen for onboarding
 class InitialConfigScreen extends ConsumerStatefulWidget {
-  final User user;
+  // final UserModel user;
 
-  const InitialConfigScreen({super.key, required this.user});
+  // const InitialConfigScreen({super.key, required this.user});
+  const InitialConfigScreen({super.key});
 
   @override
   ConsumerState<InitialConfigScreen> createState() =>
@@ -35,17 +35,15 @@ class InitialConfigScreen extends ConsumerStatefulWidget {
 }
 
 class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
-  late WalletService _walletService;
-  late ProjectService _projectService;
-  late AuthService _authService;
+  late final WalletService _walletService = ref.read(walletServiceProvider);
+  late final ProjectService _projectService = ref.read(projectServiceProvider);
+  late final UserModel? user = ref.read(currentUserProvider);
 
   final _formKey = GlobalKey<FormState>();
   final PageController _pageController = PageController();
 
   int _currentStep = 0;
   bool _isLoading = false;
-
-
 
   // Services (non-repository services)
   final AnalyticsService _analytics = AnalyticsService();
@@ -78,13 +76,10 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   }
 
   void _initializeDefaultValues() {
-    _walletNameController.text = '${widget.user.username}\'s Wallet';
-    _projectNameController.text = '${widget.user.username}\'s Project';
+    _walletNameController.text = '${user!.name}\'s Wallet';
+    _projectNameController.text = '${user!.name}\'s Project';
     _projectDescriptionController.text =
-        'This is ${widget.user.username}\'s first project.';
-    _walletService = ref.read(walletServiceProvider);
-    _projectService = ref.read(projectServiceProvider);
-    _authService = ref.read(authServiceProvider);
+        'This is ${user!.name}\'s first project.';
   }
 
   @override
@@ -114,7 +109,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
         currencyAsync.when(
           data: (currency) {
             print(currency);
-            setState((){
+            setState(() {
               _selectedCurrency = currency;
             });
           },
@@ -131,7 +126,17 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
   void _setDefaultCurrency() {
     setState(() {
-      _selectedCurrency = Currency(id: 'USD', code: 'USD', name: 'US dollars', symbol: '\$', decimals: 2, isCrypto: false, isActive: true, tempId: IdGenerator.tempCurrency(), countryISO2: 'US');
+      _selectedCurrency = Currency(
+        id: 'USD',
+        code: 'USD',
+        name: 'US dollars',
+        symbol: '\$',
+        decimals: 2,
+        isCrypto: false,
+        isActive: true,
+        tempId: IdGenerator.tempCurrency(),
+        countryISO2: 'US',
+      );
     });
   }
 
@@ -169,9 +174,10 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     }
     print(_selectedCurrency);
     await _preferencesService.setDefaultCurrency(_selectedCurrency!);
-    await _preferencesService.syncToBackend(widget.user.id);
+    await _preferencesService.syncToBackend(user!.id!);
     ref.read(defaultCurrencyProvider.notifier).state = _selectedCurrency!;
-    ref.read(defaultCurrencyCodeProvider.notifier).state = _selectedCurrency!.code;
+    ref.read(defaultCurrencyCodeProvider.notifier).state =
+        _selectedCurrency!.code;
   }
 
   Future<void> _handleWalletStep() async {
@@ -184,22 +190,22 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     print(_initialBalanceController.text);
 
     print(_selectedCurrency);
-    print(widget.user.id);
-    _createdWallet = await _walletService.createWallet(
-      name: _walletNameController.text.trim(),
-      userId: widget.user.id,
-      walletType: _walletType!.name,
-      providerId: _walletProvider?.id,
-      currency: _selectedCurrency!,
-      balance: walletBalance,
-      imageUrl: _walletProvider?.imageUrl,
-      localImagePath: _walletProvider?.localImagePath,
-      isGlobal: true,
-      iconCodePoint: _walletProvider?.iconCodePoint,
-      iconEmoji: _walletProvider?.iconEmoji,
-      iconType: _walletProvider?.iconType,
-      color: _walletProvider?.color
-    );
+    print(user!.id);
+    // _createdWallet = await _walletService.createWallet(
+    //   name: _walletNameController.text.trim(),
+    //   userId: user!.id,
+    //   walletType: _walletType!.name,
+    //   providerId: _walletProvider?.id,
+    //   currency: _selectedCurrency!,
+    //   balance: walletBalance,
+    //   imageUrl: _walletProvider?.imageUrl,
+    //   localImagePath: _walletProvider?.localImagePath,
+    //   isGlobal: true,
+    //   iconCodePoint: _walletProvider?.iconCodePoint,
+    //   iconEmoji: _walletProvider?.iconEmoji,
+    //   iconType: _walletProvider?.iconType,
+    //   color: _walletProvider?.color,
+    // );
 
     // Set the created wallet as the default selected wallet for the project
     _selectedDefaultWalletId = _createdWallet?.id;
@@ -240,26 +246,24 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     walletsAsync.whenData((wallets) async {
       final defaultWallet = wallets[0];
       print(defaultWallet);
-      final project = await _projectService.createProject(
-        name: _projectNameController.text.trim(),
-        description: _projectDescriptionController.text.trim().isEmpty
-            ? null
-            : _projectDescriptionController.text.trim(),
-        defaultWallet: defaultWallet.id,
-        userId: widget.user.id,
-      );
+      // final project = await _projectService.createProject(
+      //   name: _projectNameController.text.trim(),
+      //   description: _projectDescriptionController.text.trim().isEmpty
+      //       ? null
+      //       : _projectDescriptionController.text.trim(),
+      //   defaultWallet: defaultWallet.id,
+      //   userId: widget.user.id,
+      // );
       _analytics.logInitialConfigCompleted(
         currency: _selectedCurrency!,
         walletType: _walletType!.name,
       );
-      if (mounted) {
-        _showSuccess('Setup complete! Project "${project.name}" created.');
-        _navigateToMain();
-      }
+      // if (mounted) {
+      //   _showSuccess('Setup complete! Project "${project.name}" created.');
+      //   _navigateToMain();
+      // }
     });
     // Create first project
-
-
   }
 
   void _skipSetup() {
@@ -290,26 +294,20 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
 
   void _navigateToMain() {
     _analytics.logOnboardingCompleted();
-    Navigator.pushReplacementNamed(context, '/main', arguments: widget.user);
+    Navigator.pushReplacementNamed(context, '/main', arguments: user);
   }
 
   void _showError(String message) {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
       );
     }
   }
 
   void _showSuccess(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
     );
   }
 
@@ -351,7 +349,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
                   children: [
                     CurrencyStep(
                       selectedCurrency: _selectedCurrency,
-                      onCurrencySelected: (currency) { 
+                      onCurrencySelected: (currency) {
                         print(currency);
                         setState(() => _selectedCurrency = currency);
                       },
@@ -363,13 +361,12 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
                       walletProvider: _walletProvider,
                       onWalletTypeChanged: (type) =>
                           setState(() => _walletType = type),
-                      onWalletProviderChanged: (provider)
-                          {
-                            print(provider);
-                            setState(() { 
-                              _walletProvider = provider;
-                            });
-                          },
+                      onWalletProviderChanged: (provider) {
+                        print(provider);
+                        setState(() {
+                          _walletProvider = provider;
+                        });
+                      },
                     ),
                     ProjectStep(
                       projectNameController: _projectNameController,

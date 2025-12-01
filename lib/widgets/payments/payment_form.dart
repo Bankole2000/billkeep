@@ -39,16 +39,16 @@ class _PaymentFormState extends ConsumerState<PaymentForm> {
       setState(() => _isLoading = true);
 
       try {
-        await ref
-            .read(expenseRepositoryProvider)
-            .recordPayment(
-              expenseId: widget.expense.id,
-              actualAmount: _amountController.text.trim(),
-              paymentDate: _paymentDate,
-              notes: _notesController.text.trim().isEmpty
-                  ? null
-                  : _notesController.text.trim(),
-            );
+        // await ref
+        //     .read(expenseRepositoryProvider)
+        //     .recordPayment(
+        //       expenseId: widget.expense.id,
+        //       actualAmount: _amountController.text.trim(),
+        //       paymentDate: _paymentDate,
+        //       notes: _notesController.text.trim().isEmpty
+        //           ? null
+        //           : _notesController.text.trim(),
+        //     );
 
         if (mounted) Navigator.pop(context);
       } catch (e) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../database/database.dart';
-import '../../providers/sms_provider.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/providers/sms_provider.dart';
 
 class TestRuleScreen extends ConsumerStatefulWidget {
   const TestRuleScreen({super.key});
@@ -47,33 +47,33 @@ class _TestRuleScreenState extends ConsumerState<TestRuleScreen> {
 
       if (_selectedRule != null) {
         // Test specific rule
-        final result = await ref
-            .read(smsRepositoryProvider)
-            .testRuleMatch(
-              rule: _selectedRule!,
-              smsText: smsText,
-              sender: sender,
-            );
-        setState(() => _testResult = result);
+        // final result = await ref
+        //     .read(smsRepositoryProvider)
+        //     .testRuleMatch(
+        //       rule: _selectedRule!,
+        //       smsText: smsText,
+        //       sender: sender,
+        //     );
+        // setState(() => _testResult = result);
       } else {
         // Test against all active rules
-        final rules = await ref
-            .read(smsRepositoryProvider)
-            .getActiveMessageRules();
+        // final rules = await ref
+        //     .read(smsRepositoryProvider)
+        //     .getActiveMessageRules();
 
-        for (final rule in rules) {
-          final result = await ref
-              .read(smsRepositoryProvider)
-              .testRuleMatch(rule: rule, smsText: smsText, sender: sender);
+        // for (final rule in rules) {
+        //   final result = await ref
+        //       .read(smsRepositoryProvider)
+        //       .testRuleMatch(rule: rule, smsText: smsText, sender: sender);
 
-          if (result['matched'] == true) {
-            setState(() {
-              _testResult = result;
-              _selectedRule = rule;
-            });
-            return;
-          }
-        }
+        //   if (result['matched'] == true) {
+        //     setState(() {
+        //       _testResult = result;
+        //       _selectedRule = rule;
+        //     });
+        //     return;
+        //   }
+        // }
 
         // No rule matched
         setState(() {

@@ -2,9 +2,9 @@ import 'package:billkeep/database/database.dart';
 import 'package:billkeep/screens/sms/sms_rules_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/sms_provider.dart';
-import '../../providers/project_provider.dart';
-import '../../utils/currency_helper.dart';
+import 'package:billkeep/providers/sms_provider.dart';
+import 'package:billkeep/providers/project_provider.dart';
+import 'package:billkeep/utils/currency_helper.dart';
 
 class SmsImportScreen extends ConsumerStatefulWidget {
   const SmsImportScreen({super.key});
@@ -24,16 +24,18 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
   }
 
   Future<void> _checkPermissions() async {
-    final hasPermission = await ref
-        .read(smsRepositoryProvider)
-        .hasSmsPermissions();
+    final hasPermission = true;
+    // final hasPermission = await ref
+    //     .read(smsRepositoryProvider)
+    //     .hasSmsPermissions();
     setState(() => _hasPermission = hasPermission);
   }
 
   Future<void> _requestPermissions() async {
-    final granted = await ref
-        .read(smsRepositoryProvider)
-        .requestSmsPermissions();
+    final granted = true;
+    // final granted = await ref
+    //     .read(smsRepositoryProvider)
+    //     .requestSmsPermissions();
     setState(() => _hasPermission = granted);
 
     if (granted) {
@@ -53,7 +55,7 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(smsRepositoryProvider).readRecentSms(daysBack: 30);
+      // await ref.read(smsRepositoryProvider).readRecentSms(daysBack: 30);
       if (mounted) {
         ScaffoldMessenger.of(
           context,
@@ -73,7 +75,7 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
   }
 
   Future<void> _setupDefaultRules() async {
-    await ref.read(smsRepositoryProvider).createDefaultRules();
+    // await ref.read(smsRepositoryProvider).createDefaultRules();
     if (mounted) {
       ScaffoldMessenger.of(
         context,
@@ -355,9 +357,9 @@ class _ParsedMessageCardState extends ConsumerState<_ParsedMessageCard> {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () async {
-                          await ref
-                              .read(smsRepositoryProvider)
-                              .dismissParsedMessage(widget.message.id);
+                          // await ref
+                          //     .read(smsRepositoryProvider)
+                          //     .dismissParsedMessage(widget.message.id);
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -375,13 +377,13 @@ class _ParsedMessageCardState extends ConsumerState<_ParsedMessageCard> {
                         onPressed: _selectedProjectId == null
                             ? null
                             : () async {
-                                await ref
-                                    .read(smsRepositoryProvider)
-                                    .confirmParsedMessage(
-                                      messageId: widget.message.id,
-                                      projectId: _selectedProjectId!,
-                                      createRecord: true,
-                                    );
+                                // await ref
+                                //     .read(smsRepositoryProvider)
+                                //     .confirmParsedMessage(
+                                //       messageId: widget.message.id,
+                                //       projectId: _selectedProjectId!,
+                                //       createRecord: true,
+                                //     );
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(

@@ -38,24 +38,24 @@ class _IncomeFormState extends ConsumerState<IncomeForm> {
       setState(() => _isLoading = true);
 
       try {
-        await ref
-            .read(incomeRepositoryProvider)
-            .createIncome(
-              projectId: widget.projectId,
-              description: _descriptionController.text.trim(),
-              amount: _amountController.text.trim(),
-              type: _type,
-              startDate: _dateReceived,
-              invoiceNumber: _invoiceController.text.trim().isEmpty
-                  ? null
-                  : _invoiceController.text.trim(),
-              notes: _notesController.text.trim().isEmpty
-                  ? null
-                  : _notesController.text.trim(),
-              createInitialPayment: _type == 'RECURRING'
-                  ? _createInitialPayment
-                  : true,
-            );
+        // await ref
+        //     .read(incomeRepositoryProvider)
+        //     .createIncome(
+        //       projectId: widget.projectId,
+        //       description: _descriptionController.text.trim(),
+        //       amount: _amountController.text.trim(),
+        //       type: _type,
+        //       startDate: _dateReceived,
+        //       invoiceNumber: _invoiceController.text.trim().isEmpty
+        //           ? null
+        //           : _invoiceController.text.trim(),
+        //       notes: _notesController.text.trim().isEmpty
+        //           ? null
+        //           : _notesController.text.trim(),
+        //       createInitialPayment: _type == 'RECURRING'
+        //           ? _createInitialPayment
+        //           : true,
+        //     );
 
         if (mounted) Navigator.pop(context);
       } catch (e) {

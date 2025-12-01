@@ -69,6 +69,98 @@ class ContactInfoModel {
     );
   }
 
+  /// Converts a Drift database record to a ContactInfoModel
+  factory ContactInfoModel.fromDrift(ContactInfoData contactInfo) {
+    return ContactInfoModel(
+      id: contactInfo.id,
+      name: contactInfo.name,
+      type: contactInfo.type,
+      stringValue: contactInfo.stringValue,
+      numberValue: contactInfo.numberValue,
+      booleanValue: contactInfo.booleanValue,
+      dateTimeValue: contactInfo.dateTimeValue,
+      urlValue: contactInfo.urlValue,
+      emailValue: contactInfo.emailValue,
+      user: contactInfo.userId,
+      contact: contactInfo.contactId,
+      createdAt: contactInfo.createdAt,
+      updatedAt: contactInfo.updatedAt,
+    );
+  }
+
+
+  /// Compares this ContactInfoModel with another for equality
+  bool isEqualTo(ContactInfoModel other) {
+    return id == other.id &&
+        name == other.name &&
+        type == other.type &&
+        stringValue == other.stringValue &&
+        numberValue == other.numberValue &&
+        booleanValue == other.booleanValue &&
+        dateTimeValue == other.dateTimeValue &&
+        urlValue == other.urlValue &&
+        emailValue == other.emailValue &&
+        user == other.user &&
+        contact == other.contact;
+  }
+
+  /// Updates this ContactInfoModel with another, prioritizing non-null fields from the other
+  ContactInfoModel merge(ContactInfoModel other) {
+    return ContactInfoModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      type: other.type ?? type,
+      stringValue: other.stringValue ?? stringValue,
+      numberValue: other.numberValue ?? numberValue,
+      booleanValue: other.booleanValue ?? booleanValue,
+      dateTimeValue: other.dateTimeValue ?? dateTimeValue,
+      urlValue: other.urlValue ?? urlValue,
+      emailValue: other.emailValue ?? emailValue,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      contact: other.contact ?? contact,
+      contactData: other.contactData ?? contactData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this ContactInfoModel with the given fields replaced with new values
+  ContactInfoModel copyWith({
+    String? id,
+    String? name,
+    String? type,
+    String? stringValue,
+    int? numberValue,
+    bool? booleanValue,
+    DateTime? dateTimeValue,
+    String? urlValue,
+    String? emailValue,
+    String? user,
+    UserModel? userData,
+    String? contact,
+    ContactModel? contactData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ContactInfoModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      urlValue: urlValue ?? this.urlValue,
+      emailValue: emailValue ?? this.emailValue,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      contact: contact ?? this.contact,
+      contactData: contactData ?? this.contactData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

@@ -1,4 +1,3 @@
-import 'package:billkeep/database/database.dart';
 import 'package:billkeep/models/user_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:billkeep/utils/default_merchants.dart';
@@ -77,17 +76,22 @@ class _BillKeepAppState extends ConsumerState<BillKeepApp> {
             _isInitialized ? const OnboardingCoordinator() : SplashScreen(),
         '/onboarding/welcome': (context) => const WelcomeCarouselScreen(),
         '/auth': (context) => const AuthScreen(),
-        '/onboarding/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/onboarding/forgot-password': (context) =>
+            const ForgotPasswordScreen(),
         '/onboarding/verify-email': (context) {
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          final args =
+              ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
           return EmailVerificationScreen(
-            user: args['user'] as User,
+            user: args['user'] as UserModel,
             email: args['email'] as String,
           );
         },
         '/onboarding/config': (context) {
-          final user = ModalRoute.of(context)!.settings.arguments as User;
-          return InitialConfigScreen(user: user);
+          // final args =
+          //     ModalRoute.of(context)!.settings.arguments
+          //         as Map<String, dynamic>;
+          return InitialConfigScreen();
         },
         '/main': (context) => const MainNavigationScreen(),
       },

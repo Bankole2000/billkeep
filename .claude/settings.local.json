@@ -27,7 +27,11 @@
       "Bash(if [ -f /Users/bankoleesan/projects/flutter-projects/billkeep/lib/models/budget_metadata_model.dart ])",
       "Bash(then cat /Users/bankoleesan/projects/flutter-projects/billkeep/lib/models/budget_metadata_model.dart)",
       "Bash(else echo \"BudgetMetadata model does not exist\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(flutter analyze:*)",
+      "Bash(python:*)",
+      "Bash(dart run build_runner:*)",
+      "Bash(paste:*)"
     ],
     "deny": [],
     "ask": []

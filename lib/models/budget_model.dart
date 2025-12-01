@@ -113,6 +113,151 @@ class BudgetModel {
     );
   }
 
+  /// Converts a Drift database record to a BudgetModel
+  factory BudgetModel.fromDrift(Budget budget) {
+    return BudgetModel(
+      id: budget.id,
+      name: budget.name,
+      description: budget.description,
+      tempId: budget.tempId,
+      isSynced: budget.isSynced,
+      underLimitGoal: budget.underLimitGoal,
+      startDate: budget.startDate,
+      endDate: budget.endDate,
+      isActive: budget.isActive,
+      project: budget.projectId,
+      limitAmount: budget.limitAmount,
+      spentAmount: budget.spentAmount,
+      overBudgetAllowance: budget.overBudgetAllowance,
+      iconCodePoint: budget.iconCodePoint,
+      iconEmoji: budget.iconEmoji,
+      iconType: budget.iconType,
+      color: budget.color,
+      user: budget.userId,
+      currency: budget.currency,
+      category: budget.categoryId,
+      createdAt: budget.createdAt,
+      updatedAt: budget.updatedAt,
+    );
+  }
+
+
+  /// Compares this BudgetModel with another for equality
+  bool isEqualTo(BudgetModel other) {
+    return id == other.id &&
+        name == other.name &&
+        description == other.description &&
+        tempId == other.tempId &&
+        isSynced == other.isSynced &&
+        underLimitGoal == other.underLimitGoal &&
+        startDate == other.startDate &&
+        endDate == other.endDate &&
+        isActive == other.isActive &&
+        project == other.project &&
+        limitAmount == other.limitAmount &&
+        spentAmount == other.spentAmount &&
+        overBudgetAllowance == other.overBudgetAllowance &&
+        iconCodePoint == other.iconCodePoint &&
+        iconEmoji == other.iconEmoji &&
+        iconType == other.iconType &&
+        color == other.color &&
+        user == other.user &&
+        currency == other.currency &&
+        category == other.category;
+  }
+
+  /// Updates this BudgetModel with another, prioritizing non-null fields from the other
+  BudgetModel merge(BudgetModel other) {
+    return BudgetModel(
+      id: other.id ?? id,
+      name: other.name ?? name,
+      description: other.description ?? description,
+      tempId: other.tempId ?? tempId,
+      isSynced: other.isSynced ?? isSynced,
+      underLimitGoal: other.underLimitGoal ?? underLimitGoal,
+      startDate: other.startDate ?? startDate,
+      endDate: other.endDate ?? endDate,
+      isActive: other.isActive ?? isActive,
+      project: other.project ?? project,
+      projectData: other.projectData ?? projectData,
+      limitAmount: other.limitAmount ?? limitAmount,
+      spentAmount: other.spentAmount ?? spentAmount,
+      overBudgetAllowance: other.overBudgetAllowance ?? overBudgetAllowance,
+      iconCodePoint: other.iconCodePoint ?? iconCodePoint,
+      iconEmoji: other.iconEmoji ?? iconEmoji,
+      iconType: other.iconType ?? iconType,
+      color: other.color ?? color,
+      user: other.user ?? user,
+      userData: other.userData ?? userData,
+      currency: other.currency ?? currency,
+      currencyData: other.currencyData ?? currencyData,
+      category: other.category ?? category,
+      categoryData: other.categoryData ?? categoryData,
+      createdAt: other.createdAt ?? createdAt,
+      updatedAt: other.updatedAt ?? updatedAt,
+    );
+  }
+  /// Creates a copy of this BudgetModel with the given fields replaced with new values
+  BudgetModel copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? tempId,
+    bool? isSynced,
+    int? underLimitGoal,
+    DateTime? startDate,
+    DateTime? endDate,
+    bool? isActive,
+    String? project,
+    ProjectModel? projectData,
+    int? limitAmount,
+    int? spentAmount,
+    int? overBudgetAllowance,
+    int? iconCodePoint,
+    String? iconEmoji,
+    String? iconType,
+    String? color,
+    String? user,
+    UserModel? userData,
+    Map<String, dynamic>? metadata,
+    String? currency,
+    CurrencyModel? currencyData,
+    String? category,
+    CategoryModel? categoryData,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return BudgetModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      tempId: tempId ?? this.tempId,
+      isSynced: isSynced ?? this.isSynced,
+      underLimitGoal: underLimitGoal ?? this.underLimitGoal,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      isActive: isActive ?? this.isActive,
+      project: project ?? this.project,
+      projectData: projectData ?? this.projectData,
+      limitAmount: limitAmount ?? this.limitAmount,
+      spentAmount: spentAmount ?? this.spentAmount,
+      overBudgetAllowance: overBudgetAllowance ?? this.overBudgetAllowance,
+      iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      iconEmoji: iconEmoji ?? this.iconEmoji,
+      iconType: iconType ?? this.iconType,
+      color: color ?? this.color,
+      user: user ?? this.user,
+      userData: userData ?? this.userData,
+      metadata: metadata ?? this.metadata,
+      currency: currency ?? this.currency,
+      currencyData: currencyData ?? this.currencyData,
+      category: category ?? this.category,
+      categoryData: categoryData ?? this.categoryData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

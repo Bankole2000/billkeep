@@ -1,4 +1,5 @@
 import 'package:billkeep/config/app_config.dart';
+import 'package:billkeep/models/user_model.dart';
 import 'package:billkeep/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,8 +23,11 @@ class AuthScreen extends ConsumerStatefulWidget {
 }
 
 class _AuthScreenState extends ConsumerState<AuthScreen> {
+  late final AuthService _authService = ref.read(authServiceProvider);
+  // final AnalyticsService _analytics = AnalyticsService();
+
   final _formKey = GlobalKey<FormState>();
-  final pb = PocketBase(AppConfig.pocketbaseUrl);
+  // final pb = PocketBase(AppConfig.pocketbaseUrl);
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -33,13 +37,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   bool _agreedToTerms = false;
   String? _errorMessage;
 
-  final AuthService _authService = AuthService();
-  final AnalyticsService _analytics = AnalyticsService();
-
   @override
   void initState() {
     super.initState();
-    _analytics.logAuthScreenViewed(isSignup: !_isLogin);
+    // _analytics.logAuthScreenViewed(isSignup: !_isLogin);
   }
 
   @override
@@ -47,125 +48,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     _emailController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
-    _authService.dispose();
     super.dispose();
-  }
-
-  Future<void> _handleSubmit() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    if (!_isLogin && !_agreedToTerms) {
-      setState(() {
-        _errorMessage = 'Please agree to the Terms of Service and Privacy Policy';
-      });
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      if (_isLogin) {
-        await _handleLogin();
-      } else {
-        await _handleSignup();
-      }
-    } catch (e) {
-      if (_isLogin) {
-        _analytics.logLoginFailure(method: 'email', error: e.toString());
-      } else {
-        _analytics.logSignupFailure(method: 'email', error: e.toString());
-      }
-
-      setState(() {
-        _errorMessage = e.toString();
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _handleLogin() async {
-    _analytics.logLoginAttempt(method: 'email');
-
-    final response = await _authService.login(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-    );
-
-    _analytics.logLoginSuccess(method: 'email');
-
-    if (mounted) {
-      Navigator.pushReplacementNamed(
-        context,
-        '/main',
-        arguments: response.user,
-      );
-    }
-  }
-
-  Future<void> _handleSignup() async {
-    _analytics.logSignupAttempt(method: 'email');
-
-    final response = await _authService.signup(
-      email: _emailController.text.trim(),
-      username: _usernameController.text.trim(),
-      password: _passwordController.text,
-    );
-
-    _analytics.logSignupSuccess(method: 'email');
-
-    if (mounted) {
-      Navigator.pushReplacementNamed(
-        context,
-        '/onboarding/verify-email',
-        arguments: {
-          'user': response.user,
-          'email': _emailController.text.trim(),
-        },
-      );
-    }
-  }
-
-  void _toggleAuthMode() {
-    setState(() {
-      _isLogin = !_isLogin;
-      _errorMessage = null;
-      _formKey.currentState?.reset();
-      _agreedToTerms = false;
-    });
-    _analytics.logAuthScreenViewed(isSignup: !_isLogin);
-  }
-
-  Future<void> _launchURL(String urlString) async {
-    final url = Uri.parse(urlString);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not launch URL')),
-        );
-      }
-    }
-  }
-
-  void _handleForgotPassword() {
-    _analytics.logForgotPasswordViewed();
-    Navigator.pushNamed(context, '/onboarding/forgot-password');
-  }
-
-  void _handleViewTerms() {
-    _analytics.logTermsOfServiceViewed();
-    _launchURL('https://yourdomain.com/terms');
-  }
-
-  void _handleViewPrivacy() {
-    _analytics.logPrivacyPolicyViewed();
-    _launchURL('https://yourdomain.com/privacy');
   }
 
   @override
@@ -218,10 +101,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   const SizedBox(height: 24),
 
                   // Toggle between login and signup
-                  AuthToggle(
-                    isLogin: _isLogin,
-                    onToggle: _toggleAuthMode,
-                  ),
+                  AuthToggle(isLogin: _isLogin, onToggle: _toggleAuthMode),
                 ],
               ),
             ),
@@ -229,5 +109,135 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleSubmit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (!_isLogin && !_agreedToTerms) {
+      setState(() {
+        _errorMessage =
+            'Please agree to the Terms of Service and Privacy Policy';
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      if (_isLogin) {
+        await _handleLogin();
+      } else {
+        await _handleSignup();
+      }
+    } catch (e) {
+      // if (_isLogin) {
+      //   _analytics.logLoginFailure(method: 'email', error: e.toString());
+      // } else {
+      //   _analytics.logSignupFailure(method: 'email', error: e.toString());
+      // }
+      print(e);
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleLogin() async {
+    // _analytics.logLoginAttempt(method: 'email');
+
+    final response = await _authService.login(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+    );
+
+    // _analytics.logLoginSuccess(method: 'email');
+
+    if (mounted) {
+      Navigator.pushReplacementNamed(
+        context,
+        '/main',
+        // arguments: response.user,
+        arguments: ref.watch(currentUserProvider),
+      );
+    }
+  }
+
+  Future<void> _handleSignup() async {
+    // _analytics.logSignupAttempt(method: 'email');
+    final userToSignup = UserModel(
+      email: _emailController.text.trim(),
+      name: _usernameController.text.trim(),
+      emailVisibility: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      verified: false,
+    );
+
+    final response = await _authService.signup(
+      newUser: userToSignup,
+      password: _passwordController.text,
+    );
+
+    // _analytics.logSignupSuccess(method: 'email');
+    final user = ref.watch(currentUserProvider);
+    print(user);
+    if (mounted) {
+      Navigator.pushReplacementNamed(
+        context,
+        '/onboarding/verify-email',
+        arguments: {'user': user, 'email': _emailController.text.trim()},
+      );
+    }
+  }
+
+  void _toggleAuthMode() {
+    setState(() {
+      _isLogin = !_isLogin;
+      _errorMessage = null;
+      _formKey.currentState?.reset();
+      _agreedToTerms = false;
+    });
+    // _analytics.logAuthScreenViewed(isSignup: !_isLogin);
+  }
+
+  Future<void> _launchURL(String urlString) async {
+    final url = Uri.parse(urlString);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Could not launch URL')));
+      }
+    }
+  }
+
+  void _handleForgotPassword() {
+    // _analytics.logForgotPasswordViewed();
+    Navigator.pushNamed(context, '/onboarding/forgot-password');
+  }
+
+  void _handleViewTerms() {
+    // _analytics.logTermsOfServiceViewed();
+    _launchURL('https://yourdomain.com/terms');
+  }
+
+  void _handleViewPrivacy() {
+    // _analytics.logPrivacyPolicyViewed();
+    _launchURL('https://yourdomain.com/privacy');
   }
 }
