@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
-import '../database/database.dart';
-import '../models/merchant_model.dart';
-import '../utils/id_generator.dart';
+import 'package:billkeep/database/database.dart';
+import 'package:billkeep/models/merchant_model.dart';
+import 'package:billkeep/utils/id_generator.dart';
 import 'database_provider.dart';
-import '../repositories/merchant_repository.dart';
+import 'package:billkeep/repositories/merchant_repository.dart';
 
 // Stream provider for all merchants
 final allMerchantsProvider = StreamProvider<List<Merchant>>((ref) {

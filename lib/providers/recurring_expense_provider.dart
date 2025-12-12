@@ -1,11 +1,7 @@
+import 'package:billkeep/providers/database_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../database/database.dart';
 import '../services/recurring_expense_service.dart';
-
-// Provider for database
-final databaseProvider = Provider<AppDatabase>((ref) {
-  return AppDatabase();
-});
 
 // Provider for recurring expense service
 final recurringExpenseServiceProvider = Provider<RecurringExpenseService>((

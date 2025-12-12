@@ -27,6 +27,8 @@ enum TaskType { todo, shopping, meeting }
 
 enum ViewModeOptions { grid, list }
 
+enum DynamicFieldType { string, number, boolean, dateTime, url, email, user, object } 
+
 const transactionIcons = {
   TransactionType.expense: Icons.output_outlined,
   TransactionType.income: Icons.input,

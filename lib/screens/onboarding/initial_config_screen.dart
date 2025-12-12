@@ -1,11 +1,16 @@
 import 'dart:io';
+import 'package:billkeep/models/preference_model.dart';
 import 'package:billkeep/models/user_model.dart';
 import 'package:billkeep/providers/local/user_provider.dart';
+import 'package:billkeep/providers/preferences_provider.dart';
 import 'package:billkeep/providers/ui_providers.dart';
 import 'package:billkeep/providers/wallet_provider.dart';
+import 'package:billkeep/services/preference_service.dart';
 import 'package:billkeep/services/project_service.dart';
 import 'package:billkeep/services/wallet_service.dart';
+import 'package:billkeep/utils/app_enums.dart';
 import 'package:billkeep/utils/id_generator.dart';
+import 'package:billkeep/utils/preference_enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:billkeep/database/database.dart';
@@ -37,6 +42,8 @@ class InitialConfigScreen extends ConsumerStatefulWidget {
 class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   late final WalletService _walletService = ref.read(walletServiceProvider);
   late final ProjectService _projectService = ref.read(projectServiceProvider);
+  late final PreferenceService _preferenceService =
+      ref.read(preferenceServiceProvider);
   late final UserModel? user = ref.read(currentUserProvider);
 
   final _formKey = GlobalKey<FormState>();
@@ -46,8 +53,8 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   bool _isLoading = false;
 
   // Services (non-repository services)
-  final AnalyticsService _analytics = AnalyticsService();
-  final UserPreferencesService _preferencesService = UserPreferencesService();
+  // final AnalyticsService _analytics = AnalyticsService();
+  // final UserPreferencesService _preferencesService = UserPreferencesService();
 
   // Step 1: Currency selection
   Currency? _selectedCurrency;
@@ -72,7 +79,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
     _initializeDefaultValues();
     _suggestCurrency();
     print(_selectedCurrency);
-    _analytics.logInitialConfigViewed(step: _currentStep);
+    // _analytics.logInitialConfigViewed(step: _currentStep);
   }
 
   void _initializeDefaultValues() {
@@ -173,8 +180,20 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       throw Exception('Please select a currency to continue.');
     }
     print(_selectedCurrency);
-    await _preferencesService.setDefaultCurrency(_selectedCurrency!);
-    await _preferencesService.syncToBackend(user!.id!);
+    final preferenceInfo = PreferenceKey.DEFAULT_CURRENCY.info;
+    final user = ref.read(currentUserProvider);
+    print(user!.id);
+    final newPreference = PreferenceModel(
+      key: preferenceInfo.key.name, 
+      stringValue: _selectedCurrency!.code, 
+      displayName: preferenceInfo.displayName.toString(), 
+      type: DynamicFieldType.object.name,
+      objectValue: _selectedCurrency!.toJson(),
+      user: user.id
+      );
+    print(newPreference.objectValue);
+    await _preferenceService.createPreference(newPreference);
+    // await _preferencesService.syncToBackend(user!.id!);
     ref.read(defaultCurrencyProvider.notifier).state = _selectedCurrency!;
     ref.read(defaultCurrencyCodeProvider.notifier).state =
         _selectedCurrency!.code;
@@ -218,7 +237,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
-    _analytics.logInitialConfigViewed(step: _currentStep);
+    // _analytics.logInitialConfigViewed(step: _currentStep);
   }
 
   void _previousStep() {
@@ -254,10 +273,10 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
       //   defaultWallet: defaultWallet.id,
       //   userId: widget.user.id,
       // );
-      _analytics.logInitialConfigCompleted(
-        currency: _selectedCurrency!,
-        walletType: _walletType!.name,
-      );
+      // _analytics.logInitialConfigCompleted(
+      //   currency: _selectedCurrency!,
+      //   walletType: _walletType!.name,
+      // );
       // if (mounted) {
       //   _showSuccess('Setup complete! Project "${project.name}" created.');
       //   _navigateToMain();
@@ -282,7 +301,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              _analytics.logInitialConfigSkipped(step: _currentStep);
+              // _analytics.logInitialConfigSkipped(step: _currentStep);
               _navigateToMain();
             },
             child: const Text('Skip'),
@@ -293,7 +312,7 @@ class _InitialConfigScreenState extends ConsumerState<InitialConfigScreen> {
   }
 
   void _navigateToMain() {
-    _analytics.logOnboardingCompleted();
+    // _analytics.logOnboardingCompleted();
     Navigator.pushReplacementNamed(context, '/main', arguments: user);
   }
 

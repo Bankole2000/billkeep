@@ -11,8 +11,6 @@ class GoalMetadataModel {
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? user;
   final UserModel? userData;
   final String? goal;
@@ -28,8 +26,6 @@ class GoalMetadataModel {
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.user,
     this.userData,
     this.goal,
@@ -49,8 +45,6 @@ class GoalMetadataModel {
       dateTimeValue: json['dateTimeValue'] != null
           ? DateTime.parse(json['dateTimeValue'] as String)
           : null,
-      urlValue: json['urlValue'] as String?,
-      emailValue: json['emailValue'] as String?,
       user: json['user'] as String?,
       userData: json['expand']?['user'] != null
           ? UserModel.fromJson(json['expand']['user'] as Map<String, dynamic>)
@@ -78,8 +72,6 @@ class GoalMetadataModel {
       numberValue: metadata.numberValue,
       booleanValue: metadata.booleanValue,
       dateTimeValue: metadata.dateTimeValue,
-      urlValue: metadata.urlValue,
-      emailValue: metadata.emailValue,
       user: metadata.userId,
       goal: metadata.goalId,
       createdAt: metadata.createdAt,
@@ -97,8 +89,6 @@ class GoalMetadataModel {
         numberValue == other.numberValue &&
         booleanValue == other.booleanValue &&
         dateTimeValue == other.dateTimeValue &&
-        urlValue == other.urlValue &&
-        emailValue == other.emailValue &&
         user == other.user &&
         goal == other.goal;
   }
@@ -113,8 +103,6 @@ class GoalMetadataModel {
       numberValue: other.numberValue ?? numberValue,
       booleanValue: other.booleanValue ?? booleanValue,
       dateTimeValue: other.dateTimeValue ?? dateTimeValue,
-      urlValue: other.urlValue ?? urlValue,
-      emailValue: other.emailValue ?? emailValue,
       user: other.user ?? user,
       userData: other.userData ?? userData,
       goal: other.goal ?? goal,
@@ -149,8 +137,6 @@ class GoalMetadataModel {
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       user: user ?? this.user,
       userData: userData ?? this.userData,
       goal: goal ?? this.goal,
@@ -169,8 +155,6 @@ class GoalMetadataModel {
       'numberValue': numberValue,
       'booleanValue': booleanValue,
       'dateTimeValue': dateTimeValue?.toIso8601String(),
-      'urlValue': urlValue,
-      'emailValue': emailValue,
       'user': user,
       'goal': goal,
       'createdAt': createdAt?.toIso8601String(),
@@ -204,8 +188,6 @@ class GoalMetadataModel {
       numberValue: numberValue != null ? Value(numberValue) : (this.numberValue != null ? Value(this.numberValue!) : const Value.absent()),
       booleanValue: booleanValue != null ? Value(booleanValue) : (this.booleanValue != null ? Value(this.booleanValue!) : const Value.absent()),
       dateTimeValue: dateTimeValue != null ? Value(dateTimeValue) : (this.dateTimeValue != null ? Value(this.dateTimeValue!) : const Value.absent()),
-      urlValue: urlValue != null ? Value(urlValue) : (this.urlValue != null ? Value(this.urlValue!) : const Value.absent()),
-      emailValue: emailValue != null ? Value(emailValue) : (this.emailValue != null ? Value(this.emailValue!) : const Value.absent()),
       userId: user != null ? Value(user) : (this.user != null ? Value(this.user!) : const Value.absent()),
       // userData: userData != null ? Value(userData) : (this.userData != null ? Value(this.userData!) : const Value.absent()),
       goalId: goal != null ? Value(goal) : (this.goal != null ? Value(this.goal!) : const Value.absent()),

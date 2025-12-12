@@ -1,13 +1,16 @@
 import 'package:billkeep/repositories/user_repository.dart';
+import 'package:billkeep/utils/preference_enums.dart';
 import 'package:dio/dio.dart';
 import 'package:billkeep/models/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_client.dart';
 import 'base_api_service.dart';
 
 class AuthService extends BaseApiService {
   final UserRepository _repository;
   final void Function(UserModel?) onUserSynced;
+  SharedPreferences? _sharedPreferences;
 
   AuthService(this._repository, {required this.onUserSynced}) : super() {
     print('AuthService initialized');
@@ -19,9 +22,14 @@ class AuthService extends BaseApiService {
     subscribeToCollection('users', _handleUserEvent);
   }
 
+   /// Initialize SharedPreferences
+  Future<void> _initializeSharedPreferences() async {
+    _sharedPreferences ??= await SharedPreferences.getInstance();
+  }
+
   /// Handle realtime user events from PocketBase
   void _handleUserEvent(RecordSubscriptionEvent e) {
-    print('Realtime update for users: ${e.record.toString()}');
+    print('Realtime update for users: ${e.record.toString()} ${e.action.toString()}');
     // TODO: Check if event is relevant to current user
     try {
       switch (e.action) {
@@ -87,6 +95,9 @@ class AuthService extends BaseApiService {
     required UserModel newUser,
     required String password,
   }) async {
+
+    await _initializeSharedPreferences();
+
     try {
       final response = await dio.post(
         '/users/records',
@@ -101,9 +112,11 @@ class AuthService extends BaseApiService {
 
       final savedUser = await _repository.getUserById(localUserId);
 
+      _sharedPreferences!.setString(PreferenceKey.LOGGED_IN_USER.toString(), localUserId);
+
       onUserSynced.call(savedUser!);
 
-      return savedUser!;
+      return savedUser;
     } on DioException catch (e) {
       throw _handleError(e);
     }

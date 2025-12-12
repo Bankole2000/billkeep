@@ -79,9 +79,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -90,9 +91,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -203,11 +205,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      ),
+      )!,
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      ),
+      )!,
     );
   }
 
@@ -224,8 +226,8 @@ class User extends DataClass implements Insertable<User> {
   final bool? verified;
   final String? name;
   final String? avatar;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const User({
     required this.id,
     this.email,
@@ -233,8 +235,8 @@ class User extends DataClass implements Insertable<User> {
     this.verified,
     this.name,
     this.avatar,
-    this.createdAt,
-    this.updatedAt,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -255,12 +257,8 @@ class User extends DataClass implements Insertable<User> {
     if (!nullToAbsent || avatar != null) {
       map['avatar'] = Variable<String>(avatar);
     }
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
-    }
-    if (!nullToAbsent || updatedAt != null) {
-      map['updated_at'] = Variable<DateTime>(updatedAt);
-    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -280,12 +278,8 @@ class User extends DataClass implements Insertable<User> {
       avatar: avatar == null && nullToAbsent
           ? const Value.absent()
           : Value(avatar),
-      createdAt: createdAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(updatedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -301,8 +295,8 @@ class User extends DataClass implements Insertable<User> {
       verified: serializer.fromJson<bool?>(json['verified']),
       name: serializer.fromJson<String?>(json['name']),
       avatar: serializer.fromJson<String?>(json['avatar']),
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -315,8 +309,8 @@ class User extends DataClass implements Insertable<User> {
       'verified': serializer.toJson<bool?>(verified),
       'name': serializer.toJson<String?>(name),
       'avatar': serializer.toJson<String?>(avatar),
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
-      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -327,8 +321,8 @@ class User extends DataClass implements Insertable<User> {
     Value<bool?> verified = const Value.absent(),
     Value<String?> name = const Value.absent(),
     Value<String?> avatar = const Value.absent(),
-    Value<DateTime?> createdAt = const Value.absent(),
-    Value<DateTime?> updatedAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => User(
     id: id ?? this.id,
     email: email.present ? email.value : this.email,
@@ -338,8 +332,8 @@ class User extends DataClass implements Insertable<User> {
     verified: verified.present ? verified.value : this.verified,
     name: name.present ? name.value : this.name,
     avatar: avatar.present ? avatar.value : this.avatar,
-    createdAt: createdAt.present ? createdAt.value : this.createdAt,
-    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   User copyWithCompanion(UsersCompanion data) {
     return User(
@@ -403,8 +397,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<bool?> verified;
   final Value<String?> name;
   final Value<String?> avatar;
-  final Value<DateTime?> createdAt;
-  final Value<DateTime?> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const UsersCompanion({
     this.id = const Value.absent(),
@@ -459,8 +453,8 @@ class UsersCompanion extends UpdateCompanion<User> {
     Value<bool?>? verified,
     Value<String?>? name,
     Value<String?>? avatar,
-    Value<DateTime?>? createdAt,
-    Value<DateTime?>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
     return UsersCompanion(
@@ -518,6 +512,795 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('verified: $verified, ')
           ..write('name: $name, ')
           ..write('avatar: $avatar, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PreferencesTable extends Preferences
+    with TableInfo<$PreferencesTable, Preference> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PreferencesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _displayNameMeta = const VerificationMeta(
+    'displayName',
+  );
+  @override
+  late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
+    'display_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stringValueMeta = const VerificationMeta(
+    'stringValue',
+  );
+  @override
+  late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
+    'string_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberValueMeta = const VerificationMeta(
+    'numberValue',
+  );
+  @override
+  late final GeneratedColumn<int> numberValue = GeneratedColumn<int>(
+    'number_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _booleanValueMeta = const VerificationMeta(
+    'booleanValue',
+  );
+  @override
+  late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
+    'boolean_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("boolean_value" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _dateTimeValueMeta = const VerificationMeta(
+    'dateTimeValue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateTimeValue =
+      GeneratedColumn<DateTime>(
+        'date_time_value',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _objectValueMeta = const VerificationMeta(
+    'objectValue',
+  );
+  @override
+  late final GeneratedColumn<String> objectValue = GeneratedColumn<String>(
+    'object_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tempIdMeta = const VerificationMeta('tempId');
+  @override
+  late final GeneratedColumn<String> tempId = GeneratedColumn<String>(
+    'temp_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    displayName,
+    key,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    userId,
+    objectValue,
+    tempId,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'preferences';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Preference> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('display_name')) {
+      context.handle(
+        _displayNameMeta,
+        displayName.isAcceptableOrUnknown(
+          data['display_name']!,
+          _displayNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('string_value')) {
+      context.handle(
+        _stringValueMeta,
+        stringValue.isAcceptableOrUnknown(
+          data['string_value']!,
+          _stringValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('number_value')) {
+      context.handle(
+        _numberValueMeta,
+        numberValue.isAcceptableOrUnknown(
+          data['number_value']!,
+          _numberValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('boolean_value')) {
+      context.handle(
+        _booleanValueMeta,
+        booleanValue.isAcceptableOrUnknown(
+          data['boolean_value']!,
+          _booleanValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_time_value')) {
+      context.handle(
+        _dateTimeValueMeta,
+        dateTimeValue.isAcceptableOrUnknown(
+          data['date_time_value']!,
+          _dateTimeValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
+    if (data.containsKey('object_value')) {
+      context.handle(
+        _objectValueMeta,
+        objectValue.isAcceptableOrUnknown(
+          data['object_value']!,
+          _objectValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('temp_id')) {
+      context.handle(
+        _tempIdMeta,
+        tempId.isAcceptableOrUnknown(data['temp_id']!, _tempIdMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Preference map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Preference(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      displayName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_name'],
+      ),
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      stringValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}string_value'],
+      ),
+      numberValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_value'],
+      ),
+      booleanValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}boolean_value'],
+      ),
+      dateTimeValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_time_value'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      ),
+      objectValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}object_value'],
+      ),
+      tempId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_id'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+    );
+  }
+
+  @override
+  $PreferencesTable createAlias(String alias) {
+    return $PreferencesTable(attachedDatabase, alias);
+  }
+}
+
+class Preference extends DataClass implements Insertable<Preference> {
+  final String id;
+  final String? displayName;
+  final String key;
+  final String? type;
+  final String? stringValue;
+  final int? numberValue;
+  final bool? booleanValue;
+  final DateTime? dateTimeValue;
+  final String? userId;
+  final String? objectValue;
+  final String? tempId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  const Preference({
+    required this.id,
+    this.displayName,
+    required this.key,
+    this.type,
+    this.stringValue,
+    this.numberValue,
+    this.booleanValue,
+    this.dateTimeValue,
+    this.userId,
+    this.objectValue,
+    this.tempId,
+    this.createdAt,
+    this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || displayName != null) {
+      map['display_name'] = Variable<String>(displayName);
+    }
+    map['key'] = Variable<String>(key);
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string_value'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || numberValue != null) {
+      map['number_value'] = Variable<int>(numberValue);
+    }
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean_value'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || dateTimeValue != null) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue);
+    }
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || objectValue != null) {
+      map['object_value'] = Variable<String>(objectValue);
+    }
+    if (!nullToAbsent || tempId != null) {
+      map['temp_id'] = Variable<String>(tempId);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    return map;
+  }
+
+  PreferencesCompanion toCompanion(bool nullToAbsent) {
+    return PreferencesCompanion(
+      id: Value(id),
+      displayName: displayName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(displayName),
+      key: Value(key),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      stringValue: stringValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stringValue),
+      numberValue: numberValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(numberValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      dateTimeValue: dateTimeValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateTimeValue),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      objectValue: objectValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(objectValue),
+      tempId: tempId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tempId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+    );
+  }
+
+  factory Preference.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Preference(
+      id: serializer.fromJson<String>(json['id']),
+      displayName: serializer.fromJson<String?>(json['displayName']),
+      key: serializer.fromJson<String>(json['key']),
+      type: serializer.fromJson<String?>(json['type']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      numberValue: serializer.fromJson<int?>(json['numberValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
+      userId: serializer.fromJson<String?>(json['userId']),
+      objectValue: serializer.fromJson<String?>(json['objectValue']),
+      tempId: serializer.fromJson<String?>(json['tempId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'displayName': serializer.toJson<String?>(displayName),
+      'key': serializer.toJson<String>(key),
+      'type': serializer.toJson<String?>(type),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'numberValue': serializer.toJson<int?>(numberValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
+      'userId': serializer.toJson<String?>(userId),
+      'objectValue': serializer.toJson<String?>(objectValue),
+      'tempId': serializer.toJson<String?>(tempId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+    };
+  }
+
+  Preference copyWith({
+    String? id,
+    Value<String?> displayName = const Value.absent(),
+    String? key,
+    Value<String?> type = const Value.absent(),
+    Value<String?> stringValue = const Value.absent(),
+    Value<int?> numberValue = const Value.absent(),
+    Value<bool?> booleanValue = const Value.absent(),
+    Value<DateTime?> dateTimeValue = const Value.absent(),
+    Value<String?> userId = const Value.absent(),
+    Value<String?> objectValue = const Value.absent(),
+    Value<String?> tempId = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+  }) => Preference(
+    id: id ?? this.id,
+    displayName: displayName.present ? displayName.value : this.displayName,
+    key: key ?? this.key,
+    type: type.present ? type.value : this.type,
+    stringValue: stringValue.present ? stringValue.value : this.stringValue,
+    numberValue: numberValue.present ? numberValue.value : this.numberValue,
+    booleanValue: booleanValue.present ? booleanValue.value : this.booleanValue,
+    dateTimeValue: dateTimeValue.present
+        ? dateTimeValue.value
+        : this.dateTimeValue,
+    userId: userId.present ? userId.value : this.userId,
+    objectValue: objectValue.present ? objectValue.value : this.objectValue,
+    tempId: tempId.present ? tempId.value : this.tempId,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+  );
+  Preference copyWithCompanion(PreferencesCompanion data) {
+    return Preference(
+      id: data.id.present ? data.id.value : this.id,
+      displayName: data.displayName.present
+          ? data.displayName.value
+          : this.displayName,
+      key: data.key.present ? data.key.value : this.key,
+      type: data.type.present ? data.type.value : this.type,
+      stringValue: data.stringValue.present
+          ? data.stringValue.value
+          : this.stringValue,
+      numberValue: data.numberValue.present
+          ? data.numberValue.value
+          : this.numberValue,
+      booleanValue: data.booleanValue.present
+          ? data.booleanValue.value
+          : this.booleanValue,
+      dateTimeValue: data.dateTimeValue.present
+          ? data.dateTimeValue.value
+          : this.dateTimeValue,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      objectValue: data.objectValue.present
+          ? data.objectValue.value
+          : this.objectValue,
+      tempId: data.tempId.present ? data.tempId.value : this.tempId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Preference(')
+          ..write('id: $id, ')
+          ..write('displayName: $displayName, ')
+          ..write('key: $key, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('userId: $userId, ')
+          ..write('objectValue: $objectValue, ')
+          ..write('tempId: $tempId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    displayName,
+    key,
+    type,
+    stringValue,
+    numberValue,
+    booleanValue,
+    dateTimeValue,
+    userId,
+    objectValue,
+    tempId,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Preference &&
+          other.id == this.id &&
+          other.displayName == this.displayName &&
+          other.key == this.key &&
+          other.type == this.type &&
+          other.stringValue == this.stringValue &&
+          other.numberValue == this.numberValue &&
+          other.booleanValue == this.booleanValue &&
+          other.dateTimeValue == this.dateTimeValue &&
+          other.userId == this.userId &&
+          other.objectValue == this.objectValue &&
+          other.tempId == this.tempId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class PreferencesCompanion extends UpdateCompanion<Preference> {
+  final Value<String> id;
+  final Value<String?> displayName;
+  final Value<String> key;
+  final Value<String?> type;
+  final Value<String?> stringValue;
+  final Value<int?> numberValue;
+  final Value<bool?> booleanValue;
+  final Value<DateTime?> dateTimeValue;
+  final Value<String?> userId;
+  final Value<String?> objectValue;
+  final Value<String?> tempId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<int> rowid;
+  const PreferencesCompanion({
+    this.id = const Value.absent(),
+    this.displayName = const Value.absent(),
+    this.key = const Value.absent(),
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.objectValue = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PreferencesCompanion.insert({
+    required String id,
+    this.displayName = const Value.absent(),
+    required String key,
+    this.type = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.numberValue = const Value.absent(),
+    this.booleanValue = const Value.absent(),
+    this.dateTimeValue = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.objectValue = const Value.absent(),
+    this.tempId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       key = Value(key);
+  static Insertable<Preference> custom({
+    Expression<String>? id,
+    Expression<String>? displayName,
+    Expression<String>? key,
+    Expression<String>? type,
+    Expression<String>? stringValue,
+    Expression<int>? numberValue,
+    Expression<bool>? booleanValue,
+    Expression<DateTime>? dateTimeValue,
+    Expression<String>? userId,
+    Expression<String>? objectValue,
+    Expression<String>? tempId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (displayName != null) 'display_name': displayName,
+      if (key != null) 'key': key,
+      if (type != null) 'type': type,
+      if (stringValue != null) 'string_value': stringValue,
+      if (numberValue != null) 'number_value': numberValue,
+      if (booleanValue != null) 'boolean_value': booleanValue,
+      if (dateTimeValue != null) 'date_time_value': dateTimeValue,
+      if (userId != null) 'user_id': userId,
+      if (objectValue != null) 'object_value': objectValue,
+      if (tempId != null) 'temp_id': tempId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PreferencesCompanion copyWith({
+    Value<String>? id,
+    Value<String?>? displayName,
+    Value<String>? key,
+    Value<String?>? type,
+    Value<String?>? stringValue,
+    Value<int?>? numberValue,
+    Value<bool?>? booleanValue,
+    Value<DateTime?>? dateTimeValue,
+    Value<String?>? userId,
+    Value<String?>? objectValue,
+    Value<String?>? tempId,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return PreferencesCompanion(
+      id: id ?? this.id,
+      displayName: displayName ?? this.displayName,
+      key: key ?? this.key,
+      type: type ?? this.type,
+      stringValue: stringValue ?? this.stringValue,
+      numberValue: numberValue ?? this.numberValue,
+      booleanValue: booleanValue ?? this.booleanValue,
+      dateTimeValue: dateTimeValue ?? this.dateTimeValue,
+      userId: userId ?? this.userId,
+      objectValue: objectValue ?? this.objectValue,
+      tempId: tempId ?? this.tempId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (displayName.present) {
+      map['display_name'] = Variable<String>(displayName.value);
+    }
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (stringValue.present) {
+      map['string_value'] = Variable<String>(stringValue.value);
+    }
+    if (numberValue.present) {
+      map['number_value'] = Variable<int>(numberValue.value);
+    }
+    if (booleanValue.present) {
+      map['boolean_value'] = Variable<bool>(booleanValue.value);
+    }
+    if (dateTimeValue.present) {
+      map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (objectValue.present) {
+      map['object_value'] = Variable<String>(objectValue.value);
+    }
+    if (tempId.present) {
+      map['temp_id'] = Variable<String>(tempId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PreferencesCompanion(')
+          ..write('id: $id, ')
+          ..write('displayName: $displayName, ')
+          ..write('key: $key, ')
+          ..write('type: $type, ')
+          ..write('stringValue: $stringValue, ')
+          ..write('numberValue: $numberValue, ')
+          ..write('booleanValue: $booleanValue, ')
+          ..write('dateTimeValue: $dateTimeValue, ')
+          ..write('userId: $userId, ')
+          ..write('objectValue: $objectValue, ')
+          ..write('tempId: $tempId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -4512,28 +5295,6 @@ class $ProjectMetadataTable extends ProjectMetadata
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -4588,8 +5349,6 @@ class $ProjectMetadataTable extends ProjectMetadata
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     projectId,
     createdAt,
@@ -4660,18 +5419,6 @@ class $ProjectMetadataTable extends ProjectMetadata
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -4733,14 +5480,6 @@ class $ProjectMetadataTable extends ProjectMetadata
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -4775,8 +5514,6 @@ class ProjectMetadataData extends DataClass
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? projectId;
   final DateTime? createdAt;
@@ -4789,8 +5526,6 @@ class ProjectMetadataData extends DataClass
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.projectId,
     this.createdAt,
@@ -4817,12 +5552,6 @@ class ProjectMetadataData extends DataClass
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -4856,12 +5585,6 @@ class ProjectMetadataData extends DataClass
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -4890,8 +5613,6 @@ class ProjectMetadataData extends DataClass
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       projectId: serializer.fromJson<String?>(json['projectId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -4909,8 +5630,6 @@ class ProjectMetadataData extends DataClass
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'projectId': serializer.toJson<String?>(projectId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -4926,8 +5645,6 @@ class ProjectMetadataData extends DataClass
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> projectId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -4942,8 +5659,6 @@ class ProjectMetadataData extends DataClass
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     projectId: projectId.present ? projectId.value : this.projectId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -4966,10 +5681,6 @@ class ProjectMetadataData extends DataClass
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       projectId: data.projectId.present ? data.projectId.value : this.projectId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -4987,8 +5698,6 @@ class ProjectMetadataData extends DataClass
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('projectId: $projectId, ')
           ..write('createdAt: $createdAt, ')
@@ -5006,8 +5715,6 @@ class ProjectMetadataData extends DataClass
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     projectId,
     createdAt,
@@ -5024,8 +5731,6 @@ class ProjectMetadataData extends DataClass
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.projectId == this.projectId &&
           other.createdAt == this.createdAt &&
@@ -5040,8 +5745,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> projectId;
   final Value<DateTime?> createdAt;
@@ -5055,8 +5758,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.projectId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -5071,8 +5772,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.projectId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -5087,8 +5786,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? projectId,
     Expression<DateTime>? createdAt,
@@ -5103,8 +5800,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (projectId != null) 'project_id': projectId,
       if (createdAt != null) 'created_at': createdAt,
@@ -5121,8 +5816,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? projectId,
     Value<DateTime?>? createdAt,
@@ -5137,8 +5830,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       projectId: projectId ?? this.projectId,
       createdAt: createdAt ?? this.createdAt,
@@ -5171,12 +5862,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -5205,8 +5890,6 @@ class ProjectMetadataCompanion extends UpdateCompanion<ProjectMetadataData> {
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('projectId: $projectId, ')
           ..write('createdAt: $createdAt, ')
@@ -21573,28 +22256,6 @@ class $MerchantMetadataTable extends MerchantMetadata
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -21649,8 +22310,6 @@ class $MerchantMetadataTable extends MerchantMetadata
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     merchantId,
     createdAt,
@@ -21721,18 +22380,6 @@ class $MerchantMetadataTable extends MerchantMetadata
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -21794,14 +22441,6 @@ class $MerchantMetadataTable extends MerchantMetadata
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -21836,8 +22475,6 @@ class MerchantMetadataData extends DataClass
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? merchantId;
   final DateTime? createdAt;
@@ -21850,8 +22487,6 @@ class MerchantMetadataData extends DataClass
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.merchantId,
     this.createdAt,
@@ -21878,12 +22513,6 @@ class MerchantMetadataData extends DataClass
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -21917,12 +22546,6 @@ class MerchantMetadataData extends DataClass
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -21951,8 +22574,6 @@ class MerchantMetadataData extends DataClass
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       merchantId: serializer.fromJson<String?>(json['merchantId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -21970,8 +22591,6 @@ class MerchantMetadataData extends DataClass
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'merchantId': serializer.toJson<String?>(merchantId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -21987,8 +22606,6 @@ class MerchantMetadataData extends DataClass
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> merchantId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -22003,8 +22620,6 @@ class MerchantMetadataData extends DataClass
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     merchantId: merchantId.present ? merchantId.value : this.merchantId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -22027,10 +22642,6 @@ class MerchantMetadataData extends DataClass
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       merchantId: data.merchantId.present
           ? data.merchantId.value
@@ -22050,8 +22661,6 @@ class MerchantMetadataData extends DataClass
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('merchantId: $merchantId, ')
           ..write('createdAt: $createdAt, ')
@@ -22069,8 +22678,6 @@ class MerchantMetadataData extends DataClass
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     merchantId,
     createdAt,
@@ -22087,8 +22694,6 @@ class MerchantMetadataData extends DataClass
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.merchantId == this.merchantId &&
           other.createdAt == this.createdAt &&
@@ -22103,8 +22708,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> merchantId;
   final Value<DateTime?> createdAt;
@@ -22118,8 +22721,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.merchantId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -22134,8 +22735,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.merchantId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -22150,8 +22749,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? merchantId,
     Expression<DateTime>? createdAt,
@@ -22166,8 +22763,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (merchantId != null) 'merchant_id': merchantId,
       if (createdAt != null) 'created_at': createdAt,
@@ -22184,8 +22779,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? merchantId,
     Value<DateTime?>? createdAt,
@@ -22200,8 +22793,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       merchantId: merchantId ?? this.merchantId,
       createdAt: createdAt ?? this.createdAt,
@@ -22234,12 +22825,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -22268,8 +22853,6 @@ class MerchantMetadataCompanion extends UpdateCompanion<MerchantMetadataData> {
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('merchantId: $merchantId, ')
           ..write('createdAt: $createdAt, ')
@@ -22810,28 +23393,6 @@ class $ContactInfoTable extends ContactInfo
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -22886,8 +23447,6 @@ class $ContactInfoTable extends ContactInfo
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     contactId,
     createdAt,
@@ -22958,18 +23517,6 @@ class $ContactInfoTable extends ContactInfo
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -23031,14 +23578,6 @@ class $ContactInfoTable extends ContactInfo
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -23072,8 +23611,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? contactId;
   final DateTime? createdAt;
@@ -23086,8 +23623,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.contactId,
     this.createdAt,
@@ -23114,12 +23649,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -23153,12 +23682,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -23187,8 +23710,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       contactId: serializer.fromJson<String?>(json['contactId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -23206,8 +23727,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'contactId': serializer.toJson<String?>(contactId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -23223,8 +23742,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> contactId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -23239,8 +23756,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     contactId: contactId.present ? contactId.value : this.contactId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -23263,10 +23778,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       contactId: data.contactId.present ? data.contactId.value : this.contactId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -23284,8 +23795,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('contactId: $contactId, ')
           ..write('createdAt: $createdAt, ')
@@ -23303,8 +23812,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     contactId,
     createdAt,
@@ -23321,8 +23828,6 @@ class ContactInfoData extends DataClass implements Insertable<ContactInfoData> {
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.contactId == this.contactId &&
           other.createdAt == this.createdAt &&
@@ -23337,8 +23842,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> contactId;
   final Value<DateTime?> createdAt;
@@ -23352,8 +23855,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.contactId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -23368,8 +23869,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.contactId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -23384,8 +23883,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? contactId,
     Expression<DateTime>? createdAt,
@@ -23400,8 +23897,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (contactId != null) 'contact_id': contactId,
       if (createdAt != null) 'created_at': createdAt,
@@ -23418,8 +23913,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? contactId,
     Value<DateTime?>? createdAt,
@@ -23434,8 +23927,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       contactId: contactId ?? this.contactId,
       createdAt: createdAt ?? this.createdAt,
@@ -23468,12 +23959,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -23502,8 +23987,6 @@ class ContactInfoCompanion extends UpdateCompanion<ContactInfoData> {
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('contactId: $contactId, ')
           ..write('createdAt: $createdAt, ')
@@ -23595,28 +24078,6 @@ class $WalletMetadataTable extends WalletMetadata
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -23671,8 +24132,6 @@ class $WalletMetadataTable extends WalletMetadata
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     walletId,
     createdAt,
@@ -23743,18 +24202,6 @@ class $WalletMetadataTable extends WalletMetadata
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -23816,14 +24263,6 @@ class $WalletMetadataTable extends WalletMetadata
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -23858,8 +24297,6 @@ class WalletMetadataData extends DataClass
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? walletId;
   final DateTime? createdAt;
@@ -23872,8 +24309,6 @@ class WalletMetadataData extends DataClass
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.walletId,
     this.createdAt,
@@ -23900,12 +24335,6 @@ class WalletMetadataData extends DataClass
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -23939,12 +24368,6 @@ class WalletMetadataData extends DataClass
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -23973,8 +24396,6 @@ class WalletMetadataData extends DataClass
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       walletId: serializer.fromJson<String?>(json['walletId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -23992,8 +24413,6 @@ class WalletMetadataData extends DataClass
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'walletId': serializer.toJson<String?>(walletId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -24009,8 +24428,6 @@ class WalletMetadataData extends DataClass
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> walletId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -24025,8 +24442,6 @@ class WalletMetadataData extends DataClass
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     walletId: walletId.present ? walletId.value : this.walletId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -24049,10 +24464,6 @@ class WalletMetadataData extends DataClass
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       walletId: data.walletId.present ? data.walletId.value : this.walletId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -24070,8 +24481,6 @@ class WalletMetadataData extends DataClass
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('walletId: $walletId, ')
           ..write('createdAt: $createdAt, ')
@@ -24089,8 +24498,6 @@ class WalletMetadataData extends DataClass
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     walletId,
     createdAt,
@@ -24107,8 +24514,6 @@ class WalletMetadataData extends DataClass
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.walletId == this.walletId &&
           other.createdAt == this.createdAt &&
@@ -24123,8 +24528,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> walletId;
   final Value<DateTime?> createdAt;
@@ -24138,8 +24541,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.walletId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -24154,8 +24555,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.walletId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -24170,8 +24569,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? walletId,
     Expression<DateTime>? createdAt,
@@ -24186,8 +24583,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (walletId != null) 'wallet_id': walletId,
       if (createdAt != null) 'created_at': createdAt,
@@ -24204,8 +24599,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? walletId,
     Value<DateTime?>? createdAt,
@@ -24220,8 +24613,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       walletId: walletId ?? this.walletId,
       createdAt: createdAt ?? this.createdAt,
@@ -24254,12 +24645,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -24288,8 +24673,6 @@ class WalletMetadataCompanion extends UpdateCompanion<WalletMetadataData> {
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('walletId: $walletId, ')
           ..write('createdAt: $createdAt, ')
@@ -24381,28 +24764,6 @@ class $BudgetMetadataTable extends BudgetMetadata
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -24457,8 +24818,6 @@ class $BudgetMetadataTable extends BudgetMetadata
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     budgetId,
     createdAt,
@@ -24529,18 +24888,6 @@ class $BudgetMetadataTable extends BudgetMetadata
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -24602,14 +24949,6 @@ class $BudgetMetadataTable extends BudgetMetadata
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -24644,8 +24983,6 @@ class BudgetMetadataData extends DataClass
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? budgetId;
   final DateTime? createdAt;
@@ -24658,8 +24995,6 @@ class BudgetMetadataData extends DataClass
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.budgetId,
     this.createdAt,
@@ -24686,12 +25021,6 @@ class BudgetMetadataData extends DataClass
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -24725,12 +25054,6 @@ class BudgetMetadataData extends DataClass
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -24759,8 +25082,6 @@ class BudgetMetadataData extends DataClass
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       budgetId: serializer.fromJson<String?>(json['budgetId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -24778,8 +25099,6 @@ class BudgetMetadataData extends DataClass
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'budgetId': serializer.toJson<String?>(budgetId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -24795,8 +25114,6 @@ class BudgetMetadataData extends DataClass
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> budgetId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -24811,8 +25128,6 @@ class BudgetMetadataData extends DataClass
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     budgetId: budgetId.present ? budgetId.value : this.budgetId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -24835,10 +25150,6 @@ class BudgetMetadataData extends DataClass
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       budgetId: data.budgetId.present ? data.budgetId.value : this.budgetId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -24856,8 +25167,6 @@ class BudgetMetadataData extends DataClass
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('budgetId: $budgetId, ')
           ..write('createdAt: $createdAt, ')
@@ -24875,8 +25184,6 @@ class BudgetMetadataData extends DataClass
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     budgetId,
     createdAt,
@@ -24893,8 +25200,6 @@ class BudgetMetadataData extends DataClass
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.budgetId == this.budgetId &&
           other.createdAt == this.createdAt &&
@@ -24909,8 +25214,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> budgetId;
   final Value<DateTime?> createdAt;
@@ -24924,8 +25227,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.budgetId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -24940,8 +25241,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.budgetId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -24956,8 +25255,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? budgetId,
     Expression<DateTime>? createdAt,
@@ -24972,8 +25269,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (budgetId != null) 'budget_id': budgetId,
       if (createdAt != null) 'created_at': createdAt,
@@ -24990,8 +25285,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? budgetId,
     Value<DateTime?>? createdAt,
@@ -25006,8 +25299,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       budgetId: budgetId ?? this.budgetId,
       createdAt: createdAt ?? this.createdAt,
@@ -25040,12 +25331,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -25074,8 +25359,6 @@ class BudgetMetadataCompanion extends UpdateCompanion<BudgetMetadataData> {
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('budgetId: $budgetId, ')
           ..write('createdAt: $createdAt, ')
@@ -25167,28 +25450,6 @@ class $GoalMetadataTable extends GoalMetadata
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -25241,8 +25502,6 @@ class $GoalMetadataTable extends GoalMetadata
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     goalId,
     createdAt,
@@ -25313,18 +25572,6 @@ class $GoalMetadataTable extends GoalMetadata
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -25386,14 +25633,6 @@ class $GoalMetadataTable extends GoalMetadata
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -25428,8 +25667,6 @@ class GoalMetadataData extends DataClass
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? goalId;
   final DateTime? createdAt;
@@ -25442,8 +25679,6 @@ class GoalMetadataData extends DataClass
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.goalId,
     this.createdAt,
@@ -25470,12 +25705,6 @@ class GoalMetadataData extends DataClass
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -25509,12 +25738,6 @@ class GoalMetadataData extends DataClass
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -25543,8 +25766,6 @@ class GoalMetadataData extends DataClass
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       goalId: serializer.fromJson<String?>(json['goalId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -25562,8 +25783,6 @@ class GoalMetadataData extends DataClass
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'goalId': serializer.toJson<String?>(goalId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -25579,8 +25798,6 @@ class GoalMetadataData extends DataClass
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> goalId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -25595,8 +25812,6 @@ class GoalMetadataData extends DataClass
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     goalId: goalId.present ? goalId.value : this.goalId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -25619,10 +25834,6 @@ class GoalMetadataData extends DataClass
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       goalId: data.goalId.present ? data.goalId.value : this.goalId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -25640,8 +25851,6 @@ class GoalMetadataData extends DataClass
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
           ..write('createdAt: $createdAt, ')
@@ -25659,8 +25868,6 @@ class GoalMetadataData extends DataClass
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     goalId,
     createdAt,
@@ -25677,8 +25884,6 @@ class GoalMetadataData extends DataClass
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.goalId == this.goalId &&
           other.createdAt == this.createdAt &&
@@ -25693,8 +25898,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> goalId;
   final Value<DateTime?> createdAt;
@@ -25708,8 +25911,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.goalId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -25724,8 +25925,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.goalId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -25740,8 +25939,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? goalId,
     Expression<DateTime>? createdAt,
@@ -25756,8 +25953,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (goalId != null) 'goal_id': goalId,
       if (createdAt != null) 'created_at': createdAt,
@@ -25774,8 +25969,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? goalId,
     Value<DateTime?>? createdAt,
@@ -25790,8 +25983,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       goalId: goalId ?? this.goalId,
       createdAt: createdAt ?? this.createdAt,
@@ -25824,12 +26015,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -25858,8 +26043,6 @@ class GoalMetadataCompanion extends UpdateCompanion<GoalMetadataData> {
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
           ..write('createdAt: $createdAt, ')
@@ -26481,28 +26664,6 @@ class $InvestmentMetadataTable extends InvestmentMetadata
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -26557,8 +26718,6 @@ class $InvestmentMetadataTable extends InvestmentMetadata
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     investmentId,
     createdAt,
@@ -26629,18 +26788,6 @@ class $InvestmentMetadataTable extends InvestmentMetadata
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -26705,14 +26852,6 @@ class $InvestmentMetadataTable extends InvestmentMetadata
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -26747,8 +26886,6 @@ class InvestmentMetadataData extends DataClass
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? investmentId;
   final DateTime? createdAt;
@@ -26761,8 +26898,6 @@ class InvestmentMetadataData extends DataClass
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.investmentId,
     this.createdAt,
@@ -26789,12 +26924,6 @@ class InvestmentMetadataData extends DataClass
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -26828,12 +26957,6 @@ class InvestmentMetadataData extends DataClass
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -26862,8 +26985,6 @@ class InvestmentMetadataData extends DataClass
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       investmentId: serializer.fromJson<String?>(json['investmentId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -26881,8 +27002,6 @@ class InvestmentMetadataData extends DataClass
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'investmentId': serializer.toJson<String?>(investmentId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -26898,8 +27017,6 @@ class InvestmentMetadataData extends DataClass
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> investmentId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -26914,8 +27031,6 @@ class InvestmentMetadataData extends DataClass
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     investmentId: investmentId.present ? investmentId.value : this.investmentId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -26938,10 +27053,6 @@ class InvestmentMetadataData extends DataClass
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       investmentId: data.investmentId.present
           ? data.investmentId.value
@@ -26961,8 +27072,6 @@ class InvestmentMetadataData extends DataClass
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('investmentId: $investmentId, ')
           ..write('createdAt: $createdAt, ')
@@ -26980,8 +27089,6 @@ class InvestmentMetadataData extends DataClass
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     investmentId,
     createdAt,
@@ -26998,8 +27105,6 @@ class InvestmentMetadataData extends DataClass
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.investmentId == this.investmentId &&
           other.createdAt == this.createdAt &&
@@ -27015,8 +27120,6 @@ class InvestmentMetadataCompanion
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> investmentId;
   final Value<DateTime?> createdAt;
@@ -27030,8 +27133,6 @@ class InvestmentMetadataCompanion
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.investmentId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -27046,8 +27147,6 @@ class InvestmentMetadataCompanion
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.investmentId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -27062,8 +27161,6 @@ class InvestmentMetadataCompanion
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? investmentId,
     Expression<DateTime>? createdAt,
@@ -27078,8 +27175,6 @@ class InvestmentMetadataCompanion
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (investmentId != null) 'investment_id': investmentId,
       if (createdAt != null) 'created_at': createdAt,
@@ -27096,8 +27191,6 @@ class InvestmentMetadataCompanion
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? investmentId,
     Value<DateTime?>? createdAt,
@@ -27112,8 +27205,6 @@ class InvestmentMetadataCompanion
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       investmentId: investmentId ?? this.investmentId,
       createdAt: createdAt ?? this.createdAt,
@@ -27146,12 +27237,6 @@ class InvestmentMetadataCompanion
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -27180,8 +27265,6 @@ class InvestmentMetadataCompanion
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('investmentId: $investmentId, ')
           ..write('createdAt: $createdAt, ')
@@ -28262,28 +28345,6 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _urlValueMeta = const VerificationMeta(
-    'urlValue',
-  );
-  @override
-  late final GeneratedColumn<String> urlValue = GeneratedColumn<String>(
-    'url_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emailValueMeta = const VerificationMeta(
-    'emailValue',
-  );
-  @override
-  late final GeneratedColumn<String> emailValue = GeneratedColumn<String>(
-    'email_value',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -28338,8 +28399,6 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     walletProviderId,
     createdAt,
@@ -28410,18 +28469,6 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
         ),
       );
     }
-    if (data.containsKey('url_value')) {
-      context.handle(
-        _urlValueMeta,
-        urlValue.isAcceptableOrUnknown(data['url_value']!, _urlValueMeta),
-      );
-    }
-    if (data.containsKey('email_value')) {
-      context.handle(
-        _emailValueMeta,
-        emailValue.isAcceptableOrUnknown(data['email_value']!, _emailValueMeta),
-      );
-    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -28489,14 +28536,6 @@ class $WalletProviderMetadataTable extends WalletProviderMetadata
         DriftSqlType.dateTime,
         data['${effectivePrefix}date_time_value'],
       ),
-      urlValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}url_value'],
-      ),
-      emailValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email_value'],
-      ),
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -28531,8 +28570,6 @@ class WalletProviderMetadataData extends DataClass
   final int? numberValue;
   final bool? booleanValue;
   final DateTime? dateTimeValue;
-  final String? urlValue;
-  final String? emailValue;
   final String? userId;
   final String? walletProviderId;
   final DateTime? createdAt;
@@ -28545,8 +28582,6 @@ class WalletProviderMetadataData extends DataClass
     this.numberValue,
     this.booleanValue,
     this.dateTimeValue,
-    this.urlValue,
-    this.emailValue,
     this.userId,
     this.walletProviderId,
     this.createdAt,
@@ -28573,12 +28608,6 @@ class WalletProviderMetadataData extends DataClass
     }
     if (!nullToAbsent || dateTimeValue != null) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue);
-    }
-    if (!nullToAbsent || urlValue != null) {
-      map['url_value'] = Variable<String>(urlValue);
-    }
-    if (!nullToAbsent || emailValue != null) {
-      map['email_value'] = Variable<String>(emailValue);
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
@@ -28612,12 +28641,6 @@ class WalletProviderMetadataData extends DataClass
       dateTimeValue: dateTimeValue == null && nullToAbsent
           ? const Value.absent()
           : Value(dateTimeValue),
-      urlValue: urlValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(urlValue),
-      emailValue: emailValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailValue),
       userId: userId == null && nullToAbsent
           ? const Value.absent()
           : Value(userId),
@@ -28646,8 +28669,6 @@ class WalletProviderMetadataData extends DataClass
       numberValue: serializer.fromJson<int?>(json['numberValue']),
       booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
       dateTimeValue: serializer.fromJson<DateTime?>(json['dateTimeValue']),
-      urlValue: serializer.fromJson<String?>(json['urlValue']),
-      emailValue: serializer.fromJson<String?>(json['emailValue']),
       userId: serializer.fromJson<String?>(json['userId']),
       walletProviderId: serializer.fromJson<String?>(json['walletProviderId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -28665,8 +28686,6 @@ class WalletProviderMetadataData extends DataClass
       'numberValue': serializer.toJson<int?>(numberValue),
       'booleanValue': serializer.toJson<bool?>(booleanValue),
       'dateTimeValue': serializer.toJson<DateTime?>(dateTimeValue),
-      'urlValue': serializer.toJson<String?>(urlValue),
-      'emailValue': serializer.toJson<String?>(emailValue),
       'userId': serializer.toJson<String?>(userId),
       'walletProviderId': serializer.toJson<String?>(walletProviderId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -28682,8 +28701,6 @@ class WalletProviderMetadataData extends DataClass
     Value<int?> numberValue = const Value.absent(),
     Value<bool?> booleanValue = const Value.absent(),
     Value<DateTime?> dateTimeValue = const Value.absent(),
-    Value<String?> urlValue = const Value.absent(),
-    Value<String?> emailValue = const Value.absent(),
     Value<String?> userId = const Value.absent(),
     Value<String?> walletProviderId = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -28698,8 +28715,6 @@ class WalletProviderMetadataData extends DataClass
     dateTimeValue: dateTimeValue.present
         ? dateTimeValue.value
         : this.dateTimeValue,
-    urlValue: urlValue.present ? urlValue.value : this.urlValue,
-    emailValue: emailValue.present ? emailValue.value : this.emailValue,
     userId: userId.present ? userId.value : this.userId,
     walletProviderId: walletProviderId.present
         ? walletProviderId.value
@@ -28726,10 +28741,6 @@ class WalletProviderMetadataData extends DataClass
       dateTimeValue: data.dateTimeValue.present
           ? data.dateTimeValue.value
           : this.dateTimeValue,
-      urlValue: data.urlValue.present ? data.urlValue.value : this.urlValue,
-      emailValue: data.emailValue.present
-          ? data.emailValue.value
-          : this.emailValue,
       userId: data.userId.present ? data.userId.value : this.userId,
       walletProviderId: data.walletProviderId.present
           ? data.walletProviderId.value
@@ -28749,8 +28760,6 @@ class WalletProviderMetadataData extends DataClass
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('walletProviderId: $walletProviderId, ')
           ..write('createdAt: $createdAt, ')
@@ -28768,8 +28777,6 @@ class WalletProviderMetadataData extends DataClass
     numberValue,
     booleanValue,
     dateTimeValue,
-    urlValue,
-    emailValue,
     userId,
     walletProviderId,
     createdAt,
@@ -28786,8 +28793,6 @@ class WalletProviderMetadataData extends DataClass
           other.numberValue == this.numberValue &&
           other.booleanValue == this.booleanValue &&
           other.dateTimeValue == this.dateTimeValue &&
-          other.urlValue == this.urlValue &&
-          other.emailValue == this.emailValue &&
           other.userId == this.userId &&
           other.walletProviderId == this.walletProviderId &&
           other.createdAt == this.createdAt &&
@@ -28803,8 +28808,6 @@ class WalletProviderMetadataCompanion
   final Value<int?> numberValue;
   final Value<bool?> booleanValue;
   final Value<DateTime?> dateTimeValue;
-  final Value<String?> urlValue;
-  final Value<String?> emailValue;
   final Value<String?> userId;
   final Value<String?> walletProviderId;
   final Value<DateTime?> createdAt;
@@ -28818,8 +28821,6 @@ class WalletProviderMetadataCompanion
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.walletProviderId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -28834,8 +28835,6 @@ class WalletProviderMetadataCompanion
     this.numberValue = const Value.absent(),
     this.booleanValue = const Value.absent(),
     this.dateTimeValue = const Value.absent(),
-    this.urlValue = const Value.absent(),
-    this.emailValue = const Value.absent(),
     this.userId = const Value.absent(),
     this.walletProviderId = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -28850,8 +28849,6 @@ class WalletProviderMetadataCompanion
     Expression<int>? numberValue,
     Expression<bool>? booleanValue,
     Expression<DateTime>? dateTimeValue,
-    Expression<String>? urlValue,
-    Expression<String>? emailValue,
     Expression<String>? userId,
     Expression<String>? walletProviderId,
     Expression<DateTime>? createdAt,
@@ -28866,8 +28863,6 @@ class WalletProviderMetadataCompanion
       if (numberValue != null) 'number_value': numberValue,
       if (booleanValue != null) 'boolean_value': booleanValue,
       if (dateTimeValue != null) 'date_time_value': dateTimeValue,
-      if (urlValue != null) 'url_value': urlValue,
-      if (emailValue != null) 'email_value': emailValue,
       if (userId != null) 'user_id': userId,
       if (walletProviderId != null) 'wallet_provider_id': walletProviderId,
       if (createdAt != null) 'created_at': createdAt,
@@ -28884,8 +28879,6 @@ class WalletProviderMetadataCompanion
     Value<int?>? numberValue,
     Value<bool?>? booleanValue,
     Value<DateTime?>? dateTimeValue,
-    Value<String?>? urlValue,
-    Value<String?>? emailValue,
     Value<String?>? userId,
     Value<String?>? walletProviderId,
     Value<DateTime?>? createdAt,
@@ -28900,8 +28893,6 @@ class WalletProviderMetadataCompanion
       numberValue: numberValue ?? this.numberValue,
       booleanValue: booleanValue ?? this.booleanValue,
       dateTimeValue: dateTimeValue ?? this.dateTimeValue,
-      urlValue: urlValue ?? this.urlValue,
-      emailValue: emailValue ?? this.emailValue,
       userId: userId ?? this.userId,
       walletProviderId: walletProviderId ?? this.walletProviderId,
       createdAt: createdAt ?? this.createdAt,
@@ -28934,12 +28925,6 @@ class WalletProviderMetadataCompanion
     if (dateTimeValue.present) {
       map['date_time_value'] = Variable<DateTime>(dateTimeValue.value);
     }
-    if (urlValue.present) {
-      map['url_value'] = Variable<String>(urlValue.value);
-    }
-    if (emailValue.present) {
-      map['email_value'] = Variable<String>(emailValue.value);
-    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
@@ -28968,8 +28953,6 @@ class WalletProviderMetadataCompanion
           ..write('numberValue: $numberValue, ')
           ..write('booleanValue: $booleanValue, ')
           ..write('dateTimeValue: $dateTimeValue, ')
-          ..write('urlValue: $urlValue, ')
-          ..write('emailValue: $emailValue, ')
           ..write('userId: $userId, ')
           ..write('walletProviderId: $walletProviderId, ')
           ..write('createdAt: $createdAt, ')
@@ -28984,6 +28967,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $UsersTable users = $UsersTable(this);
+  late final $PreferencesTable preferences = $PreferencesTable(this);
   late final $CurrenciesTable currencies = $CurrenciesTable(this);
   late final $WalletProvidersTable walletProviders = $WalletProvidersTable(
     this,
@@ -29039,6 +29023,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     users,
+    preferences,
     currencies,
     walletProviders,
     wallets,
@@ -29136,8 +29121,8 @@ typedef $$UsersTableCreateCompanionBuilder =
       Value<bool?> verified,
       Value<String?> name,
       Value<String?> avatar,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
@@ -29148,8 +29133,8 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<bool?> verified,
       Value<String?> name,
       Value<String?> avatar,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 
@@ -29322,8 +29307,8 @@ class $$UsersTableTableManager
                 Value<bool?> verified = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<String?> avatar = const Value.absent(),
-                Value<DateTime?> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
                 id: id,
@@ -29344,8 +29329,8 @@ class $$UsersTableTableManager
                 Value<bool?> verified = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<String?> avatar = const Value.absent(),
-                Value<DateTime?> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
                 id: id,
@@ -29378,6 +29363,370 @@ typedef $$UsersTableProcessedTableManager =
       $$UsersTableUpdateCompanionBuilder,
       (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
       User,
+      PrefetchHooks Function()
+    >;
+typedef $$PreferencesTableCreateCompanionBuilder =
+    PreferencesCompanion Function({
+      required String id,
+      Value<String?> displayName,
+      required String key,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> userId,
+      Value<String?> objectValue,
+      Value<String?> tempId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$PreferencesTableUpdateCompanionBuilder =
+    PreferencesCompanion Function({
+      Value<String> id,
+      Value<String?> displayName,
+      Value<String> key,
+      Value<String?> type,
+      Value<String?> stringValue,
+      Value<int?> numberValue,
+      Value<bool?> booleanValue,
+      Value<DateTime?> dateTimeValue,
+      Value<String?> userId,
+      Value<String?> objectValue,
+      Value<String?> tempId,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$PreferencesTableFilterComposer
+    extends Composer<_$AppDatabase, $PreferencesTable> {
+  $$PreferencesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get displayName => $composableBuilder(
+    column: $table.displayName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get objectValue => $composableBuilder(
+    column: $table.objectValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PreferencesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PreferencesTable> {
+  $$PreferencesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get displayName => $composableBuilder(
+    column: $table.displayName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get objectValue => $composableBuilder(
+    column: $table.objectValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tempId => $composableBuilder(
+    column: $table.tempId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PreferencesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PreferencesTable> {
+  $$PreferencesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get displayName => $composableBuilder(
+    column: $table.displayName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+    column: $table.stringValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get numberValue => $composableBuilder(
+    column: $table.numberValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+    column: $table.booleanValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
+    column: $table.dateTimeValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get objectValue => $composableBuilder(
+    column: $table.objectValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get tempId =>
+      $composableBuilder(column: $table.tempId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$PreferencesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PreferencesTable,
+          Preference,
+          $$PreferencesTableFilterComposer,
+          $$PreferencesTableOrderingComposer,
+          $$PreferencesTableAnnotationComposer,
+          $$PreferencesTableCreateCompanionBuilder,
+          $$PreferencesTableUpdateCompanionBuilder,
+          (
+            Preference,
+            BaseReferences<_$AppDatabase, $PreferencesTable, Preference>,
+          ),
+          Preference,
+          PrefetchHooks Function()
+        > {
+  $$PreferencesTableTableManager(_$AppDatabase db, $PreferencesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PreferencesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PreferencesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PreferencesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String?> displayName = const Value.absent(),
+                Value<String> key = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> objectValue = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PreferencesCompanion(
+                id: id,
+                displayName: displayName,
+                key: key,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                userId: userId,
+                objectValue: objectValue,
+                tempId: tempId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<String?> displayName = const Value.absent(),
+                required String key,
+                Value<String?> type = const Value.absent(),
+                Value<String?> stringValue = const Value.absent(),
+                Value<int?> numberValue = const Value.absent(),
+                Value<bool?> booleanValue = const Value.absent(),
+                Value<DateTime?> dateTimeValue = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
+                Value<String?> objectValue = const Value.absent(),
+                Value<String?> tempId = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PreferencesCompanion.insert(
+                id: id,
+                displayName: displayName,
+                key: key,
+                type: type,
+                stringValue: stringValue,
+                numberValue: numberValue,
+                booleanValue: booleanValue,
+                dateTimeValue: dateTimeValue,
+                userId: userId,
+                objectValue: objectValue,
+                tempId: tempId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PreferencesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PreferencesTable,
+      Preference,
+      $$PreferencesTableFilterComposer,
+      $$PreferencesTableOrderingComposer,
+      $$PreferencesTableAnnotationComposer,
+      $$PreferencesTableCreateCompanionBuilder,
+      $$PreferencesTableUpdateCompanionBuilder,
+      (
+        Preference,
+        BaseReferences<_$AppDatabase, $PreferencesTable, Preference>,
+      ),
+      Preference,
       PrefetchHooks Function()
     >;
 typedef $$CurrenciesTableCreateCompanionBuilder =
@@ -33340,8 +33689,6 @@ typedef $$ProjectMetadataTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> projectId,
       Value<DateTime?> createdAt,
@@ -33357,8 +33704,6 @@ typedef $$ProjectMetadataTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> projectId,
       Value<DateTime?> createdAt,
@@ -33440,16 +33785,6 @@ class $$ProjectMetadataTableFilterComposer
 
   ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
     column: $table.dateTimeValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -33536,16 +33871,6 @@ class $$ProjectMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -33623,14 +33948,6 @@ class $$ProjectMetadataTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
@@ -33701,8 +34018,6 @@ class $$ProjectMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> projectId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -33716,8 +34031,6 @@ class $$ProjectMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 projectId: projectId,
                 createdAt: createdAt,
@@ -33733,8 +34046,6 @@ class $$ProjectMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> projectId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -33748,8 +34059,6 @@ class $$ProjectMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 projectId: projectId,
                 createdAt: createdAt,
@@ -48407,8 +48716,6 @@ typedef $$MerchantMetadataTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> merchantId,
       Value<DateTime?> createdAt,
@@ -48424,8 +48731,6 @@ typedef $$MerchantMetadataTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> merchantId,
       Value<DateTime?> createdAt,
@@ -48507,16 +48812,6 @@ class $$MerchantMetadataTableFilterComposer
 
   ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
     column: $table.dateTimeValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -48603,16 +48898,6 @@ class $$MerchantMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -48690,14 +48975,6 @@ class $$MerchantMetadataTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
@@ -48768,8 +49045,6 @@ class $$MerchantMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> merchantId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -48783,8 +49058,6 @@ class $$MerchantMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 merchantId: merchantId,
                 createdAt: createdAt,
@@ -48800,8 +49073,6 @@ class $$MerchantMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> merchantId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -48815,8 +49086,6 @@ class $$MerchantMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 merchantId: merchantId,
                 createdAt: createdAt,
@@ -49131,8 +49400,6 @@ typedef $$ContactInfoTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> contactId,
       Value<DateTime?> createdAt,
@@ -49148,8 +49415,6 @@ typedef $$ContactInfoTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> contactId,
       Value<DateTime?> createdAt,
@@ -49222,16 +49487,6 @@ class $$ContactInfoTableFilterComposer
 
   ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
     column: $table.dateTimeValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -49318,16 +49573,6 @@ class $$ContactInfoTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -49405,14 +49650,6 @@ class $$ContactInfoTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
@@ -49481,8 +49718,6 @@ class $$ContactInfoTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> contactId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -49496,8 +49731,6 @@ class $$ContactInfoTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 contactId: contactId,
                 createdAt: createdAt,
@@ -49513,8 +49746,6 @@ class $$ContactInfoTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> contactId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -49528,8 +49759,6 @@ class $$ContactInfoTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 contactId: contactId,
                 createdAt: createdAt,
@@ -49612,8 +49841,6 @@ typedef $$WalletMetadataTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> walletId,
       Value<DateTime?> createdAt,
@@ -49629,8 +49856,6 @@ typedef $$WalletMetadataTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> walletId,
       Value<DateTime?> createdAt,
@@ -49712,16 +49937,6 @@ class $$WalletMetadataTableFilterComposer
 
   ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
     column: $table.dateTimeValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -49808,16 +50023,6 @@ class $$WalletMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -49895,14 +50100,6 @@ class $$WalletMetadataTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
@@ -49973,8 +50170,6 @@ class $$WalletMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> walletId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -49988,8 +50183,6 @@ class $$WalletMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 walletId: walletId,
                 createdAt: createdAt,
@@ -50005,8 +50198,6 @@ class $$WalletMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> walletId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -50020,8 +50211,6 @@ class $$WalletMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 walletId: walletId,
                 createdAt: createdAt,
@@ -50105,8 +50294,6 @@ typedef $$BudgetMetadataTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> budgetId,
       Value<DateTime?> createdAt,
@@ -50122,8 +50309,6 @@ typedef $$BudgetMetadataTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> budgetId,
       Value<DateTime?> createdAt,
@@ -50205,16 +50390,6 @@ class $$BudgetMetadataTableFilterComposer
 
   ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
     column: $table.dateTimeValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -50301,16 +50476,6 @@ class $$BudgetMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -50388,14 +50553,6 @@ class $$BudgetMetadataTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
@@ -50466,8 +50623,6 @@ class $$BudgetMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> budgetId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -50481,8 +50636,6 @@ class $$BudgetMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 budgetId: budgetId,
                 createdAt: createdAt,
@@ -50498,8 +50651,6 @@ class $$BudgetMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> budgetId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -50513,8 +50664,6 @@ class $$BudgetMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 budgetId: budgetId,
                 createdAt: createdAt,
@@ -50598,8 +50747,6 @@ typedef $$GoalMetadataTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> goalId,
       Value<DateTime?> createdAt,
@@ -50615,8 +50762,6 @@ typedef $$GoalMetadataTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> goalId,
       Value<DateTime?> createdAt,
@@ -50689,16 +50834,6 @@ class $$GoalMetadataTableFilterComposer
 
   ColumnFilters<DateTime> get dateTimeValue => $composableBuilder(
     column: $table.dateTimeValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -50785,16 +50920,6 @@ class $$GoalMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -50872,14 +50997,6 @@ class $$GoalMetadataTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
@@ -50948,8 +51065,6 @@ class $$GoalMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> goalId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -50963,8 +51078,6 @@ class $$GoalMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 goalId: goalId,
                 createdAt: createdAt,
@@ -50980,8 +51093,6 @@ class $$GoalMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> goalId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -50995,8 +51106,6 @@ class $$GoalMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 goalId: goalId,
                 createdAt: createdAt,
@@ -51561,8 +51670,6 @@ typedef $$InvestmentMetadataTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> investmentId,
       Value<DateTime?> createdAt,
@@ -51578,8 +51685,6 @@ typedef $$InvestmentMetadataTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> investmentId,
       Value<DateTime?> createdAt,
@@ -51667,16 +51772,6 @@ class $$InvestmentMetadataTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnFilters(column),
@@ -51760,16 +51855,6 @@ class $$InvestmentMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -51847,14 +51932,6 @@ class $$InvestmentMetadataTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
@@ -51928,8 +52005,6 @@ class $$InvestmentMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> investmentId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -51943,8 +52018,6 @@ class $$InvestmentMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 investmentId: investmentId,
                 createdAt: createdAt,
@@ -51960,8 +52033,6 @@ class $$InvestmentMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> investmentId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -51975,8 +52046,6 @@ class $$InvestmentMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 investmentId: investmentId,
                 createdAt: createdAt,
@@ -52926,8 +52995,6 @@ typedef $$WalletProviderMetadataTableCreateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> walletProviderId,
       Value<DateTime?> createdAt,
@@ -52943,8 +53010,6 @@ typedef $$WalletProviderMetadataTableUpdateCompanionBuilder =
       Value<int?> numberValue,
       Value<bool?> booleanValue,
       Value<DateTime?> dateTimeValue,
-      Value<String?> urlValue,
-      Value<String?> emailValue,
       Value<String?> userId,
       Value<String?> walletProviderId,
       Value<DateTime?> createdAt,
@@ -53032,16 +53097,6 @@ class $$WalletProviderMetadataTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnFilters(column),
@@ -53125,16 +53180,6 @@ class $$WalletProviderMetadataTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get urlValue => $composableBuilder(
-    column: $table.urlValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
     builder: (column) => ColumnOrderings(column),
@@ -53209,14 +53254,6 @@ class $$WalletProviderMetadataTableAnnotationComposer
 
   GeneratedColumn<DateTime> get dateTimeValue => $composableBuilder(
     column: $table.dateTimeValue,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get urlValue =>
-      $composableBuilder(column: $table.urlValue, builder: (column) => column);
-
-  GeneratedColumn<String> get emailValue => $composableBuilder(
-    column: $table.emailValue,
     builder: (column) => column,
   );
 
@@ -53299,8 +53336,6 @@ class $$WalletProviderMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> walletProviderId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -53314,8 +53349,6 @@ class $$WalletProviderMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 walletProviderId: walletProviderId,
                 createdAt: createdAt,
@@ -53331,8 +53364,6 @@ class $$WalletProviderMetadataTableTableManager
                 Value<int?> numberValue = const Value.absent(),
                 Value<bool?> booleanValue = const Value.absent(),
                 Value<DateTime?> dateTimeValue = const Value.absent(),
-                Value<String?> urlValue = const Value.absent(),
-                Value<String?> emailValue = const Value.absent(),
                 Value<String?> userId = const Value.absent(),
                 Value<String?> walletProviderId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -53346,8 +53377,6 @@ class $$WalletProviderMetadataTableTableManager
                 numberValue: numberValue,
                 booleanValue: booleanValue,
                 dateTimeValue: dateTimeValue,
-                urlValue: urlValue,
-                emailValue: emailValue,
                 userId: userId,
                 walletProviderId: walletProviderId,
                 createdAt: createdAt,
@@ -53429,6 +53458,8 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$UsersTableTableManager get users =>
       $$UsersTableTableManager(_db, _db.users);
+  $$PreferencesTableTableManager get preferences =>
+      $$PreferencesTableTableManager(_db, _db.preferences);
   $$CurrenciesTableTableManager get currencies =>
       $$CurrenciesTableTableManager(_db, _db.currencies);
   $$WalletProvidersTableTableManager get walletProviders =>

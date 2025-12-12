@@ -191,6 +191,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       password: _passwordController.text,
     );
 
+    await _authService.login(email: response.email!, password: _passwordController.text);
+
     // _analytics.logSignupSuccess(method: 'email');
     final user = ref.watch(currentUserProvider);
     print(user);

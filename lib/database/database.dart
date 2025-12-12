@@ -23,6 +23,25 @@ class Users extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+class Preferences extends Table {
+  TextColumn get id => text()();
+  TextColumn get displayName => text().nullable()();
+  TextColumn get key => text()();
+  TextColumn get type => text().nullable()();
+  TextColumn get stringValue => text().nullable()();
+  IntColumn get numberValue => integer().nullable()();
+  BoolColumn get booleanValue => boolean().nullable()();
+  DateTimeColumn get dateTimeValue => dateTime().nullable()();
+  TextColumn get userId => text().nullable()();
+  TextColumn get objectValue => text().nullable()(); // Store as JSON string
+  TextColumn get tempId => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 // Projects table
 class Projects extends Table {
   TextColumn get id => text()();
@@ -65,8 +84,6 @@ class ProjectMetadata extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get projectId => text().nullable().references(Projects, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -437,8 +454,6 @@ class MerchantMetadata extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get merchantId => text().nullable().references(Merchants, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -492,8 +507,6 @@ class ContactInfo extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get contactId => text().nullable().references(Contacts, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -552,8 +565,6 @@ class WalletMetadata extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get walletId => text().nullable().references(Wallets, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -603,8 +614,6 @@ class WalletProviderMetadata extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get walletProviderId =>
       text().nullable().references(WalletProviders, #id)();
@@ -659,8 +668,6 @@ class BudgetMetadata extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get budgetId => text().nullable().references(Budgets, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -733,8 +740,6 @@ class GoalMetadata extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get goalId => text().nullable().references(Goals, #id)();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -850,8 +855,6 @@ class InvestmentMetadata extends Table {
   IntColumn get numberValue => integer().nullable()();
   BoolColumn get booleanValue => boolean().nullable()();
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
-  TextColumn get urlValue => text().nullable()();
-  TextColumn get emailValue => text().nullable()();
   TextColumn get userId => text().nullable()();
   TextColumn get investmentId =>
       text().nullable().references(Investments, #id)();
@@ -913,6 +916,7 @@ class _ReturnCalculationTypeConverter
 @DriftDatabase(
   tables: [
     Users,
+    Preferences,
     Projects,
     ProjectMetadata,
     Expenses,
